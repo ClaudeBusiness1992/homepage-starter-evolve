@@ -1,0 +1,16 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  center?: boolean;
+  class?: string;
+}
+const { label, headline, subline, center = false, class: extraClass = '' } = Astro.props;
+---
+
+<div class={`section-hd r ${center ? 'section-hd--center' : ''} ${extraClass}`.trim()}>
+  <span class="lbl">{label}</span>
+  <h2 class="h2" set:html={headline} />
+  <p class="sub">{subline}</p>
+</div>

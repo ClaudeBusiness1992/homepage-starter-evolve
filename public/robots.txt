@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://effervescent-chebakia-6a45c4.netlify.app/sitemap-index.xml
+# Sitemap-URL vor Live-Schaltung auf Produktionsdomain anpassen (astro.config.mjs → site)
+Sitemap: https://ihre-domain.de/sitemap-index.xml

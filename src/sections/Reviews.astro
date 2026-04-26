@@ -1,4 +1,5 @@
 ---
+import SectionHeader from '../components/SectionHeader.astro';
 interface Review {
   name: string;
   company: string;
@@ -12,8 +13,10 @@ interface Props {
   headline: string;
   subline: string;
   items: Review[];
+  agencyName?: string;
+  agencyUrl?: string;
 }
-const { label, headline, subline, items } = Astro.props;
+const { label, headline, subline, items, agencyName = '', agencyUrl } = Astro.props;
 const delays = ['d1', 'd2', 'd3'];
 
 const avg = items.length
@@ -24,16 +27,20 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
   '@id': '#business',
+  name: agencyName,
+  ...(agencyUrl ? { url: agencyUrl } : {}),
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: avg,
     reviewCount: items.length,
+    bestRating: 5,
   },
   review: items.map(r => ({
     '@type': 'Review',
     author: { '@type': 'Person', name: r.name },
     reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 },
     reviewBody: r.text,
+    datePublished: r.date,
   })),
 };
 ---
@@ -42,20 +49,16 @@ const jsonLd = {
 
 <section class="section" id="reviews">
   <div class="wrap">
-    <div class="reviews-hd r">
-      <span class="lbl">{label}</span>
-      <h2 class="h2">{headline}</h2>
-      <p class="sub" style="margin:0 auto">{subline}</p>
-    </div>
+    <SectionHeader {label} {headline} {subline} center />
     <div class="reviews-grid">
       {items.map((review, i) => (
         <div class={`review-card r ${delays[i % 3]}`}>
           <div class="review-top">
-            <div class="review-stars">
-              {Array.from({ length: review.rating }).map(() => <span>★</span>)}
+            <div class="review-stars" aria-label={`${review.rating} von 5 Sternen`}>
+              {Array.from({ length: review.rating }).map(() => <span aria-hidden="true">★</span>)}
             </div>
             {review.verified && (
-              <span class="review-verified" title="Echtheit wurde von pixel&code geprüft">
+              <span class="review-verified" title={agencyName ? `Echtheit wurde von ${agencyName} geprüft` : 'Echtheit geprüft'}>
                 ✓ Verifiziert
               </span>
             )}

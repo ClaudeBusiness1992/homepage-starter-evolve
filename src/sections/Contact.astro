@@ -10,7 +10,7 @@ interface Props {
 const { label, headline, subline, email, phone, phoneDisplay } = Astro.props;
 ---
 
-<section class="section" id="contact">
+<section class="section section--dark" id="contact">
   <div class="wrap">
     <div class="contact-grid">
 
@@ -38,34 +38,44 @@ const { label, headline, subline, email, phone, phoneDisplay } = Astro.props;
           <input type="hidden" name="form-name" value="kontakt" />
           <input type="hidden" name="bot-field" />
 
+          <div role="alert" aria-live="polite" id="formErrors" class="form-errors" hidden></div>
+
           <div class="form-row">
             <div class="form-group">
               <label for="name">Name *</label>
-              <input type="text"  id="name"    name="name"    placeholder="Max Mustermann" required />
+              <input type="text"  id="name"    name="name"    placeholder="Max Mustermann" required
+                     autocomplete="name" aria-describedby="name-err" aria-invalid="false" />
+              <span id="name-err" class="field-err" hidden>Bitte geben Sie Ihren Namen an.</span>
             </div>
             <div class="form-group">
               <label for="email">E-Mail *</label>
-              <input type="email" id="email"   name="email"   placeholder="max@beispiel.de" required />
+              <input type="email" id="email"   name="email"   placeholder="max@beispiel.de" required
+                     autocomplete="email" aria-describedby="email-err" aria-invalid="false" />
+              <span id="email-err" class="field-err" hidden>Bitte geben Sie eine gültige E-Mail-Adresse an.</span>
             </div>
           </div>
 
           <div class="form-group">
             <label for="phone">Telefon <span class="form-optional">(optional)</span></label>
-            <input type="tel" id="phone" name="phone" placeholder="+49 000 000000" />
+            <input type="tel" id="phone" name="phone" placeholder="+49 000 000000" autocomplete="tel" />
           </div>
 
           <div class="form-group">
             <label for="message">Nachricht *</label>
-            <textarea id="message" name="message" rows="5" placeholder="Beschreiben Sie kurz Ihr Projekt..." required></textarea>
+            <textarea id="message" name="message" rows="5" placeholder="Beschreiben Sie kurz Ihr Projekt..." required
+                      aria-describedby="message-err" aria-invalid="false"></textarea>
+            <span id="message-err" class="field-err" hidden>Bitte schreiben Sie eine kurze Nachricht.</span>
           </div>
 
           <div class="form-check">
-            <input type="checkbox" id="privacy" name="privacy" required />
+            <input type="checkbox" id="privacy" name="privacy" required
+                   aria-describedby="privacy-err" aria-invalid="false" />
             <label for="privacy">
-              Ich habe die <a href="/datenschutz" target="_blank">Datenschutzerklärung</a> gelesen
+              Ich habe die <a href="/datenschutz">Datenschutzerklärung</a> gelesen
               und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu. *
             </label>
           </div>
+          <span id="privacy-err" class="field-err" hidden>Bitte stimmen Sie der Datenschutzerklärung zu.</span>
 
           <button type="submit" class="btn btn-submit">
             Nachricht senden →
@@ -91,33 +101,53 @@ const { label, headline, subline, email, phone, phoneDisplay } = Astro.props;
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Einfache Client-Validierung
     const required = form.querySelectorAll('[required]');
     let valid = true;
     required.forEach(el => {
-      el.classList.remove('error');
-      if ((el.type === 'checkbox' && !el.checked) || (el.type !== 'checkbox' && !el.value.trim())) {
-        el.classList.add('error');
-        valid = false;
-      }
+      const invalid = (el.type === 'checkbox' && !el.checked) || (el.type !== 'checkbox' && !el.value.trim());
+      el.classList.toggle('error', invalid);
+      el.setAttribute('aria-invalid', String(invalid));
+      const errId = el.getAttribute('aria-describedby');
+      const errEl = errId ? document.getElementById(errId) : null;
+      if (errEl) errEl.hidden = !invalid;
+      if (invalid) valid = false;
     });
-    if (!valid) return;
+    if (!valid) {
+      const errBox = document.getElementById('formErrors');
+      if (errBox) {
+        errBox.textContent = 'Bitte füllen Sie alle Pflichtfelder aus.';
+        errBox.hidden = false;
+      }
+      form.querySelector('[aria-invalid="true"]')?.focus();
+      return;
+    }
+    const errBox = document.getElementById('formErrors');
+    if (errBox) errBox.hidden = true;
 
     const btn = form.querySelector('button[type="submit"]');
     btn.textContent = 'Wird gesendet…';
     btn.disabled = true;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
 
     try {
       await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(new FormData(form)).toString(),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
       form.hidden = true;
       success.hidden = false;
-    } catch {
-      btn.textContent = 'Fehler — bitte per E-Mail kontaktieren';
+    } catch (err) {
+      clearTimeout(timeout);
+      btn.textContent = err?.name === 'AbortError'
+        ? 'Zeitüberschreitung — bitte per E-Mail kontaktieren'
+        : 'Fehler — bitte per E-Mail kontaktieren';
       btn.disabled = false;
+      setTimeout(() => { btn.textContent = 'Nachricht senden →'; }, 5000);
     }
   });
 </script>

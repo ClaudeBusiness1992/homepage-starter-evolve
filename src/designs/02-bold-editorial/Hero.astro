@@ -1,0 +1,116 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+}
+const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
+---
+
+<section id="hero">
+  <div class="hero-bg-num" aria-hidden="true">WEB</div>
+  <div class="wrap">
+    <div class="hero-inner r">
+      <p class="hero-eyebrow">{label}</p>
+      <h1 class="hero-h1">{headline}</h1>
+      <div class="hero-bar">
+        <p class="hero-sub">{subline}</p>
+        <div class="hero-btns">
+          <a href="#contact" class="btn btn-fill">{ctaPrimary}</a>
+          <a href="#services" class="btn btn-ghost">{ctaSecondary}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-slash" aria-hidden="true"></div>
+</section>
+
+<style>
+#hero {
+  min-height: 100vh;
+  background: #0d0d0d;
+  color: #f0ede8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: var(--nav-h);
+  overflow: hidden;
+  position: relative;
+}
+
+.hero-bg-num {
+  position: absolute;
+  right: -2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--serif);
+  font-size: clamp(12rem, 22vw, 22rem);
+  font-weight: 700;
+  color: rgba(255,255,255,.03);
+  letter-spacing: -.02em;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.hero-inner {
+  padding: 5rem 0 6rem;
+}
+
+.hero-eyebrow {
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.hero-h1 {
+  font-family: var(--serif);
+  font-size: clamp(3.5rem, 8vw, 8rem);
+  line-height: 1.0;
+  letter-spacing: -.02em;
+  color: #f0ede8;
+  margin-bottom: 3rem;
+  max-width: 14ch;
+}
+
+.hero-bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 4rem;
+  border-top: 1px solid rgba(240,237,232,.15);
+  padding-top: 2rem;
+}
+
+.hero-sub {
+  flex: 1;
+  font-size: 1rem;
+  color: rgba(240,237,232,.55);
+  line-height: 1.75;
+  max-width: 420px;
+}
+
+.hero-btns {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  flex-shrink: 0;
+}
+
+.hero-slash {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: var(--cream);
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+}
+
+@media (max-width: 640px) {
+  .hero-bar { flex-direction: column; gap: 2rem; }
+  .hero-btns { flex-direction: row; }
+}
+</style>
