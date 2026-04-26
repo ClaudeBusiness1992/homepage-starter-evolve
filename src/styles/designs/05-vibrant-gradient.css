@@ -22,73 +22,91 @@
 [data-design="05-vibrant-gradient"] #about {
   background: linear-gradient(180deg, #f8f6ff 0%, #fff 100%);
 }
-[data-design="05-vibrant-gradient"] .member-card {
+[data-design="05-vibrant-gradient"] .acard {
   border-radius: var(--r-lg);
   box-shadow: 0 4px 24px rgba(26,26,46,.07);
+  overflow: hidden;
 }
-[data-design="05-vibrant-gradient"] .member-photo-placeholder {
-  border-radius: 50%;
+[data-design="05-vibrant-gradient"] .acard:hover {
+  box-shadow: 0 8px 32px rgba(26,26,46,.12);
+}
+[data-design="05-vibrant-gradient"] .aphoto {
+  border-radius: 0;
 }
 
-/* Services */
+/* Services — floating cards on white, light bg override */
 [data-design="05-vibrant-gradient"] #services {
   background: #fff;
+  color: var(--ink);
 }
-[data-design="05-vibrant-gradient"] .service-card {
+[data-design="05-vibrant-gradient"] #services .h2 { color: var(--ink); }
+[data-design="05-vibrant-gradient"] #services .sub { color: var(--ink-muted); }
+[data-design="05-vibrant-gradient"] #services .lbl { color: var(--accent-text); }
+[data-design="05-vibrant-gradient"] .scard {
+  background: #fff;
   border-radius: var(--r-lg);
   box-shadow: 0 2px 16px rgba(26,26,46,.06);
   border: 1px solid rgba(26,26,46,.06);
   transition: transform .25s, box-shadow .25s;
 }
-[data-design="05-vibrant-gradient"] .service-card:hover {
+[data-design="05-vibrant-gradient"] .scard:hover {
   transform: translateY(-6px);
   box-shadow: 0 12px 40px rgba(26,26,46,.12);
+  border-color: transparent;
 }
-[data-design="05-vibrant-gradient"] .service-icon {
+[data-design="05-vibrant-gradient"] .sico {
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
   color: #fff;
   border-radius: 14px;
 }
+[data-design="05-vibrant-gradient"] .stitle { color: var(--ink); }
+[data-design="05-vibrant-gradient"] .stxt { color: var(--ink-muted); }
 
-/* Stats */
+/* Stats — gradient dark bg */
 [data-design="05-vibrant-gradient"] #stats {
   background: linear-gradient(135deg, var(--ink) 0%, #2d1b4e 50%, #1a2e4e 100%);
 }
-[data-design="05-vibrant-gradient"] .stats-inner {
+[data-design="05-vibrant-gradient"] .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
+  text-align: center;
 }
-[data-design="05-vibrant-gradient"] .stat-item {
+[data-design="05-vibrant-gradient"] .stats-grid > div {
   background: rgba(255,255,255,.07);
   border: 1px solid rgba(255,255,255,.1);
   border-radius: var(--r-lg);
   padding: 2rem;
-  text-align: center;
 }
-[data-design="05-vibrant-gradient"] .stat-val { color: #fff; }
-[data-design="05-vibrant-gradient"] .stat-label { color: rgba(255,255,255,.5); }
+[data-design="05-vibrant-gradient"] .stat-n { color: #fff; }
+[data-design="05-vibrant-gradient"] .stat-l { color: rgba(255,255,255,.5); }
 
-/* Pricing */
+/* Pricing — gradient background, featured dark card */
 [data-design="05-vibrant-gradient"] #pricing {
   background: linear-gradient(180deg, #f8f6ff 0%, #fff 100%);
 }
-[data-design="05-vibrant-gradient"] .price-card {
+[data-design="05-vibrant-gradient"] .pcard {
   border-radius: var(--r-lg);
   box-shadow: 0 4px 24px rgba(26,26,46,.07);
   border: 1.5px solid rgba(26,26,46,.06);
 }
-[data-design="05-vibrant-gradient"] .price-card.featured {
+[data-design="05-vibrant-gradient"] .pcard:hover {
+  box-shadow: 0 8px 32px rgba(26,26,46,.12);
+}
+[data-design="05-vibrant-gradient"] .pcard.feat {
   background: linear-gradient(160deg, var(--ink) 0%, #2d1b4e 100%);
   border-color: transparent;
   box-shadow: 0 16px 48px rgba(26,26,46,.25);
 }
-[data-design="05-vibrant-gradient"] .price-card.featured .price-name,
-[data-design="05-vibrant-gradient"] .price-card.featured .price-amount,
-[data-design="05-vibrant-gradient"] .price-card.featured .price-tagline,
-[data-design="05-vibrant-gradient"] .price-card.featured .price-note,
-[data-design="05-vibrant-gradient"] .price-card.featured .price-features li,
-[data-design="05-vibrant-gradient"] .price-card.featured .price-features li::before {
+[data-design="05-vibrant-gradient"] .pcard.feat:hover {
+  box-shadow: 0 20px 56px rgba(26,26,46,.3);
+}
+[data-design="05-vibrant-gradient"] .pcard.feat .pname,
+[data-design="05-vibrant-gradient"] .pcard.feat .amount,
+[data-design="05-vibrant-gradient"] .pcard.feat .ptag,
+[data-design="05-vibrant-gradient"] .pcard.feat .note,
+[data-design="05-vibrant-gradient"] .pcard.feat .plist li,
+[data-design="05-vibrant-gradient"] .pcard.feat .plist li::before {
   color: rgba(255,255,255,.85);
 }
 
@@ -96,9 +114,12 @@
 [data-design="05-vibrant-gradient"] #gallery {
   background: #fff;
 }
-[data-design="05-vibrant-gradient"] .gallery-card {
+[data-design="05-vibrant-gradient"] .gallery-item {
   border-radius: var(--r-lg);
   overflow: hidden;
+}
+[data-design="05-vibrant-gradient"] .gallery-img {
+  border-radius: var(--r-lg);
 }
 
 /* Reviews */
@@ -110,11 +131,13 @@
   box-shadow: 0 4px 20px rgba(26,26,46,.07);
   border: 1px solid rgba(26,26,46,.06);
 }
+[data-design="05-vibrant-gradient"] .review-card:hover {
+  box-shadow: 0 8px 28px rgba(26,26,46,.12);
+}
 
-/* Contact */
+/* Contact — gradient dark bg */
 [data-design="05-vibrant-gradient"] #contact {
   background: linear-gradient(135deg, var(--ink) 0%, #2d1b4e 100%);
-  color: #fff;
 }
 [data-design="05-vibrant-gradient"] #contact .h2 { color: #fff; }
 [data-design="05-vibrant-gradient"] #contact .sub { color: rgba(255,255,255,.65); }
@@ -127,8 +150,11 @@
   border-radius: var(--r);
 }
 [data-design="05-vibrant-gradient"] .contact-form input::placeholder,
-[data-design="05-vibrant-gradient"] .contact-form textarea::placeholder { color: rgba(255,255,255,.35); }
-[data-design="05-vibrant-gradient"] .contact-form label { color: rgba(255,255,255,.75); }
+[data-design="05-vibrant-gradient"] .contact-form textarea::placeholder {
+  color: rgba(255,255,255,.35);
+}
+[data-design="05-vibrant-gradient"] .form-group label { color: rgba(255,255,255,.75); }
+[data-design="05-vibrant-gradient"] .form-optional { color: rgba(255,255,255,.4); }
 
 /* Footer */
 [data-design="05-vibrant-gradient"] footer {
@@ -141,5 +167,5 @@
 [data-design="05-vibrant-gradient"] .foot-copy { color: rgba(255,255,255,.25); }
 
 @media (max-width: 768px) {
-  [data-design="05-vibrant-gradient"] .stats-inner { grid-template-columns: repeat(2, 1fr); }
+  [data-design="05-vibrant-gradient"] .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }

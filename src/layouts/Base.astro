@@ -105,11 +105,12 @@ const themeStyle = `
               if (prefersReducedMotion) { el.textContent = target; return; }
               const step = target / (1400 / 16);
               let cur = 0;
-              const t = setInterval(() => {
+              const tick = () => {
                 cur = Math.min(cur + step, target);
                 el.textContent = Math.round(cur);
-                if (cur >= target) clearInterval(t);
-              }, 16);
+                if (cur < target) requestAnimationFrame(tick);
+              };
+              requestAnimationFrame(tick);
             });
           }
         });
