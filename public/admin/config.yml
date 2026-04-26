@@ -3,8 +3,8 @@ backend:
   repo: ClaudeBusiness1992/hompage-starter
   branch: main
   client_id: Ov23lijI6FiImrx8EcYE
-  base_url: https://effervescent-chebakia-6a45c4.netlify.app
-  auth_endpoint: .netlify/functions/auth
+  base_url: https://CLOUDFLARE_URL_HIER_EINTRAGEN.pages.dev
+  auth_endpoint: auth
 
 media_folder: public/images
 public_folder: /images
