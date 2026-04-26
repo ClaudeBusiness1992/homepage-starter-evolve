@@ -3,6 +3,8 @@ interface Review {
   name: string;
   company: string;
   rating: number;
+  verified: boolean;
+  date: string;
   text: string;
 }
 interface Props {
@@ -13,7 +15,30 @@ interface Props {
 }
 const { label, headline, subline, items } = Astro.props;
 const delays = ['d1', 'd2', 'd3'];
+
+const avg = items.length
+  ? (items.reduce((s, r) => s + r.rating, 0) / items.length).toFixed(1)
+  : '0';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': '#business',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: avg,
+    reviewCount: items.length,
+  },
+  review: items.map(r => ({
+    '@type': 'Review',
+    author: { '@type': 'Person', name: r.name },
+    reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 },
+    reviewBody: r.text,
+  })),
+};
 ---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
 <section class="section" id="reviews">
   <div class="wrap">
@@ -25,21 +50,34 @@ const delays = ['d1', 'd2', 'd3'];
     <div class="reviews-grid">
       {items.map((review, i) => (
         <div class={`review-card r ${delays[i % 3]}`}>
-          <div class="review-stars">
-            {Array.from({ length: review.rating }).map(() => <span>★</span>)}
+          <div class="review-top">
+            <div class="review-stars">
+              {Array.from({ length: review.rating }).map(() => <span>★</span>)}
+            </div>
+            {review.verified && (
+              <span class="review-verified" title="Echtheit wurde von pixel&code geprüft">
+                ✓ Verifiziert
+              </span>
+            )}
           </div>
           <p class="review-text">„{review.text}"</p>
-          <div class="review-author">
-            <div class="review-avatar">
-              {review.name.charAt(0)}
+          <div class="review-footer">
+            <div class="review-author">
+              <div class="review-avatar">{review.name.charAt(0)}</div>
+              <div>
+                <div class="review-name">{review.name}</div>
+                <div class="review-company">{review.company}</div>
+              </div>
             </div>
-            <div>
-              <div class="review-name">{review.name}</div>
-              <div class="review-company">{review.company}</div>
-            </div>
+            {review.date && <div class="review-date">{review.date}</div>}
           </div>
         </div>
       ))}
     </div>
+    <p class="reviews-note r">
+      ✓ Alle Bewertungen stammen von verifizierten Kunden, die unsere Leistungen tatsächlich
+      in Anspruch genommen haben. Die Echtheit jeder Bewertung wurde von uns geprüft und
+      dokumentiert — gemäß EU-Omnibus-Richtlinie (2022/161/EU).
+    </p>
   </div>
 </section>

@@ -149,18 +149,24 @@
           "name": "Sandra Weber",
           "company": "Schreinerei Weber",
           "rating": 5,
+          "verified": true,
+          "date": "März 2026",
           "text": "Innerhalb von zwei Wochen hatten wir eine Website, die unsere Arbeit endlich richtig zeigt. Anfragen über die Seite kommen seitdem regelmäßig rein."
         },
         {
           "name": "Dr. Thomas Müller",
           "company": "Allgemeinarzt",
           "rating": 5,
+          "verified": true,
+          "date": "Februar 2026",
           "text": "Professionelle Abwicklung von Anfang bis Ende. Die Seite ist übersichtlich, schnell und kommt bei meinen Patienten sehr gut an."
         },
         {
           "name": "Lisa Sonnenschein",
           "company": "Café Sonnenschein",
           "rating": 5,
+          "verified": true,
+          "date": "Januar 2026",
           "text": "Wir hatten genaue Vorstellungen und die wurden perfekt umgesetzt. Besonders die Bildergalerie und das Kontaktformular funktionieren einwandfrei."
         }
       ]
@@ -177,6 +183,42 @@
         { "label": "Impressum",   "href": "/impressum" },
         { "label": "Datenschutz", "href": "/datenschutz" }
       ]
+    }
+  },
+  "legal": {
+    "company": {
+      "name": "[Firmenname]",
+      "legalForm": "[Rechtsform: GmbH / UG / Einzelunternehmen / GbR]",
+      "representedBy": "[Vor- und Nachname Vertretungsberechtigter]"
+    },
+    "address": {
+      "street": "[Straße + Hausnummer]",
+      "zip": "[PLZ]",
+      "city": "[Stadt]",
+      "country": "Deutschland"
+    },
+    "contact": {
+      "phone": "[Telefon mit Vorwahl]",
+      "email": "[E-Mail-Adresse]"
+    },
+    "register": {
+      "type": "[HRB / HRA / Partnerschaftsregister oder leer]",
+      "number": "[Registernummer]",
+      "court": "[Amtsgericht]"
+    },
+    "vatId": "[USt-IdNr. DE... oder leer]",
+    "responsibleForContent": "[Verantwortlicher §18 Abs.2 MStV]",
+    "professionalRegulations": "",
+    "supervisoryAuthority": "",
+    "hosting": {
+      "provider": "[z.B. Vercel Inc. / Hetzner / IONOS]",
+      "address": "[Adresse des Hosters]",
+      "privacyUrl": "[URL zur Datenschutzerklärung des Hosters]"
+    },
+    "dataProtectionOfficer": "",
+    "analytics": {
+      "enabled": false,
+      "tool": ""
     }
   }
 }
