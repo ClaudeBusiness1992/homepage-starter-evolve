@@ -1,0 +1,45 @@
+---
+interface Review {
+  name: string;
+  company: string;
+  rating: number;
+  text: string;
+}
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  items: Review[];
+}
+const { label, headline, subline, items } = Astro.props;
+const delays = ['d1', 'd2', 'd3'];
+---
+
+<section class="section" id="reviews">
+  <div class="wrap">
+    <div class="reviews-hd r">
+      <span class="lbl">{label}</span>
+      <h2 class="h2">{headline}</h2>
+      <p class="sub" style="margin:0 auto">{subline}</p>
+    </div>
+    <div class="reviews-grid">
+      {items.map((review, i) => (
+        <div class={`review-card r ${delays[i % 3]}`}>
+          <div class="review-stars">
+            {Array.from({ length: review.rating }).map(() => <span>★</span>)}
+          </div>
+          <p class="review-text">„{review.text}"</p>
+          <div class="review-author">
+            <div class="review-avatar">
+              {review.name.charAt(0)}
+            </div>
+            <div>
+              <div class="review-name">{review.name}</div>
+              <div class="review-company">{review.company}</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

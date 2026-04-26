@@ -1,0 +1,53 @@
+---
+interface GalleryItem {
+  src: string;
+  alt: string;
+  caption: string;
+  category: string;
+}
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  items: GalleryItem[];
+}
+const { label, headline, subline, items } = Astro.props;
+
+const gradients = [
+  'linear-gradient(135deg, #2a2a4e 0%, #3d2a4e 100%)',
+  'linear-gradient(135deg, #1e3a34 0%, #2a4e3d 100%)',
+  'linear-gradient(135deg, #4e2a1e 0%, #6b3520 100%)',
+  'linear-gradient(135deg, #1e2a4e 0%, #2a3d6b 100%)',
+  'linear-gradient(135deg, #3d3520 0%, #4e4228 100%)',
+  'linear-gradient(135deg, #2a3d2a 0%, #354e35 100%)',
+];
+---
+
+<section class="section" id="gallery">
+  <div class="wrap">
+    <div class="gallery-hd r">
+      <span class="lbl">{label}</span>
+      <h2 class="h2">{headline}</h2>
+      <p class="sub">{subline}</p>
+    </div>
+    <div class="gallery-grid">
+      {items.map((item, i) => (
+        <div class={`gallery-item r d${(i % 3) + 1}`}>
+          <div class="gallery-img" style={!item.src ? `background: ${gradients[i % gradients.length]}` : ''}>
+            {item.src
+              ? <img src={item.src} alt={item.alt} loading="lazy" />
+              : <div class="gallery-placeholder">
+                  <span class="gallery-placeholder-icon">⬡</span>
+                  <span class="gallery-placeholder-txt">Bild einfügen</span>
+                </div>
+            }
+            <div class="gallery-overlay">
+              <span class="gallery-category">{item.category}</span>
+              <span class="gallery-caption">{item.caption}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

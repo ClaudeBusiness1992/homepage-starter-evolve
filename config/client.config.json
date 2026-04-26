@@ -126,10 +126,44 @@
       ]
     },
     "gallery": {
-      "enabled": false
+      "enabled": true,
+      "label": "Unsere Arbeiten",
+      "headline": "Projekte die begeistern",
+      "subline": "Ein Blick auf einige unserer abgeschlossenen Kundenprojekte.",
+      "items": [
+        { "src": "", "alt": "Projekt 1", "caption": "Schreinerei Weber",    "category": "Webdesign" },
+        { "src": "", "alt": "Projekt 2", "caption": "Praxis Dr. Müller",    "category": "Landingpage" },
+        { "src": "", "alt": "Projekt 3", "caption": "Café Sonnenschein",    "category": "Webdesign" },
+        { "src": "", "alt": "Projekt 4", "caption": "Elektro Bauer GmbH",  "category": "SEO" },
+        { "src": "", "alt": "Projekt 5", "caption": "Yoga Studio Mitte",   "category": "Landingpage" },
+        { "src": "", "alt": "Projekt 6", "caption": "Friseur Haargenau",   "category": "Webdesign" }
+      ]
     },
     "reviews": {
-      "enabled": false
+      "enabled": true,
+      "label": "Kundenstimmen",
+      "headline": "Was unsere Kunden sagen",
+      "subline": "Echte Projekte, echte Menschen, echte Ergebnisse.",
+      "items": [
+        {
+          "name": "Sandra Weber",
+          "company": "Schreinerei Weber",
+          "rating": 5,
+          "text": "Innerhalb von zwei Wochen hatten wir eine Website, die unsere Arbeit endlich richtig zeigt. Anfragen über die Seite kommen seitdem regelmäßig rein."
+        },
+        {
+          "name": "Dr. Thomas Müller",
+          "company": "Allgemeinarzt",
+          "rating": 5,
+          "text": "Professionelle Abwicklung von Anfang bis Ende. Die Seite ist übersichtlich, schnell und kommt bei meinen Patienten sehr gut an."
+        },
+        {
+          "name": "Lisa Sonnenschein",
+          "company": "Café Sonnenschein",
+          "rating": 5,
+          "text": "Wir hatten genaue Vorstellungen und die wurden perfekt umgesetzt. Besonders die Bildergalerie und das Kontaktformular funktionieren einwandfrei."
+        }
+      ]
     },
     "contact": {
       "enabled": true,
