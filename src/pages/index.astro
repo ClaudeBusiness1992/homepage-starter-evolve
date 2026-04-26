@@ -21,10 +21,10 @@ const { meta, theme, sections: s } = config;
   {s.hero.enabled      && <Hero      {...s.hero} />}
   {s.about.enabled     && <About     {...s.about} />}
   {s.services.enabled  && <Services  {...s.services} />}
+  {s.gallery?.enabled  && <Gallery   {...s.gallery} />}
   {s.stats.enabled     && <Stats     items={s.stats.items} />}
   {s.pricing.enabled   && <Pricing   {...s.pricing} />}
-  {s.gallery.enabled   && <Gallery   {...s.gallery} />}
-  {s.reviews.enabled   && <Reviews   {...s.reviews} />}
+  {s.reviews?.enabled  && <Reviews   {...s.reviews} />}
   {s.contact.enabled   && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} />}
   {s.footer.enabled    && <Footer    siteName={meta.siteName} copyright={meta.copyright} links={s.footer.links} />}
 </Base>

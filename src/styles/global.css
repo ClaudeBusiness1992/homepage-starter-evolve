@@ -471,6 +471,16 @@ body {
   border-radius: var(--r);
 }
 
+/* ── LEGAL PAGES (Impressum / Datenschutz) ── */
+.legal-page { padding-top: var(--nav-h); background: var(--cream); min-height: 100vh; }
+.legal-wrap { max-width: 720px; padding: 4rem 1.5rem 6rem; }
+.legal-h1 { font-family: var(--serif); font-size: clamp(2rem,4vw,3rem); margin-bottom: 3rem; color: var(--ink); }
+.legal-section { margin-bottom: 2.5rem; }
+.legal-section h2 { font-family: var(--serif); font-size: 1.25rem; margin-bottom: .75rem; color: var(--ink); }
+.legal-section p { font-size: .95rem; line-height: 1.8; color: var(--ink-muted); }
+.legal-section a { color: var(--accent); text-decoration: none; }
+.legal-section a:hover { text-decoration: underline; }
+
 /* ── FOOTER ── */
 footer { background: #0f0f1e; padding: 1.75rem 0; }
 .foot-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import CookieBanner from '../components/CookieBanner.astro';
 
 interface Props {
   meta: {
@@ -39,6 +40,7 @@ const themeStyle = `
   </head>
   <body>
     <slot />
+    <CookieBanner />
 
     <script is:inline>
       // Nav scroll effect

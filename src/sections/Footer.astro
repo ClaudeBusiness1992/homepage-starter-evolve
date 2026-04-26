@@ -18,6 +18,7 @@ const [before, after] = siteName.split('&');
       <span class="foot-logo">{before}<em>&</em>{after}</span>
       <ul class="foot-links">
         {links.map(l => <li><a href={l.href}>{l.label}</a></li>)}
+        <li><a href="#" data-cookie-settings>Cookie-Einstellungen</a></li>
       </ul>
       <span class="foot-copy">{copyright}</span>
     </div>
