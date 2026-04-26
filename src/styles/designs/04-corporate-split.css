@@ -16,60 +16,7 @@
   backdrop-filter: none;
 }
 
-/* About — two-col layout */
-[data-design="04-corporate-split"] #about {
-  background: #fff;
-}
-[data-design="04-corporate-split"] .about-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6rem;
-  align-items: center;
-}
-[data-design="04-corporate-split"] .acard {
-  background: var(--cream);
-  border-radius: var(--r);
-  box-shadow: none;
-  overflow: visible;
-  display: grid;
-  grid-template-columns: 52px 1fr;
-  gap: 1.25rem;
-  padding: 1.5rem;
-  align-items: start;
-  transition: none;
-}
-[data-design="04-corporate-split"] .acard:hover {
-  transform: none;
-  box-shadow: none;
-}
-[data-design="04-corporate-split"] .aphoto {
-  width: 52px;
-  height: 52px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-[data-design="04-corporate-split"] .aphoto img {
-  border-radius: 50%;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-[data-design="04-corporate-split"] .aphoto-placeholder {
-  font-size: .5rem;
-}
-[data-design="04-corporate-split"] .aphoto-placeholder::before {
-  width: 28px;
-  height: 28px;
-  margin-bottom: .3rem;
-}
-[data-design="04-corporate-split"] .abody {
-  padding: 0;
-}
-[data-design="04-corporate-split"] .aname {
-  font-size: 1.1rem;
-  margin-bottom: .15rem;
-}
+/* About: see src/designs/04-corporate-split/About.astro */
 
 /* Services — 2-col grid with borders, light bg */
 [data-design="04-corporate-split"] #services {

@@ -34,33 +34,7 @@
   border-radius: 0;
 }
 
-/* Services — floating cards on white, light bg override */
-[data-design="05-vibrant-gradient"] #services {
-  background: #fff;
-  color: var(--ink);
-}
-[data-design="05-vibrant-gradient"] #services .h2 { color: var(--ink); }
-[data-design="05-vibrant-gradient"] #services .sub { color: var(--ink-muted); }
-[data-design="05-vibrant-gradient"] #services .lbl { color: var(--accent-text); }
-[data-design="05-vibrant-gradient"] .scard {
-  background: #fff;
-  border-radius: var(--r-lg);
-  box-shadow: 0 2px 16px rgba(26,26,46,.06);
-  border: 1px solid rgba(26,26,46,.06);
-  transition: transform .25s, box-shadow .25s;
-}
-[data-design="05-vibrant-gradient"] .scard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(26,26,46,.12);
-  border-color: transparent;
-}
-[data-design="05-vibrant-gradient"] .sico {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-  color: #fff;
-  border-radius: 14px;
-}
-[data-design="05-vibrant-gradient"] .stitle { color: var(--ink); }
-[data-design="05-vibrant-gradient"] .stxt { color: var(--ink-muted); }
+/* Services: see src/designs/05-vibrant-gradient/Services.astro */
 
 /* Stats — gradient dark bg */
 [data-design="05-vibrant-gradient"] #stats {

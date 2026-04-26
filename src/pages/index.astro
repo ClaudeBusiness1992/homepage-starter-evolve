@@ -9,8 +9,12 @@ import Hero02   from '../designs/02-bold-editorial/Hero.astro';
 import Hero03   from '../designs/03-minimal-clean/Hero.astro';
 import Hero04   from '../designs/04-corporate-split/Hero.astro';
 import Hero05   from '../designs/05-vibrant-gradient/Hero.astro';
-import About    from '../sections/About.astro';
-import Services from '../sections/Services.astro';
+import About01  from '../sections/About.astro';
+import About02  from '../designs/02-bold-editorial/About.astro';
+import About04  from '../designs/04-corporate-split/About.astro';
+import Services01 from '../sections/Services.astro';
+import Services02 from '../designs/02-bold-editorial/Services.astro';
+import Services05 from '../designs/05-vibrant-gradient/Services.astro';
 import Stats    from '../sections/Stats.astro';
 import Pricing  from '../sections/Pricing.astro';
 import Gallery  from '../sections/Gallery.astro';
@@ -23,13 +27,32 @@ const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
 
 const HeroComponents = {
-  '01-warm-local':      Hero01,
-  '02-bold-editorial':  Hero02,
-  '03-minimal-clean':   Hero03,
-  '04-corporate-split': Hero04,
+  '01-warm-local':       Hero01,
+  '02-bold-editorial':   Hero02,
+  '03-minimal-clean':    Hero03,
+  '04-corporate-split':  Hero04,
   '05-vibrant-gradient': Hero05,
 };
-const Hero = HeroComponents[design] ?? Hero01;
+
+const AboutComponents = {
+  '01-warm-local':       About01,
+  '02-bold-editorial':   About02,
+  '03-minimal-clean':    About01,
+  '04-corporate-split':  About04,
+  '05-vibrant-gradient': About01,
+};
+
+const ServicesComponents = {
+  '01-warm-local':       Services01,
+  '02-bold-editorial':   Services02,
+  '03-minimal-clean':    Services01,
+  '04-corporate-split':  Services01,
+  '05-vibrant-gradient': Services05,
+};
+
+const Hero     = HeroComponents[design]    ?? Hero01;
+const About    = AboutComponents[design]   ?? About01;
+const Services = ServicesComponents[design] ?? Services01;
 
 const navLinks = (meta.nav ?? []).filter(l => !l.section || s[l.section]?.enabled !== false);
 ---

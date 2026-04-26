@@ -1,0 +1,73 @@
+---
+interface Member { name: string; role: string; bio: string; photo: string; }
+interface Props { label: string; headline: string; subline: string; members: Member[]; }
+const { label, headline, subline, members } = Astro.props;
+---
+
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="ab4-layout r">
+      <div class="ab4-left">
+        <span class="lbl">{label}</span>
+        <h2 class="h2" set:html={headline.replace(',', ',<br />')} />
+        <p class="sub">{subline}</p>
+      </div>
+      <div class="ab4-right">
+        {members.map((m, i) => (
+          <div class={`ab4-card r d${(i % 2) + 1}`}>
+            <div class="ab4-photo">
+              {m.photo
+                ? <img src={m.photo} alt={m.name} width="56" height="56" loading="lazy" />
+                : <div class="ab4-initials">{m.name.split(' ').map((w: string) => w[0]).join('')}</div>
+              }
+            </div>
+            <div class="ab4-info">
+              <h3 class="ab4-name">{m.name}</h3>
+              <span class="ab4-role">{m.role}</span>
+              <p class="ab4-bio">{m.bio}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #about { background: #fff; }
+  .ab4-layout {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: 6rem;
+    align-items: start;
+  }
+  .ab4-left { position: sticky; top: 5rem; }
+  .ab4-left .lbl { display: block; margin-bottom: .75rem; }
+  .ab4-left .h2 { margin-bottom: 1.5rem; font-size: clamp(1.8rem, 3vw, 2.5rem); }
+  .ab4-right { display: flex; flex-direction: column; gap: 1rem; }
+  .ab4-card {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 1.25rem;
+    align-items: start;
+    padding: 1.5rem;
+    background: var(--cream);
+    border-radius: var(--r);
+    border: 1px solid rgba(26,26,46,.07);
+  }
+  .ab4-photo img, .ab4-initials {
+    width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; object-fit: cover; display: block;
+  }
+  .ab4-initials {
+    background: #1a1a2e; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; font-weight: 600;
+  }
+  .ab4-name { font-size: 1.05rem; font-weight: 600; color: var(--ink); margin-bottom: .2rem; }
+  .ab4-role { font-size: .8rem; color: var(--accent-text); font-weight: 500; display: block; margin-bottom: .6rem; }
+  .ab4-bio { font-size: .875rem; color: var(--ink-muted); line-height: 1.65; margin: 0; }
+  @media (max-width: 900px) {
+    .ab4-layout { grid-template-columns: 1fr; gap: 3rem; }
+    .ab4-left { position: static; }
+  }
+</style>

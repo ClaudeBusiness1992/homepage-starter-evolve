@@ -1,0 +1,51 @@
+---
+import SectionHeader from '../../components/SectionHeader.astro';
+interface ServiceItem { icon: string; title: string; text: string; }
+interface Props { label: string; headline: string; subline: string; items: ServiceItem[]; }
+const { label, headline, subline, items } = Astro.props;
+---
+
+<section class="section" id="services">
+  <div class="wrap">
+    <SectionHeader {label} {headline} {subline} />
+    <div class="sv2-list">
+      {items.map((item, i) => (
+        <div class={`sv2-row r d${(i % 3) + 1}`}>
+          <span class="sv2-num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="sv2-icon">{item.icon}</span>
+          <div class="sv2-body">
+            <h3 class="sv2-title">{item.title}</h3>
+            <p class="sv2-text">{item.text}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  #services { background: #f0ede8; color: #1a1a2e; }
+  .sv2-list { border-bottom: 1px solid rgba(26,26,46,.1); }
+  .sv2-row {
+    display: grid;
+    grid-template-columns: 3.5rem 2rem 1fr;
+    gap: 2.5rem;
+    align-items: start;
+    padding: 2.5rem 0;
+    border-top: 1px solid rgba(26,26,46,.1);
+  }
+  .sv2-num {
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    color: var(--accent);
+    line-height: 1;
+    padding-top: .05em;
+  }
+  .sv2-icon { font-size: 1.4rem; padding-top: .1em; }
+  .sv2-title { font-size: 1.15rem; font-weight: 600; color: #1a1a2e; margin-bottom: .45rem; }
+  .sv2-text { color: rgba(26,26,46,.55); font-size: .92rem; line-height: 1.7; margin: 0; }
+  @media (max-width: 640px) {
+    .sv2-row { grid-template-columns: 2.5rem 1fr; }
+    .sv2-icon { display: none; }
+  }
+</style>
