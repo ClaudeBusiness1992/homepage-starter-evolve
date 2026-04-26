@@ -1,5 +1,6 @@
 ---
-import config from '../../config/client.config.json';
+import metaConfig    from '../../config/meta.json';
+import contentConfig from '../../config/content.json';
 import Base    from '../layouts/Base.astro';
 import Nav     from '../components/Nav.astro';
 import Hero    from '../sections/Hero.astro';
@@ -12,19 +13,24 @@ import Reviews from '../sections/Reviews.astro';
 import Contact from '../sections/Contact.astro';
 import Footer  from '../sections/Footer.astro';
 
-const { meta, theme, sections: s } = config;
+const { meta, theme } = metaConfig;
+const { sections: s } = contentConfig;
+
+const navLinks = (meta.nav ?? []).filter(l => !l.section || s[l.section]?.enabled !== false);
 ---
 
 <Base meta={meta} theme={theme}>
-  <Nav siteName={meta.siteName} />
+  <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={navLinks} />
 
-  {s.hero.enabled      && <Hero      {...s.hero} />}
-  {s.about.enabled     && <About     {...s.about} />}
-  {s.services.enabled  && <Services  {...s.services} />}
-  {s.gallery?.enabled  && <Gallery   {...s.gallery} />}
-  {s.stats.enabled     && <Stats     items={s.stats.items} />}
-  {s.pricing.enabled   && <Pricing   {...s.pricing} />}
-  {s.reviews?.enabled  && <Reviews   {...s.reviews} />}
-  {s.contact.enabled   && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} />}
-  {s.footer.enabled    && <Footer    siteName={meta.siteName} copyright={meta.copyright} links={s.footer.links} />}
+  <main id="main">
+    {s.hero.enabled      && <Hero      {...s.hero} />}
+    {s.about.enabled     && <About     {...s.about} />}
+    {s.services.enabled  && <Services  {...s.services} />}
+    {s.gallery?.enabled  && <Gallery   {...s.gallery} />}
+    {s.stats.enabled     && <Stats     items={s.stats.items} />}
+    {s.pricing.enabled   && <Pricing   {...s.pricing} />}
+    {s.reviews?.enabled  && <Reviews   {...s.reviews} agencyName={meta.siteName} agencyUrl={Astro.site?.href} />}
+    {s.contact.enabled   && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} />}
+    {s.footer.enabled    && <Footer    siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} copyright={meta.copyright} links={s.footer.links} />}
+  </main>
 </Base>

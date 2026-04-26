@@ -1,10 +1,14 @@
 ---
-import config from '../../config/client.config.json';
+import metaConfig    from '../../config/meta.json';
+import contentConfig from '../../config/content.json';
+import legalConfig   from '../../config/legal.json';
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../sections/Footer.astro';
 
-const { meta, theme, sections: s, legal: l } = config;
+const { meta, theme } = metaConfig;
+const { sections: s } = contentConfig;
+const { legal: l } = legalConfig;
 
 const fullCompanyName = `${l.company.name}${l.company.legalForm ? ' ' + l.company.legalForm : ''}`;
 const hasDPO = l.dataProtectionOfficer && !l.dataProtectionOfficer.startsWith('[');
@@ -12,9 +16,9 @@ const analyticsEnabled = l.analytics?.enabled === true;
 ---
 
 <Base meta={{ siteName: meta.siteName + ' — Datenschutz', description: 'Datenschutzerklärung gemäß DSGVO' }} theme={theme}>
-  <Nav siteName={meta.siteName} />
+  <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={meta.nav} />
 
-  <main class="legal-page">
+  <main id="main" class="legal-page">
     <div class="wrap legal-wrap">
       <h1 class="legal-h1">Datenschutzerklärung</h1>
 
