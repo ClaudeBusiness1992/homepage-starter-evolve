@@ -216,7 +216,7 @@ body {
 .btn-outline {
   background: transparent;
   color: var(--ink);
-  border: 1.5px solid var(--border);
+  border: 1.5px solid rgba(26,26,46,.3);
 }
 .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
 .btn-w { width: 100%; justify-content: center; }
@@ -480,13 +480,21 @@ body {
 .btn-submit { width: 100%; justify-content: center; padding: 1rem; font-size: 1rem; }
 .btn-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
 .form-errors { background: rgba(232,85,85,.12); border: 1px solid var(--error); border-radius: var(--r); padding: .75rem 1rem; color: var(--error); font-size: .88rem; margin-bottom: 1.25rem; }
-.field-err { font-size: .78rem; color: var(--error); margin-top: .2rem; display: block; }
+.field-err { font-size: .78rem; color: var(--error); margin-top: .2rem; display: none; }
+.field-err:not([hidden]) { display: block; }
 .form-success { text-align: center; padding: 3rem 1rem; }
 .form-success-icon { font-size: 3rem; color: var(--sage); margin-bottom: 1rem; }
 .form-success h3 { font-family: var(--serif); font-size: 1.75rem; color: var(--cream); margin-bottom: .5rem; }
 .form-success p { color: rgba(245,240,232,.6); }
 
 /* ── GALLERY ── */
+.gph-a { background: var(--ink); }
+.gph-b { background: color-mix(in srgb, var(--ink) 70%, var(--sage)); }
+.gph-c { background: color-mix(in srgb, var(--accent) 30%, var(--ink)); }
+.gph-d { background: color-mix(in srgb, var(--sage) 80%, var(--ink)); }
+.gph-e { background: color-mix(in srgb, var(--ink) 85%, var(--accent-light)); }
+.gph-f { background: color-mix(in srgb, var(--sage) 50%, var(--ink)); }
+
 #gallery { background: var(--ink); color: var(--cream); }
 .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
 .gallery-item { border-radius: var(--r-lg); overflow: hidden; }

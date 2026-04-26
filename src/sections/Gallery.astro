@@ -14,14 +14,7 @@ interface Props {
 }
 const { label, headline, subline, items } = Astro.props;
 
-const gradients = [
-  'linear-gradient(135deg, #2a2a4e 0%, #3d2a4e 100%)',
-  'linear-gradient(135deg, #1e3a34 0%, #2a4e3d 100%)',
-  'linear-gradient(135deg, #4e2a1e 0%, #6b3520 100%)',
-  'linear-gradient(135deg, #1e2a4e 0%, #2a3d6b 100%)',
-  'linear-gradient(135deg, #3d3520 0%, #4e4228 100%)',
-  'linear-gradient(135deg, #2a3d2a 0%, #354e35 100%)',
-];
+const phClasses = ['gph-a', 'gph-b', 'gph-c', 'gph-d', 'gph-e', 'gph-f'];
 ---
 
 <section class="section section--dark" id="gallery">
@@ -30,7 +23,7 @@ const gradients = [
     <div class="gallery-grid">
       {items.map((item, i) => (
         <div class={`gallery-item r d${(i % 3) + 1}`}>
-          <div class="gallery-img" style={!item.src ? `background: ${gradients[i % gradients.length]}` : ''}>
+          <div class={`gallery-img${!item.src ? ' ' + phClasses[i % phClasses.length] : ''}`}>
             {item.src
               ? <img src={item.src} alt={item.alt} width="800" height="600" loading="lazy" />
               : <div class="gallery-placeholder">
