@@ -139,6 +139,22 @@ netlify deploy        # Preview-Deploy auf Netlify
 netlify deploy --prod # Produktions-Deploy auf Netlify
 ```
 
+## Audit-Slash-Commands
+
+In Claude Code im Projekt-Root verfügbar via `/`:
+
+| Command | Zweck | Wann |
+|---|---|---|
+| `/audit-architecture` | Modul-Grenzen, Dependency-Richtung | Nach Refactoring |
+| `/audit-customizing` | Hartcodierte Werte, Token-Lecks | Pro Kunden-Branch |
+| `/audit-quality` | Naming, Duplikate, Dead Code | Wöchentlich |
+| `/audit-ui` | Komponenten-Konsistenz, Button-States | Nach Style-Änderungen |
+| `/audit-a11y` | WCAG/BITV, Heading-Reihenfolge, Alt | Vor Release |
+| `/audit-performance` | Bundle, Bilder, Hydration | Vor Release |
+| `/audit-security-seo` | Secrets, Meta-Tags, target=_blank | Vor Live-Schaltung |
+
+Optional Pfad als Argument: `/audit-ui src/components/Hero.astro`. Details in `docs/audit-agents.md`.
+
 ---
 
 ## Nächste offene Aufgaben

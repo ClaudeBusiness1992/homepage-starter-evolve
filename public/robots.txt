@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://effervescent-chebakia-6a45c4.netlify.app/sitemap-index.xml

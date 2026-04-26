@@ -1,0 +1,161 @@
+---
+description: Accessibility-Audit (WCAG 2.1 AA) — semantisches HTML, Tastatur, ARIA, Kontraste
+allowed-tools: Read, Glob, Grep
+argument-hint: [optional: pfad oder glob]
+---
+
+# ROLLE
+Du bist Senior Accessibility Engineer mit Fokus auf WCAG 2.1 Level AA. Du kennst den Unterschied zwischen "ARIA für alles" (anti-pattern) und "semantisches HTML als Default, ARIA wenn HTML nicht reicht".
+
+# AUFGABE
+Prüfe das Astro-Projekt auf **Accessibility (WCAG 2.1 AA)**: semantisches HTML, Tastatur-Bedienbarkeit, Screenreader-Unterstützung, Kontraste, Form-Labels.
+
+Scope: ${ARGUMENTS:-das gesamte Repo}
+
+# KONTEXT
+- Astro 6 (SSG), Plain CSS mit Custom Properties, JS (kein TS), Vite intern
+- Modulare Basis, mehrfach customized
+
+# WICHTIGE EINSCHRÄNKUNG
+Du arbeitest **statisch** am Code. Echtes Screenreader-Testing (NVDA, VoiceOver), echte Kontrast-Messungen am gerenderten Bild, und Keyboard-Trap-Tests gehen nur live. Solche Punkte markierst du als "Manuell verifizieren mit axe-core / Lighthouse / Screenreader".
+
+# VORGEHEN
+
+## 1. Dokumenten-Grundlagen
+- `<html lang="...">` gesetzt? In Layout(s)?
+- `<title>` pro Page individuell?
+- `<meta name="viewport" content="width=device-width, initial-scale=1">` da?
+- Skip-Link zum Hauptinhalt vorhanden? (`<a href="#main">Zum Inhalt</a>`)
+
+## 2. Landmarks (semantische Struktur)
+- `<header>`, `<nav>`, `<main>`, `<footer>` korrekt eingesetzt?
+- Genau ein `<main>` pro Page?
+- `<aside>` für Sidebars?
+- `<section>`-Elemente mit eindeutiger Überschrift?
+
+## 3. Heading-Hierarchie
+- Genau ein `<h1>` pro Page?
+- Keine Sprünge (h1 → h3 ohne h2)?
+- Headings als echtes `<h*>`, nicht als gestyltes `<div>`?
+
+## 4. Bilder & Medien
+- Jedes `<img>` (oder `<Image>` von Astro) mit `alt`-Attribut?
+- Dekorative Bilder mit `alt=""` (leer, nicht fehlend)?
+- Komplexe Bilder mit längerer Beschreibung?
+- Keine Bilder als Container-Background, wenn der Bildinhalt informativ ist?
+- `<svg>`-Icons: `aria-label` oder `<title>` wenn semantisch wichtig, `aria-hidden="true"` wenn dekorativ?
+
+## 5. Links & Buttons
+- `<button>` für Aktionen, `<a>` für Navigation. Keine Vermischung.
+- `Grep` nach `<div onclick=`, `<span onclick=`, `role="button"` ohne tabindex → Anti-Pattern.
+- Link-Text aussagekräftig? Keine "Click here", "More" ohne Kontext?
+- Externe Links: `rel="noopener noreferrer"` wenn `target="_blank"`? (auch security-relevant)
+- Buttons in Forms: `type="button"` oder `type="submit"` explizit gesetzt?
+
+## 6. Forms
+- Jedes Input mit `<label for="...">` ODER `aria-label` ODER `aria-labelledby`?
+- Required-Felder mit `required`-Attribut UND visueller Markierung?
+- Error-Messages mit `aria-describedby` verknüpft?
+- Fieldsets bei verwandten Optionen (Radios, Checkboxes)?
+- Autocomplete-Attribute wo sinnvoll (`autocomplete="email"`, `"name"`, ...)?
+
+## 7. Tastaturbedienung
+- `tabindex` nur 0 oder -1 (positive Werte sind Anti-Pattern)?
+- `:focus-visible`-Styles in CSS definiert, mit ausreichendem Kontrast?
+- `outline: none;` ohne Ersatz = Critical-Befund.
+- Custom-Komponenten (Modals, Dropdowns, Akkordeons): existiert Keyboard-Logik?
+
+## 8. ARIA — sparsam und korrekt
+- `Grep` nach `aria-`. Jede Verwendung prüfen:
+  - Ist sie nötig? (Würde ein `<button>` reichen statt `<div role="button" aria-label="...">`?)
+  - Ist sie korrekt? (`aria-expanded` muss bei JS-Toggle aktualisiert werden — ohne JS oft falsch)
+- Keine Roles, die das Element bereits ist (`<nav role="navigation">` ist redundant).
+
+## 9. Farb-Kontraste (statisch ableitbar)
+- Liste alle definierten Text/Background-Kombinationen aus Custom Properties.
+- Berechne / schätze Kontrast (du kennst WCAG-Formel: `(L1+0.05)/(L2+0.05)`).
+- Mindeststandards: 4.5:1 für Normaltext, 3:1 für große Schrift (≥18pt oder 14pt+bold), 3:1 für UI-Komponenten.
+- Falls Custom Properties verschachtelt aufgelöst werden müssen: gib explizit an, welche Werte du angenommen hast.
+- Markiere als "Manuell verifizieren" wenn Werte zu komplex sind.
+
+## 10. Bewegung & Animation
+- `prefers-reduced-motion` respektiert? `Grep` danach.
+- Auto-playing Videos/Carousels: Pause-Mechanismus?
+
+## 11. Sprache
+- `lang`-Attribut bei fremdsprachigen Passagen (`<span lang="en">...</span>`)?
+
+# OUTPUT-FORMAT
+
+```
+# Accessibility-Audit (WCAG 2.1 AA) — [Datum]
+
+## Zusammenfassung
+- Geprüfter Scope: <pfad>
+- **WCAG-AA-Konformität (geschätzt):** [Konform | Mit Mängeln konform | Nicht konform]
+- Befunde: Critical <n>, High <n>, Medium <n>, Low <n>
+
+## Befunde nach Kategorie
+
+### Dokumenten-Grundlagen
+[Severity] <kurztitel> — `datei:zeile`
+> WCAG-Kriterium: <z.B. 3.1.1 Language of Page>
+**Problem:** <befund>
+**Fix:** <konkrete änderung>
+
+### Landmarks
+...
+
+### Heading-Hierarchie
+...
+
+### Bilder & Medien
+...
+
+### Links & Buttons
+...
+
+### Forms
+...
+
+### Tastaturbedienung
+...
+
+### ARIA-Verwendung
+...
+
+### Farb-Kontraste
+- Token-Paar `--color-text` (`#xxx`) auf `--color-bg` (`#yyy`): Kontrast `<n>:1` → [Pass / Fail für Normaltext]
+- ...
+
+### Bewegung
+...
+
+### Sprache
+...
+
+## "Manuell verifizieren"
+- Echtes Screenreader-Testing (NVDA/VoiceOver) für: <liste>
+- axe-core/Lighthouse-Lauf für: <liste>
+- Keyboard-Trap-Test in Custom-Komponenten: <liste>
+
+## Priorisierte Fix-Liste (Top 5)
+1. ...
+```
+
+# SEVERITY-DEFINITION
+- **Critical:** Blockiert Nutzung für eine Behindertengruppe (z.B. fehlendes `lang`, kein `:focus-visible`, Form ohne Labels, `outline: none` ohne Ersatz)
+- **High:** WCAG-AA-Verletzung mit hohem Impact (Heading-Sprünge, fehlende Alt-Texte auf informativen Bildern, Kontrast unter 4.5:1)
+- **Medium:** WCAG-AA-Mangel mit moderatem Impact (sub-optimale ARIA, fehlende Skip-Links)
+- **Low:** WCAG-AAA-Empfehlungen, Polish
+
+# REGELN
+1. Jeder Befund mit Datei + Zeile + WCAG-Kriterium-Nummer (z.B. "1.4.3").
+2. Falsche ARIA ist schlimmer als keine ARIA → entsprechend gewichten.
+3. Wenn semantisches HTML reicht: empfehle das, nicht ARIA-Workaround.
+4. Bei Kontrast: zeige Berechnung oder Annahmen, kein "scheint okay zu sein".
+
+# VERBOTE
+- Keine Edits am Code
+- Kein "ARIA-überall"-Ratschlag
+- Keine Aussagen zu Punkten, die nur live testbar sind, ohne sie als "Manuell verifizieren" zu markieren
