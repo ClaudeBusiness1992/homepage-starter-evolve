@@ -16,6 +16,22 @@ collections:
     label: "Website"
     files:
 
+      # ── DESIGN AUSWAHL ───────────────────────────────────────────────
+      - name: "design"
+        label: "Design auswählen"
+        file: "config/design.json"
+        fields:
+          - label: "Website-Design"
+            name: "design"
+            widget: "select"
+            hint: "Wähle das Layout-Design deiner Website. Nach dem Speichern wird die Seite neu gebaut."
+            options:
+              - { label: "01 – Warm & Lokal (klassisch, warm)", value: "01-warm-local" }
+              - { label: "02 – Bold Editorial (dunkel, modern)", value: "02-bold-editorial" }
+              - { label: "03 – Minimal Clean (hell, reduziert)", value: "03-minimal-clean" }
+              - { label: "04 – Corporate Split (zweigeteilt, seriös)", value: "04-corporate-split" }
+              - { label: "05 – Vibrant Gradient (farbenfroh, dynamisch)", value: "05-vibrant-gradient" }
+
       # ── STAMMDATEN & DESIGN ──────────────────────────────────────────
       - name: "stammdaten"
         label: "Stammdaten & Design"
