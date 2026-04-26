@@ -1,0 +1,123 @@
+/* ── DESIGN 04: CORPORATE SPLIT ────────────────────────────────────── */
+[data-design="04-corporate-split"] {
+  --r: 6px;
+  --r-lg: 12px;
+}
+
+/* Nav */
+[data-design="04-corporate-split"] #nav {
+  background: var(--cream);
+  box-shadow: none;
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: none;
+}
+[data-design="04-corporate-split"] #nav.on {
+  background: var(--cream);
+  backdrop-filter: none;
+}
+
+/* About — alternating columns */
+[data-design="04-corporate-split"] #about {
+  background: #fff;
+}
+[data-design="04-corporate-split"] .about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+[data-design="04-corporate-split"] .about-members {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+[data-design="04-corporate-split"] .member-card {
+  background: var(--cream);
+  border-radius: var(--r);
+  box-shadow: none;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  align-items: start;
+}
+[data-design="04-corporate-split"] .member-photo-placeholder,
+[data-design="04-corporate-split"] .member-photo-img {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Services — 2-col with border */
+[data-design="04-corporate-split"] #services {
+  background: var(--cream);
+}
+[data-design="04-corporate-split"] .services-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+[data-design="04-corporate-split"] .service-card {
+  background: #fff;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding: 2rem;
+}
+[data-design="04-corporate-split"] .service-card:nth-child(even) { border-right: none; }
+[data-design="04-corporate-split"] .service-card:nth-last-child(-n+2) { border-bottom: none; }
+
+/* Stats — two-tone bar */
+[data-design="04-corporate-split"] #stats {
+  background: var(--ink);
+  padding: 3rem 0;
+}
+[data-design="04-corporate-split"] .stats-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+[data-design="04-corporate-split"] .stat-item {
+  padding: 2rem 1.5rem;
+  border-left: 1px solid rgba(255,255,255,.08);
+  text-align: center;
+}
+[data-design="04-corporate-split"] .stat-item:first-child { border-left: none; }
+[data-design="04-corporate-split"] .stat-val { color: #fff; }
+[data-design="04-corporate-split"] .stat-label { color: rgba(255,255,255,.45); }
+
+/* Pricing */
+[data-design="04-corporate-split"] #pricing {
+  background: #fff;
+}
+[data-design="04-corporate-split"] .price-card {
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+[data-design="04-corporate-split"] .price-card.featured {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* Footer */
+[data-design="04-corporate-split"] footer {
+  background: var(--ink);
+  color: rgba(255,255,255,.7);
+}
+[data-design="04-corporate-split"] .foot-logo { color: #fff; }
+[data-design="04-corporate-split"] .foot-logo em { color: var(--accent); }
+[data-design="04-corporate-split"] .foot-links a { color: rgba(255,255,255,.6); }
+[data-design="04-corporate-split"] .foot-links a:hover { color: #fff; }
+[data-design="04-corporate-split"] .foot-copy { color: rgba(255,255,255,.35); }
+
+@media (max-width: 768px) {
+  [data-design="04-corporate-split"] .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+  [data-design="04-corporate-split"] .services-grid { grid-template-columns: 1fr; }
+  [data-design="04-corporate-split"] .service-card { border-right: none !important; }
+  [data-design="04-corporate-split"] .stats-inner { grid-template-columns: repeat(2, 1fr); }
+}
