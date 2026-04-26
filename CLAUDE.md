@@ -143,14 +143,22 @@ netlify deploy --prod # Produktions-Deploy auf Netlify
 
 ## Nächste offene Aufgaben
 
-- [ ] nvm-windows installieren + Node auf v22 LTS wechseln
-- [ ] VS Code oder Cursor installieren
-- [ ] Netlify CLI einrichten + Account verbinden
-- [ ] Astro initialisieren und mit bestehendem index.html verknüpfen
-- [ ] Modul-Config-System bauen (client.config → Sektionen ein/aus)
-- [ ] Galerie-Sektion entwickeln
-- [ ] Bewertungs-Sektion entwickeln
+**Erledigt:**
+- [x] Astro initialisiert und mit bestehendem index.html verknüpft
+- [x] Modul-Config-System (client.config.json → Sektionen ein/aus)
+- [x] Galerie-Sektion (`Gallery.astro`)
+- [x] Bewertungs-Sektion (`Reviews.astro` mit Schema.org JSON-LD)
+- [x] Cookie-Banner (TTDSG-konform, im `Base.astro` Layout)
+- [x] Impressum-Page (`/impressum` aus `config.legal`)
+- [x] Datenschutz-Page (`/datenschutz` aus `config.legal`)
+- [x] Legal-Daten im Config-Schema
+
+**Offen:**
 - [ ] Kontaktformular mit E-Mail-Versand (Resend oder Nodemailer)
+- [ ] `@astrojs/sitemap` Integration für `sitemap.xml`
+- [ ] `robots.txt` in `public/`
+- [ ] Phase 2: 4 weitere Designs (`02-minimal-clean`, `03-bold-editorial`, `04-corporate-trust`, `17-onepage-classic`)
+- [ ] Variant-System für `01-warm-local` (Farb- + Hero-Varianten)
 - [ ] Master Admin Interface
 - [ ] Client Admin Interface (eingeschränkt)
 - [ ] Netlify-Deploy-Vorlage erstellen
