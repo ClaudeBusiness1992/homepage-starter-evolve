@@ -1,4 +1,5 @@
 ---
+import SectionHeader from '../components/SectionHeader.astro';
 interface GalleryItem {
   src: string;
   alt: string;
@@ -23,21 +24,17 @@ const gradients = [
 ];
 ---
 
-<section class="section" id="gallery">
+<section class="section section--dark" id="gallery">
   <div class="wrap">
-    <div class="gallery-hd r">
-      <span class="lbl">{label}</span>
-      <h2 class="h2">{headline}</h2>
-      <p class="sub">{subline}</p>
-    </div>
+    <SectionHeader {label} {headline} {subline} />
     <div class="gallery-grid">
       {items.map((item, i) => (
         <div class={`gallery-item r d${(i % 3) + 1}`}>
           <div class="gallery-img" style={!item.src ? `background: ${gradients[i % gradients.length]}` : ''}>
             {item.src
-              ? <img src={item.src} alt={item.alt} loading="lazy" />
+              ? <img src={item.src} alt={item.alt} width="800" height="600" loading="lazy" />
               : <div class="gallery-placeholder">
-                  <span class="gallery-placeholder-icon">⬡</span>
+                  <span class="gallery-placeholder-icon" aria-hidden="true">⬡</span>
                   <span class="gallery-placeholder-txt">Bild einfügen</span>
                 </div>
             }

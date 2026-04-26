@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import '../styles/designs/02-bold-editorial.css';
+import '../styles/designs/03-minimal-clean.css';
 import CookieBanner from '../components/CookieBanner.astro';
 
 interface Props {
@@ -15,9 +17,10 @@ interface Props {
     accentLight: string;
     sage: string;
   };
+  design?: string;
 }
 
-const { meta, theme } = Astro.props;
+const { meta, theme, design = '01-warm-local' } = Astro.props;
 const canonicalUrl = Astro.url.href;
 const ogImage = meta.image ?? '/og-image.jpg';
 
@@ -31,12 +34,14 @@ const themeStyle = `
 ---
 
 <!doctype html>
-<html lang="de" style={themeStyle}>
+<html lang="de" style={themeStyle} data-design={design}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{meta.siteName}</title>
     <meta name="description" content={meta.description} />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/dm-serif-display-normal-400-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/outfit-normal-400-latin.woff2" crossorigin />
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph -->
@@ -53,10 +58,6 @@ const themeStyle = `
     <meta name="twitter:description" content={meta.description} />
     <meta name="twitter:image"       content={new URL(ogImage, Astro.url).href} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
     <a href="#main" class="skip-link">Zum Inhalt springen</a>

@@ -1,0 +1,194 @@
+/* ── DESIGN 03: MINIMAL CLEAN ──────────────────────────────────────── */
+[data-design="03-minimal-clean"] {
+  --r: 2px;
+  --r-lg: 4px;
+}
+
+/* Nav */
+[data-design="03-minimal-clean"] #nav {
+  background: #ffffff;
+  box-shadow: none;
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: none;
+}
+[data-design="03-minimal-clean"] #nav.on {
+  background: #ffffff;
+  backdrop-filter: none;
+}
+[data-design="03-minimal-clean"] .nav-ul .cta-link {
+  background: transparent;
+  color: var(--ink) !important;
+  border: 1.5px solid var(--ink);
+  border-radius: 2px;
+}
+[data-design="03-minimal-clean"] .nav-ul .cta-link:hover {
+  background: var(--ink) !important;
+  color: #fff !important;
+}
+
+/* About — centered, clean */
+[data-design="03-minimal-clean"] #about {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+[data-design="03-minimal-clean"] .about-grid {
+  text-align: center;
+}
+[data-design="03-minimal-clean"] .about-text { max-width: 600px; margin: 0 auto; }
+[data-design="03-minimal-clean"] .about-text .sub { margin: 0 auto; }
+[data-design="03-minimal-clean"] .about-members {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+[data-design="03-minimal-clean"] .member-card {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  text-align: center;
+  max-width: 220px;
+}
+[data-design="03-minimal-clean"] .member-photo-placeholder,
+[data-design="03-minimal-clean"] .member-photo-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  border: 1px solid var(--border);
+}
+
+/* Services — simple two-col list */
+[data-design="03-minimal-clean"] #services {
+  background: #fafafa;
+  border-bottom: 1px solid var(--border);
+}
+[data-design="03-minimal-clean"] .services-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+[data-design="03-minimal-clean"] .service-card {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 1.5rem;
+  gap: 1rem;
+}
+[data-design="03-minimal-clean"] .service-card:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+[data-design="03-minimal-clean"] .service-icon {
+  background: none;
+  color: var(--accent);
+  font-size: 1.2rem;
+  width: auto;
+  height: auto;
+}
+[data-design="03-minimal-clean"] .service-title { font-size: 1rem; }
+
+/* Stats — inline, minimal */
+[data-design="03-minimal-clean"] #stats {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+[data-design="03-minimal-clean"] .stats-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  text-align: center;
+}
+[data-design="03-minimal-clean"] .stat-item {
+  padding: 3rem 2rem;
+  border-right: 1px solid var(--border);
+}
+[data-design="03-minimal-clean"] .stat-item:last-child { border-right: none; }
+[data-design="03-minimal-clean"] .stat-val {
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  color: var(--ink);
+  font-weight: 400;
+}
+[data-design="03-minimal-clean"] .stat-suffix { font-size: 1.5rem; }
+
+/* Pricing — outlined cards */
+[data-design="03-minimal-clean"] #pricing {
+  background: #fafafa;
+  border-bottom: 1px solid var(--border);
+}
+[data-design="03-minimal-clean"] .price-card {
+  border: 1px solid var(--border);
+  box-shadow: none;
+  border-radius: 2px;
+  background: #fff;
+}
+[data-design="03-minimal-clean"] .price-card.featured {
+  border-color: var(--ink);
+  box-shadow: none;
+  transform: none;
+}
+[data-design="03-minimal-clean"] .price-badge {
+  background: var(--ink);
+  color: #fff;
+  border-radius: 2px;
+}
+[data-design="03-minimal-clean"] .btn-fill {
+  background: var(--ink);
+  box-shadow: none;
+}
+[data-design="03-minimal-clean"] .btn-fill:hover {
+  background: #333;
+  box-shadow: none;
+}
+
+/* Gallery */
+[data-design="03-minimal-clean"] #gallery {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+[data-design="03-minimal-clean"] .gallery-card {
+  border-radius: 0;
+  border: 1px solid var(--border);
+}
+
+/* Reviews */
+[data-design="03-minimal-clean"] #reviews {
+  background: #fafafa;
+  border-bottom: 1px solid var(--border);
+}
+[data-design="03-minimal-clean"] .review-card {
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+/* Contact */
+[data-design="03-minimal-clean"] #contact {
+  background: #fff;
+}
+[data-design="03-minimal-clean"] .contact-form input,
+[data-design="03-minimal-clean"] .contact-form textarea,
+[data-design="03-minimal-clean"] .contact-form select {
+  border-radius: 2px;
+  border-color: rgba(26,26,46,.2);
+}
+
+/* Footer */
+[data-design="03-minimal-clean"] footer {
+  background: #fff;
+  border-top: 1px solid var(--border);
+}
+
+/* Section headings */
+[data-design="03-minimal-clean"] .h2 {
+  font-weight: 400;
+}
+
+@media (max-width: 640px) {
+  [data-design="03-minimal-clean"] .services-grid { grid-template-columns: 1fr; }
+  [data-design="03-minimal-clean"] .service-card:nth-child(odd) { border-right: none; }
+  [data-design="03-minimal-clean"] .stats-inner { grid-template-columns: repeat(2, 1fr); }
+}

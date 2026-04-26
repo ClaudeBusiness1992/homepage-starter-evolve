@@ -1,4 +1,5 @@
 ---
+import SectionHeader from '../components/SectionHeader.astro';
 interface Member {
   name: string;
   role: string;
@@ -16,17 +17,13 @@ const { label, headline, subline, members } = Astro.props;
 
 <section class="section" id="about">
   <div class="wrap">
-    <div class="about-hd r">
-      <span class="lbl">{label}</span>
-      <h2 class="h2" set:html={headline.replace(',', ',<br />')} />
-      <p class="sub" style="margin:0 auto">{subline}</p>
-    </div>
+    <SectionHeader {label} headline={headline.replace(',', ',<br />')} {subline} center />
     <div class="about-grid">
       {members.map((m, i) => (
         <div class={`acard r d${i + 1}`}>
           <div class="aphoto">
             {m.photo
-              ? <img src={m.photo} alt={m.name} />
+              ? <img src={m.photo} alt={m.name} width="600" height="800" loading="lazy" />
               : <div class="aphoto-placeholder">Foto hier einfügen<br />600 × 800 px empfohlen</div>
             }
           </div>

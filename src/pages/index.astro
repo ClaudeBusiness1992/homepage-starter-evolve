@@ -1,25 +1,34 @@
 ---
 import metaConfig    from '../../config/meta.json';
 import contentConfig from '../../config/content.json';
-import Base    from '../layouts/Base.astro';
-import Nav     from '../components/Nav.astro';
-import Hero    from '../sections/Hero.astro';
-import About   from '../sections/About.astro';
+import Base     from '../layouts/Base.astro';
+import Nav      from '../components/Nav.astro';
+import Hero01   from '../sections/Hero.astro';
+import Hero02   from '../designs/02-bold-editorial/Hero.astro';
+import Hero03   from '../designs/03-minimal-clean/Hero.astro';
+import About    from '../sections/About.astro';
 import Services from '../sections/Services.astro';
-import Stats   from '../sections/Stats.astro';
-import Pricing from '../sections/Pricing.astro';
-import Gallery from '../sections/Gallery.astro';
-import Reviews from '../sections/Reviews.astro';
-import Contact from '../sections/Contact.astro';
-import Footer  from '../sections/Footer.astro';
+import Stats    from '../sections/Stats.astro';
+import Pricing  from '../sections/Pricing.astro';
+import Gallery  from '../sections/Gallery.astro';
+import Reviews  from '../sections/Reviews.astro';
+import Contact  from '../sections/Contact.astro';
+import Footer   from '../sections/Footer.astro';
 
-const { meta, theme } = metaConfig;
+const { design = '01-warm-local', meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
+
+const HeroComponents = {
+  '01-warm-local':    Hero01,
+  '02-bold-editorial': Hero02,
+  '03-minimal-clean':  Hero03,
+};
+const Hero = HeroComponents[design] ?? Hero01;
 
 const navLinks = (meta.nav ?? []).filter(l => !l.section || s[l.section]?.enabled !== false);
 ---
 
-<Base meta={meta} theme={theme}>
+<Base meta={meta} theme={theme} design={design}>
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={navLinks} />
 
   <main id="main">

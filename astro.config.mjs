@@ -3,6 +3,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   output: 'static',
-  site: 'https://effervescent-chebakia-6a45c4.netlify.app',
+  // Pro Kunde anpassen — wird für Sitemap, Canonical-URLs und OG-Tags benötigt
+  site: 'https://ihre-domain.de',
   integrations: [sitemap()],
 });

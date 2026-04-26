@@ -1,22 +1,32 @@
 ---
+interface NavLink {
+  label: string;
+  href: string;
+  cta?: boolean;
+}
 interface Props {
   siteName: string;
+  siteNameAccent?: string;
+  links?: NavLink[];
 }
-const { siteName } = Astro.props;
-const [before, after] = siteName.split('&');
+const { siteName, siteNameAccent, links = [] } = Astro.props;
+const logoBefore = siteNameAccent ? siteName.replace(siteNameAccent, '') : siteName;
 ---
 
-<nav id="nav">
+<nav id="nav" aria-label="Hauptnavigation">
   <div class="wrap">
     <div class="nav-row">
-      <a href="#" class="logo">{before}<em>&</em>{after}</a>
-      <ul class="nav-ul" id="navLinks">
-        <li><a href="#about">Über uns</a></li>
-        <li><a href="#services">Leistungen</a></li>
-        <li><a href="#pricing">Preise</a></li>
-        <li><a href="#contact" class="cta-link">Projekt starten</a></li>
-      </ul>
-      <button class="burger" id="burger" aria-label="Menü">
+      <a href="/" class="logo">{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}</a>
+      {links.length > 0 && (
+        <ul class="nav-ul" id="navLinks">
+          {links.map(l => (
+            <li>
+              <a href={l.href} class={l.cta ? 'cta-link' : ''}>{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      )}
+      <button class="burger" id="burger" aria-label="Menü" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>

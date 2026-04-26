@@ -14,11 +14,11 @@ const [h1, h2, h3] = headline.split('. ');
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <span class="hero-lbl">{label}</span>
+        <span class="lbl hero-lbl">{label}</span>
         <h1 class="hero-h1">{h1}.<br /><i>{h2}.</i><br />{h3}.</h1>
         <p class="hero-sub">{subline}</p>
         <div class="hero-btns">
-          <a href="#contact" class="btn btn-fill">{ctaPrimary} →</a>
+          <a href="#contact" class="btn btn-fill">{ctaPrimary} <span aria-hidden="true">→</span></a>
           <a href="#services" class="btn btn-ghost">{ctaSecondary}</a>
         </div>
       </div>
