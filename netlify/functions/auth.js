@@ -46,11 +46,17 @@ exports.handler = async (event) => {
       body: `<script>
         (function() {
           const token = ${JSON.stringify(data.access_token)};
-          window.opener.postMessage(
-            'authorization:github:success:' + JSON.stringify({ token, provider: 'github' }),
-            '*'
-          );
-          window.close();
+          function receiveMessage(e) {
+            if (e.data === 'authorizing:github') {
+              window.removeEventListener('message', receiveMessage, false);
+              window.opener.postMessage(
+                'authorization:github:success:' + JSON.stringify({ token, provider: 'github' }),
+                e.origin
+              );
+            }
+          }
+          window.addEventListener('message', receiveMessage, false);
+          window.opener.postMessage('authorizing:github', '*');
         })();
       </script>`,
     };
