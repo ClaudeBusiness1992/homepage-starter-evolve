@@ -1,0 +1,25 @@
+---
+interface FooterLink {
+  label: string;
+  href: string;
+}
+interface Props {
+  siteName: string;
+  copyright: string;
+  links: FooterLink[];
+}
+const { siteName, copyright, links } = Astro.props;
+const [before, after] = siteName.split('&');
+---
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <span class="foot-logo">{before}<em>&</em>{after}</span>
+      <ul class="foot-links">
+        {links.map(l => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+      <span class="foot-copy">{copyright}</span>
+    </div>
+  </div>
+</footer>

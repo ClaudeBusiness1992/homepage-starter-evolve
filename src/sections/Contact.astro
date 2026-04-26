@@ -1,0 +1,23 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  email: string;
+  phone: string;
+  phoneDisplay: string;
+}
+const { label, headline, subline, email, phone, phoneDisplay } = Astro.props;
+---
+
+<section class="section" id="contact">
+  <div class="wrap">
+    <span class="lbl r">{label}</span>
+    <h2 class="h2 r">{headline}</h2>
+    <p class="sub r">{subline}</p>
+    <div class="contact-btns r">
+      <a href={`mailto:${email}`} class="btn btn-email">✉&nbsp; {email}</a>
+      <a href={`tel:${phone}`}    class="btn btn-phone">☎&nbsp; {phoneDisplay}</a>
+    </div>
+  </div>
+</section>

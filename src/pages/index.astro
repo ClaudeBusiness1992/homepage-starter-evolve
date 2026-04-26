@@ -1,0 +1,26 @@
+---
+import config from '../../config/client.config.json';
+import Base    from '../layouts/Base.astro';
+import Nav     from '../components/Nav.astro';
+import Hero    from '../sections/Hero.astro';
+import About   from '../sections/About.astro';
+import Services from '../sections/Services.astro';
+import Stats   from '../sections/Stats.astro';
+import Pricing from '../sections/Pricing.astro';
+import Contact from '../sections/Contact.astro';
+import Footer  from '../sections/Footer.astro';
+
+const { meta, theme, sections: s } = config;
+---
+
+<Base meta={meta} theme={theme}>
+  <Nav siteName={meta.siteName} />
+
+  {s.hero.enabled      && <Hero      {...s.hero} />}
+  {s.about.enabled     && <About     {...s.about} />}
+  {s.services.enabled  && <Services  {...s.services} />}
+  {s.stats.enabled     && <Stats     items={s.stats.items} />}
+  {s.pricing.enabled   && <Pricing   {...s.pricing} />}
+  {s.contact.enabled   && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} />}
+  {s.footer.enabled    && <Footer    siteName={meta.siteName} copyright={meta.copyright} links={s.footer.links} />}
+</Base>

@@ -1,0 +1,24 @@
+---
+interface StatItem {
+  value: number;
+  label: string;
+}
+interface Props {
+  items: StatItem[];
+}
+const { items } = Astro.props;
+const delays = ['','d1','d2','d3'];
+---
+
+<section id="stats">
+  <div class="wrap">
+    <div class="stats-grid">
+      {items.map((item, i) => (
+        <div class={`r ${delays[i]}`}>
+          <div class="stat-n" data-count={item.value}>0</div>
+          <div class="stat-l">{item.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

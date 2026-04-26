@@ -1,0 +1,53 @@
+---
+interface Package {
+  name: string;
+  tagline: string;
+  price: string;
+  priceNote: string;
+  featured: boolean;
+  badge: string;
+  features: string[];
+}
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  packages: Package[];
+}
+const { label, headline, subline, packages } = Astro.props;
+const delays = ['d1','d2','d3'];
+---
+
+<section class="section" id="pricing">
+  <div class="wrap">
+    <div class="pricing-hd r">
+      <span class="lbl">{label}</span>
+      <h2 class="h2">{headline}</h2>
+      <p class="sub" style="margin:0 auto">{subline}</p>
+    </div>
+    <div class="pricing-grid">
+      {packages.map((pkg, i) => (
+        <div class={`pcard r ${delays[i]} ${pkg.featured ? 'feat' : ''}`}>
+          {pkg.badge && <div class="pbadge">{pkg.badge}</div>}
+          <h3 class="pname">{pkg.name}</h3>
+          <span class="ptag">{pkg.tagline}</span>
+          <div class="pprice">
+            <div class="amount">{pkg.price}</div>
+            <div class="note">{pkg.priceNote}</div>
+          </div>
+          <div class="pdiv"></div>
+          <ul class="plist">
+            {pkg.features.map(f => <li>{f}</li>)}
+          </ul>
+          <a href="#contact" class={`btn btn-w ${pkg.featured ? 'btn-fill' : 'btn-outline'}`}>
+            {pkg.featured ? 'Jetzt anfragen' : 'Anfragen'}
+          </a>
+        </div>
+      ))}
+    </div>
+    <p class="pricing-note r">
+      Alle Pakete individuell anpassbar.
+      <a href="#contact">Schreiben Sie uns</a> für ein maßgeschneidertes Angebot.
+    </p>
+  </div>
+</section>

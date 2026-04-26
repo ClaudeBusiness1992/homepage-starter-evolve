@@ -1,0 +1,58 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+}
+const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
+const [h1, h2, h3] = headline.split('. ');
+---
+
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="hero-lbl">{label}</span>
+        <h1 class="hero-h1">{h1}.<br /><i>{h2}.</i><br />{h3}.</h1>
+        <p class="hero-sub">{subline}</p>
+        <div class="hero-btns">
+          <a href="#contact" class="btn btn-fill">{ctaPrimary} →</a>
+          <a href="#services" class="btn btn-ghost">{ctaSecondary}</a>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center">
+        <div class="browser">
+          <div class="bbar">
+            <div class="bdots"><span></span><span></span><span></span></div>
+            <div class="burl">ihre-neue-website.de</div>
+          </div>
+          <div class="bcontent">
+            <div class="ms">
+              <div class="ms-nav">
+                <div class="ms-logo"></div>
+                <div class="ms-links"><span></span><span></span><span></span></div>
+              </div>
+              <div class="ms-hero">
+                <div class="ms-txt">
+                  <div class="ms-h"></div>
+                  <div class="ms-h s"></div>
+                  <div class="ms-p"></div>
+                  <div class="ms-p short"></div>
+                  <div class="ms-cta"></div>
+                </div>
+                <div class="ms-img"></div>
+              </div>
+              <div class="ms-cards">
+                <div class="ms-card"><div class="ms-icon"></div><div class="ms-line"></div><div class="ms-line s"></div></div>
+                <div class="ms-card"><div class="ms-icon"></div><div class="ms-line"></div><div class="ms-line s"></div></div>
+                <div class="ms-card"><div class="ms-icon"></div><div class="ms-line"></div><div class="ms-line s"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+---
+interface Props {
+  siteName: string;
+}
+const { siteName } = Astro.props;
+const [before, after] = siteName.split('&');
+---
+
+<nav id="nav">
+  <div class="wrap">
+    <div class="nav-row">
+      <a href="#" class="logo">{before}<em>&</em>{after}</a>
+      <ul class="nav-ul" id="navLinks">
+        <li><a href="#about">Über uns</a></li>
+        <li><a href="#services">Leistungen</a></li>
+        <li><a href="#pricing">Preise</a></li>
+        <li><a href="#contact" class="cta-link">Projekt starten</a></li>
+      </ul>
+      <button class="burger" id="burger" aria-label="Menü">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>

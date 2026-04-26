@@ -1,0 +1,85 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  meta: {
+    siteName: string;
+    description: string;
+  };
+  theme: {
+    ink: string;
+    cream: string;
+    accent: string;
+    accentLight: string;
+    sage: string;
+  };
+}
+
+const { meta, theme } = Astro.props;
+
+const themeStyle = `
+  --ink: ${theme.ink};
+  --cream: ${theme.cream};
+  --accent: ${theme.accent};
+  --accent-light: ${theme.accentLight};
+  --sage: ${theme.sage};
+`;
+---
+
+<!doctype html>
+<html lang="de" style={themeStyle}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{meta.siteName}</title>
+    <meta name="description" content={meta.description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <slot />
+
+    <script is:inline>
+      // Nav scroll effect
+      const nav = document.getElementById('nav');
+      window.addEventListener('scroll', () => nav?.classList.toggle('on', scrollY > 20));
+
+      // Mobile nav toggle
+      const burger = document.getElementById('burger');
+      const navLinks = document.getElementById('navLinks');
+      burger?.addEventListener('click', () => {
+        burger.classList.toggle('x');
+        navLinks?.classList.toggle('open');
+      });
+      navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        burger?.classList.remove('x');
+        navLinks?.classList.remove('open');
+      }));
+
+      // Scroll reveal + counter animation
+      let countersTriggered = false;
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('in');
+          if (e.target.querySelector('[data-count]') && !countersTriggered) {
+            countersTriggered = true;
+            document.querySelectorAll('[data-count]').forEach(el => {
+              const target = +el.dataset.count;
+              const step = target / (1400 / 16);
+              let cur = 0;
+              const t = setInterval(() => {
+                cur = Math.min(cur + step, target);
+                el.textContent = Math.round(cur);
+                if (cur >= target) clearInterval(t);
+              }, 16);
+            });
+          }
+        });
+      }, { threshold: 0.14 });
+
+      document.querySelectorAll('.r').forEach(el => io.observe(el));
+    </script>
+  </body>
+</html>
