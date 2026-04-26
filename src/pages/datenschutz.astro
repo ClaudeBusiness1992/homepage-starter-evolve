@@ -6,7 +6,7 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../sections/Footer.astro';
 
-const { meta, theme } = metaConfig;
+const { design = '01-warm-local', meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
 const { legal: l } = legalConfig;
 
@@ -15,7 +15,7 @@ const hasDPO = l.dataProtectionOfficer && !l.dataProtectionOfficer.startsWith('[
 const analyticsEnabled = l.analytics?.enabled === true;
 ---
 
-<Base meta={{ siteName: meta.siteName + ' — Datenschutz', description: 'Datenschutzerklärung gemäß DSGVO' }} theme={theme}>
+<Base meta={{ siteName: meta.siteName + ' — Datenschutz', description: 'Datenschutzerklärung gemäß DSGVO' }} theme={theme} design={design}>
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={meta.nav} />
 
   <main id="main" class="legal-page">
