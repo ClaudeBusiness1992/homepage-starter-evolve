@@ -66,9 +66,14 @@
     border-radius: var(--r-lg, 20px);
     box-shadow: var(--shadow-lg, 0 12px 48px rgba(0,0,0,.3));
     padding: 1.5rem;
+    /* Safe-Area auf iPhones mit Home-Indikator */
+    padding-bottom: max(1.5rem, calc(1.5rem + env(safe-area-inset-bottom)));
     max-width: 560px;
     margin: 0 auto;
     animation: cookie-slide-up .3s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cookie-banner { animation: none; }
   }
   .cookie-inner { display: flex; flex-direction: column; gap: 1.25rem; }
   .cookie-text h3 {
@@ -94,6 +99,7 @@
   .cookie-btn {
     flex: 1;
     min-width: 140px;
+    min-height: 44px;  /* Touch-Target */
     padding: .75rem 1.25rem;
     border-radius: 100px;
     font-family: inherit;

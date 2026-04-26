@@ -29,7 +29,10 @@ body {
   color: var(--ink);
   line-height: 1.6;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
 }
+
 
 /* ── LAYOUT ── */
 .wrap {
@@ -117,6 +120,7 @@ body {
 }
 #nav.on {
   background: rgba(245,240,232,.96);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   box-shadow: 0 1px 0 var(--border);
 }
@@ -341,7 +345,7 @@ body {
   padding: .75rem 1rem;
   color: var(--cream);
   font-family: var(--sans);
-  font-size: .93rem;
+  font-size: 16px;  /* >= 16px verhindert iOS Auto-Zoom beim Fokus */
   transition: border-color .2s, background .2s;
   width: 100%;
   resize: vertical;
@@ -517,7 +521,8 @@ footer { background: #0f0f1e; padding: 1.75rem 0; }
     position: fixed;
     top: var(--nav-h); left: 0; right: 0;
     background: rgba(245,240,232,.97);
-    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
     flex-direction: column;
     padding: 1.5rem;
     gap: 1rem;
@@ -546,4 +551,109 @@ footer { background: #0f0f1e; padding: 1.75rem 0; }
   .stats-grid { grid-template-columns: repeat(2,1fr); }
   .contact-btns { flex-direction: column; align-items: center; }
   .btn-email, .btn-phone { width: 100%; justify-content: center; }
+}
+
+/* ════════════════════════════════════════════════════════════════ */
+/* MOBILE & TOUCH-OPTIMIERUNGEN                                     */
+/* ════════════════════════════════════════════════════════════════ */
+
+/* Touch-Geräte: Gallery-Overlay permanent zeigen, sonst sieht User
+   auf Mobile niemals Caption oder Kategorie der Projekte. */
+@media (hover: none) {
+  .gallery-overlay { opacity: 1; }
+  .gallery-img:hover img { transform: none; }
+}
+
+/* Touch-Targets: Footer- und Nav-Links brauchen mehr Hit-Area.
+   Apple HIG: 44pt, Material Design: 48dp. */
+@media (max-width: 768px) {
+  .foot-links { flex-direction: column; gap: 0; width: 100%; }
+  .foot-links a {
+    display: block;
+    padding: .75rem 0;
+    text-align: center;
+    min-height: 44px;
+  }
+  .nav-ul.open a {
+    display: block;
+    padding: .85rem 0;
+    min-height: 44px;
+  }
+}
+
+/* Pricing als horizontaler Slider auf Mobile — Cards nebeneinander
+   swipebar ist deutlich besser zum Vergleichen als untereinander. */
+@media (max-width: 768px) {
+  .pricing-grid {
+    display: flex;
+    grid-template-columns: none;
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 1.5rem;
+    margin: 0 -1.5rem;
+    padding: 0 1.5rem 1rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .pricing-grid::-webkit-scrollbar { display: none; }
+  .pcard {
+    flex: 0 0 calc(85% - 1rem);
+    scroll-snap-align: center;
+  }
+  .pcard.feat { order: 0; }
+}
+
+/* Reviews als Slider auf Mobile — natürliche Swipe-Geste. */
+@media (max-width: 768px) {
+  .reviews-grid {
+    display: flex;
+    grid-template-columns: none;
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 1.5rem;
+    margin: 0 -1.5rem;
+    padding: 0 1.5rem 1rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .reviews-grid::-webkit-scrollbar { display: none; }
+  .review-card { flex: 0 0 calc(85% - 1rem); scroll-snap-align: center; }
+}
+
+/* Hero-Mockup auf sehr kleinen Screens komplett ausblenden —
+   320px-Telefone (iPhone SE) sind sonst zu eng. Text + CTA reichen. */
+@media (max-width: 380px) {
+  .browser { display: none; }
+  .hero-grid { gap: 0; padding: 3rem 0; }
+}
+
+/* Cookie-Banner Safe-Area auf iPhones mit Home-Indikator. */
+.cookie-banner {
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+}
+
+/* prefers-reduced-motion: User mit Motion-Empfindlichkeit / Vestibulärstörung */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .r { opacity: 1 !important; transform: none !important; }
+}
+
+/* Bessere Touch-Scrollung auf iOS (überflüssig ab iOS 13, aber harmless) */
+.pricing-grid, .reviews-grid {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fokus-Indikator nicht entfernen — wichtig für Tastatur-Navigation (BITV) */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
