@@ -6,6 +6,8 @@ import Nav      from '../components/Nav.astro';
 import Hero01   from '../sections/Hero.astro';
 import Hero02   from '../designs/02-bold-editorial/Hero.astro';
 import Hero03   from '../designs/03-minimal-clean/Hero.astro';
+import Hero04   from '../designs/04-corporate-split/Hero.astro';
+import Hero05   from '../designs/05-vibrant-gradient/Hero.astro';
 import About    from '../sections/About.astro';
 import Services from '../sections/Services.astro';
 import Stats    from '../sections/Stats.astro';
@@ -19,9 +21,11 @@ const { design = '01-warm-local', meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
 
 const HeroComponents = {
-  '01-warm-local':    Hero01,
-  '02-bold-editorial': Hero02,
-  '03-minimal-clean':  Hero03,
+  '01-warm-local':      Hero01,
+  '02-bold-editorial':  Hero02,
+  '03-minimal-clean':   Hero03,
+  '04-corporate-split': Hero04,
+  '05-vibrant-gradient': Hero05,
 };
 const Hero = HeroComponents[design] ?? Hero01;
 

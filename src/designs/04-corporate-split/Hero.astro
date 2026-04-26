@@ -1,0 +1,152 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+}
+const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
+---
+
+<section id="hero">
+  <div class="hero-split">
+    <div class="hero-left">
+      <div class="hero-content r">
+        <span class="hero-label">{label}</span>
+        <h1 class="hero-h1">{headline}</h1>
+        <p class="hero-sub">{subline}</p>
+        <div class="hero-btns">
+          <a href="#contact" class="btn btn-fill">{ctaPrimary} <span aria-hidden="true">→</span></a>
+          <a href="#services" class="btn btn-outline">{ctaSecondary}</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-right" aria-hidden="true">
+      <div class="hero-deco">
+        <div class="deco-lines">
+          {Array.from({length: 6}).map(() => <div class="deco-line"></div>)}
+        </div>
+        <div class="deco-card">
+          <span class="deco-icon">✓</span>
+          <p>Website in 2–3 Wochen</p>
+        </div>
+        <div class="deco-card deco-card-2">
+          <span class="deco-icon">★</span>
+          <p>Über 50 zufriedene Kunden</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+#hero {
+  min-height: 100vh;
+  padding-top: var(--nav-h);
+  overflow: hidden;
+}
+
+.hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: calc(100vh - var(--nav-h));
+}
+
+.hero-left {
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  padding: 5rem 4rem 5rem 0;
+}
+
+.hero-content { max-width: 520px; margin-left: auto; }
+
+.hero-label {
+  display: block;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.hero-h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.6rem, 4.5vw, 4.2rem);
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+  letter-spacing: -.01em;
+}
+
+.hero-sub {
+  font-size: 1rem;
+  color: var(--ink-muted);
+  line-height: 1.75;
+  margin-bottom: 2.5rem;
+  max-width: 440px;
+}
+
+.hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.hero-right {
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-deco { position: relative; width: 100%; height: 100%; }
+
+.deco-lines {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+.deco-line {
+  border-right: 1px solid rgba(255,255,255,.05);
+}
+
+.deco-card {
+  position: absolute;
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--r-lg);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(255,255,255,.9);
+  font-size: .9rem;
+  font-weight: 500;
+  top: 30%;
+  left: 15%;
+  right: 15%;
+}
+
+.deco-card-2 {
+  top: auto;
+  bottom: 28%;
+  left: 20%;
+  right: 10%;
+}
+
+.deco-icon {
+  font-size: 1.4rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .hero-split { grid-template-columns: 1fr; }
+  .hero-left { padding: 4rem 2rem; }
+  .hero-content { margin: 0 auto; }
+  .hero-right { display: none; }
+}
+</style>

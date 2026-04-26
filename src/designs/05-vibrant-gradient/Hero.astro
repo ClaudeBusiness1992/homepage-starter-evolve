@@ -1,0 +1,159 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+}
+const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
+---
+
+<section id="hero">
+  <div class="hero-orb hero-orb-1" aria-hidden="true"></div>
+  <div class="hero-orb hero-orb-2" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero-inner r">
+      <span class="hero-badge">{label}</span>
+      <h1 class="hero-h1">{headline}</h1>
+      <p class="hero-sub">{subline}</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn hero-btn-primary">{ctaPrimary}</a>
+        <a href="#services" class="btn hero-btn-secondary">{ctaSecondary}</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hs-item"><strong>50+</strong><span>Kunden</span></div>
+        <div class="hs-div"></div>
+        <div class="hs-item"><strong>3 Wo.</strong><span>Lieferzeit</span></div>
+        <div class="hs-div"></div>
+        <div class="hs-item"><strong>5★</strong><span>Bewertung</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+#hero {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--ink) 0%, #2d1b4e 50%, #1a2e4e 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding-top: var(--nav-h);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-orb-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(232,99,27,.25) 0%, transparent 70%);
+  top: -200px; right: -100px;
+}
+.hero-orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(74,124,111,.2) 0%, transparent 70%);
+  bottom: -100px; left: -80px;
+}
+
+.hero-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 6rem 0 5rem;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 100px;
+  padding: .35rem 1rem;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.85);
+  margin-bottom: 1.75rem;
+}
+
+.hero-h1 {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  color: #fff;
+  margin-bottom: 1.25rem;
+}
+
+.hero-sub {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,.65);
+  line-height: 1.75;
+  max-width: 520px;
+  margin: 0 auto 2.5rem;
+}
+
+.hero-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 4rem;
+}
+
+.hero-btn-primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(232,99,27,.4);
+}
+.hero-btn-primary:hover { background: var(--accent-light); }
+
+.hero-btn-secondary {
+  background: rgba(255,255,255,.1);
+  color: rgba(255,255,255,.9);
+  border: 1px solid rgba(255,255,255,.2);
+}
+.hero-btn-secondary:hover { background: rgba(255,255,255,.18); }
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  border-top: 1px solid rgba(255,255,255,.12);
+  padding-top: 2rem;
+}
+
+.hs-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .2rem;
+}
+.hs-item strong {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+}
+.hs-item span {
+  font-size: .78rem;
+  color: rgba(255,255,255,.5);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.hs-div {
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,.15);
+}
+
+@media (max-width: 480px) {
+  .hero-stats { gap: 1.25rem; }
+}
+</style>
