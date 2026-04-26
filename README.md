@@ -1,8 +1,10 @@
 # homepage-starter
 
-Wiederverwendbares One-Pager-Template für Kunden-Websites — entwickelt von **pixel&code**.
+Wiederverwendbares One-Pager-Template für Kunden-Websites der Agentur **pixel&code**.  
+Pro Kunde wird das Repo geklont. Konfiguration ausschließlich über JSON-Dateien — der Code wird nie angefasst.
 
-Pro Kunde wird das Projekt geklont und über drei Config-Dateien konfiguriert: Marke, Inhalte, Legal. Output: statische Website, deploybar auf Netlify Free Tier.
+**Live-Demo:** https://hompage-starter.vercel.app  
+**CMS-Admin:** https://hompage-starter.vercel.app/admin/
 
 ---
 
@@ -12,166 +14,161 @@ Pro Kunde wird das Projekt geklont und über drei Config-Dateien konfiguriert: M
 |---|---|---|
 | Astro | 6.x | Static Site Generator |
 | pnpm | 10.x | Paketmanager |
+| Node.js | v22 LTS | Laufzeitumgebung |
+| Decap CMS | 3.x | Content-Management (GitHub Backend) |
+| Vercel | — | Hosting + Serverless Functions |
 | Vanilla CSS | — | Custom Properties, kein Framework |
-| WOFF2 (self-hosted) | — | DM Serif Display + Outfit, DSGVO-konform |
-| Netlify | — | Deployment + Formulare + Security-Headers |
 
 ---
 
-## Schnellstart
+## Konfiguration
 
-```bash
-pnpm install
-pnpm dev        # → http://localhost:4321
-pnpm build      # → dist/
-pnpm preview    # Build lokal vorschauen
-```
-
----
-
-## Config-Struktur
-
-Alle Kunden-Werte leben in drei Dateien im `config/`-Ordner. Der Code selbst wird nie angefasst.
+Alle Kunden-Werte leben in `config/`. Der Code wird nie angefasst.
 
 | Datei | Inhalt |
 |---|---|
-| `config/meta.json` | Marke (Name, Farben, Kontakt, Nav), Design-Auswahl |
-| `config/content.json` | Seiteninhalte (alle Sektionen: Texte, Bilder, Pakete, Bewertungen) |
-| `config/legal.json` | Impressum + Datenschutz (Adresse, Registernummer, Hoster etc.) |
+| `config/design.json` | Aktives Design (ein Wert) |
+| `config/meta.json` | Marke: siteName, theme (Farben), nav, Kontakt |
+| `config/content.json` | Seiteninhalte: alle Sektionen mit `enabled`-Flag |
+| `config/legal.json` | Impressum + Datenschutz: Adresse, Register, Hoster |
 
 ---
 
 ## Design-System
 
-Das Template unterstützt mehrere visuelle Stile. Der aktive Stil wird in `config/meta.json` gesetzt:
+Der aktive Stil wird in `config/design.json` gesetzt:
 
 ```json
-{ "design": "01-warm-local" }
+{ "design": "02-bold-editorial" }
 ```
 
-| Design | Status | Zielgruppe |
+`Base.astro` liest den Wert und setzt `data-design="..."` auf dem `<html>`-Tag.  
+`index.astro` lädt pro Sektion die passende Komponente aus der Design-Map.
+
+### Verfügbare Designs
+
+| Key | Charakter | Eigene Komponenten |
 |---|---|---|
-| `01-warm-local` | ✅ fertig | Handwerk, lokale Dienstleister |
-| `02-bold-editorial` | 🔨 in Arbeit | Kreativbranchen |
-| `03-minimal-clean` | 🔨 in Arbeit | Freelancer, Agenturen |
-| `04-corporate-trust` | Geplant | Beratung, Kanzleien |
+| `01-warm-local` | Warm, lokal, klassisch | Hero |
+| `02-bold-editorial` | Dunkel, mutig, editorial | Hero, About, Services |
+| `03-minimal-clean` | Hell, reduziert, typografisch | Hero |
+| `04-corporate-split` | Zweigeteilt, seriös, strukturiert | Hero, About |
+| `05-vibrant-gradient` | Gradient, dynamisch, modern | Hero, Services |
 
-Jedes Design überschreibt nur was abweicht — via `[data-design="..."]`-Selektor in `src/styles/designs/`. Die Basis (`global.css`) bleibt für alle gleich.
+Design wechseln: im CMS unter **"Design auswählen"** oder direkt in `config/design.json`.
 
-### Farben anpassen
+### Dateistruktur
 
-Alle Farben sind CSS Custom Properties, gesetzt in `config/meta.json → theme`:
-
-```json
-"theme": {
-  "ink":        "#1a1a2e",
-  "cream":      "#f5f0e8",
-  "accent":     "#e8631b",
-  "accentLight":"#ff8c42",
-  "sage":       "#4a7c6f"
-}
+```
+src/
+  designs/
+    02-bold-editorial/   Hero.astro, About.astro, Services.astro
+    03-minimal-clean/    Hero.astro
+    04-corporate-split/  Hero.astro, About.astro
+    05-vibrant-gradient/ Hero.astro, Services.astro
+  sections/              Shared Fallback-Komponenten
+  styles/
+    global.css
+    designs/             02-bold-editorial.css, 03-minimal-clean.css, ...
 ```
 
-`--accent-text` wird automatisch aus `--accent` abgeleitet (75% Accent + 25% Schwarz) — für WCAG-konformen Text auf hellem Hintergrund.
+---
+
+## CMS (Decap CMS)
+
+### Einloggen
+
+1. `/admin/` aufrufen
+2. "Login with GitHub" klicken
+3. GitHub-Account autorisieren
+
+### Bereiche
+
+| Bereich | Datei | Inhalt |
+|---|---|---|
+| Design auswählen | `design.json` | Aktives Layout (visueller Picker) |
+| Stammdaten & Design | `meta.json` | Name, Farben, Kontakt, Navigation |
+| Inhalte | `content.json` | Texte, Bilder, Pakete, Bewertungen |
+| Firmendaten & Impressum | `legal.json` | Adresse, Register, Hoster |
+
+### OAuth-Einrichtung (einmalig pro Projekt)
+
+1. GitHub OAuth App erstellen → Settings → Developer Settings → OAuth Apps
+2. Callback URL: `https://[domain]/api/auth`
+3. `client_id` in `public/admin/config.yml` eintragen
+4. `GITHUB_CLIENT_ID` + `GITHUB_CLIENT_SECRET` als Vercel Environment Variables setzen
+
+---
+
+## Deployment (Vercel)
+
+```
+Build Command:     pnpm build
+Output Directory:  dist
+Framework Preset:  Astro
+```
+
+Jeder Push auf `main` triggert automatisch einen neuen Build.  
+Decap CMS committet Änderungen direkt auf GitHub — das triggert ebenfalls einen Deploy.
 
 ---
 
 ## Sektionen
 
-Alle Sektionen sind modular — per `enabled: true/false` in `config/content.json` ein- oder ausschaltbar. Die Nav filtert automatisch deaktivierte Sektionen heraus.
+Alle in `config/content.json` mit `enabled: true/false` steuerbar. Nav filtert deaktivierte automatisch.
 
-| Sektion | Komponente | Klasse |
+| Sektion | Astro-Datei | Anmerkung |
 |---|---|---|
-| Hero | `src/sections/Hero.astro` | — |
-| Über uns | `src/sections/About.astro` | — |
-| Leistungen | `src/sections/Services.astro` | `section--dark` |
-| Galerie | `src/sections/Gallery.astro` | `section--dark` |
-| Kennzahlen | `src/sections/Stats.astro` | — |
-| Preise | `src/sections/Pricing.astro` | — |
-| Bewertungen | `src/sections/Reviews.astro` | — |
-| Kontakt | `src/sections/Contact.astro` | `section--dark` |
-| Footer | `src/sections/Footer.astro` | — |
-
-Sektionen auf dunklem Hintergrund tragen die Klasse `section--dark` — das regelt Textfarben automatisch.
+| Hero | design-spezifisch | Jedes Design eigene Komponente |
+| Über uns | About.astro / design-spezifisch | Design 02 + 04 eigene Komponente |
+| Leistungen | Services.astro / design-spezifisch | Design 02 + 05 eigene Komponente |
+| Galerie | Gallery.astro | Design-CSS überschreibt Layout |
+| Kennzahlen | Stats.astro | — |
+| Preise | Pricing.astro | — |
+| Bewertungen | Reviews.astro | — |
+| Kontakt | Contact.astro | Formular mit JS-Validierung |
+| Footer | Footer.astro | — |
 
 ---
 
-## Komponenten
+## Rechtliche Seiten (DE)
 
-| Komponente | Zweck |
-|---|---|
-| `src/components/Nav.astro` | Navigation, Burger-Menü, Logo |
-| `src/components/SectionHeader.astro` | Wiederverwendbarer Label + H2 + Subline Block |
-| `src/components/CookieBanner.astro` | TTDSG-konformer Cookie-Banner |
-
-`SectionHeader` nimmt `label`, `headline`, `subline` und optionales `center` Prop.
-
----
-
-## Pflicht-Pages (DE-Recht)
-
-| Page | Route | Quelle |
+| Seite | Route | Datenquelle |
 |---|---|---|
-| Impressum (§5 DDG) | `/impressum` | `config/legal.json` |
-| Datenschutzerklärung (DSGVO) | `/datenschutz` | `config/legal.json` |
-| Cookie-Banner (TTDSG) | global | `Base.astro` |
+| Impressum | `/impressum` | `config/legal.json` |
+| Datenschutz | `/datenschutz` | `config/legal.json` |
+| Cookie-Banner | global | `CookieBanner.astro` |
 
 ---
 
-## Fonts
+## Lokale Entwicklung
 
-Fonts sind selbst gehostet (DSGVO-konform, kein Google-CDN-Request):
-
-- `public/fonts/*.woff2` — 12 Dateien (DM Serif Display + Outfit in 4 Gewichten, je latin + latin-ext)
-- `@font-face`-Regeln in `src/styles/global.css` (ganz oben)
-- Preload für die zwei kritischsten Dateien in `Base.astro`
-
----
-
-## Sicherheit
-
-`netlify.toml` setzt für alle Routen:
-- `Content-Security-Policy` (nur eigene Ressourcen + inline-Styles für Theme-Injection)
-- `X-Frame-Options: DENY`
-- `X-Content-Type-Options: nosniff`
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy` (kein Kamera/Mikro/Geo)
+```bash
+pnpm install
+pnpm dev        # → http://localhost:4321
+pnpm build      # Produktions-Build → dist/
+pnpm preview    # Build lokal vorschauen
+```
 
 ---
 
 ## Pro Kunde: Checkliste
 
 1. Repo klonen: `git clone <repo-url> kunde-name && cd kunde-name`
-2. Design wählen: `config/meta.json → design`
-3. Marke eintragen: `config/meta.json` — Name, Farben, Kontakt, Logo-Akzent (`siteNameAccent`)
-4. Inhalte eintragen: `config/content.json` — alle Sektionen befüllen, nicht benötigte auf `enabled: false`
+2. Design wählen: `config/design.json`
+3. Marke eintragen: `config/meta.json` — siteName, theme (Farben), nav, Kontakt
+4. Inhalte eintragen: `config/content.json` — Sektionen befüllen, nicht benötigte auf `enabled: false`
 5. Legal eintragen: `config/legal.json` — alle `[…]`-Platzhalter ersetzen
-6. Domain eintragen: `astro.config.mjs → site`
-7. OG-Bild erstellen: `public/og-image.jpg` (1200×630px)
-8. `pnpm build` → `dist/` auf Netlify hochladen
+6. OG-Bild erstellen: `public/og-image.jpg` (1200×630 px)
+7. Domain eintragen: `astro.config.mjs → site`
+8. Neues Vercel-Projekt anlegen + GitHub-Repo verbinden
+9. Environment Variables setzen: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
+10. GitHub OAuth App Callback URL auf neue Domain aktualisieren
+11. `public/admin/config.yml → base_url` auf neue Domain setzen
 
 ---
 
-## Qualitäts-Audits
+## Sicherheit
 
-7 Slash-Commands für Claude Code — im Projekt-Root ausführen:
-
-| Command | Prüft | Wann |
-|---|---|---|
-| `/audit-architecture` | Modul-Grenzen, Dependency-Richtung | Nach Refactoring |
-| `/audit-customizing` | Hardcoded Werte, Customizing-Readiness | Pro Kunden-Branch |
-| `/audit-quality` | Naming, Duplikate, Dead Code | Wöchentlich |
-| `/audit-ui` | Komponenten-Konsistenz, Button-States | Nach Style-Änderungen |
-| `/audit-a11y` | WCAG 2.1 AA, ARIA, Kontraste | Vor Release |
-| `/audit-performance` | Bundle, Bilder, Hydration | Vor Release |
-| `/audit-security-seo` | CSP, Meta-Tags, Sitemap | Vor Live-Schaltung |
-
----
-
-## Konventionen
-
-- **Paketmanager:** immer `pnpm`
-- **Commits:** `feat:`, `fix:`, `chore:`, `style:`
-- **Config:** Kunden-Werte nur in `config/` — nie direkt im Code
-- **CSS:** Custom Properties, keine externen UI-Libraries
-- **Designs:** Überschreibungen nur in `src/styles/designs/*.css` via `[data-design]`
+`public/_headers` setzt für alle Routen strikte Security-Header (CSP, X-Frame-Options etc.).  
+`/admin/*` hat eine eigene permissivere CSP — Decap CMS benötigt `unsafe-eval`.
