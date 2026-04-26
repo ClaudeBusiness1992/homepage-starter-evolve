@@ -1,0 +1,231 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/images
+public_folder: /images
+
+locale: de
+
+collections:
+  - name: "website"
+    label: "Website"
+    files:
+
+      - name: "allgemein"
+        label: "Allgemein"
+        file: "config/client.config.json"
+        fields:
+          - label: "Allgemein"
+            name: "meta"
+            widget: "object"
+            fields:
+              - { label: "Website-Name", name: "siteName", widget: "string" }
+              - { label: "Tagline", name: "tagline", widget: "string" }
+              - { label: "SEO-Beschreibung", name: "description", widget: "text" }
+              - { label: "E-Mail", name: "email", widget: "string" }
+              - { label: "Telefon", name: "phone", widget: "string" }
+              - { label: "Telefon (Anzeige)", name: "phoneDisplay", widget: "string" }
+              - { label: "Copyright", name: "copyright", widget: "string" }
+          - label: "Theme (Farben)"
+            name: "theme"
+            widget: "object"
+            collapsed: true
+            fields:
+              - { label: "Dunkel", name: "ink", widget: "string" }
+              - { label: "Hell", name: "cream", widget: "string" }
+              - { label: "Akzent", name: "accent", widget: "string" }
+              - { label: "Akzent Hell", name: "accentLight", widget: "string" }
+              - { label: "Grün", name: "sage", widget: "string" }
+          - label: "Sektionen"
+            name: "sections"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "Hero"
+                name: "hero"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "Überschrift", name: "headline", widget: "string" }
+                  - { label: "Unterzeile", name: "subline", widget: "text" }
+                  - { label: "Button 1", name: "ctaPrimary", widget: "string" }
+                  - { label: "Button 2", name: "ctaSecondary", widget: "string" }
+              - label: "Über uns"
+                name: "about"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "Überschrift", name: "headline", widget: "string" }
+                  - { label: "Unterzeile", name: "subline", widget: "text" }
+                  - label: "Team"
+                    name: "members"
+                    widget: "list"
+                    fields:
+                      - { label: "Name", name: "name", widget: "string" }
+                      - { label: "Rolle", name: "role", widget: "string" }
+                      - { label: "Bio", name: "bio", widget: "text" }
+                      - { label: "Foto", name: "photo", widget: "image", required: false, default: "" }
+              - label: "Leistungen"
+                name: "services"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "Überschrift", name: "headline", widget: "string" }
+                  - { label: "Unterzeile", name: "subline", widget: "text" }
+                  - label: "Leistungen"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - { label: "Icon", name: "icon", widget: "string" }
+                      - { label: "Titel", name: "title", widget: "string" }
+                      - { label: "Beschreibung", name: "text", widget: "text" }
+              - label: "Kennzahlen"
+                name: "stats"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
+                  - label: "Zahlen"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - { label: "Zahl", name: "value", widget: "number", value_type: "int" }
+                      - { label: "Beschriftung", name: "label", widget: "string" }
+              - label: "Preise"
+                name: "pricing"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "Überschrift", name: "headline", widget: "string" }
+                  - { label: "Unterzeile", name: "subline", widget: "text" }
+                  - label: "Pakete"
+                    name: "packages"
+                    widget: "list"
+                    fields:
+                      - { label: "Name", name: "name", widget: "string" }
+                      - { label: "Tagline", name: "tagline", widget: "string" }
+                      - { label: "Preis", name: "price", widget: "string" }
+                      - { label: "Preishinweis", name: "priceNote", widget: "string" }
+                      - { label: "Hervorgehoben", name: "featured", widget: "boolean" }
+                      - { label: "Badge", name: "badge", widget: "string", required: false, default: "" }
+                      - label: "Features"
+                        name: "features"
+                        widget: "list"
+                        field: { label: "Feature", name: "item", widget: "string" }
+              - label: "Galerie"
+                name: "gallery"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "Überschrift", name: "headline", widget: "string" }
+                  - { label: "Unterzeile", name: "subline", widget: "text" }
+                  - label: "Bilder"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - { label: "Bild", name: "src", widget: "image" }
+                      - { label: "Alt-Text", name: "alt", widget: "string" }
+                      - { label: "Bildunterschrift", name: "caption", widget: "string" }
+                      - { label: "Kategorie", name: "category", widget: "string" }
+              - label: "Bewertungen"
+                name: "reviews"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "Überschrift", name: "headline", widget: "string" }
+                  - { label: "Unterzeile", name: "subline", widget: "text" }
+                  - label: "Bewertungen"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - { label: "Name", name: "name", widget: "string" }
+                      - { label: "Firma", name: "company", widget: "string" }
+                      - { label: "Sterne (1–5)", name: "rating", widget: "number", value_type: "int", min: 1, max: 5 }
+                      - { label: "Verifiziert", name: "verified", widget: "boolean" }
+                      - { label: "Datum", name: "date", widget: "string" }
+                      - { label: "Text", name: "text", widget: "text" }
+              - label: "Kontakt"
+                name: "contact"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "Überschrift", name: "headline", widget: "string" }
+                  - { label: "Unterzeile", name: "subline", widget: "text" }
+              - label: "Footer"
+                name: "footer"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
+                  - label: "Links"
+                    name: "links"
+                    widget: "list"
+                    fields:
+                      - { label: "Beschriftung", name: "label", widget: "string" }
+                      - { label: "URL", name: "href", widget: "string" }
+          - label: "Legal"
+            name: "legal"
+            widget: "object"
+            collapsed: true
+            fields:
+              - label: "Firma"
+                name: "company"
+                widget: "object"
+                fields:
+                  - { label: "Name", name: "name", widget: "string" }
+                  - { label: "Rechtsform", name: "legalForm", widget: "string" }
+                  - { label: "Vertreten durch", name: "representedBy", widget: "string" }
+              - label: "Adresse"
+                name: "address"
+                widget: "object"
+                fields:
+                  - { label: "Straße + Nr.", name: "street", widget: "string" }
+                  - { label: "PLZ", name: "zip", widget: "string" }
+                  - { label: "Stadt", name: "city", widget: "string" }
+                  - { label: "Land", name: "country", widget: "string" }
+              - label: "Kontakt"
+                name: "contact"
+                widget: "object"
+                fields:
+                  - { label: "Telefon", name: "phone", widget: "string" }
+                  - { label: "E-Mail", name: "email", widget: "string" }
+              - label: "Registereintrag"
+                name: "register"
+                widget: "object"
+                fields:
+                  - { label: "Typ (HRB/HRA)", name: "type", widget: "string", required: false, default: "" }
+                  - { label: "Nummer", name: "number", widget: "string", required: false, default: "" }
+                  - { label: "Gericht", name: "court", widget: "string", required: false, default: "" }
+              - { label: "USt-IdNr.", name: "vatId", widget: "string", required: false, default: "" }
+              - { label: "Verantwortlicher §18 MStV", name: "responsibleForContent", widget: "string" }
+              - { label: "Berufsrechtliche Angaben", name: "professionalRegulations", widget: "string", required: false, default: "" }
+              - { label: "Aufsichtsbehörde", name: "supervisoryAuthority", widget: "string", required: false, default: "" }
+              - label: "Hosting"
+                name: "hosting"
+                widget: "object"
+                fields:
+                  - { label: "Anbieter", name: "provider", widget: "string" }
+                  - { label: "Adresse", name: "address", widget: "string" }
+                  - { label: "Datenschutz-URL", name: "privacyUrl", widget: "string" }
+              - { label: "Datenschutzbeauftragter", name: "dataProtectionOfficer", widget: "string", required: false, default: "" }
+              - label: "Analytics"
+                name: "analytics"
+                widget: "object"
+                fields:
+                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
+                  - { label: "Tool", name: "tool", widget: "string", required: false, default: "" }

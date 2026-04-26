@@ -6,6 +6,7 @@ interface Props {
   meta: {
     siteName: string;
     description: string;
+    image?: string;
   };
   theme: {
     ink: string;
@@ -17,6 +18,8 @@ interface Props {
 }
 
 const { meta, theme } = Astro.props;
+const canonicalUrl = Astro.url.href;
+const ogImage = meta.image ?? '/og-image.jpg';
 
 const themeStyle = `
   --ink: ${theme.ink};
@@ -34,33 +37,60 @@ const themeStyle = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{meta.siteName}</title>
     <meta name="description" content={meta.description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content={canonicalUrl} />
+    <meta property="og:title"       content={meta.siteName} />
+    <meta property="og:description" content={meta.description} />
+    <meta property="og:image"       content={new URL(ogImage, Astro.url).href} />
+    <meta property="og:locale"      content="de_DE" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={meta.siteName} />
+    <meta name="twitter:description" content={meta.description} />
+    <meta name="twitter:image"       content={new URL(ogImage, Astro.url).href} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   </head>
   <body>
+    <a href="#main" class="skip-link">Zum Inhalt springen</a>
     <slot />
     <CookieBanner />
 
     <script is:inline>
       // Nav scroll effect
       const nav = document.getElementById('nav');
-      window.addEventListener('scroll', () => nav?.classList.toggle('on', scrollY > 20));
+      window.addEventListener('scroll', () => nav?.classList.toggle('on', scrollY > 20), { passive: true });
 
       // Mobile nav toggle
       const burger = document.getElementById('burger');
       const navLinks = document.getElementById('navLinks');
-      burger?.addEventListener('click', () => {
-        burger.classList.toggle('x');
-        navLinks?.classList.toggle('open');
+
+      function setNavOpen(open) {
+        burger?.classList.toggle('x', open);
+        navLinks?.classList.toggle('open', open);
+        burger?.setAttribute('aria-expanded', String(open));
+      }
+
+      burger?.addEventListener('click', () => setNavOpen(!navLinks?.classList.contains('open')));
+      navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && navLinks?.classList.contains('open')) {
+          setNavOpen(false);
+          burger?.focus();
+        }
       });
-      navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-        burger?.classList.remove('x');
-        navLinks?.classList.remove('open');
-      }));
 
       // Scroll reveal + counter animation
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let countersTriggered = false;
+
       const io = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (!e.isIntersecting) return;
@@ -69,6 +99,7 @@ const themeStyle = `
             countersTriggered = true;
             document.querySelectorAll('[data-count]').forEach(el => {
               const target = +el.dataset.count;
+              if (prefersReducedMotion) { el.textContent = target; return; }
               const step = target / (1400 / 16);
               let cur = 0;
               const t = setInterval(() => {
