@@ -16,54 +16,56 @@ collections:
     label: "Website"
     files:
 
-      - name: "allgemein"
-        label: "Allgemein"
-        file: "config/client.config.json"
+      # ── STAMMDATEN & DESIGN ──────────────────────────────────────────
+      - name: "stammdaten"
+        label: "Stammdaten & Design"
+        file: "config/meta.json"
         fields:
-          - label: "Allgemein"
+          - label: "Stammdaten"
             name: "meta"
             widget: "object"
             fields:
-              - { label: "Website-Name", name: "siteName", widget: "string" }
-              - { label: "Tagline", name: "tagline", widget: "string" }
-              - { label: "SEO-Beschreibung", name: "description", widget: "text" }
+              - { label: "Website-Name", name: "siteName", widget: "string", hint: "z.B. pixel&code oder Schreinerei Müller" }
+              - { label: "Name Akzent (farbiger Teil)", name: "siteNameAccent", widget: "string", hint: "Teil des Namens der farbig hervorgehoben wird, z.B. &code" }
+              - { label: "Tagline", name: "tagline", widget: "string", hint: "Kurzer Slogan unter dem Logo, z.B. Websites für kleine Unternehmen" }
+              - { label: "SEO-Beschreibung", name: "description", widget: "text", hint: "Wird in Google-Suchergebnissen angezeigt. Ca. 150 Zeichen." }
               - { label: "E-Mail", name: "email", widget: "string" }
-              - { label: "Telefon", name: "phone", widget: "string" }
-              - { label: "Telefon (Anzeige)", name: "phoneDisplay", widget: "string" }
-              - { label: "Copyright", name: "copyright", widget: "string" }
-          - label: "Theme (Farben)"
+              - { label: "Telefon (technisch)", name: "phone", widget: "string", hint: "Format: +491234567890 (für tel:-Links)" }
+              - { label: "Telefon (Anzeige)", name: "phoneDisplay", widget: "string", hint: "Wird so auf der Website angezeigt, z.B. +49 (0)123 456 789" }
+              - { label: "Copyright-Zeile", name: "copyright", widget: "string", hint: "z.B. © 2025 pixel&code. Alle Rechte vorbehalten." }
+
+          - label: "Design & Farben"
             name: "theme"
             widget: "object"
-            collapsed: true
             fields:
-              - { label: "Dunkel (Textfarbe)", name: "ink", widget: "string", hint: "Hauptfarbe für Text und dunkle Hintergründe. Beispiel: #1a1a2e = dunkles Blau-Schwarz" }
-              - { label: "Hell (Hintergrund)", name: "cream", widget: "string", hint: "Hintergrundfarbe der Website. Beispiel: #f5f0e8 = warmes Creme-Weiß" }
-              - { label: "Akzent (Hauptfarbe)", name: "accent", widget: "string", hint: "Auffallende Farbe für Buttons und Highlights. Beispiel: #e8631b = Orange" }
-              - { label: "Akzent Hell (Hover)", name: "accentLight", widget: "string", hint: "Hellere Version der Akzentfarbe, erscheint beim Überfahren mit der Maus. Beispiel: #ff8c42 = helles Orange" }
-              - { label: "Grün (Sekundär)", name: "sage", widget: "string", hint: "Ruhigere Zweitfarbe, z.B. für Badges oder Hintergründe. Beispiel: #4a7c6f = gedämpftes Grün" }
+              - { label: "Dunkel (Textfarbe)", name: "ink", widget: "string", hint: "Hauptfarbe für Text und dunkle Hintergründe. Farbcode z.B. #1a1a2e = dunkles Blau-Schwarz" }
+              - { label: "Hell (Hintergrund)", name: "cream", widget: "string", hint: "Hintergrundfarbe der Website. z.B. #f5f0e8 = warmes Creme-Weiß" }
+              - { label: "Akzent (Hauptfarbe)", name: "accent", widget: "string", hint: "Farbe für Buttons und Highlights. z.B. #e8631b = Orange" }
+              - { label: "Akzent Hell (Hover)", name: "accentLight", widget: "string", hint: "Etwas hellere Version der Akzentfarbe, erscheint beim Drüberfahren. z.B. #ff8c42" }
+              - { label: "Sekundärfarbe", name: "sage", widget: "string", hint: "Ruhige Zweitfarbe für Badges oder Hintergründe. z.B. #4a7c6f = gedämpftes Grün" }
+
+      # ── WEBSITE-INHALTE ──────────────────────────────────────────────
+      - name: "hero"
+        label: "Inhalte → Hero (Startbereich)"
+        file: "config/content.json"
+        fields:
           - label: "Sektionen"
             name: "sections"
             widget: "object"
-            collapsed: true
             fields:
               - label: "Hero"
                 name: "hero"
                 widget: "object"
-                collapsed: true
                 fields:
-                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
-                  - { label: "Label", name: "label", widget: "string" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
-                  - { label: "Button 1", name: "ctaPrimary", widget: "string" }
-                  - { label: "Button 2", name: "ctaSecondary", widget: "string" }
+                  - { label: "Button 1 Text", name: "ctaPrimary", widget: "string" }
+                  - { label: "Button 2 Text", name: "ctaSecondary", widget: "string" }
               - label: "Über uns"
                 name: "about"
                 widget: "object"
                 collapsed: true
                 fields:
-                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
-                  - { label: "Label", name: "label", widget: "string" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
                   - label: "Team"
@@ -79,8 +81,6 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
-                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
-                  - { label: "Label", name: "label", widget: "string" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
                   - label: "Leistungen"
@@ -95,7 +95,6 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
-                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
                   - label: "Zahlen"
                     name: "items"
                     widget: "list"
@@ -107,8 +106,6 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
-                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
-                  - { label: "Label", name: "label", widget: "string" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
                   - label: "Pakete"
@@ -130,8 +127,6 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
-                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
-                  - { label: "Label", name: "label", widget: "string" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
                   - label: "Bilder"
@@ -147,8 +142,6 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
-                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
-                  - { label: "Label", name: "label", widget: "string" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
                   - label: "Bewertungen"
@@ -166,8 +159,6 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
-                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
-                  - { label: "Label", name: "label", widget: "string" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
               - label: "Footer"
@@ -175,61 +166,56 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
-                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
                   - label: "Links"
                     name: "links"
                     widget: "list"
                     fields:
                       - { label: "Beschriftung", name: "label", widget: "string" }
                       - { label: "URL", name: "href", widget: "string" }
-          - label: "Legal"
+
+      # ── FIRMENDATEN ──────────────────────────────────────────────────
+      - name: "firmendaten"
+        label: "Firmendaten & Impressum"
+        file: "config/legal.json"
+        fields:
+          - label: "Firmendaten"
             name: "legal"
             widget: "object"
-            collapsed: true
             fields:
               - label: "Firma"
                 name: "company"
                 widget: "object"
                 fields:
-                  - { label: "Name", name: "name", widget: "string" }
-                  - { label: "Rechtsform", name: "legalForm", widget: "string" }
-                  - { label: "Vertreten durch", name: "representedBy", widget: "string" }
+                  - { label: "Firmenname", name: "name", widget: "string" }
+                  - { label: "Rechtsform", name: "legalForm", widget: "string", hint: "z.B. GmbH, UG, Einzelunternehmen, GbR — oder leer lassen" }
+                  - { label: "Vertreten durch", name: "representedBy", widget: "string", hint: "Vor- und Nachname des Geschäftsführers / Inhabers" }
               - label: "Adresse"
                 name: "address"
                 widget: "object"
                 fields:
-                  - { label: "Straße + Nr.", name: "street", widget: "string" }
+                  - { label: "Straße + Hausnummer", name: "street", widget: "string" }
                   - { label: "PLZ", name: "zip", widget: "string" }
                   - { label: "Stadt", name: "city", widget: "string" }
                   - { label: "Land", name: "country", widget: "string" }
-              - label: "Kontakt"
+              - label: "Kontakt (Impressum)"
                 name: "contact"
                 widget: "object"
                 fields:
                   - { label: "Telefon", name: "phone", widget: "string" }
                   - { label: "E-Mail", name: "email", widget: "string" }
-              - label: "Registereintrag"
+              - label: "Handelsregister (optional)"
                 name: "register"
                 widget: "object"
                 fields:
-                  - { label: "Typ (HRB/HRA)", name: "type", widget: "string", required: false, default: "" }
-                  - { label: "Nummer", name: "number", widget: "string", required: false, default: "" }
-                  - { label: "Gericht", name: "court", widget: "string", required: false, default: "" }
-              - { label: "USt-IdNr.", name: "vatId", widget: "string", required: false, default: "" }
-              - { label: "Verantwortlicher §18 MStV", name: "responsibleForContent", widget: "string" }
-              - { label: "Berufsrechtliche Angaben", name: "professionalRegulations", widget: "string", required: false, default: "" }
-              - { label: "Aufsichtsbehörde", name: "supervisoryAuthority", widget: "string", required: false, default: "" }
-              - label: "Hosting"
+                  - { label: "Typ (HRB / HRA)", name: "type", widget: "string", required: false, default: "" }
+                  - { label: "Registernummer", name: "number", widget: "string", required: false, default: "" }
+                  - { label: "Registergericht", name: "court", widget: "string", required: false, default: "" }
+              - { label: "USt-IdNr. (optional)", name: "vatId", widget: "string", required: false, default: "", hint: "Format: DE123456789 — oder leer lassen" }
+              - { label: "Verantwortlicher §18 MStV", name: "responsibleForContent", widget: "string", hint: "Meist der Inhaber / Geschäftsführer" }
+              - label: "Hosting-Anbieter"
                 name: "hosting"
                 widget: "object"
                 fields:
                   - { label: "Anbieter", name: "provider", widget: "string" }
                   - { label: "Adresse", name: "address", widget: "string" }
                   - { label: "Datenschutz-URL", name: "privacyUrl", widget: "string" }
-              - { label: "Datenschutzbeauftragter", name: "dataProtectionOfficer", widget: "string", required: false, default: "" }
-              - label: "Analytics"
-                name: "analytics"
-                widget: "object"
-                fields:
-                  - { label: "Aktiv", name: "enabled", widget: "boolean" }
-                  - { label: "Tool", name: "tool", widget: "string", required: false, default: "" }

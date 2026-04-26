@@ -1,0 +1,25 @@
+{
+  "meta": {
+    "siteName": "pixel&code",
+    "siteNameAccent": "&code",
+    "tagline": "Websites für kleine Unternehmen",
+    "description": "pixel&code baut moderne, schnelle Websites für kleine Unternehmen. Webdesign, SEO und digitale Präsenz aus einer Hand.",
+    "email": "hallo@pixelundcode.de",
+    "phone": "+49000000000",
+    "phoneDisplay": "[Telefonnummer einfügen]",
+    "copyright": "© 2025 pixel&code. Alle Rechte vorbehalten.",
+    "nav": [
+      { "label": "Über uns",        "href": "#about",    "section": "about" },
+      { "label": "Leistungen",      "href": "#services", "section": "services" },
+      { "label": "Preise",          "href": "#pricing",  "section": "pricing" },
+      { "label": "Projekt starten", "href": "#contact",  "section": "contact", "cta": true }
+    ]
+  },
+  "theme": {
+    "ink": "#1a1a2e",
+    "cream": "#f5f0e8",
+    "accent": "#e8631b",
+    "accentLight": "#ff8c42",
+    "sage": "#4a7c6f"
+  }
+}

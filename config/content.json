@@ -1,0 +1,172 @@
+{
+  "sections": {
+    "hero": {
+      "enabled": true,
+      "label": "Webdesign für kleine Unternehmen",
+      "headline": "Ihre Website. Professionell. Fertig.",
+      "subline": "Wir bauen moderne, schnelle Websites für kleine Unternehmen — damit Sie online sichtbar sind und neue Kunden gewinnen.",
+      "ctaPrimary": "Projekt starten",
+      "ctaSecondary": "Leistungen ansehen"
+    },
+    "about": {
+      "enabled": true,
+      "label": "Das Team",
+      "headline": "Zwei Köpfe, eine Leidenschaft",
+      "subline": "Wir sind ein kleines, eingespieltes Team aus Designer und Entwickler — und wir lieben es, Ideen in funktionierende Websites zu verwandeln.",
+      "members": [
+        {
+          "name": "[Dein Name]",
+          "role": "Design & Konzept",
+          "bio": "Hier deine persönliche Beschreibung einfügen. Was treibt dich an? Was machst du besonders gerne? Was bringst du aus deiner Erfahrung mit?",
+          "photo": ""
+        },
+        {
+          "name": "[Dein Name]",
+          "role": "Entwicklung & SEO",
+          "bio": "Hier deine persönliche Beschreibung einfügen. Was treibt dich an? Was machst du besonders gerne? Was bringst du aus deiner Erfahrung mit?",
+          "photo": ""
+        }
+      ]
+    },
+    "services": {
+      "enabled": true,
+      "label": "Was wir tun",
+      "headline": "Alles aus einer Hand",
+      "subline": "Von der ersten Idee bis zur fertigen Website — und dauerhaft darüber hinaus.",
+      "items": [
+        { "icon": "✦", "title": "Webdesign",            "text": "Individuelle Designs, die zu Ihrem Unternehmen passen und bei Besuchern einen bleibenden Eindruck hinterlassen." },
+        { "icon": "◈", "title": "Responsive Umsetzung", "text": "Ihre Website sieht auf jedem Gerät perfekt aus — ob Smartphone, Tablet oder großem Monitor." },
+        { "icon": "◎", "title": "SEO",                  "text": "Wir optimieren Ihre Seite technisch und inhaltlich, damit Sie bei Google gefunden werden." },
+        { "icon": "✎", "title": "Texte",                "text": "Klare, überzeugende Texte, die Ihre Stärken zeigen und Besucher in Kunden verwandeln." },
+        { "icon": "⟳", "title": "Pflege",               "text": "Wir halten Ihre Website aktuell, sicher und technisch auf dem neuesten Stand — dauerhaft." },
+        { "icon": "◉", "title": "Social Media",         "text": "Professionelle Präsenz in sozialen Netzwerken: Profil-Setup, Strategie und Posting-Vorlagen." }
+      ]
+    },
+    "stats": {
+      "enabled": true,
+      "items": [
+        { "value": 47, "label": "Zufriedene Kunden" },
+        { "value": 83, "label": "Abgeschlossene Projekte" },
+        { "value": 3,  "label": "Jahre Erfahrung" },
+        { "value": 98, "label": "% Weiterempfehlung" }
+      ]
+    },
+    "pricing": {
+      "enabled": true,
+      "label": "Transparente Preise",
+      "headline": "Kein Versteckspiel bei den Kosten",
+      "subline": "Feste Preise, klarer Leistungsumfang. Keine Überraschungen auf der Rechnung.",
+      "packages": [
+        {
+          "name": "Starter",
+          "tagline": "Der schnelle Einstieg",
+          "price": "799 €",
+          "priceNote": "einmalig, zzgl. MwSt.",
+          "featured": false,
+          "badge": "",
+          "features": [
+            "1-Seiter (Landingpage)",
+            "Responsives Design",
+            "Kontaktformular",
+            "Google Maps Einbindung",
+            "1 Korrekturschleife",
+            "Lieferung in ca. 2 Wochen"
+          ]
+        },
+        {
+          "name": "Business",
+          "tagline": "Die komplette Lösung",
+          "price": "1.499 €",
+          "priceNote": "einmalig, zzgl. MwSt.",
+          "featured": true,
+          "badge": "Beliebt",
+          "features": [
+            "Bis zu 5 Unterseiten",
+            "Individuelles Design",
+            "SEO-Grundoptimierung",
+            "Kontaktformular",
+            "Google Maps Einbindung",
+            "3 Korrekturschleifen",
+            "Lieferung in 3–4 Wochen"
+          ]
+        },
+        {
+          "name": "Premium",
+          "tagline": "Rundum sorglos",
+          "price": "2.499 €",
+          "priceNote": "einmalig, zzgl. MwSt.",
+          "featured": false,
+          "badge": "",
+          "features": [
+            "Bis zu 10 Unterseiten",
+            "Premium-Design",
+            "Vollständige SEO-Optimierung",
+            "Texterstellung inklusive",
+            "Fotografie-Briefing",
+            "3 Monate Pflege inklusive",
+            "Unbegrenzte Korrekturen"
+          ]
+        }
+      ]
+    },
+    "gallery": {
+      "enabled": true,
+      "label": "Unsere Arbeiten",
+      "headline": "Projekte die begeistern",
+      "subline": "Ein Blick auf einige unserer abgeschlossenen Kundenprojekte.",
+      "items": [
+        { "src": "", "alt": "Projekt 1", "caption": "Schreinerei Weber",   "category": "Webdesign" },
+        { "src": "", "alt": "Projekt 2", "caption": "Praxis Dr. Müller",   "category": "Landingpage" },
+        { "src": "", "alt": "Projekt 3", "caption": "Café Sonnenschein",   "category": "Webdesign" },
+        { "src": "", "alt": "Projekt 4", "caption": "Elektro Bauer GmbH", "category": "SEO" },
+        { "src": "", "alt": "Projekt 5", "caption": "Yoga Studio Mitte",  "category": "Landingpage" },
+        { "src": "", "alt": "Projekt 6", "caption": "Friseur Haargenau",  "category": "Webdesign" }
+      ]
+    },
+    "reviews": {
+      "enabled": true,
+      "label": "Kundenstimmen",
+      "headline": "Was unsere Kunden sagen",
+      "subline": "Echte Projekte, echte Menschen, echte Ergebnisse.",
+      "items": [
+        {
+          "name": "Sandra Weber",
+          "company": "Schreinerei Weber",
+          "rating": 5,
+          "verified": true,
+          "date": "März 2026",
+          "text": "Innerhalb von zwei Wochen hatten wir eine Website, die unsere Arbeit endlich richtig zeigt. Anfragen über die Seite kommen seitdem regelmäßig rein."
+        },
+        {
+          "name": "Dr. Thomas Müller",
+          "company": "Allgemeinarzt",
+          "rating": 5,
+          "verified": true,
+          "date": "Februar 2026",
+          "text": "Professionelle Abwicklung von Anfang bis Ende. Die Seite ist übersichtlich, schnell und kommt bei meinen Patienten sehr gut an."
+        },
+        {
+          "name": "Lisa Sonnenschein",
+          "company": "Café Sonnenschein",
+          "rating": 5,
+          "verified": true,
+          "date": "Januar 2026",
+          "text": "Wir hatten genaue Vorstellungen und die wurden perfekt umgesetzt. Besonders die Bildergalerie und das Kontaktformular funktionieren einwandfrei."
+        }
+      ]
+    },
+    "contact": {
+      "enabled": true,
+      "label": "Kontakt",
+      "headline": "Bereit für Ihre neue Website?",
+      "subline": "Schreiben Sie uns — wir melden uns innerhalb von 24 Stunden und besprechen Ihr Projekt ganz unverbindlich."
+    },
+    "footer": {
+      "enabled": true,
+      "links": [
+        { "label": "Impressum",   "href": "/impressum" },
+        { "label": "Datenschutz", "href": "/datenschutz" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "legal": {
+    "company": {
+      "name": "[Firmenname]",
+      "legalForm": "[Rechtsform: GmbH / UG / Einzelunternehmen / GbR]",
+      "representedBy": "[Vor- und Nachname Vertretungsberechtigter]"
+    },
+    "address": {
+      "street": "[Straße + Hausnummer]",
+      "zip": "[PLZ]",
+      "city": "[Stadt]",
+      "country": "Deutschland"
+    },
+    "contact": {
+      "phone": "[Telefon mit Vorwahl]",
+      "email": "[E-Mail-Adresse]"
+    },
+    "register": {
+      "type": "[HRB / HRA / Partnerschaftsregister oder leer]",
+      "number": "[Registernummer]",
+      "court": "[Amtsgericht]"
+    },
+    "vatId": "[USt-IdNr. DE... oder leer]",
+    "responsibleForContent": "[Verantwortlicher §18 Abs.2 MStV]",
+    "professionalRegulations": "",
+    "supervisoryAuthority": "",
+    "hosting": {
+      "provider": "Netlify Inc.",
+      "address": "512 2nd Street, Suite 200, San Francisco, CA 94107, USA",
+      "privacyUrl": "https://www.netlify.com/privacy/"
+    },
+    "dataProtectionOfficer": "",
+    "analytics": {
+      "enabled": false,
+      "tool": ""
+    }
+  }
+}
