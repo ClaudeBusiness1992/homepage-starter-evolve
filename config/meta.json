@@ -1,5 +1,5 @@
 {
-  "design": "01-warm-local",
+  "design": "02-bold-editorial",
   "meta": {
     "nav": [
       {
@@ -27,7 +27,7 @@
     "copyright": "© 2025 pixel&code. Alle Rechte vorbehalten.",
     "phone": "+49000000000",
     "tagline": "Websites für kleine Unternehmen",
-    "siteName": "Penis&Co",
+    "siteName": "pixel&code",
     "phoneDisplay": "[Telefonnummer einfügen]",
     "siteNameAccent": "&code",
     "email": "hallo@pixelundcode.de",
