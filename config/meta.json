@@ -1,19 +1,36 @@
 {
   "meta": {
-    "siteName": "pixel&code",
-    "siteNameAccent": "&code",
-    "tagline": "Websites für kleine Unternehmen",
-    "description": "pixel&code baut moderne, schnelle Websites für kleine Unternehmen. Webdesign, SEO und digitale Präsenz aus einer Hand.",
-    "email": "hallo@pixelundcode.de",
-    "phone": "+49000000000",
-    "phoneDisplay": "[Telefonnummer einfügen]",
-    "copyright": "© 2025 pixel&code. Alle Rechte vorbehalten.",
     "nav": [
-      { "label": "Über uns",        "href": "#about",    "section": "about" },
-      { "label": "Leistungen",      "href": "#services", "section": "services" },
-      { "label": "Preise",          "href": "#pricing",  "section": "pricing" },
-      { "label": "Projekt starten", "href": "#contact",  "section": "contact", "cta": true }
-    ]
+      {
+        "label": "Über uns",
+        "href": "#about",
+        "section": "about"
+      },
+      {
+        "label": "Leistungen",
+        "href": "#services",
+        "section": "services"
+      },
+      {
+        "label": "Preise",
+        "href": "#pricing",
+        "section": "pricing"
+      },
+      {
+        "label": "Projekt starten",
+        "href": "#contact",
+        "section": "contact",
+        "cta": true
+      }
+    ],
+    "copyright": "© 2025 pixel&code. Alle Rechte vorbehalten.",
+    "phone": "+49000000000",
+    "tagline": "Websites für kleine Unternehmen",
+    "siteName": "Penis&Co",
+    "phoneDisplay": "[Telefonnummer einfügen]",
+    "siteNameAccent": "&code",
+    "email": "hallo@pixelundcode.de",
+    "description": "pixel&code baut moderne, schnelle Websites für kleine Unternehmen. Webdesign, SEO und digitale Präsenz aus einer Hand."
   },
   "theme": {
     "ink": "#1a1a2e",
