@@ -36,11 +36,11 @@ collections:
             widget: "object"
             collapsed: true
             fields:
-              - { label: "Dunkel", name: "ink", widget: "string" }
-              - { label: "Hell", name: "cream", widget: "string" }
-              - { label: "Akzent", name: "accent", widget: "string" }
-              - { label: "Akzent Hell", name: "accentLight", widget: "string" }
-              - { label: "Grün", name: "sage", widget: "string" }
+              - { label: "Dunkel (Textfarbe)", name: "ink", widget: "string", hint: "Hauptfarbe für Text und dunkle Hintergründe. Beispiel: #1a1a2e = dunkles Blau-Schwarz" }
+              - { label: "Hell (Hintergrund)", name: "cream", widget: "string", hint: "Hintergrundfarbe der Website. Beispiel: #f5f0e8 = warmes Creme-Weiß" }
+              - { label: "Akzent (Hauptfarbe)", name: "accent", widget: "string", hint: "Auffallende Farbe für Buttons und Highlights. Beispiel: #e8631b = Orange" }
+              - { label: "Akzent Hell (Hover)", name: "accentLight", widget: "string", hint: "Hellere Version der Akzentfarbe, erscheint beim Überfahren mit der Maus. Beispiel: #ff8c42 = helles Orange" }
+              - { label: "Grün (Sekundär)", name: "sage", widget: "string", hint: "Ruhigere Zweitfarbe, z.B. für Badges oder Hintergründe. Beispiel: #4a7c6f = gedämpftes Grün" }
           - label: "Sektionen"
             name: "sections"
             widget: "object"
