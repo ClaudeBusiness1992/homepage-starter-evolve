@@ -1,0 +1,15 @@
+# theme.tokens.example
+# Design-Tokens: Farben, Schriften, Abstände. Pro Projekt kopieren und anpassen.
+
+# colors:
+#   primary: ""
+#   secondary: ""
+#   background: ""
+#   text: ""
+
+# fonts:
+#   heading: ""
+#   body: ""
+
+# spacing:
+#   base: ""

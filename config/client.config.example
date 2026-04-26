@@ -1,0 +1,7 @@
+# client.config.example
+# Vorlage für die Kunden-Konfiguration. Pro Projekt kopieren und als client.config umbenennen.
+
+# clientName: ""
+# primaryColor: ""
+# logoPath: ""
+# contactEmail: ""
