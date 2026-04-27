@@ -793,8 +793,11 @@ footer { background: #0f0f1e; padding: 1.75rem 0; }
 .foot-logo { font-family: var(--serif); font-size: 1.1rem; color: rgba(245,240,232,.75); }
 .foot-logo em { font-style: normal; color: var(--accent); }
 .foot-links { list-style: none; display: flex; gap: 2rem; }
-.foot-links a { text-decoration: none; color: rgba(245,240,232,.7); font-size: .83rem; transition: color .2s; }
-.foot-links a:hover { color: var(--accent); }
+.foot-links a,
+.foot-cookie-btn { text-decoration: none; color: rgba(245,240,232,.7); font-size: .83rem; transition: color .2s; }
+.foot-cookie-btn { background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit; }
+.foot-links a:hover,
+.foot-cookie-btn:hover { color: var(--accent); }
 .foot-copy { font-size: .8rem; color: rgba(245,240,232,.5); }
 
 /* ── RESPONSIVE ── */

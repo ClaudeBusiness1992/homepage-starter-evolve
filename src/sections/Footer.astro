@@ -22,7 +22,7 @@ const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.
       <nav aria-label="Footer-Navigation">
         <ul class="foot-links">
           {links.map(l => <li><a href={l.href}>{l.label}</a></li>)}
-          <li><a href="#" data-cookie-settings>Cookie-Einstellungen</a></li>
+          <li><button type="button" class="foot-cookie-btn" data-cookie-settings>Cookie-Einstellungen</button></li>
         </ul>
       </nav>
       <span class="foot-copy">{copyright}</span>
