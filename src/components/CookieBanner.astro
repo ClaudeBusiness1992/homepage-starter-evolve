@@ -30,7 +30,12 @@
     const banner = document.getElementById('cookie-banner');
     const stored = localStorage.getItem(KEY);
 
-    function show() { banner.hidden = false; }
+    function show() {
+      banner.hidden = false;
+      // Move focus to the secondary button (less aggressive default)
+      const target = banner.querySelector('.cookie-btn-secondary');
+      if (target) target.focus();
+    }
     function hide() { banner.hidden = true; }
 
     function setConsent(value) {

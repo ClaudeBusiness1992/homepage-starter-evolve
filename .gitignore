@@ -1,7 +1,11 @@
 node_modules/
 .env
+.env.local
+.env.*.local
+.env.production
 dist/
 .astro/
 .netlify/
+.vercel/
 .DS_Store
 *.log

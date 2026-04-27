@@ -24,7 +24,12 @@ const delays = ['d1','d2','d3'];
     <SectionHeader {label} {headline} {subline} center />
     <div class="pricing-grid">
       {packages.map((pkg, i) => (
-        <div class={`pcard r ${delays[i % delays.length]} ${pkg.featured ? 'feat' : ''}`}>
+        <div
+          class={`pcard r ${delays[i % delays.length]} ${pkg.featured ? 'feat' : ''}`}
+          role="button"
+          tabindex="0"
+          aria-pressed={pkg.featured ? 'true' : 'false'}
+        >
           {pkg.badge && <div class="pbadge">{pkg.badge}</div>}
           <h3 class="pname">{pkg.name}</h3>
           <span class="ptag">{pkg.tagline}</span>
@@ -42,30 +47,44 @@ const delays = ['d1','d2','d3'];
         </div>
       ))}
     </div>
-
-<style>
-  .pcard { cursor: pointer; }
-</style>
-
-<script>
-  const cards = document.querySelectorAll('#pricing .pcard');
-  cards.forEach(card => {
-    card.addEventListener('click', () => {
-      if (card.classList.contains('feat')) return;
-      cards.forEach(c => {
-        c.classList.remove('feat');
-        const btn = c.querySelector('.btn');
-        if (btn) { btn.classList.replace('btn-fill', 'btn-outline'); btn.textContent = 'Anfragen'; }
-      });
-      card.classList.add('feat');
-      const btn = card.querySelector('.btn');
-      if (btn) { btn.classList.replace('btn-outline', 'btn-fill'); btn.textContent = 'Jetzt anfragen'; }
-    });
-  });
-</script>
     <p class="pricing-note r">
       Alle Pakete individuell anpassbar.
       <a href="#contact">Schreiben Sie uns</a> für ein maßgeschneidertes Angebot.
     </p>
   </div>
 </section>
+
+<script is:inline>
+  (() => {
+    const cards = document.querySelectorAll('#pricing .pcard');
+    if (!cards.length) return;
+
+    const select = (card) => {
+      if (card.classList.contains('feat')) return;
+      cards.forEach((c) => {
+        c.classList.remove('feat');
+        c.setAttribute('aria-pressed', 'false');
+        const btn = c.querySelector('.btn');
+        if (btn) { btn.classList.replace('btn-fill', 'btn-outline'); btn.textContent = 'Anfragen'; }
+      });
+      card.classList.add('feat');
+      card.setAttribute('aria-pressed', 'true');
+      const btn = card.querySelector('.btn');
+      if (btn) { btn.classList.replace('btn-outline', 'btn-fill'); btn.textContent = 'Jetzt anfragen'; }
+    };
+
+    cards.forEach((card) => {
+      card.addEventListener('click', (e) => {
+        // Let the inner CTA link navigate; selection happens on the bubble path naturally
+        if (e.target.closest('a.btn')) return;
+        select(card);
+      });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          select(card);
+        }
+      });
+    });
+  })();
+</script>

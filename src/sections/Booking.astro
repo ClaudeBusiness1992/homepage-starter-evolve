@@ -85,8 +85,8 @@ if (groupStart) {
     <SectionHeader {label} {headline} {subline} center />
 
     {hoursGroups.length > 0 && (
-      <div class="bk-hours r" aria-label="Sprechzeiten">
-        <span class="bk-hours-title">🕐 Unsere Sprechzeiten</span>
+      <div class="bk-hours r">
+        <h3 class="bk-hours-title">🕐 Unsere Sprechzeiten</h3>
         <ul class="bk-hours-list">
           {hoursGroups.map(g => (
             <li><span class="bk-hours-days">{g.days}</span> <span class="bk-hours-time">{g.hours}</span></li>
