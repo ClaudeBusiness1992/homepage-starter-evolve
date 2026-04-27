@@ -210,7 +210,7 @@ Security-Header für Vercel in `public/_headers` (nicht `netlify.toml`):
   Content-Security-Policy: ... unsafe-eval ... (Decap CMS benötigt dies)
 ```
 
-> `netlify.toml` existiert noch, ist aber Legacy und wird von Vercel ignoriert.
+**vercel.json** ist die autoritative Header-Quelle (Vercel liest sie zuerst). `public/_headers` existiert als Fallback.
 
 ---
 
@@ -230,8 +230,19 @@ Kunden können Inhalte ohne Code-Zugriff bearbeiten.
 |---|---|---|
 | Design auswählen | `config/design.json` | Aktives Layout |
 | Stammdaten & Design | `config/meta.json` | Name, Farben, Kontakt, Navigation |
-| Inhalte | `config/content.json` | Texte, Bilder, Pakete, Bewertungen |
+| Inhalte | `config/content.json` | Texte, Bilder, Pakete |
+| Erweiterungen / Add-ons | `config/extras.json` | Countdown, Bewertungen, Buchung (alle deaktivierbar) |
 | Firmendaten & Impressum | `config/legal.json` | Adresse, Register, Hoster |
+
+### Add-ons (Erweiterungen)
+
+| Add-on | Default | Setup |
+|---|---|---|
+| Countdown / Event | aus | nur Daten in CMS, keine zusätzliche Konfig |
+| Bewertungen | aus | nur Daten in CMS |
+| Buchung (mailto + .ics) | aus | nur E-Mail in CMS |
+| Buchung (Live-Sync) | aus | siehe `docs/BOOKING-LIVESYNC.md` (Google Service-Account, ~15 Min Setup) |
+| Kontaktformular E-Mail-Versand | optional | siehe `docs/CONTACT-SETUP.md` (Resend, kostenlos bis 3000 Mails/Monat) |
 
 ### OAuth-Einrichtung (einmalig pro Projekt)
 
@@ -290,6 +301,28 @@ vercel --prod         # Produktions-Deploy
 - **Designs:** Überschreibungen nur in `src/styles/designs/*.css` via `[data-design]`
 - **Keine Inline-Styles** für Design-Entscheidungen — alles in CSS-Dateien
 - **WCAG AA:** alle Text-Kontraste müssen 4.5:1 erfüllen (normal), 3:1 (groß/bold)
+- **TS-light:** `.astro`-Frontmatter darf TypeScript-Annotationen nutzen (`interface`, `as`-Casts), Vanilla-JS bleibt für Browser-Scripts. Keine separaten `.ts`-Files.
+
+## Token-Naming-Konvention pro Design
+
+Designs definieren eigene CSS-Custom-Properties als `--<2-char-key>-*`:
+
+| Design | Prefix | Bedeutung |
+|---|---|---|
+| 02 Bold Editorial | `--bld-*` | bg, cream |
+| 05 Vibrant Gradient | `--vg-*` | warm-darks (heroisch isoliert) |
+| 07 Terminal Console | `--tc-*` | bg/text/border slate |
+| 08 Soft Bloom | `--sb-*` | cream pastels + wave SVGs |
+| 09 Luxe Atelier | `--lx-*` | premium cream + line |
+| 10 Pop Studio | `--po-*` | bg + bright accents |
+
+Designs **ohne** eigene Tokens (01, 03, 04, 06) verwenden die globalen `--ink/--cream/--accent/--accent-light/--sage` direkt.
+
+## Section-Background-Konvention
+
+- `.section--dark` ist der **Default** für Services/Gallery/Contact (dunkel via `var(--ink)`)
+- Helle Designs (03, 04, 06, 08, 09) **müssen explizit überschreiben** mit `[data-design] #services { background: ... }` etc.
+- Bei neuen Designs: prüfen ob `.section--dark`-Sektionen Override brauchen, sonst Cream-on-Cream-Fail.
 
 ---
 
@@ -353,11 +386,25 @@ pnpm dev
 
 ## Offene Punkte
 
+- [x] Cookie-Banner: Fokus auf ersten Button wenn eingeblendet ✓ Wave 1
+- [x] `.gitignore`: `.env.local`, `.env.*.local`, `.env.production` ergänzen ✓ Wave 1
+- [x] `netlify.toml` entfernen ✓ Wave 1
+- [x] Font-Cache-Header in `public/_headers` (+ vercel.json) ✓ Wave 1
+- [x] Booking-Add-on, Live-Sync, Setup-Doku ✓
+- [x] Contact-Form auf Vercel-Function migriert ✓ Wave 2
+- [x] Design 02 self-referencing CSS-Vars gefixt ✓ Wave 1
+- [x] Pricing-Cards Tastatur-bedienbar ✓ Wave 1
+
+## Offene Punkte (für später)
+
 - [ ] `stat-l` Text-Kontrast prüfen (Accent-Hintergrund, kleiner Text)
-- [ ] Cookie-Banner: Fokus auf ersten Button wenn eingeblendet
-- [ ] `.gitignore`: `.env.local`, `.env.*.local`, `.env.production` ergänzen
-- [ ] `public/og-image.jpg` Platzhalter erstellen (1200×630px)
+- [ ] `public/og-image.jpg` Platzhalter erstellen (1200×630px) — bei Live-Schaltung pflicht
 - [ ] Datenschutz-Seite: Google-Fonts-Abschnitt entfernen (jetzt self-hosted)
-- [ ] `netlify.toml` entfernen (Legacy, wird von Vercel ignoriert)
-- [ ] Font-Cache-Header in `public/_headers` ergänzen (1 Jahr für `/fonts/*`)
-- [ ] Design-CSS 02–05 vervollständigen
+- [ ] `astro:assets` `<Image>` für Kundenbilder (AVIF/WebP-Auto-Generation)
+- [ ] Conditional CSS-Loading per Design (statt alle 9 Override-CSS global)
+- [ ] Component-Map dynamisch via `import.meta.glob`
+- [ ] Design 05/10 weitere Hardcoded-Colors zu Tokens
+- [ ] Form-Group Selector entkoppeln (`global.css` umstrukturieren)
+- [ ] `theme.fonts` in `meta.json` einführen (aktuell nur in global.css editierbar)
+- [ ] `headline.split('. ')` durch strukturierte CMS-Felder ersetzen (1-3 Linien)
+- [ ] Schema.org LocalBusiness — `address` + `telephone` Pflichtfelder ergänzen
