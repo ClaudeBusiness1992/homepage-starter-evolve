@@ -1,7 +1,7 @@
 {
   "extras": {
     "countdown": {
-      "enabled": false,
+      "enabled": true,
       "label": "Save the Date",
       "headline": "Workshop am 15. Mai 2026",
       "subline": "Plätze sind begrenzt — sichern Sie sich Ihren rechtzeitig.",
