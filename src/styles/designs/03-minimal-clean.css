@@ -95,7 +95,7 @@
 
 /* Services — simple two-col list on light bg */
 [data-design="03-minimal-clean"] #services {
-  background: #fafafa;
+  background: color-mix(in srgb, var(--cream) 92%, white);
   border-bottom: 1px solid var(--border);
   color: var(--ink);
 }
@@ -174,7 +174,7 @@
 
 /* Pricing — outlined cards */
 [data-design="03-minimal-clean"] #pricing {
-  background: #fafafa;
+  background: color-mix(in srgb, var(--cream) 92%, white);
   border-bottom: 1px solid var(--border);
 }
 [data-design="03-minimal-clean"] .pcard {
@@ -213,7 +213,7 @@
   box-shadow: none;
 }
 [data-design="03-minimal-clean"] .btn-fill:hover {
-  background: #333;
+  background: color-mix(in srgb, var(--ink) 85%, white);
   box-shadow: none;
 }
 
@@ -232,7 +232,7 @@
 
 /* Reviews */
 [data-design="03-minimal-clean"] #reviews {
-  background: #fafafa;
+  background: color-mix(in srgb, var(--cream) 92%, white);
   border-bottom: 1px solid var(--border);
 }
 [data-design="03-minimal-clean"] .review-card {
@@ -255,7 +255,7 @@
 [data-design="03-minimal-clean"] #contact .sub { color: var(--ink-muted); }
 [data-design="03-minimal-clean"] #contact .lbl { color: var(--accent-text); }
 [data-design="03-minimal-clean"] .contact-form-wrap {
-  background: #fafafa;
+  background: color-mix(in srgb, var(--cream) 92%, white);
   border-color: var(--border);
 }
 [data-design="03-minimal-clean"] .form-group label {
