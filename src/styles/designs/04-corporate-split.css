@@ -56,7 +56,7 @@
   transition: background .15s;
 }
 [data-design="04-corporate-split"] .scard:hover {
-  background: rgba(232,99,27,.03);
+  background: color-mix(in srgb, var(--accent) 3%, transparent);
   transform: none;
   border-color: var(--border);
 }

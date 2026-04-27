@@ -172,7 +172,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   .lx-cta-primary:hover::before {
     opacity: 1;
     inset: 6px;
-    border-color: rgba(232,99,27,.5);
+    border-color: color-mix(in srgb, var(--accent) 50%, transparent);
   }
 
   .lx-cta-secondary {

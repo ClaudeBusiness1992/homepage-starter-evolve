@@ -218,11 +218,11 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     background: var(--accent);
     color: var(--tc-bg);
     font-weight: 700;
-    box-shadow: 0 0 0 1px var(--accent), 0 0 24px rgba(232,99,27,.3);
+    box-shadow: 0 0 0 1px var(--accent), 0 0 24px color-mix(in srgb, var(--accent) 30%, transparent);
   }
   .tc-btn-primary:hover {
     background: var(--accent-light);
-    box-shadow: 0 0 0 1px var(--accent-light), 0 0 32px rgba(232,99,27,.5);
+    box-shadow: 0 0 0 1px var(--accent-light), 0 0 32px color-mix(in srgb, var(--accent) 50%, transparent);
   }
   .tc-btn-ghost {
     background: transparent;
