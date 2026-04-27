@@ -218,11 +218,11 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .btn-submit {
   background: var(--accent);
   color: var(--white);
-  box-shadow: 0 4px 20px rgba(232,99,27,.35);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 .btn-fill:hover,
 .btn-email:hover,
-.btn-submit:hover { background: var(--accent-light); box-shadow: 0 6px 28px rgba(232,99,27,.45); }
+.btn-submit:hover { background: var(--accent-light); box-shadow: 0 6px 28px color-mix(in srgb, var(--accent) 45%, transparent); }
 .btn-ghost {
   background: rgba(245,240,232,.1);
   color: var(--cream);
@@ -328,7 +328,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
   position: absolute;
   top: -35%; right: -15%;
   width: 680px; height: 680px;
-  background: radial-gradient(circle, rgba(232,99,27,.14) 0%, transparent 68%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 14%, transparent) 0%, transparent 68%);
   pointer-events: none;
 }
 .hero-grid {
@@ -350,7 +350,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
   max-width: 520px;
   background: #23233f;
   border-radius: var(--r-lg);
-  box-shadow: var(--shadow-lg), 0 0 80px rgba(232,99,27,.12);
+  box-shadow: var(--shadow-lg), 0 0 80px color-mix(in srgb, var(--accent) 12%, transparent);
   overflow: hidden;
 }
 .bbar { background: #18182e; padding: .8rem 1rem; display: flex; align-items: center; gap: .75rem; }
@@ -384,7 +384,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .ms-line.s { width: 58%; }
 
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.6} }
-@keyframes glow  { 0%,100%{box-shadow:0 0 0 0 rgba(232,99,27,.4)} 50%{box-shadow:0 0 10px 3px rgba(232,99,27,.28)} }
+@keyframes glow  { 0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent)} 50%{box-shadow:0 0 10px 3px color-mix(in srgb, var(--accent) 28%, transparent)} }
 
 /* ── ABOUT ── */
 #about { background: var(--cream); }
@@ -410,14 +410,14 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 #services { background: var(--ink); color: var(--cream); }
 .srv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
 .scard { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); border-radius: var(--r-lg); padding: 2rem; transition: background .3s, border-color .3s, transform .3s; }
-.scard:hover { background: rgba(255,255,255,.08); border-color: rgba(232,99,27,.3); transform: translateY(-4px); }
+.scard:hover { background: rgba(255,255,255,.08); border-color: color-mix(in srgb, var(--accent) 30%, transparent); transform: translateY(-4px); }
 .sico { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; font-size: 1.35rem; margin-bottom: 1.25rem; }
-.scard:nth-child(1) .sico { background: rgba(232,99,27,.15); }
-.scard:nth-child(2) .sico { background: rgba(74,124,111,.2); }
+.scard:nth-child(1) .sico { background: color-mix(in srgb, var(--accent) 15%, transparent); }
+.scard:nth-child(2) .sico { background: color-mix(in srgb, var(--sage) 20%, transparent); }
 .scard:nth-child(3) .sico { background: rgba(255,140,66,.14); }
 .scard:nth-child(4) .sico { background: rgba(124,111,154,.2); }
-.scard:nth-child(5) .sico { background: rgba(232,99,27,.15); }
-.scard:nth-child(6) .sico { background: rgba(74,124,111,.2); }
+.scard:nth-child(5) .sico { background: color-mix(in srgb, var(--accent) 15%, transparent); }
+.scard:nth-child(6) .sico { background: color-mix(in srgb, var(--sage) 20%, transparent); }
 .stitle { font-family: var(--serif); font-size: 1.25rem; margin-bottom: .4rem; color: var(--cream); }
 .stxt { font-size: .88rem; color: rgba(245,240,232,.58); line-height: 1.75; }
 
@@ -462,7 +462,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .bk-hours {
   max-width: 760px;
   margin: 0 auto 1.5rem;
-  background: rgba(232,99,27,.05);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
   border-left: 3px solid var(--accent);
   border-radius: var(--r);
   padding: 1rem 1.25rem;
@@ -541,7 +541,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .bk-grid textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(232,99,27,.12);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 .bk-grid select:disabled {
   opacity: .55;
@@ -645,7 +645,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .form-group input::placeholder,
 .form-group textarea::placeholder { color: rgba(245,240,232,.28); }
 .form-group input:focus-visible,
-.form-group textarea:focus-visible { border-color: var(--accent); background: rgba(255,255,255,.09); outline: 2px solid var(--accent); outline-offset: 0; box-shadow: 0 0 0 3px rgba(232,99,27,.25); }
+.form-group textarea:focus-visible { border-color: var(--accent); background: rgba(255,255,255,.09); outline: 2px solid var(--accent); outline-offset: 0; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
 .form-group input.error,
 .form-group textarea.error { border-color: var(--error); }
 .form-check { display: flex; gap: .75rem; align-items: flex-start; margin-bottom: 1.5rem; }
@@ -726,8 +726,8 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .review-verified {
   font-size: .72rem; font-weight: 700;
   color: var(--sage);
-  background: rgba(74,124,111,.1);
-  border: 1px solid rgba(74,124,111,.25);
+  background: color-mix(in srgb, var(--sage) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sage) 25%, transparent);
   padding: .2rem .6rem;
   border-radius: var(--r-pill);
   white-space: nowrap;
@@ -759,8 +759,8 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
   margin-right: auto;
   line-height: 1.7;
   padding: 1rem 1.5rem;
-  background: rgba(74,124,111,.07);
-  border: 1px solid rgba(74,124,111,.15);
+  background: color-mix(in srgb, var(--sage) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sage) 15%, transparent);
   border-radius: var(--r);
 }
 
@@ -779,7 +779,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .legal-note {
   margin-top: 3rem;
   padding: 1.25rem 1.5rem;
-  background: rgba(232,99,27,.06);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
   border-left: 3px solid var(--accent);
   border-radius: var(--r);
   font-size: .88rem;

@@ -464,7 +464,7 @@
 [data-design="09-luxe-atelier"] .form-group textarea:focus {
   border-color: var(--accent);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(232,99,27,.12);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 [data-design="09-luxe-atelier"] .form-group label {
   font-family: var(--serif);

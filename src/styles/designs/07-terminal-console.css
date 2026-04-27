@@ -107,7 +107,7 @@
 [data-design="07-terminal-console"] .acard:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
-  box-shadow: 0 0 0 1px var(--accent), 0 12px 32px rgba(232,99,27,.15);
+  box-shadow: 0 0 0 1px var(--accent), 0 12px 32px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 [data-design="07-terminal-console"] .aphoto {
   border-radius: 0;
@@ -284,7 +284,7 @@
 [data-design="07-terminal-console"] .pcard.feat {
   background: var(--tc-bg);
   border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent), 0 0 32px rgba(232,99,27,.2);
+  box-shadow: 0 0 0 1px var(--accent), 0 0 32px color-mix(in srgb, var(--accent) 20%, transparent);
   transform: none;
 }
 [data-design="07-terminal-console"] .pbadge {
@@ -357,7 +357,7 @@
 }
 [data-design="07-terminal-console"] .btn-fill:hover {
   background: var(--accent-light);
-  box-shadow: 0 0 0 1px var(--accent-light), 0 0 24px rgba(232,99,27,.3);
+  box-shadow: 0 0 0 1px var(--accent-light), 0 0 24px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 [data-design="07-terminal-console"] .btn-outline {
   background: transparent;
@@ -367,7 +367,7 @@
 [data-design="07-terminal-console"] .btn-outline:hover {
   border-color: var(--accent);
   color: var(--accent);
-  background: rgba(232,99,27,.05);
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
 }
 
 /* Gallery */

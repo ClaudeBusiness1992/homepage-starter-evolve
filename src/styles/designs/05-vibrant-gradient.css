@@ -10,7 +10,7 @@
 
 /* Hero — explicit warm-dark gradient (no purple) */
 [data-design="05-vibrant-gradient"] #hero {
-  background: linear-gradient(135deg, var(--vg-bg-1) 0%, var(--vg-bg-2)50%, #241612 100%);
+  background: linear-gradient(135deg, var(--vg-bg-1) 0%, var(--vg-bg-2) 50%, var(--vg-bg-3) 100%);
   color: var(--white);
 }
 [data-design="05-vibrant-gradient"] #hero::before {
@@ -37,7 +37,7 @@
   color: var(--white);
 }
 [data-design="05-vibrant-gradient"] #about {
-  background: linear-gradient(180deg, var(--vg-bg-1) 0%, #241a14 100%);
+  background: linear-gradient(180deg, var(--vg-bg-1) 0%, var(--vg-bg-4) 100%);
   color: var(--white);
 }
 [data-design="05-vibrant-gradient"] #about .h2 { color: var(--white); }
@@ -65,7 +65,7 @@
 
 /* Stats — gradient dark bg */
 [data-design="05-vibrant-gradient"] #stats {
-  background: linear-gradient(135deg, var(--vg-bg-1) 0%, var(--vg-bg-2)50%, #241612 100%);
+  background: linear-gradient(135deg, var(--vg-bg-1) 0%, var(--vg-bg-2) 50%, var(--vg-bg-3) 100%);
 }
 [data-design="05-vibrant-gradient"] .stats-grid {
   display: grid;
@@ -84,7 +84,7 @@
 
 /* Pricing — dark gradient, glassmorphism cards */
 [data-design="05-vibrant-gradient"] #pricing {
-  background: linear-gradient(180deg, #241a14 0%, var(--vg-bg-1) 100%);
+  background: linear-gradient(180deg, var(--vg-bg-4) 0%, var(--vg-bg-1) 100%);
   color: var(--white);
 }
 [data-design="05-vibrant-gradient"] #pricing .h2 { color: var(--white); }
@@ -113,10 +113,10 @@
 [data-design="05-vibrant-gradient"] .pcard.feat {
   background: linear-gradient(160deg, var(--accent) 0%, var(--accent-light) 100%);
   border-color: transparent;
-  box-shadow: 0 16px 48px rgba(232,99,27,.4);
+  box-shadow: 0 16px 48px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 [data-design="05-vibrant-gradient"] .pcard.feat:hover {
-  box-shadow: 0 20px 56px rgba(232,99,27,.5);
+  box-shadow: 0 20px 56px color-mix(in srgb, var(--accent) 50%, transparent);
 }
 [data-design="05-vibrant-gradient"] .pcard.feat .pname,
 [data-design="05-vibrant-gradient"] .pcard.feat .amount,
@@ -129,7 +129,7 @@
 
 /* Gallery — dark consistent */
 [data-design="05-vibrant-gradient"] #gallery {
-  background: linear-gradient(180deg, var(--vg-bg-1) 0%, #241a14 100%);
+  background: linear-gradient(180deg, var(--vg-bg-1) 0%, var(--vg-bg-4) 100%);
   color: var(--white);
 }
 [data-design="05-vibrant-gradient"] #gallery .h2 { color: var(--white); }
@@ -148,7 +148,7 @@
 
 /* Reviews — dark consistent */
 [data-design="05-vibrant-gradient"] #reviews {
-  background: linear-gradient(180deg, #241a14 0%, var(--vg-bg-1) 100%);
+  background: linear-gradient(180deg, var(--vg-bg-4) 0%, var(--vg-bg-1) 100%);
   color: var(--white);
 }
 [data-design="05-vibrant-gradient"] #reviews .h2 { color: var(--white); }

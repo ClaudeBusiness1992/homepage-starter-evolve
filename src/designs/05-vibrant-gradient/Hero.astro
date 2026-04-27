@@ -52,12 +52,12 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 }
 .hero-orb-1 {
   width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(232,99,27,.25) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 25%, transparent) 0%, transparent 70%);
   top: -200px; right: -100px;
 }
 .hero-orb-2 {
   width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(74,124,111,.2) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--sage) 20%, transparent) 0%, transparent 70%);
   bottom: -100px; left: -80px;
 }
 
@@ -109,11 +109,11 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 .hero-btn-primary {
   background: var(--accent);
   color: var(--white);
-  box-shadow: 0 8px 32px rgba(232,99,27,.35);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 .hero-btn-primary:hover {
   background: var(--accent-light);
-  box-shadow: 0 12px 40px rgba(232,99,27,.5);
+  box-shadow: 0 12px 40px color-mix(in srgb, var(--accent) 50%, transparent);
 }
 
 .hero-btn-secondary {
