@@ -4,6 +4,17 @@
   --r-lg: 12px;
 }
 
+/* Hero — split layout, neutralize global flex/bg so .hero-split grid works */
+[data-design="04-corporate-split"] #hero {
+  background: var(--cream);
+  color: var(--ink);
+  display: block;
+  padding: 0;
+}
+[data-design="04-corporate-split"] #hero::before {
+  display: none;
+}
+
 /* Nav */
 [data-design="04-corporate-split"] #nav {
   background: var(--cream);
@@ -54,10 +65,12 @@
 [data-design="04-corporate-split"] .stitle { color: var(--ink); }
 [data-design="04-corporate-split"] .stxt { color: var(--ink-muted); }
 
-/* Stats — dark bar */
+/* Stats — cream bar (consistent with rest) */
 [data-design="04-corporate-split"] #stats {
-  background: var(--ink);
+  background: var(--cream);
   padding: 3rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 [data-design="04-corporate-split"] .stats-grid {
   display: grid;
@@ -67,13 +80,13 @@
 }
 [data-design="04-corporate-split"] .stats-grid > div {
   padding: 2rem 1.5rem;
-  border-left: 1px solid rgba(255,255,255,.08);
+  border-left: 1px solid var(--border);
 }
 [data-design="04-corporate-split"] .stats-grid > div:first-child {
   border-left: none;
 }
-[data-design="04-corporate-split"] .stat-n { color: #fff; }
-[data-design="04-corporate-split"] .stat-l { color: rgba(255,255,255,.45); }
+[data-design="04-corporate-split"] .stat-n { color: var(--accent); }
+[data-design="04-corporate-split"] .stat-l { color: var(--ink-muted); }
 
 /* Pricing — same cream as the rest, only Stats/Contact/Footer break the rhythm with dark */
 [data-design="04-corporate-split"] #pricing {
@@ -96,16 +109,58 @@
   transform: translateY(-2px);
 }
 
-/* Footer */
+/* Footer — cream consistent */
 [data-design="04-corporate-split"] footer {
-  background: var(--ink);
-  color: rgba(255,255,255,.7);
+  background: var(--cream);
+  color: var(--ink);
+  border-top: 1px solid var(--border);
 }
-[data-design="04-corporate-split"] .foot-logo { color: #fff; }
+[data-design="04-corporate-split"] .foot-logo { color: var(--ink); }
 [data-design="04-corporate-split"] .foot-logo em { color: var(--accent); }
-[data-design="04-corporate-split"] .foot-links a { color: rgba(255,255,255,.6); }
-[data-design="04-corporate-split"] .foot-links a:hover { color: #fff; }
-[data-design="04-corporate-split"] .foot-copy { color: rgba(255,255,255,.35); }
+[data-design="04-corporate-split"] .foot-links a { color: var(--ink-muted); }
+[data-design="04-corporate-split"] .foot-links a:hover { color: var(--accent); }
+[data-design="04-corporate-split"] .foot-copy { color: rgba(26,26,46,.5); }
+
+/* Contact — cream override (default is .section--dark) */
+[data-design="04-corporate-split"] #contact {
+  background: var(--cream);
+  color: var(--ink);
+}
+[data-design="04-corporate-split"] #contact .h2 { color: var(--ink); }
+[data-design="04-corporate-split"] #contact .sub { color: var(--ink-muted); }
+[data-design="04-corporate-split"] #contact .lbl { color: var(--accent); }
+[data-design="04-corporate-split"] .contact-form-wrap {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+[data-design="04-corporate-split"] .form-group input,
+[data-design="04-corporate-split"] .form-group textarea {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  color: var(--ink);
+}
+[data-design="04-corporate-split"] .form-group input::placeholder,
+[data-design="04-corporate-split"] .form-group textarea::placeholder {
+  color: rgba(26,26,46,.4);
+}
+[data-design="04-corporate-split"] .form-group label,
+[data-design="04-corporate-split"] .form-privacy,
+[data-design="04-corporate-split"] .form-checkbox-row {
+  color: var(--ink);
+}
+[data-design="04-corporate-split"] .form-optional {
+  color: var(--ink-muted);
+}
+[data-design="04-corporate-split"] .btn-phone {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--border);
+}
+[data-design="04-corporate-split"] .btn-phone:hover {
+  background: var(--ink);
+  color: var(--cream);
+}
 
 /* Gallery — light bg, clean bordered cards */
 [data-design="04-corporate-split"] #gallery {

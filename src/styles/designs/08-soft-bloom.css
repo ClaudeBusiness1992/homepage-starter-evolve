@@ -374,8 +374,8 @@
 [data-design="08-soft-bloom"] .form-optional {
   color: var(--ink-muted);
 }
-[data-design="08-soft-bloom"] .contact-form input,
-[data-design="08-soft-bloom"] .contact-form textarea {
+[data-design="08-soft-bloom"] .form-group input,
+[data-design="08-soft-bloom"] .form-group textarea {
   background: var(--sb-bg-2);
   border: 2px solid rgba(26,26,46,.15);
   border-radius: 16px;
@@ -383,17 +383,17 @@
   padding: .85rem 1.1rem;
   transition: border-color .2s, box-shadow .2s, background .2s;
 }
-[data-design="08-soft-bloom"] .contact-form input:hover,
-[data-design="08-soft-bloom"] .contact-form textarea:hover {
+[data-design="08-soft-bloom"] .form-group input:hover,
+[data-design="08-soft-bloom"] .form-group textarea:hover {
   border-color: rgba(26,26,46,.28);
   background: var(--sb-bg-3);
 }
-[data-design="08-soft-bloom"] .contact-form input::placeholder,
-[data-design="08-soft-bloom"] .contact-form textarea::placeholder {
+[data-design="08-soft-bloom"] .form-group input::placeholder,
+[data-design="08-soft-bloom"] .form-group textarea::placeholder {
   color: rgba(26,26,46,.42);
 }
-[data-design="08-soft-bloom"] .contact-form input:focus,
-[data-design="08-soft-bloom"] .contact-form textarea:focus {
+[data-design="08-soft-bloom"] .form-group input:focus,
+[data-design="08-soft-bloom"] .form-group textarea:focus {
   border-color: var(--accent);
   outline: none;
   box-shadow: 0 0 0 3px rgba(232,99,27,.12);

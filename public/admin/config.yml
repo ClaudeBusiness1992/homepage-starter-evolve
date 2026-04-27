@@ -147,23 +147,6 @@ collections:
                       - { label: "Alt-Text", name: "alt", widget: "string" }
                       - { label: "Bildunterschrift", name: "caption", widget: "string" }
                       - { label: "Kategorie", name: "category", widget: "string" }
-              - label: "Bewertungen"
-                name: "reviews"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - { label: "Überschrift", name: "headline", widget: "string" }
-                  - { label: "Unterzeile", name: "subline", widget: "text" }
-                  - label: "Bewertungen"
-                    name: "items"
-                    widget: "list"
-                    fields:
-                      - { label: "Name", name: "name", widget: "string" }
-                      - { label: "Firma", name: "company", widget: "string" }
-                      - { label: "Sterne (1–5)", name: "rating", widget: "number", value_type: "int", min: 1, max: 5 }
-                      - { label: "Verifiziert", name: "verified", widget: "boolean" }
-                      - { label: "Datum", name: "date", widget: "string" }
-                      - { label: "Text", name: "text", widget: "text" }
               - label: "Kontakt"
                 name: "contact"
                 widget: "object"
@@ -192,12 +175,24 @@ collections:
             name: "extras"
             widget: "object"
             fields:
-              - label: "Countdown / Event"
-                name: "countdown"
+
+              # ── Master-Toggles (immer sichtbar, auch wenn Detail-Bereiche zugeklappt) ──
+              - label: "🎚️ Add-ons aktivieren"
+                name: "active"
                 widget: "object"
                 collapsed: false
+                hint: "Hier kannst du jedes Add-on direkt an-/ausschalten. Die Detail-Einstellungen weiter unten kannst du beruhigt zugeklappt lassen — die Toggles funktionieren auch ohne sie zu öffnen."
                 fields:
-                  - { label: "Sektion anzeigen", name: "enabled", widget: "boolean", default: false, hint: "Schaltet die Countdown-Sektion auf der Website ein oder aus" }
+                  - { label: "📅 Countdown / Event", name: "countdown", widget: "boolean", default: false, hint: "Zeigt einen Live-Countdown zu einem Event auf der Website." }
+                  - { label: "⭐ Kundenbewertungen", name: "reviews", widget: "boolean", default: false, hint: "Zeigt die Bewertungs-Sektion mit Sternen und Zitaten." }
+                  - { label: "📋 Online-Buchung", name: "booking", widget: "boolean", default: false, hint: "Zeigt das Buchungsformular für Termine (Service, Mitarbeiter:in, Datum, Uhrzeit)." }
+
+              # ── Countdown-Detail-Einstellungen ──
+              - label: "📅 Countdown — Detail-Einstellungen"
+                name: "countdown"
+                widget: "object"
+                collapsed: true
+                fields:
                   - { label: "Label (kleine Überschrift)", name: "label", widget: "string", required: false, default: "Save the Date" }
                   - { label: "Überschrift", name: "headline", widget: "string", required: false, default: "" }
                   - { label: "Unterzeile", name: "subline", widget: "text", required: false, default: "" }
@@ -205,6 +200,66 @@ collections:
                   - { label: "Button-Text", name: "ctaLabel", widget: "string", required: false, default: "Jetzt anmelden" }
                   - { label: "Button-Link", name: "ctaHref", widget: "string", required: false, default: "#contact", hint: "z.B. #contact für das Kontaktformular oder eine vollständige URL" }
                   - { label: "Text nach Ablauf", name: "expiredText", widget: "string", required: false, default: "Das Event hat begonnen" }
+
+              # ── Bewertungen-Detail-Einstellungen (umgezogen aus Inhalte) ──
+              - label: "⭐ Bewertungen — Inhalte"
+                name: "reviews"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Label (kleine Überschrift)", name: "label", widget: "string", required: false, default: "Kundenbewertungen" }
+                  - { label: "Überschrift", name: "headline", widget: "string", required: false, default: "Was unsere Kunden sagen" }
+                  - { label: "Unterzeile", name: "subline", widget: "text", required: false, default: "" }
+                  - label: "Bewertungen"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - { label: "Name", name: "name", widget: "string" }
+                      - { label: "Firma", name: "company", widget: "string" }
+                      - { label: "Sterne (1–5)", name: "rating", widget: "number", value_type: "int", min: 1, max: 5 }
+                      - { label: "Verifiziert", name: "verified", widget: "boolean", default: false }
+                      - { label: "Datum", name: "date", widget: "string" }
+                      - { label: "Text", name: "text", widget: "text" }
+
+              # ── Buchungs-Detail-Einstellungen ──
+              - label: "📋 Buchung — Konfiguration"
+                name: "booking"
+                widget: "object"
+                collapsed: true
+                hint: "Online-Buchungsformular. Anfragen werden per E-Mail an Sie versendet. Der Kunde erhält automatisch eine Kalender-Datei (.ics) zum Speichern. Hinweis: Echtzeit-Sync mit Google Calendar ist NICHT enthalten — Sie tragen Termine manuell in Ihren Kalender ein."
+                fields:
+                  - { label: "Label (kleine Überschrift)", name: "label", widget: "string", required: false, default: "Termin buchen" }
+                  - { label: "Überschrift", name: "headline", widget: "string", required: false, default: "Wann darf's losgehen?" }
+                  - { label: "Unterzeile", name: "subline", widget: "text", required: false, default: "" }
+                  - { label: "E-Mail-Empfänger", name: "emailTo", widget: "string", required: true, hint: "An welche E-Mail-Adresse sollen Buchungsanfragen geschickt werden?" }
+                  - { label: "Button-Text", name: "ctaLabel", widget: "string", required: false, default: "Termin anfragen" }
+                  - { label: "Bestätigungs-Text nach Absenden", name: "successMessage", widget: "text", required: false, default: "Vielen Dank! Wir melden uns innerhalb von 24h." }
+                  - { label: "Vorlauf in Tagen", name: "leadDays", widget: "number", value_type: "int", default: 1, hint: "Wie viele Tage Vorlauf brauchen Sie? (1 = ab morgen buchbar)" }
+                  - label: "Verfügbare Services"
+                    name: "services"
+                    widget: "list"
+                    hint: "Welche Dienstleistungen können gebucht werden?"
+                    fields:
+                      - { label: "Name des Service", name: "name", widget: "string" }
+                      - { label: "Dauer in Minuten", name: "duration", widget: "number", value_type: "int", default: 30 }
+                  - label: "Mitarbeiter:innen"
+                    name: "staff"
+                    widget: "list"
+                    hint: "Wer kann den Service ausführen?"
+                    fields:
+                      - { label: "Name", name: "name", widget: "string" }
+                  - label: "Verfügbare Uhrzeiten pro Wochentag"
+                    name: "availability"
+                    widget: "object"
+                    hint: "Tragen Sie hier die buchbaren Zeiten pro Wochentag ein. Format pro Zeit: HH:MM (z.B. 09:00). Leer lassen = Tag geschlossen."
+                    fields:
+                      - { label: "Montag", name: "monday", widget: "list", required: false, default: [], field: { label: "Uhrzeit", name: "time", widget: "string" } }
+                      - { label: "Dienstag", name: "tuesday", widget: "list", required: false, default: [], field: { label: "Uhrzeit", name: "time", widget: "string" } }
+                      - { label: "Mittwoch", name: "wednesday", widget: "list", required: false, default: [], field: { label: "Uhrzeit", name: "time", widget: "string" } }
+                      - { label: "Donnerstag", name: "thursday", widget: "list", required: false, default: [], field: { label: "Uhrzeit", name: "time", widget: "string" } }
+                      - { label: "Freitag", name: "friday", widget: "list", required: false, default: [], field: { label: "Uhrzeit", name: "time", widget: "string" } }
+                      - { label: "Samstag", name: "saturday", widget: "list", required: false, default: [], field: { label: "Uhrzeit", name: "time", widget: "string" } }
+                      - { label: "Sonntag", name: "sunday", widget: "list", required: false, default: [], field: { label: "Uhrzeit", name: "time", widget: "string" } }
 
       # ── FIRMENDATEN ──────────────────────────────────────────────────
       - name: "firmendaten"

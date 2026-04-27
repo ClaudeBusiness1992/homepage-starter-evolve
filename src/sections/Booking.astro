@@ -1,0 +1,201 @@
+---
+import SectionHeader from '../components/SectionHeader.astro';
+
+interface Service { name: string; duration: number; }
+interface Staff   { name: string; }
+interface Avail   {
+  monday?: string[]; tuesday?: string[]; wednesday?: string[];
+  thursday?: string[]; friday?: string[]; saturday?: string[]; sunday?: string[];
+}
+
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  emailTo: string;
+  ctaLabel?: string;
+  successMessage?: string;
+  services: Service[];
+  staff: Staff[];
+  availability: Avail;
+  leadDays?: number;
+}
+
+const {
+  label, headline, subline,
+  emailTo, ctaLabel = 'Termin anfragen',
+  successMessage = 'Buchungsanfrage übermittelt. Wir melden uns innerhalb von 24 Stunden.',
+  services = [],
+  staff = [],
+  availability = {},
+  leadDays = 1,
+} = Astro.props;
+
+// Compute min date (today + leadDays)
+const today = new Date();
+const min = new Date(today.getTime() + leadDays * 86400000);
+const minDateStr = min.toISOString().slice(0, 10);
+---
+
+<section class="section booking-section" id="booking">
+  <div class="wrap">
+    <SectionHeader {label} {headline} {subline} center />
+
+    <form
+      class="booking-form r"
+      id="bookingForm"
+      data-email-to={emailTo}
+      data-availability={JSON.stringify(availability)}
+      novalidate
+    >
+      <div class="bk-grid">
+        <div class="form-group">
+          <label for="bk-service">Service *</label>
+          <select id="bk-service" name="service" required>
+            <option value="">Bitte wählen</option>
+            {services.map(s => (
+              <option value={`${s.name} (${s.duration} Min.)`}>
+                {s.name} ({s.duration} Min.)
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="bk-staff">Mitarbeiter:in *</label>
+          <select id="bk-staff" name="staff" required>
+            <option value="">Bitte wählen</option>
+            {staff.map(p => (
+              <option value={p.name}>{p.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="bk-date">Wunschdatum *</label>
+          <input type="date" id="bk-date" name="date" min={minDateStr} required />
+        </div>
+
+        <div class="form-group">
+          <label for="bk-time">Uhrzeit *</label>
+          <select id="bk-time" name="time" required disabled>
+            <option value="">Erst Datum wählen</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="bk-name">Ihr Name *</label>
+          <input type="text" id="bk-name" name="name" required autocomplete="name" />
+        </div>
+
+        <div class="form-group">
+          <label for="bk-email">E-Mail *</label>
+          <input type="email" id="bk-email" name="email" required autocomplete="email" />
+        </div>
+
+        <div class="form-group form-group--full">
+          <label for="bk-phone">Telefon <span class="form-optional">(optional)</span></label>
+          <input type="tel" id="bk-phone" name="phone" autocomplete="tel" />
+        </div>
+
+        <div class="form-group form-group--full">
+          <label for="bk-note">Anmerkung <span class="form-optional">(optional)</span></label>
+          <textarea id="bk-note" name="note" rows="3"></textarea>
+        </div>
+      </div>
+
+      <p class="bk-status" id="bk-status" aria-live="polite"></p>
+
+      <div class="bk-actions">
+        <button type="submit" class="btn btn-fill bk-submit">{ctaLabel} →</button>
+        <a href="#" id="bk-ics" class="bk-ics-link" hidden>📅 Termin als Kalender-Datei (.ics) speichern</a>
+      </div>
+
+      <p class="bk-hint">
+        Hinweis: Ihre Anfrage wird per E-Mail an uns übermittelt. Wir bestätigen den Termin verbindlich
+        innerhalb von 24 Stunden. Bei Bedarf schlagen wir einen Alternativtermin vor.
+      </p>
+    </form>
+  </div>
+</section>
+
+<script is:inline define:vars={{ successMessage }}>
+  (() => {
+    const form = document.getElementById('bookingForm');
+    if (!form) return;
+    const dateEl = form.querySelector('#bk-date');
+    const timeEl = form.querySelector('#bk-time');
+    const status = form.querySelector('#bk-status');
+    const icsLink = form.querySelector('#bk-ics');
+    const emailTo = form.dataset.emailTo;
+    const availability = JSON.parse(form.dataset.availability || '{}');
+    const dayKeys = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
+    // Update time slots when date changes
+    dateEl?.addEventListener('change', () => {
+      const d = new Date(dateEl.value);
+      if (isNaN(d)) { timeEl.disabled = true; return; }
+      const slots = availability[dayKeys[d.getDay()]] || [];
+      timeEl.innerHTML = slots.length
+        ? '<option value="">Bitte wählen</option>' + slots.map(s => `<option value="${s}">${s} Uhr</option>`).join('')
+        : '<option value="">Keine Termine an diesem Tag</option>';
+      timeEl.disabled = slots.length === 0;
+    });
+
+    // Build .ics calendar file content
+    const buildIcs = (data) => {
+      const dt = new Date(`${data.date}T${data.time}:00`);
+      const end = new Date(dt.getTime() + 60 * 60000); // default 60 min
+      const fmt = d => d.toISOString().replace(/[-:]|\.\d{3}/g, '');
+      return [
+        'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//homepage-starter//Booking//DE',
+        'BEGIN:VEVENT',
+        'UID:' + Date.now() + '@booking',
+        'DTSTAMP:' + fmt(new Date()),
+        'DTSTART:' + fmt(dt),
+        'DTEND:' + fmt(end),
+        'SUMMARY:' + (data.service || 'Termin'),
+        'DESCRIPTION:Mitarbeiter\\: ' + (data.staff || '') + '\\nKunde\\: ' + (data.name || ''),
+        'END:VEVENT','END:VCALENDAR'
+      ].join('\r\n');
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      const data = Object.fromEntries(new FormData(form));
+
+      // Build mailto: with all booking details
+      const subject = encodeURIComponent(`Buchungsanfrage: ${data.service} am ${data.date} ${data.time}`);
+      const bodyLines = [
+        'Buchungsanfrage über die Website:',
+        '',
+        `Service:       ${data.service}`,
+        `Mitarbeiter:   ${data.staff}`,
+        `Datum:         ${data.date}`,
+        `Uhrzeit:       ${data.time} Uhr`,
+        '',
+        `Name:          ${data.name}`,
+        `E-Mail:        ${data.email}`,
+        `Telefon:       ${data.phone || '—'}`,
+        '',
+        'Anmerkung:',
+        data.note || '—',
+      ];
+      const body = encodeURIComponent(bodyLines.join('\n'));
+      window.location.href = `mailto:${emailTo}?subject=${subject}&body=${body}`;
+
+      // Provide .ics download
+      try {
+        const ics = buildIcs(data);
+        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        icsLink.href = URL.createObjectURL(blob);
+        icsLink.download = `termin-${data.date}.ics`;
+        icsLink.hidden = false;
+      } catch (_) {}
+
+      status.textContent = successMessage;
+      status.classList.add('bk-status--success');
+    });
+  })();
+</script>

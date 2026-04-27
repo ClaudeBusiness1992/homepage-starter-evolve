@@ -457,6 +457,70 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .pricing-note { text-align: center; margin-top: 2rem; font-size: .83rem; color: var(--ink-muted); }
 .pricing-note a { color: var(--accent); text-decoration: none; }
 
+/* ── BOOKING (optional add-on) ── */
+.booking-section { background: var(--cream); }
+.booking-form {
+  max-width: 760px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  padding: 2.5rem;
+}
+.bk-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+.bk-grid .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+.bk-grid .form-group--full {
+  grid-column: 1 / -1;
+}
+.bk-grid label {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.bk-grid input,
+.bk-grid select,
+.bk-grid textarea {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: .75rem 1rem;
+  font-family: inherit;
+  font-size: .95rem;
+  color: var(--ink);
+  transition: border-color .2s, box-shadow .2s;
+}
+.bk-grid input:focus,
+.bk-grid select:focus,
+.bk-grid textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(232,99,27,.12);
+}
+.bk-grid select:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+.bk-grid textarea { resize: vertical; min-height: 80px; }
+.bk-status { margin: 1.25rem 0 0; font-size: .9rem; color: var(--ink-muted); min-height: 1.4em; }
+.bk-status--success { color: var(--sage); font-weight: 600; }
+.bk-actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 1.5rem; }
+.bk-submit { font-size: 1rem; }
+.bk-ics-link { font-size: .88rem; color: var(--accent); text-decoration: underline; }
+.bk-hint { font-size: .8rem; color: var(--ink-muted); margin-top: 1.5rem; line-height: 1.5; }
+
+@media (max-width: 640px) {
+  .bk-grid { grid-template-columns: 1fr; }
+  .booking-form { padding: 1.5rem; }
+}
+
 /* ── COUNTDOWN (optional add-on) ── */
 .countdown-section { background: var(--ink); color: var(--cream); padding: 5rem 0; }
 .countdown-section .lbl { color: var(--accent-light); }
