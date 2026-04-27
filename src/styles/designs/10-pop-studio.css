@@ -414,15 +414,15 @@
   border-radius: 20px;
   box-shadow: 8px 8px 0 var(--accent);
 }
-[data-design="10-pop-studio"] .contact-form input,
-[data-design="10-pop-studio"] .contact-form textarea {
+[data-design="10-pop-studio"] .form-group input,
+[data-design="10-pop-studio"] .form-group textarea {
   background: var(--po-bg);
   border: 2px solid var(--ink);
   border-radius: 12px;
   color: var(--ink);
 }
-[data-design="10-pop-studio"] .contact-form input:focus,
-[data-design="10-pop-studio"] .contact-form textarea:focus {
+[data-design="10-pop-studio"] .form-group input:focus,
+[data-design="10-pop-studio"] .form-group textarea:focus {
   border-color: var(--accent);
   box-shadow: 4px 4px 0 var(--accent);
 }
@@ -442,6 +442,7 @@
 [data-design="10-pop-studio"] .foot-logo {
   font-family: var(--serif);
   font-weight: 400;
+  color: var(--ink);
 }
 [data-design="10-pop-studio"] .foot-logo em {
   background: var(--accent);
@@ -455,6 +456,13 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .08em;
+  color: rgba(26,26,46,.7);
+}
+[data-design="10-pop-studio"] .foot-links a:hover {
+  color: var(--accent);
+}
+[data-design="10-pop-studio"] .foot-copy {
+  color: rgba(26,26,46,.5);
 }
 
 @media (max-width: 768px) {

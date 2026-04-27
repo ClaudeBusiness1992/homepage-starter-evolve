@@ -1,7 +1,11 @@
 {
   "extras": {
+    "active": {
+      "countdown": true,
+      "reviews": false,
+      "booking": false
+    },
     "countdown": {
-      "enabled": true,
       "label": "Save the Date",
       "headline": "Workshop am 15. Mai 2026",
       "subline": "Plätze sind begrenzt — sichern Sie sich Ihren rechtzeitig.",
@@ -9,6 +13,65 @@
       "ctaLabel": "Jetzt anmelden",
       "ctaHref": "#contact",
       "expiredText": "Das Event hat begonnen"
+    },
+    "reviews": {
+      "label": "Kundenbewertungen",
+      "headline": "Was unsere Kunden sagen",
+      "subline": "Echte Projekte, echte Menschen, echte Ergebnisse.",
+      "items": [
+        {
+          "name": "Sandra Weber",
+          "company": "Schreinerei Weber",
+          "rating": 5,
+          "verified": true,
+          "date": "März 2026",
+          "text": "Innerhalb von zwei Wochen hatten wir eine Website, die unsere Arbeit endlich richtig zeigt. Anfragen über die Seite kommen seitdem regelmäßig rein."
+        },
+        {
+          "name": "Dr. Thomas Müller",
+          "company": "Allgemeinarzt",
+          "rating": 5,
+          "verified": true,
+          "date": "Februar 2026",
+          "text": "Professionelle Abwicklung von Anfang bis Ende. Die Seite ist übersichtlich, schnell und kommt bei meinen Patienten sehr gut an."
+        },
+        {
+          "name": "Lisa Sonnenschein",
+          "company": "Café Sonnenschein",
+          "rating": 5,
+          "verified": true,
+          "date": "Januar 2026",
+          "text": "Wir hatten genaue Vorstellungen und die wurden perfekt umgesetzt. Besonders die Bildergalerie und das Kontaktformular funktionieren einwandfrei."
+        }
+      ]
+    },
+    "booking": {
+      "label": "Termin buchen",
+      "headline": "Wann darf's losgehen?",
+      "subline": "Wählen Sie Service, Mitarbeiter:in und Wunschtermin. Wir bestätigen Ihre Buchung per E-Mail innerhalb von 24 Stunden.",
+      "emailTo": "termine@beispiel.de",
+      "ctaLabel": "Termin anfragen",
+      "successMessage": "Buchungsanfrage wurde übermittelt. Wir melden uns innerhalb von 24 Stunden zur Bestätigung.",
+      "services": [
+        { "name": "Erstberatung (30 min)", "duration": 30 },
+        { "name": "Strategie-Workshop (60 min)", "duration": 60 },
+        { "name": "Premium-Beratung (90 min)", "duration": 90 }
+      ],
+      "staff": [
+        { "name": "Anna Müller" },
+        { "name": "Tom Berger" },
+        { "name": "Egal — wer Zeit hat" }
+      ],
+      "availability": {
+        "monday":    ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
+        "tuesday":   ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
+        "wednesday": ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
+        "thursday":  ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
+        "friday":    ["09:00", "10:00", "11:00", "14:00"],
+        "saturday":  [],
+        "sunday":    []
+      },
+      "leadDays": 1
     }
   }
 }

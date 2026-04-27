@@ -77,15 +77,15 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 
 <style>
   .tc-hero {
-    background: #0a0e14;
-    color: #ffffff;
+    background: var(--tc-bg);
+    color: var(--tc-text);
     min-height: 100vh;
     padding: calc(var(--nav-h) + 3rem) 0 4rem;
     display: flex;
     align-items: center;
     position: relative;
     overflow: hidden;
-    font-family: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', Consolas, ui-monospace, monospace;
+    font-family: var(--mono);
   }
 
   .tc-grid-bg {
@@ -100,8 +100,8 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   }
 
   .tc-window {
-    background: #0d1117;
-    border: 1px solid #1f2933;
+    background: var(--tc-bg-2);
+    border: 1px solid var(--tc-border);
     border-radius: 10px;
     box-shadow: 0 24px 80px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.02);
     overflow: hidden;
@@ -115,22 +115,23 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     align-items: center;
     gap: 1rem;
     padding: .75rem 1rem;
-    background: #161c24;
-    border-bottom: 1px solid #1f2933;
-    font-size: .78rem;
-    color: rgba(255,255,255,.72);
+    background: var(--tc-bg-3);
+    border-bottom: 1px solid var(--tc-border);
+    font-size: .84rem;
+    color: var(--tc-text-dim);
   }
   .tc-dots { display: flex; gap: .4rem; }
   .tc-dot { width: 12px; height: 12px; border-radius: 50%; }
+  /* Mac-Window-Dots — semantische Farben, bleiben fix */
   .tc-dot-r { background: #ff5f57; }
   .tc-dot-y { background: #ffbd2e; }
   .tc-dot-g { background: #28c840; }
   .tc-tab {
-    background: #0d1117;
+    background: var(--tc-bg-2);
     padding: .25rem .9rem;
     border-radius: 6px 6px 0 0;
-    color: #ffffff;
-    border: 1px solid #1f2933;
+    color: var(--tc-text);
+    border: 1px solid var(--tc-border);
     border-bottom: none;
     margin-bottom: -.75rem;
     margin-top: -.4rem;
@@ -140,16 +141,17 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     display: flex;
     align-items: center;
     gap: .4rem;
-    color: #7ee787;
+    color: var(--tc-accent-2);
   }
   .tc-led {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #7ee787;
-    box-shadow: 0 0 8px #7ee787;
+    background: var(--tc-accent-2);
+    box-shadow: 0 0 8px var(--tc-accent-2);
     animation: tc-pulse 2s infinite;
   }
+  /* OK-LED Variante — semantisches Blau, bleibt fix */
   .tc-led-ok { background: #58a6ff; box-shadow: 0 0 6px #58a6ff; }
   @keyframes tc-pulse {
     0%, 100% { opacity: 1; }
@@ -160,21 +162,21 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 
   .tc-pre {
     font-family: inherit;
-    color: rgba(255,255,255,.72);
+    color: var(--tc-text-dim);
     font-size: .92rem;
     line-height: 1.4;
     margin: 0;
     white-space: pre-wrap;
   }
   .tc-prompt { color: var(--accent); font-weight: 700; }
-  .tc-cmd { color: #ffffff; }
-  .tc-out { color: #79c0ff; display: block; }
+  .tc-cmd { color: var(--tc-text); }
+  .tc-out { color: var(--tc-accent-3); display: block; }
 
   .tc-h1 {
-    font-family: 'Outfit', system-ui, sans-serif;
+    font-family: var(--sans);
     font-size: clamp(2rem, 4.5vw, 3.4rem);
     line-height: 1.15;
-    color: #ffffff;
+    color: var(--tc-text);
     margin: .8rem 0 1.5rem;
     letter-spacing: -.02em;
     font-weight: 700;
@@ -188,8 +190,8 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   @keyframes tc-blink { 50% { opacity: 0; } }
 
   .tc-sub {
-    font-family: 'Outfit', system-ui, sans-serif;
-    color: #ffffff;
+    font-family: var(--sans);
+    color: var(--tc-text);
     font-size: 1rem;
     line-height: 1.7;
     margin: .8rem 0 1.5rem;
@@ -214,7 +216,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   }
   .tc-btn-primary {
     background: var(--accent);
-    color: #0a0e14;
+    color: var(--tc-bg);
     font-weight: 700;
     box-shadow: 0 0 0 1px var(--accent), 0 0 24px rgba(232,99,27,.3);
   }
@@ -224,8 +226,8 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   }
   .tc-btn-ghost {
     background: transparent;
-    color: #ffffff;
-    border: 1px solid #2c343d;
+    color: var(--tc-text);
+    border: 1px solid var(--tc-border-soft);
   }
   .tc-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -234,19 +236,19 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     align-items: center;
     gap: .85rem;
     padding: .55rem 1.25rem;
-    background: #0a0e14;
-    border-top: 1px solid #1f2933;
-    font-size: .72rem;
-    color: rgba(255,255,255,.72);
+    background: var(--tc-bg);
+    border-top: 1px solid var(--tc-border);
+    font-size: .78rem;
+    color: var(--tc-text-dim);
   }
   .tc-statusbar .tc-led { width: 6px; height: 6px; }
-  .tc-sep { color: #2c343d; }
+  .tc-sep { color: var(--tc-border-soft); }
   .tc-spacer { flex: 1; }
   .tc-time { color: var(--accent); font-variant-numeric: tabular-nums; }
 
   @media (max-width: 640px) {
     .tc-body { padding: 1.5rem 1.25rem 2rem; }
-    .tc-statusbar { font-size: .65rem; padding: .55rem 1rem; gap: .5rem; }
+    .tc-statusbar { font-size: .7rem; padding: .55rem 1rem; gap: .5rem; }
     .tc-actions { flex-direction: column; }
     .tc-btn { text-align: center; }
   }

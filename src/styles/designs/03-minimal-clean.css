@@ -4,6 +4,21 @@
   --r-lg: 4px;
 }
 
+/* Body */
+[data-design="03-minimal-clean"] body {
+  background: #ffffff;
+  color: var(--ink);
+}
+
+/* Hero — explicit override (light bg) */
+[data-design="03-minimal-clean"] #hero {
+  background: #ffffff;
+  color: var(--ink);
+}
+[data-design="03-minimal-clean"] #hero::before {
+  display: none;
+}
+
 /* Nav */
 [data-design="03-minimal-clean"] #nav {
   background: #ffffff;
@@ -249,15 +264,15 @@
 [data-design="03-minimal-clean"] .form-optional {
   color: var(--ink-muted);
 }
-[data-design="03-minimal-clean"] .contact-form input,
-[data-design="03-minimal-clean"] .contact-form textarea {
+[data-design="03-minimal-clean"] .form-group input,
+[data-design="03-minimal-clean"] .form-group textarea {
   background: #fff;
   border-color: rgba(26,26,46,.2);
   color: var(--ink);
   border-radius: 2px;
 }
-[data-design="03-minimal-clean"] .contact-form input::placeholder,
-[data-design="03-minimal-clean"] .contact-form textarea::placeholder {
+[data-design="03-minimal-clean"] .form-group input::placeholder,
+[data-design="03-minimal-clean"] .form-group textarea::placeholder {
   color: rgba(26,26,46,.35);
 }
 [data-design="03-minimal-clean"] .btn-phone {

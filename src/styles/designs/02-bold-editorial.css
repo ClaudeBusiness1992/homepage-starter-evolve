@@ -4,6 +4,15 @@
   --r-lg: 8px;
 }
 
+/* Hero — explicit override for consistency */
+[data-design="02-bold-editorial"] #hero {
+  background: #0d0d0d;
+  color: #f0ede8;
+}
+[data-design="02-bold-editorial"] #hero::before {
+  display: none;
+}
+
 /* Nav */
 [data-design="02-bold-editorial"] #nav {
   background: #0d0d0d;
@@ -55,7 +64,17 @@
 
 /* Pricing — framed boxes, centered, magazine ad style */
 [data-design="02-bold-editorial"] #pricing {
-  background: #f0ede8;
+  background: #0d0d0d;
+}
+[data-design="02-bold-editorial"] #pricing .h2,
+[data-design="02-bold-editorial"] #pricing .h2 * {
+  color: #f0ede8;
+}
+[data-design="02-bold-editorial"] #pricing .sub {
+  color: rgba(240,237,232,.6);
+}
+[data-design="02-bold-editorial"] #pricing .lbl {
+  color: var(--accent-light);
 }
 [data-design="02-bold-editorial"] .pricing-grid {
   display: grid;
@@ -64,8 +83,8 @@
 }
 [data-design="02-bold-editorial"] .pcard {
   background: transparent;
-  color: var(--ink);
-  border: 2px solid var(--ink);
+  color: #f0ede8;
+  border: 2px solid #f0ede8;
   border-radius: 0;
   padding: 2.75rem 1.75rem;
   box-shadow: none;
@@ -74,8 +93,8 @@
   transition: background .25s, color .25s, transform .5s cubic-bezier(.22,.61,.36,1);
 }
 [data-design="02-bold-editorial"] .pcard:hover {
-  background: var(--ink);
-  color: var(--cream);
+  background: #f0ede8;
+  color: var(--ink);
   transform: translateY(-4px);
   box-shadow: none;
 }
@@ -84,24 +103,24 @@
 [data-design="02-bold-editorial"] .pcard:hover .amount,
 [data-design="02-bold-editorial"] .pcard:hover .note,
 [data-design="02-bold-editorial"] .pcard:hover .plist li {
-  color: var(--cream);
+  color: var(--ink);
 }
 [data-design="02-bold-editorial"] .pcard:hover .plist li {
-  background: rgba(245,240,232,.12);
+  background: rgba(26,26,46,.08);
 }
 [data-design="02-bold-editorial"] .pcard.feat {
-  background: var(--ink);
-  color: var(--cream);
+  background: #f0ede8;
+  color: var(--ink);
 }
 [data-design="02-bold-editorial"] .pcard.feat .pname,
 [data-design="02-bold-editorial"] .pcard.feat .ptag,
 [data-design="02-bold-editorial"] .pcard.feat .note,
 [data-design="02-bold-editorial"] .pcard.feat .plist li {
-  color: var(--cream);
+  color: var(--ink);
 }
-[data-design="02-bold-editorial"] .pcard.feat .amount { color: var(--accent-light); }
+[data-design="02-bold-editorial"] .pcard.feat .amount { color: var(--accent); }
 [data-design="02-bold-editorial"] .pcard.feat .plist li {
-  background: rgba(245,240,232,.12);
+  background: rgba(26,26,46,.08);
 }
 [data-design="02-bold-editorial"] .pbadge {
   position: absolute;
@@ -130,7 +149,7 @@
   font-style: italic;
   font-size: 1.6rem;
   line-height: 1.2;
-  color: var(--ink);
+  color: #f0ede8;
   margin-bottom: 1.5rem;
   font-weight: 400;
 }
@@ -138,7 +157,7 @@
   font-size: 2.2rem;
   font-weight: 700;
   font-family: var(--serif);
-  color: var(--ink);
+  color: var(--accent);
 }
 [data-design="02-bold-editorial"] .pprice .note {
   text-align: center;

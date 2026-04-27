@@ -26,6 +26,7 @@ import Countdown from '../sections/Countdown.astro';
 import Pricing  from '../sections/Pricing.astro';
 import Gallery  from '../sections/Gallery.astro';
 import Reviews  from '../sections/Reviews.astro';
+import Booking  from '../sections/Booking.astro';
 import Contact  from '../sections/Contact.astro';
 import Footer   from '../sections/Footer.astro';
 
@@ -88,11 +89,12 @@ const navLinks = (meta.nav ?? []).filter(l => !l.section || s[l.section]?.enable
     {s.about.enabled     && <About     {...s.about} />}
     {s.services.enabled  && <Services  {...s.services} />}
     {s.gallery?.enabled  && <Gallery   {...s.gallery} />}
-    {s.stats.enabled     && <Stats     items={s.stats.items} />}
-    {x.countdown?.enabled && <Countdown {...x.countdown} />}
-    {s.pricing.enabled   && <Pricing   {...s.pricing} />}
-    {s.reviews?.enabled  && <Reviews   {...s.reviews} agencyName={meta.siteName} agencyUrl={Astro.site?.href} />}
-    {s.contact.enabled   && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} />}
-    {s.footer.enabled    && <Footer    siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} copyright={meta.copyright} links={s.footer.links} />}
+    {s.stats?.enabled    && <Stats     items={s.stats.items} />}
+    {x.active?.countdown && x.countdown && <Countdown {...x.countdown} />}
+    {s.pricing?.enabled  && <Pricing   {...s.pricing} />}
+    {x.active?.reviews   && x.reviews  && <Reviews  {...x.reviews} agencyName={meta.siteName} agencyUrl={Astro.site?.href} />}
+    {x.active?.booking   && x.booking  && <Booking  {...x.booking} />}
+    {s.contact?.enabled  && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} />}
+    {s.footer?.enabled   && <Footer    siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} copyright={meta.copyright} links={s.footer.links} />}
   </main>
 </Base>

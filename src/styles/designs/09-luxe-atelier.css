@@ -442,8 +442,8 @@
   border: none;
   box-shadow: none;
 }
-[data-design="09-luxe-atelier"] .contact-form input,
-[data-design="09-luxe-atelier"] .contact-form textarea {
+[data-design="09-luxe-atelier"] .form-group input,
+[data-design="09-luxe-atelier"] .form-group textarea {
   background: var(--lx-bg);
   border: 1px solid rgba(26,26,26,.22);
   border-radius: 0;
@@ -452,16 +452,16 @@
   padding: .85rem 1rem;
   transition: border-color .2s, box-shadow .2s;
 }
-[data-design="09-luxe-atelier"] .contact-form input:hover,
-[data-design="09-luxe-atelier"] .contact-form textarea:hover {
+[data-design="09-luxe-atelier"] .form-group input:hover,
+[data-design="09-luxe-atelier"] .form-group textarea:hover {
   border-color: rgba(26,26,26,.4);
 }
-[data-design="09-luxe-atelier"] .contact-form input::placeholder,
-[data-design="09-luxe-atelier"] .contact-form textarea::placeholder {
+[data-design="09-luxe-atelier"] .form-group input::placeholder,
+[data-design="09-luxe-atelier"] .form-group textarea::placeholder {
   color: rgba(26,26,26,.35);
 }
-[data-design="09-luxe-atelier"] .contact-form input:focus,
-[data-design="09-luxe-atelier"] .contact-form textarea:focus {
+[data-design="09-luxe-atelier"] .form-group input:focus,
+[data-design="09-luxe-atelier"] .form-group textarea:focus {
   border-color: var(--accent);
   outline: none;
   box-shadow: 0 0 0 2px rgba(232,99,27,.12);
