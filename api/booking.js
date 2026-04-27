@@ -121,13 +121,21 @@ export default async function handler(req, res) {
     return res.end(JSON.stringify({ error: 'Ungültige E-Mail-Adresse.' }));
   }
 
+  // Length validation (anti-bloat)
+  const tooLong = (v, max) => typeof v === 'string' && v.length > max;
+  if (tooLong(name, 120) || tooLong(email, 200) || tooLong(phone, 60)
+      || tooLong(service, 200) || tooLong(staff, 120) || tooLong(note, 2000)) {
+    res.statusCode = 400;
+    return res.end(JSON.stringify({ error: 'Eingaben zu lang.' }));
+  }
+
   // Live-Sync: create Google Calendar event
   const saJson = process.env.GOOGLE_SA_JSON;
   const calendarId = body.calendarId || process.env.GOOGLE_CALENDAR_ID || '';
 
   if (!saJson || !calendarId) {
-    // Live-Sync nicht konfiguriert → Erfolg melden, Logging
-    console.log('Booking received (live-sync not configured):', { service, staff, date, time, name, email });
+    // Live-Sync nicht konfiguriert → Erfolg melden, Logging ohne PII
+    console.log('Booking received (live-sync not configured)');
     res.statusCode = 200;
     return res.end(JSON.stringify({
       ok: true,

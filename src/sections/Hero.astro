@@ -5,9 +5,12 @@ interface Props {
   subline: string;
   ctaPrimary: string;
   ctaSecondary: string;
+  mockupUrl?: string;
 }
-const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
-const [h1, h2, h3] = headline.split('. ');
+const { label, headline, subline, ctaPrimary, ctaSecondary, mockupUrl = 'ihre-neue-website.de' } = Astro.props;
+// Robust split: 1, 2, or 3 sentences supported. Trailing dots optional.
+const parts = headline.split('. ').map(p => p.replace(/\.$/, ''));
+const [h1, h2, h3] = [parts[0] ?? '', parts[1] ?? '', parts[2] ?? ''];
 ---
 
 <section id="hero">
@@ -15,7 +18,11 @@ const [h1, h2, h3] = headline.split('. ');
     <div class="hero-grid">
       <div>
         <span class="lbl hero-lbl">{label}</span>
-        <h1 class="hero-h1">{h1}.<br /><i>{h2}.</i><br />{h3}.</h1>
+        <h1 class="hero-h1">
+          {h1}{h1 ? '.' : ''}
+          {h2 && (<><br /><i>{h2}.</i></>)}
+          {h3 && (<><br />{h3}.</>)}
+        </h1>
         <p class="hero-sub">{subline}</p>
         <div class="hero-btns">
           <a href="#contact" class="btn btn-fill">{ctaPrimary} <span aria-hidden="true">→</span></a>
@@ -26,7 +33,7 @@ const [h1, h2, h3] = headline.split('. ');
         <div class="browser">
           <div class="bbar">
             <div class="bdots"><span></span><span></span><span></span></div>
-            <div class="burl">ihre-neue-website.de</div>
+            <div class="burl">{mockupUrl}</div>
           </div>
           <div class="bcontent">
             <div class="ms">

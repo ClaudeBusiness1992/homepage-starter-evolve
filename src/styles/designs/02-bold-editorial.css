@@ -2,8 +2,8 @@
 [data-design="02-bold-editorial"] {
   --r: 4px;
   --r-lg: 8px;
-  --bld-bg: var(--bld-bg);
-  --bld-cream: var(--bld-cream);
+  --bld-bg: #0d0d0d;
+  --bld-cream: #f0ede8;
 }
 
 /* Hero — explicit override for consistency */

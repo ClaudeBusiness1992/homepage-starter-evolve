@@ -85,7 +85,7 @@ const navLinks = (meta.nav ?? []).filter(l => !l.section || s[l.section]?.enable
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={navLinks} />
 
   <main id="main">
-    {s.hero.enabled      && <Hero      {...s.hero} />}
+    {s.hero.enabled      && <Hero      {...s.hero} mockupUrl={Astro.site ? Astro.site.host : undefined} />}
     {s.about.enabled     && <About     {...s.about} />}
     {s.services.enabled  && <Services  {...s.services} />}
     {s.gallery?.enabled  && <Gallery   {...s.gallery} />}
