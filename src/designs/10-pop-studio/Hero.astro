@@ -61,7 +61,7 @@ const secondHalf = words.slice(half).join(' ');
 
 <style>
   .po-hero {
-    background: #fef6e8;
+    background: var(--po-bg);
     color: var(--ink);
     min-height: 100vh;
     padding: calc(var(--nav-h) + 3rem) 0 0;
@@ -99,7 +99,7 @@ const secondHalf = words.slice(half).join(' ');
     animation: po-float 12s ease-in-out infinite reverse;
   }
   .po-shape-cross {
-    color: #6c3aff;
+    color: var(--po-purple);
     font-size: 60px;
     top: 28%;
     left: 8%;
@@ -111,7 +111,7 @@ const secondHalf = words.slice(half).join(' ');
     position: absolute;
     width: 200px;
     height: 40px;
-    color: #ffd23f;
+    color: var(--po-yellow);
     bottom: 18%;
     right: 7%;
     pointer-events: none;
@@ -135,7 +135,7 @@ const secondHalf = words.slice(half).join(' ');
     position: absolute;
     top: calc(var(--nav-h) + 2rem);
     right: 8%;
-    background: #ffd23f;
+    background: var(--po-yellow);
     color: #1a1a1a;
     padding: .5rem 1rem;
     border-radius: 100px;
@@ -187,7 +187,7 @@ const secondHalf = words.slice(half).join(' ');
   .po-h1-mark {
     display: inline-block;
     background: var(--accent);
-    color: #fff;
+    color: var(--white);
     padding: 0 .25em;
     border-radius: 12px;
     transform: rotate(-1.5deg);
@@ -226,7 +226,7 @@ const secondHalf = words.slice(half).join(' ');
   }
   .po-btn-primary {
     background: var(--ink);
-    color: #fef6e8;
+    color: var(--po-bg);
     box-shadow: 5px 5px 0 var(--accent);
   }
   .po-btn-primary:hover {
@@ -234,7 +234,7 @@ const secondHalf = words.slice(half).join(' ');
     box-shadow: 7px 7px 0 var(--accent);
   }
   .po-btn-ghost {
-    background: #fff;
+    background: var(--po-bg-2);
     color: var(--ink);
     box-shadow: 5px 5px 0 var(--sage);
   }
@@ -252,7 +252,7 @@ const secondHalf = words.slice(half).join(' ');
   .po-marquee {
     margin-top: 3rem;
     background: var(--ink);
-    color: #fef6e8;
+    color: var(--po-bg);
     padding: 1rem 0;
     overflow: hidden;
     border-top: 3px solid var(--accent);

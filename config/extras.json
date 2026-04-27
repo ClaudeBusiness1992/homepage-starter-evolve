@@ -50,6 +50,8 @@
       "headline": "Wann darf's losgehen?",
       "subline": "Wählen Sie Service, Mitarbeiter:in und Wunschtermin. Wir bestätigen Ihre Buchung per E-Mail innerhalb von 24 Stunden.",
       "emailTo": "termine@beispiel.de",
+      "liveSync": false,
+      "calendarId": "",
       "ctaLabel": "Termin anfragen",
       "successMessage": "Buchungsanfrage wurde übermittelt. Wir melden uns innerhalb von 24 Stunden zur Bestätigung.",
       "services": [

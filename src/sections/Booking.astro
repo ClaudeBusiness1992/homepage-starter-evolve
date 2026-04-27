@@ -13,6 +13,8 @@ interface Props {
   headline: string;
   subline: string;
   emailTo: string;
+  liveSync?: boolean;
+  calendarId?: string;
   ctaLabel?: string;
   successMessage?: string;
   services: Service[];
@@ -23,7 +25,10 @@ interface Props {
 
 const {
   label, headline, subline,
-  emailTo, ctaLabel = 'Termin anfragen',
+  emailTo,
+  liveSync = false,
+  calendarId = '',
+  ctaLabel = 'Termin anfragen',
   successMessage = 'Buchungsanfrage übermittelt. Wir melden uns innerhalb von 24 Stunden.',
   services = [],
   staff = [],
@@ -45,9 +50,13 @@ const minDateStr = min.toISOString().slice(0, 10);
       class="booking-form r"
       id="bookingForm"
       data-email-to={emailTo}
+      data-live-sync={liveSync ? 'true' : 'false'}
+      data-calendar-id={calendarId}
       data-availability={JSON.stringify(availability)}
       novalidate
     >
+      <input type="text" name="hp" tabindex="-1" autocomplete="off"
+             style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true" />
       <div class="bk-grid">
         <div class="form-group">
           <label for="bk-service">Service *</label>
@@ -127,11 +136,16 @@ const minDateStr = min.toISOString().slice(0, 10);
     const timeEl = form.querySelector('#bk-time');
     const status = form.querySelector('#bk-status');
     const icsLink = form.querySelector('#bk-ics');
+    const submitBtn = form.querySelector('.bk-submit');
     const emailTo = form.dataset.emailTo;
+    const liveSync = form.dataset.liveSync === 'true';
+    const calendarId = form.dataset.calendarId || '';
     const availability = JSON.parse(form.dataset.availability || '{}');
     const dayKeys = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
 
-    // Update time slots when date changes
+    // Track when form was first rendered (anti-bot time check)
+    const formRenderedAt = Date.now();
+
     dateEl?.addEventListener('change', () => {
       const d = new Date(dateEl.value);
       if (isNaN(d)) { timeEl.disabled = true; return; }
@@ -142,10 +156,9 @@ const minDateStr = min.toISOString().slice(0, 10);
       timeEl.disabled = slots.length === 0;
     });
 
-    // Build .ics calendar file content
     const buildIcs = (data) => {
       const dt = new Date(`${data.date}T${data.time}:00`);
-      const end = new Date(dt.getTime() + 60 * 60000); // default 60 min
+      const end = new Date(dt.getTime() + 60 * 60000);
       const fmt = d => d.toISOString().replace(/[-:]|\.\d{3}/g, '');
       return [
         'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//homepage-starter//Booking//DE',
@@ -160,12 +173,54 @@ const minDateStr = min.toISOString().slice(0, 10);
       ].join('\r\n');
     };
 
-    form.addEventListener('submit', (e) => {
+    const showIcsDownload = (data) => {
+      try {
+        const ics = buildIcs(data);
+        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+        icsLink.href = URL.createObjectURL(blob);
+        icsLink.download = `termin-${data.date}.ics`;
+        icsLink.hidden = false;
+      } catch (_) {}
+    };
+
+    const setStatus = (msg, isError = false) => {
+      status.textContent = msg;
+      status.classList.toggle('bk-status--success', !isError);
+      status.classList.toggle('bk-status--error', isError);
+    };
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      const data = Object.fromEntries(new FormData(form));
 
-      // Build mailto: with all booking details
+      const fd = new FormData(form);
+      const data = Object.fromEntries(fd);
+      data.ts = formRenderedAt;
+
+      if (liveSync) {
+        // POST to Vercel function — creates Google Calendar event
+        submitBtn.disabled = true;
+        setStatus('Termin wird erstellt …', false);
+        try {
+          const res = await fetch('/api/booking', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...data, calendarId }),
+          });
+          const json = await res.json();
+          if (!res.ok) throw new Error(json.error || 'Unbekannter Fehler');
+          setStatus(json.message || successMessage, false);
+          showIcsDownload(data);
+          form.reset();
+        } catch (err) {
+          setStatus('Fehler: ' + err.message + ' — bitte später erneut versuchen oder uns direkt kontaktieren.', true);
+        } finally {
+          submitBtn.disabled = false;
+        }
+        return;
+      }
+
+      // Mailto fallback (no backend, no live sync)
       const subject = encodeURIComponent(`Buchungsanfrage: ${data.service} am ${data.date} ${data.time}`);
       const bodyLines = [
         'Buchungsanfrage über die Website:',
@@ -182,20 +237,9 @@ const minDateStr = min.toISOString().slice(0, 10);
         'Anmerkung:',
         data.note || '—',
       ];
-      const body = encodeURIComponent(bodyLines.join('\n'));
-      window.location.href = `mailto:${emailTo}?subject=${subject}&body=${body}`;
-
-      // Provide .ics download
-      try {
-        const ics = buildIcs(data);
-        const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-        icsLink.href = URL.createObjectURL(blob);
-        icsLink.download = `termin-${data.date}.ics`;
-        icsLink.hidden = false;
-      } catch (_) {}
-
-      status.textContent = successMessage;
-      status.classList.add('bk-status--success');
+      window.location.href = `mailto:${emailTo}?subject=${subject}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+      showIcsDownload(data);
+      setStatus(successMessage, false);
     });
   })();
 </script>

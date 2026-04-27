@@ -511,6 +511,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .bk-grid textarea { resize: vertical; min-height: 80px; }
 .bk-status { margin: 1.25rem 0 0; font-size: .9rem; color: var(--ink-muted); min-height: 1.4em; }
 .bk-status--success { color: var(--sage); font-weight: 600; }
+.bk-status--error { color: var(--error); font-weight: 600; }
 .bk-actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 1.5rem; }
 .bk-submit { font-size: 1rem; }
 .bk-ics-link { font-size: .88rem; color: var(--accent); text-decoration: underline; }

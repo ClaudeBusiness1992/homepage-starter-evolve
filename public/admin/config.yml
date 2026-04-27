@@ -231,7 +231,9 @@ collections:
                   - { label: "Label (kleine Überschrift)", name: "label", widget: "string", required: false, default: "Termin buchen" }
                   - { label: "Überschrift", name: "headline", widget: "string", required: false, default: "Wann darf's losgehen?" }
                   - { label: "Unterzeile", name: "subline", widget: "text", required: false, default: "" }
-                  - { label: "E-Mail-Empfänger", name: "emailTo", widget: "string", required: true, hint: "An welche E-Mail-Adresse sollen Buchungsanfragen geschickt werden?" }
+                  - { label: "E-Mail-Empfänger", name: "emailTo", widget: "string", required: true, hint: "An welche E-Mail-Adresse sollen Buchungsanfragen geschickt werden? (Fallback wenn Live-Sync aus)" }
+                  - { label: "🔄 Live-Sync mit Google Calendar", name: "liveSync", widget: "boolean", default: false, hint: "Wenn aktiv: Buchungen werden direkt als Termin in Google Calendar erstellt + Kunde bekommt automatisch eine Einladung. Setup: siehe docs/BOOKING-LIVESYNC.md" }
+                  - { label: "Google Calendar ID", name: "calendarId", widget: "string", required: false, default: "", hint: "Nur bei aktivem Live-Sync. Format: xxx@group.calendar.google.com (siehe Setup-Doku)" }
                   - { label: "Button-Text", name: "ctaLabel", widget: "string", required: false, default: "Termin anfragen" }
                   - { label: "Bestätigungs-Text nach Absenden", name: "successMessage", widget: "text", required: false, default: "Vielen Dank! Wir melden uns innerhalb von 24h." }
                   - { label: "Vorlauf in Tagen", name: "leadDays", widget: "number", value_type: "int", default: 1, hint: "Wie viele Tage Vorlauf brauchen Sie? (1 = ab morgen buchbar)" }
