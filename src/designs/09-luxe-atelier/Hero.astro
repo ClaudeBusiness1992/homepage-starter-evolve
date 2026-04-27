@@ -51,8 +51,8 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 
 <style>
   .lx-hero {
-    background: #faf7f2;
-    color: #1a1a1a;
+    background: var(--lx-bg);
+    color: var(--lx-ink);
     min-height: 100vh;
     padding: calc(var(--nav-h) + 4rem) 2rem 4rem;
     display: flex;
@@ -98,7 +98,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     font-size: clamp(2.8rem, 6vw, 5.5rem);
     line-height: 1.05;
     letter-spacing: .005em;
-    color: #1a1a1a;
+    color: var(--lx-ink);
     margin-bottom: 2rem;
     font-weight: 400;
   }
@@ -149,8 +149,8 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   .lx-cta-primary {
     display: inline-block;
     padding: 1rem 2.75rem;
-    border: 1px solid #1a1a1a;
-    color: #1a1a1a;
+    border: 1px solid var(--lx-ink);
+    color: var(--lx-ink);
     font-size: .82rem;
     letter-spacing: .25em;
     text-transform: uppercase;
@@ -166,8 +166,8 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     transition: opacity .3s, inset .3s;
   }
   .lx-cta-primary:hover {
-    background: #1a1a1a;
-    color: #faf7f2;
+    background: var(--lx-ink);
+    color: var(--lx-bg);
   }
   .lx-cta-primary:hover::before {
     opacity: 1;
