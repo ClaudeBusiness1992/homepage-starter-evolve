@@ -1,0 +1,292 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+}
+const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
+const words = headline.split(' ');
+const half = Math.ceil(words.length / 2);
+const firstHalf = words.slice(0, half).join(' ');
+const secondHalf = words.slice(half).join(' ');
+---
+
+<section id="hero" class="po-hero">
+  <span class="po-shape po-shape-circle" aria-hidden="true"></span>
+  <span class="po-shape po-shape-square" aria-hidden="true"></span>
+  <span class="po-shape po-shape-cross" aria-hidden="true">✕</span>
+  <svg class="po-squiggle" viewBox="0 0 200 40" aria-hidden="true">
+    <path d="M0,20 Q25,0 50,20 T100,20 T150,20 T200,20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+
+  <div class="wrap">
+    <div class="po-sticker po-sticker-rotate-1">
+      <span class="po-sticker-star">★</span>
+      <span>{label}</span>
+    </div>
+
+    <div class="po-inner r">
+      <h1 class="po-h1">
+        <span class="po-h1-line">{firstHalf}</span>
+        {secondHalf && (
+          <span class="po-h1-line po-h1-highlight">
+            <span class="po-h1-mark">{secondHalf}</span>
+          </span>
+        )}
+      </h1>
+
+      <p class="po-sub">{subline}</p>
+
+      <div class="po-btns">
+        <a href="#contact" class="po-btn po-btn-primary">
+          <span>{ctaPrimary}</span>
+          <span class="po-btn-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="#services" class="po-btn po-btn-ghost">
+          {ctaSecondary}
+        </a>
+      </div>
+    </div>
+
+    <div class="po-marquee" aria-hidden="true">
+      <div class="po-marquee-track">
+        <span>WEBDESIGN ✦ BRANDING ✦ STRATEGIE ✦ ENTWICKLUNG ✦ SEO ✦ FOTOGRAFIE ✦</span>
+        <span>WEBDESIGN ✦ BRANDING ✦ STRATEGIE ✦ ENTWICKLUNG ✦ SEO ✦ FOTOGRAFIE ✦</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .po-hero {
+    background: #fef6e8;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: calc(var(--nav-h) + 3rem) 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Geometric shapes scattered */
+  .po-shape {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .po-shape-circle {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: var(--accent);
+    top: 12%;
+    right: 5%;
+    opacity: .85;
+    animation: po-float 8s ease-in-out infinite;
+  }
+  .po-shape-square {
+    width: 120px;
+    height: 120px;
+    background: var(--sage);
+    top: 55%;
+    left: 4%;
+    transform: rotate(15deg);
+    border-radius: 16px;
+    animation: po-float 12s ease-in-out infinite reverse;
+  }
+  .po-shape-cross {
+    color: #6c3aff;
+    font-size: 60px;
+    top: 28%;
+    left: 8%;
+    font-weight: 900;
+    line-height: 1;
+    animation: po-spin 14s linear infinite;
+  }
+  .po-squiggle {
+    position: absolute;
+    width: 200px;
+    height: 40px;
+    color: #ffd23f;
+    bottom: 18%;
+    right: 7%;
+    pointer-events: none;
+    z-index: 0;
+    animation: po-float 10s ease-in-out infinite;
+  }
+  @keyframes po-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-18px) rotate(5deg); }
+  }
+  @keyframes po-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .po-shape-square { animation-name: po-float; }
+  @media (prefers-reduced-motion: reduce) {
+    .po-shape, .po-squiggle { animation: none; }
+  }
+
+  .po-sticker {
+    position: absolute;
+    top: calc(var(--nav-h) + 2rem);
+    right: 8%;
+    background: #ffd23f;
+    color: #1a1a1a;
+    padding: .5rem 1rem;
+    border-radius: 100px;
+    font-size: .8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    box-shadow: 4px 4px 0 var(--ink);
+    z-index: 3;
+  }
+  .po-sticker-rotate-1 { transform: rotate(-8deg); }
+  .po-sticker-star {
+    color: var(--accent);
+    font-size: 1rem;
+    animation: po-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes po-pulse {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.2) rotate(72deg); }
+  }
+
+  .po-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 3rem 1rem;
+  }
+
+  .po-h1 {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 1.05;
+    letter-spacing: -.025em;
+    color: var(--ink);
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+  .po-h1-line {
+    display: block;
+  }
+  .po-h1-highlight {
+    margin-top: .25em;
+  }
+  .po-h1-mark {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 0 .25em;
+    border-radius: 12px;
+    transform: rotate(-1.5deg);
+    font-style: italic;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .po-sub {
+    font-size: 1.15rem;
+    color: var(--ink);
+    line-height: 1.65;
+    max-width: 580px;
+    margin: 0 auto 2.5rem;
+    opacity: .85;
+  }
+
+  .po-btns {
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .po-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: 1rem 1.85rem;
+    border-radius: 100px;
+    font-size: .95rem;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    transition: transform .2s, box-shadow .2s;
+    border: 2px solid var(--ink);
+  }
+  .po-btn-primary {
+    background: var(--ink);
+    color: #fef6e8;
+    box-shadow: 5px 5px 0 var(--accent);
+  }
+  .po-btn-primary:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--accent);
+  }
+  .po-btn-ghost {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 5px 5px 0 var(--sage);
+  }
+  .po-btn-ghost:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--sage);
+  }
+  .po-btn-arrow {
+    transition: transform .2s;
+  }
+  .po-btn-primary:hover .po-btn-arrow {
+    transform: translateX(4px);
+  }
+
+  .po-marquee {
+    margin-top: 3rem;
+    background: var(--ink);
+    color: #fef6e8;
+    padding: 1rem 0;
+    overflow: hidden;
+    border-top: 3px solid var(--accent);
+    border-bottom: 3px solid var(--accent);
+    transform: rotate(-1.5deg);
+    margin-left: -2rem;
+    margin-right: -2rem;
+  }
+  .po-marquee-track {
+    display: flex;
+    gap: 2rem;
+    white-space: nowrap;
+    animation: po-scroll 28s linear infinite;
+    font-weight: 700;
+    letter-spacing: .15em;
+    font-size: 1rem;
+  }
+  .po-marquee-track span {
+    flex-shrink: 0;
+  }
+  @keyframes po-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .po-marquee-track { animation: none; }
+  }
+
+  @media (max-width: 640px) {
+    .po-shape-circle { width: 100px; height: 100px; right: -20px; }
+    .po-shape-square { width: 70px; height: 70px; }
+    .po-shape-cross { font-size: 36px; }
+    .po-sticker { right: 4%; font-size: .7rem; padding: .4rem .7rem; }
+    .po-btns { flex-direction: column; align-items: center; }
+    .po-btn { width: 240px; justify-content: center; }
+  }
+</style>

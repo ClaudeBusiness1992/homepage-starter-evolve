@@ -27,13 +27,51 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
         <div class="deco-lines">
           {Array.from({length: 6}).map(() => <div class="deco-line"></div>)}
         </div>
-        <div class="deco-card">
+        <div class="deco-card" style="top: 5%; left: 14%; transform: rotate(-3deg);">
           <span class="deco-icon">✓</span>
           <p>Website in 2–3 Wochen</p>
         </div>
-        <div class="deco-card deco-card-2">
-          <span class="deco-icon">★</span>
-          <p>Über 50 zufriedene Kunden</p>
+        <div class="deco-card deco-review" style="top: 12%; right: 5%; transform: rotate(2deg);">
+          <span class="deco-stars" aria-hidden="true">★★★★★</span>
+          <strong>Sandra Weber</strong>
+          <em>„Innerhalb von 2 Wochen online."</em>
+        </div>
+        <div class="deco-card deco-card-sm" style="top: 28%; left: 4%; transform: rotate(2deg);">
+          <span class="deco-icon">◇</span>
+          <p>Mobile-First</p>
+        </div>
+        <div class="deco-card deco-card-sm" style="top: 32%; right: 28%; transform: rotate(-3deg);">
+          <span class="deco-icon">🛡</span>
+          <p>DSGVO-konform</p>
+        </div>
+        <div class="deco-card deco-review" style="top: 40%; left: 24%; transform: rotate(-2deg);">
+          <span class="deco-stars" aria-hidden="true">★★★★★</span>
+          <strong>Dr. T. Müller</strong>
+          <em>„Top bei meinen Patienten."</em>
+        </div>
+        <div class="deco-card deco-card-sm" style="top: 45%; right: 28%; transform: rotate(-2deg);">
+          <span class="deco-icon">€</span>
+          <p>Faire Preise</p>
+        </div>
+        <div class="deco-card" style="top: 53%; left: 6%; transform: rotate(3deg);">
+          <span class="deco-icon">⚙</span>
+          <p>SEO inklusive</p>
+        </div>
+        <div class="deco-card deco-card-sm" style="top: 64%; right: 8%; transform: rotate(2deg);">
+          <span class="deco-icon">✎</span>
+          <p>Texte inklusive</p>
+        </div>
+        <div class="deco-card" style="top: 71%; left: 22%; transform: rotate(-3deg);">
+          <span class="deco-icon">⚡</span>
+          <p>Schnelle Ladezeit</p>
+        </div>
+        <div class="deco-card deco-card-sm" style="top: 84%; left: 8%; transform: rotate(1deg);">
+          <span class="deco-icon">⟳</span>
+          <p>Pflege-Service</p>
+        </div>
+        <div class="deco-card deco-card-sm" style="top: 88%; right: 16%; transform: rotate(-2deg);">
+          <span class="deco-icon">✦</span>
+          <p>Persönlich</p>
         </div>
       </div>
     </div>
@@ -51,16 +89,25 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: calc(100vh - var(--nav-h));
+  width: 100%;
+}
+
+.hero-left, .hero-right {
+  min-width: 0;
 }
 
 .hero-left {
   background: var(--cream);
   display: flex;
   align-items: center;
-  padding: 5rem 4rem 5rem 0;
+  justify-content: center;
+  padding: 5rem clamp(1.5rem, 5vw, 4rem);
 }
 
-.hero-content { max-width: 520px; margin-left: auto; }
+.hero-content {
+  max-width: 540px;
+  width: 100%;
+}
 
 .hero-label {
   display: block;
@@ -117,30 +164,60 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   background: rgba(255,255,255,.08);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255,255,255,.12);
-  border-radius: var(--r-lg);
-  padding: 1.25rem 1.5rem;
-  display: flex;
+  border-radius: var(--r);
+  padding: .65rem 1rem;
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  color: rgba(255,255,255,.9);
-  font-size: .9rem;
+  gap: .55rem;
+  color: rgba(255,255,255,.92);
+  font-size: .82rem;
   font-weight: 500;
-  top: 30%;
-  left: 15%;
-  right: 15%;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  transition: transform .3s, box-shadow .3s;
+}
+.deco-card:hover {
+  transform: translateY(-2px) rotate(0deg) !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,.4);
 }
 
-.deco-card-2 {
-  top: auto;
-  bottom: 28%;
-  left: 20%;
-  right: 10%;
+.deco-card-sm {
+  font-size: .75rem;
+  padding: .5rem .85rem;
+  gap: .4rem;
 }
 
 .deco-icon {
-  font-size: 1.4rem;
+  font-size: 1rem;
   color: var(--accent);
   flex-shrink: 0;
+}
+
+.deco-review {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .15rem;
+  padding: .7rem .95rem;
+  max-width: 220px;
+  white-space: normal;
+}
+.deco-review .deco-stars {
+  color: #f5b300;
+  font-size: .82rem;
+  letter-spacing: .04em;
+  line-height: 1;
+}
+.deco-review strong {
+  font-size: .82rem;
+  color: rgba(255,255,255,.95);
+  font-weight: 600;
+  margin-top: .1rem;
+}
+.deco-review em {
+  font-size: .72rem;
+  font-style: italic;
+  color: rgba(255,255,255,.6);
+  line-height: 1.35;
 }
 
 @media (max-width: 768px) {

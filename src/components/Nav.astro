@@ -10,18 +10,22 @@ interface Props {
   links?: NavLink[];
 }
 const { siteName, siteNameAccent, links = [] } = Astro.props;
-const logoBefore = siteNameAccent ? siteName.replace(siteNameAccent, '') : siteName;
+const accentIdx = siteNameAccent ? siteName.indexOf(siteNameAccent) : -1;
+const logoBefore = accentIdx > -1 ? siteName.slice(0, accentIdx) : siteName;
+const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.length ?? 0)) : '';
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
+const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href : `/${href}`;
 ---
 
 <nav id="nav" aria-label="Hauptnavigation">
   <div class="wrap">
     <div class="nav-row">
-      <a href="/" class="logo">{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}</a>
+      <a href="/" class="logo">{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</a>
       {links.length > 0 && (
         <ul class="nav-ul" id="navLinks">
           {links.map(l => (
             <li>
-              <a href={l.href} class={l.cta ? 'cta-link' : ''}>{l.label}</a>
+              <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : ''}>{l.label}</a>
             </li>
           ))}
         </ul>

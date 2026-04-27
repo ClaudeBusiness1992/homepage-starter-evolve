@@ -1,9 +1,9 @@
 backend:
   name: github
-  repo: ClaudeBusiness1992/hompage-starter
+  repo: ClaudeBusiness1992/homepage-starter
   branch: main
   client_id: Ov23lijI6FiImrx8EcYE
-  base_url: https://hompage-starter.vercel.app
+  base_url: https://homepage-starter.vercel.app
   auth_endpoint: api/auth
 
 media_folder: public/images
@@ -182,6 +182,29 @@ collections:
                     fields:
                       - { label: "Beschriftung", name: "label", widget: "string" }
                       - { label: "URL", name: "href", widget: "string" }
+
+      # ── ERWEITERUNGEN / ADD-ONS ──────────────────────────────────────
+      - name: "erweiterungen"
+        label: "Erweiterungen / Add-ons"
+        file: "config/extras.json"
+        fields:
+          - label: "Add-ons"
+            name: "extras"
+            widget: "object"
+            fields:
+              - label: "Countdown / Event"
+                name: "countdown"
+                widget: "object"
+                collapsed: false
+                fields:
+                  - { label: "Sektion anzeigen", name: "enabled", widget: "boolean", default: false, hint: "Schaltet die Countdown-Sektion auf der Website ein oder aus" }
+                  - { label: "Label (kleine Überschrift)", name: "label", widget: "string", required: false, default: "Save the Date" }
+                  - { label: "Überschrift", name: "headline", widget: "string", required: false, default: "" }
+                  - { label: "Unterzeile", name: "subline", widget: "text", required: false, default: "" }
+                  - { label: "Zieldatum + Uhrzeit", name: "targetDate", widget: "datetime", required: false, default: "", format: "YYYY-MM-DDTHH:mm:ss", date_format: "DD.MM.YYYY", time_format: "HH:mm", hint: "Wann beginnt das Event? Der Counter zählt bis hierhin runter." }
+                  - { label: "Button-Text", name: "ctaLabel", widget: "string", required: false, default: "Jetzt anmelden" }
+                  - { label: "Button-Link", name: "ctaHref", widget: "string", required: false, default: "#contact", hint: "z.B. #contact für das Kontaktformular oder eine vollständige URL" }
+                  - { label: "Text nach Ablauf", name: "expiredText", widget: "string", required: false, default: "Das Event hat begonnen" }
 
       # ── FIRMENDATEN ──────────────────────────────────────────────────
       - name: "firmendaten"

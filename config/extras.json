@@ -1,0 +1,14 @@
+{
+  "extras": {
+    "countdown": {
+      "enabled": false,
+      "label": "Save the Date",
+      "headline": "Workshop am 15. Mai 2026",
+      "subline": "Plätze sind begrenzt — sichern Sie sich Ihren rechtzeitig.",
+      "targetDate": "2026-05-15T19:00:00",
+      "ctaLabel": "Jetzt anmelden",
+      "ctaHref": "#contact",
+      "expiredText": "Das Event hat begonnen"
+    }
+  }
+}

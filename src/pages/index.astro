@@ -2,6 +2,7 @@
 import metaConfig    from '../../config/meta.json';
 import designConfig  from '../../config/design.json';
 import contentConfig from '../../config/content.json';
+import extrasConfig  from '../../config/extras.json';
 import Base     from '../layouts/Base.astro';
 import Nav      from '../components/Nav.astro';
 import Hero01   from '../sections/Hero.astro';
@@ -9,6 +10,11 @@ import Hero02   from '../designs/02-bold-editorial/Hero.astro';
 import Hero03   from '../designs/03-minimal-clean/Hero.astro';
 import Hero04   from '../designs/04-corporate-split/Hero.astro';
 import Hero05   from '../designs/05-vibrant-gradient/Hero.astro';
+import Hero06   from '../designs/06-editorial-press/Hero.astro';
+import Hero07   from '../designs/07-terminal-console/Hero.astro';
+import Hero08   from '../designs/08-soft-bloom/Hero.astro';
+import Hero09   from '../designs/09-luxe-atelier/Hero.astro';
+import Hero10   from '../designs/10-pop-studio/Hero.astro';
 import About01  from '../sections/About.astro';
 import About02  from '../designs/02-bold-editorial/About.astro';
 import About04  from '../designs/04-corporate-split/About.astro';
@@ -16,6 +22,7 @@ import Services01 from '../sections/Services.astro';
 import Services02 from '../designs/02-bold-editorial/Services.astro';
 import Services05 from '../designs/05-vibrant-gradient/Services.astro';
 import Stats    from '../sections/Stats.astro';
+import Countdown from '../sections/Countdown.astro';
 import Pricing  from '../sections/Pricing.astro';
 import Gallery  from '../sections/Gallery.astro';
 import Reviews  from '../sections/Reviews.astro';
@@ -25,6 +32,7 @@ import Footer   from '../sections/Footer.astro';
 const { design = '01-warm-local' } = designConfig;
 const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
+const { extras: x = {} } = extrasConfig;
 
 const HeroComponents = {
   '01-warm-local':       Hero01,
@@ -32,6 +40,11 @@ const HeroComponents = {
   '03-minimal-clean':    Hero03,
   '04-corporate-split':  Hero04,
   '05-vibrant-gradient': Hero05,
+  '06-editorial-press':  Hero06,
+  '07-terminal-console': Hero07,
+  '08-soft-bloom':       Hero08,
+  '09-luxe-atelier':     Hero09,
+  '10-pop-studio':       Hero10,
 };
 
 const AboutComponents = {
@@ -40,6 +53,11 @@ const AboutComponents = {
   '03-minimal-clean':    About01,
   '04-corporate-split':  About04,
   '05-vibrant-gradient': About01,
+  '06-editorial-press':  About01,
+  '07-terminal-console': About01,
+  '08-soft-bloom':       About01,
+  '09-luxe-atelier':     About01,
+  '10-pop-studio':       About01,
 };
 
 const ServicesComponents = {
@@ -48,6 +66,11 @@ const ServicesComponents = {
   '03-minimal-clean':    Services01,
   '04-corporate-split':  Services01,
   '05-vibrant-gradient': Services05,
+  '06-editorial-press':  Services01,
+  '07-terminal-console': Services01,
+  '08-soft-bloom':       Services01,
+  '09-luxe-atelier':     Services01,
+  '10-pop-studio':       Services01,
 };
 
 const Hero     = HeroComponents[design]    ?? Hero01;
@@ -66,6 +89,7 @@ const navLinks = (meta.nav ?? []).filter(l => !l.section || s[l.section]?.enable
     {s.services.enabled  && <Services  {...s.services} />}
     {s.gallery?.enabled  && <Gallery   {...s.gallery} />}
     {s.stats.enabled     && <Stats     items={s.stats.items} />}
+    {x.countdown?.enabled && <Countdown {...x.countdown} />}
     {s.pricing.enabled   && <Pricing   {...s.pricing} />}
     {s.reviews?.enabled  && <Reviews   {...s.reviews} agencyName={meta.siteName} agencyUrl={Astro.site?.href} />}
     {s.contact.enabled   && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} />}

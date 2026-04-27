@@ -10,13 +10,15 @@ interface Props {
   links: FooterLink[];
 }
 const { siteName, siteNameAccent, copyright, links } = Astro.props;
-const logoBefore = siteNameAccent ? siteName.replace(siteNameAccent, '') : siteName;
+const accentIdx = siteNameAccent ? siteName.indexOf(siteNameAccent) : -1;
+const logoBefore = accentIdx > -1 ? siteName.slice(0, accentIdx) : siteName;
+const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.length ?? 0)) : '';
 ---
 
 <footer>
   <div class="wrap">
     <div class="foot-row">
-      <span class="foot-logo">{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}</span>
+      <span class="foot-logo">{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</span>
       <nav aria-label="Footer-Navigation">
         <ul class="foot-links">
           {links.map(l => <li><a href={l.href}>{l.label}</a></li>)}

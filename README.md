@@ -3,8 +3,8 @@
 Wiederverwendbares One-Pager-Template für Kunden-Websites der Agentur **pixel&code**.  
 Pro Kunde wird das Repo geklont. Konfiguration ausschließlich über JSON-Dateien — der Code wird nie angefasst.
 
-**Live-Demo:** https://hompage-starter.vercel.app  
-**CMS-Admin:** https://hompage-starter.vercel.app/admin/
+**Live-Demo:** https://homepage-starter.vercel.app  
+**CMS-Admin:** https://homepage-starter.vercel.app/admin/
 
 ---
 

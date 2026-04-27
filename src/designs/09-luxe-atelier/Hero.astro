@@ -1,0 +1,216 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+}
+const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
+---
+
+<section id="hero" class="lx-hero">
+  <div class="wrap">
+    <div class="lx-inner r">
+      <div class="lx-meta">
+        <span class="lx-meta-side">Maison</span>
+        <span class="lx-meta-side">Est. MMXXVI</span>
+      </div>
+
+      <p class="lx-eyebrow">— {label} —</p>
+
+      <h1 class="lx-h1">{headline}</h1>
+
+      <div class="lx-ornament" aria-hidden="true">
+        <span class="lx-ornament-line"></span>
+        <span class="lx-ornament-mark">❦</span>
+        <span class="lx-ornament-line"></span>
+      </div>
+
+      <p class="lx-sub">{subline}</p>
+
+      <div class="lx-actions">
+        <a href="#contact" class="lx-cta lx-cta-primary">
+          <span>{ctaPrimary}</span>
+        </a>
+        <a href="#services" class="lx-cta lx-cta-secondary">
+          {ctaSecondary}
+        </a>
+      </div>
+
+      <div class="lx-foot">
+        <span>Atelier</span>
+        <span class="lx-foot-dot" aria-hidden="true">·</span>
+        <span>Webdesign d'Auteur</span>
+        <span class="lx-foot-dot" aria-hidden="true">·</span>
+        <span>Édition Limitée</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lx-hero {
+    background: #faf7f2;
+    color: #1a1a1a;
+    min-height: 100vh;
+    padding: calc(var(--nav-h) + 4rem) 2rem 4rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .lx-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .lx-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: .78rem;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: rgba(26,26,46,.65);
+    margin-bottom: 4rem;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .lx-eyebrow {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: .85rem;
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2.5rem;
+  }
+
+  .lx-h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: .005em;
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  .lx-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0 auto 2rem;
+    max-width: 280px;
+  }
+  .lx-ornament-line {
+    flex: 1;
+    height: 1px;
+    background: var(--accent);
+  }
+  .lx-ornament-mark {
+    color: var(--accent);
+    font-size: 1.1rem;
+    font-family: var(--serif);
+  }
+
+  .lx-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: rgba(26,26,46,.85);
+    max-width: 520px;
+    margin: 0 auto 3rem;
+  }
+
+  .lx-actions {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+  }
+
+  .lx-cta {
+    font-family: var(--serif);
+    text-decoration: none;
+    transition: all .3s;
+  }
+  .lx-cta-primary {
+    display: inline-block;
+    padding: 1rem 2.75rem;
+    border: 1px solid #1a1a1a;
+    color: #1a1a1a;
+    font-size: .82rem;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    font-weight: 500;
+    position: relative;
+  }
+  .lx-cta-primary::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px solid var(--accent);
+    opacity: 0;
+    transition: opacity .3s, inset .3s;
+  }
+  .lx-cta-primary:hover {
+    background: #1a1a1a;
+    color: #faf7f2;
+  }
+  .lx-cta-primary:hover::before {
+    opacity: 1;
+    inset: 6px;
+    border-color: rgba(232,99,27,.5);
+  }
+
+  .lx-cta-secondary {
+    font-style: italic;
+    font-size: .95rem;
+    color: rgba(26,26,46,.7);
+    border-bottom: 1px solid rgba(26,26,46,.4);
+    padding-bottom: 2px;
+  }
+  .lx-cta-secondary:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .lx-foot {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: .78rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: rgba(26,26,46,.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .85rem;
+    flex-wrap: wrap;
+  }
+  .lx-foot-dot {
+    color: var(--accent);
+    font-size: 1.2em;
+    line-height: 1;
+  }
+
+  @media (max-width: 640px) {
+    .lx-hero { padding: calc(var(--nav-h) + 2.5rem) 1rem 3rem; }
+    .lx-hero::before { inset: .75rem; }
+    .lx-corner { display: none; }
+    .lx-meta { font-size: .68rem; letter-spacing: .15em; }
+    .lx-foot { font-size: .65rem; gap: .5rem; }
+  }
+</style>

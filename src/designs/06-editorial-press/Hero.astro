@@ -1,0 +1,259 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+}
+const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
+const words = headline.split(' ');
+const firstWord = words[0];
+const restWords = words.slice(1).join(' ');
+---
+
+<section id="hero" class="ed-hero">
+  <div class="wrap">
+    <div class="ed-meta">
+      <span class="ed-issue">Issue N<sup>o</sup> 01 — Webdesign</span>
+      <span class="ed-date">Vol. 2026 / Frühjahr</span>
+    </div>
+    <hr class="ed-rule" />
+
+    <div class="ed-grid">
+      <div class="ed-content r">
+        <div class="ed-section-mark">01</div>
+        <p class="ed-eyebrow">{label}</p>
+        <h1 class="ed-h1"><i>{firstWord}</i> {restWords}</h1>
+        <p class="ed-lead">
+          <span class="ed-dropcap">»</span>{subline}«
+        </p>
+        <div class="ed-cta-row">
+          <a href="#contact" class="ed-cta">{ctaPrimary} <span aria-hidden="true">→</span></a>
+          <span class="ed-cta-sep">·</span>
+          <a href="#services" class="ed-cta ed-cta-secondary">{ctaSecondary}</a>
+        </div>
+      </div>
+
+      <aside class="ed-aside">
+        <div class="ed-photo">
+          <div class="ed-photo-stamp">
+            <span>Editorial</span>
+            <span>N<sup>o</sup> 01</span>
+          </div>
+          <span class="ed-photo-num">01</span>
+        </div>
+        <p class="ed-caption">Photographie — Ihre Marke, in Szene gesetzt.</p>
+      </aside>
+    </div>
+
+    <hr class="ed-rule" />
+
+    <nav class="ed-toc" aria-label="Inhaltsverzeichnis">
+      <span class="ed-toc-label">In dieser Ausgabe:</span>
+      <a href="#about"><i>i</i>&nbsp;Über uns</a>
+      <a href="#services"><i>ii</i>&nbsp;Leistungen</a>
+      <a href="#pricing"><i>iii</i>&nbsp;Pakete</a>
+      <a href="#contact"><i>iv</i>&nbsp;Kontakt</a>
+    </nav>
+  </div>
+</section>
+
+<style>
+  .ed-hero {
+    background: var(--cream);
+    color: var(--ink);
+    padding: calc(var(--nav-h) + 2rem) 0 4rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .ed-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: .85rem;
+    color: var(--ink);
+    letter-spacing: .02em;
+  }
+  .ed-meta sup { font-size: .65em; vertical-align: super; }
+
+  .ed-rule {
+    border: 0;
+    height: 2px;
+    background: var(--ink);
+    margin: 1rem 0 0;
+  }
+  .ed-rule + .ed-grid { margin-top: 2.5rem; }
+
+  .ed-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 4rem;
+    margin-bottom: 4rem;
+  }
+
+  .ed-section-mark {
+    font-family: var(--serif);
+    font-size: clamp(5rem, 9vw, 8rem);
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: -.04em;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+
+  .ed-eyebrow {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+    border-top: 1px solid var(--ink);
+    padding-top: .75rem;
+    display: inline-block;
+  }
+
+  .ed-h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.6rem, 5.5vw, 5rem);
+    line-height: 1.05;
+    letter-spacing: -.015em;
+    margin-bottom: 1.75rem;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .ed-h1 i {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .ed-lead {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--ink);
+    max-width: 540px;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  .ed-dropcap {
+    font-size: 1.4em;
+    color: var(--accent);
+    font-style: normal;
+    margin-right: .15em;
+  }
+
+  .ed-cta-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+  .ed-cta {
+    font-family: var(--serif);
+    font-size: 1rem;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 4px;
+    transition: color .2s, border-color .2s;
+    letter-spacing: .01em;
+  }
+  .ed-cta:hover { color: var(--accent); border-color: var(--accent); }
+  .ed-cta-secondary { border-bottom-style: dashed; opacity: .8; }
+  .ed-cta-sep { color: var(--ink); opacity: .35; }
+
+  .ed-aside { display: flex; flex-direction: column; }
+
+  .ed-photo {
+    aspect-ratio: 3/4;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 1.25rem;
+  }
+  .ed-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(45deg, transparent 0 8px, rgba(255,255,255,.03) 8px 9px);
+  }
+  .ed-photo-num {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    font-family: var(--serif);
+    font-size: 5rem;
+    line-height: 1;
+    font-style: italic;
+    color: var(--accent);
+    z-index: 2;
+  }
+  .ed-photo-stamp {
+    position: relative;
+    z-index: 2;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: .85rem;
+    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+  }
+  .ed-photo-stamp sup { font-size: .65em; }
+
+  .ed-caption {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: .85rem;
+    color: var(--ink);
+    opacity: .7;
+    margin-top: .85rem;
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: .75rem;
+  }
+
+  .ed-toc {
+    display: flex;
+    align-items: baseline;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    padding-top: 1rem;
+    font-family: var(--serif);
+    font-size: .95rem;
+  }
+  .ed-toc-label {
+    font-style: italic;
+    opacity: .6;
+  }
+  .ed-toc a {
+    color: var(--ink);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .ed-toc a i {
+    color: var(--accent);
+    font-style: italic;
+    margin-right: .15rem;
+  }
+  .ed-toc a:hover { color: var(--accent); }
+
+  @media (max-width: 800px) {
+    .ed-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .ed-aside { order: -1; }
+    .ed-photo { aspect-ratio: 4/3; }
+    .ed-toc { gap: 1.25rem; }
+    .ed-meta { flex-direction: column; gap: .25rem; }
+  }
+</style>

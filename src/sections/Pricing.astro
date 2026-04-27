@@ -42,6 +42,27 @@ const delays = ['d1','d2','d3'];
         </div>
       ))}
     </div>
+
+<style>
+  .pcard { cursor: pointer; }
+</style>
+
+<script>
+  const cards = document.querySelectorAll('#pricing .pcard');
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      if (card.classList.contains('feat')) return;
+      cards.forEach(c => {
+        c.classList.remove('feat');
+        const btn = c.querySelector('.btn');
+        if (btn) { btn.classList.replace('btn-fill', 'btn-outline'); btn.textContent = 'Anfragen'; }
+      });
+      card.classList.add('feat');
+      const btn = card.querySelector('.btn');
+      if (btn) { btn.classList.replace('btn-outline', 'btn-fill'); btn.textContent = 'Jetzt anfragen'; }
+    });
+  });
+</script>
     <p class="pricing-note r">
       Alle Pakete individuell anpassbar.
       <a href="#contact">Schreiben Sie uns</a> für ein maßgeschneidertes Angebot.

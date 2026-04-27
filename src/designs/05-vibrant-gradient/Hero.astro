@@ -35,7 +35,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 <style>
 #hero {
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--ink) 0%, #2d1b4e 50%, #1a2e4e 100%);
+  background: linear-gradient(135deg, #1a1612 0%, #2a1f1a 50%, #241612 100%);
   color: #fff;
   display: flex;
   align-items: center;
@@ -92,7 +92,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 
 .hero-sub {
   font-size: 1.1rem;
-  color: rgba(255,255,255,.65);
+  color: rgba(255,255,255,.82);
   line-height: 1.75;
   max-width: 520px;
   margin: 0 auto 2.5rem;
@@ -109,16 +109,25 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 .hero-btn-primary {
   background: var(--accent);
   color: #fff;
-  box-shadow: 0 8px 32px rgba(232,99,27,.4);
+  box-shadow: 0 8px 32px rgba(232,99,27,.35);
 }
-.hero-btn-primary:hover { background: var(--accent-light); }
+.hero-btn-primary:hover {
+  background: var(--accent-light);
+  box-shadow: 0 12px 40px rgba(232,99,27,.5);
+}
 
 .hero-btn-secondary {
-  background: rgba(255,255,255,.1);
-  color: rgba(255,255,255,.9);
-  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.95);
+  border: 1px solid rgba(255,255,255,.22);
+  box-shadow: 0 8px 32px rgba(255,255,255,.18), inset 0 0 0 1px rgba(255,255,255,.06);
+  backdrop-filter: blur(12px);
 }
-.hero-btn-secondary:hover { background: rgba(255,255,255,.18); }
+.hero-btn-secondary:hover {
+  background: rgba(255,255,255,.16);
+  border-color: rgba(255,255,255,.4);
+  box-shadow: 0 12px 40px rgba(255,255,255,.28), inset 0 0 0 1px rgba(255,255,255,.12);
+}
 
 .hero-stats {
   display: flex;

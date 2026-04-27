@@ -1,0 +1,102 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  targetDate: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  expiredText?: string;
+}
+const {
+  label,
+  headline,
+  subline,
+  targetDate,
+  ctaLabel = 'Jetzt anmelden',
+  ctaHref = '#contact',
+  expiredText = 'Das Event hat begonnen',
+} = Astro.props;
+---
+
+<section class="section countdown-section" id="countdown">
+  <div class="wrap">
+    <div class="cd-inner r">
+      <span class="lbl">{label}</span>
+      <h2 class="cd-h2 h2">{headline}</h2>
+      <p class="cd-sub sub">{subline}</p>
+
+      <div class="cd-grid" data-target={targetDate}>
+        <div class="cd-box">
+          <span class="cd-num" data-cd="days">--</span>
+          <span class="cd-lbl">Tage</span>
+        </div>
+        <div class="cd-sep" aria-hidden="true">:</div>
+        <div class="cd-box">
+          <span class="cd-num" data-cd="hours">--</span>
+          <span class="cd-lbl">Stunden</span>
+        </div>
+        <div class="cd-sep" aria-hidden="true">:</div>
+        <div class="cd-box">
+          <span class="cd-num" data-cd="minutes">--</span>
+          <span class="cd-lbl">Minuten</span>
+        </div>
+        <div class="cd-sep" aria-hidden="true">:</div>
+        <div class="cd-box">
+          <span class="cd-num" data-cd="seconds">--</span>
+          <span class="cd-lbl">Sekunden</span>
+        </div>
+      </div>
+
+      <p class="cd-expired" data-cd-expired data-expired-text={expiredText} hidden>{expiredText}</p>
+
+      {ctaLabel && (
+        <a href={ctaHref} class="btn btn-fill cd-cta">{ctaLabel}</a>
+      )}
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const grid = document.querySelector('#countdown .cd-grid');
+    if (!grid) return;
+    const targetStr = grid.getAttribute('data-target');
+    if (!targetStr) return;
+    const target = new Date(targetStr).getTime();
+    if (isNaN(target)) return;
+
+    const expired = document.querySelector('#countdown [data-cd-expired]');
+    const els = {
+      days: grid.querySelector('[data-cd="days"]'),
+      hours: grid.querySelector('[data-cd="hours"]'),
+      minutes: grid.querySelector('[data-cd="minutes"]'),
+      seconds: grid.querySelector('[data-cd="seconds"]'),
+    };
+
+    const pad = n => String(n).padStart(2, '0');
+
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        Object.values(els).forEach(el => el && (el.textContent = '00'));
+        if (expired) { expired.hidden = false; }
+        grid.classList.add('cd-grid--done');
+        return false;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff / 3600000) % 24);
+      const m = Math.floor((diff / 60000) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+      els.days.textContent = pad(d);
+      els.hours.textContent = pad(h);
+      els.minutes.textContent = pad(m);
+      els.seconds.textContent = pad(s);
+      return true;
+    };
+
+    if (tick()) {
+      const id = setInterval(() => { if (!tick()) clearInterval(id); }, 1000);
+    }
+  })();
+</script>
