@@ -31,6 +31,36 @@
   display: none;
 }
 
+/* Countdown — terminal style: mono, green, brackets */
+[data-design="07-terminal-console"] .countdown-section {
+  background: var(--tc-bg);
+  color: var(--tc-text);
+  border-bottom: 1px solid var(--tc-border);
+}
+[data-design="07-terminal-console"] .countdown-section .lbl { color: var(--tc-accent-2); }
+[data-design="07-terminal-console"] .countdown-section .h2 { color: var(--tc-text-bright); font-family: var(--sans); }
+[data-design="07-terminal-console"] .countdown-section .sub { color: var(--tc-text-dim); font-family: var(--mono); }
+[data-design="07-terminal-console"] .cd-grid { font-family: var(--mono); }
+[data-design="07-terminal-console"] .cd-box {
+  background: var(--tc-bg-2);
+  border: 1px solid var(--tc-border);
+  border-radius: 6px;
+}
+[data-design="07-terminal-console"] .cd-num {
+  color: var(--tc-accent-2);
+  font-family: var(--mono);
+  text-shadow: 0 0 16px color-mix(in srgb, var(--tc-accent-2) 35%, transparent);
+}
+[data-design="07-terminal-console"] .cd-lbl {
+  color: var(--tc-text-dim);
+  font-family: var(--mono);
+  text-transform: lowercase;
+}
+[data-design="07-terminal-console"] .cd-sep {
+  color: var(--tc-border);
+  font-family: var(--mono);
+}
+
 /* Nav — matrix-like */
 [data-design="07-terminal-console"] #nav {
   background: rgba(10,14,20,.9);

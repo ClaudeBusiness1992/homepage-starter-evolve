@@ -19,6 +19,20 @@
   display: none;
 }
 
+/* Countdown — minimal clean theme */
+[data-design="03-minimal-clean"] .countdown-section {
+  background: #fff;
+  color: var(--ink);
+  border-bottom: 1px solid var(--border);
+}
+[data-design="03-minimal-clean"] .countdown-section .lbl { color: var(--accent-text); }
+[data-design="03-minimal-clean"] .countdown-section .h2  { color: var(--ink); font-weight: 400; }
+[data-design="03-minimal-clean"] .countdown-section .sub { color: var(--ink-muted); }
+[data-design="03-minimal-clean"] .cd-box { background: transparent; border: 1px solid var(--border); border-radius: 2px; }
+[data-design="03-minimal-clean"] .cd-num { color: var(--ink); }
+[data-design="03-minimal-clean"] .cd-lbl { color: var(--ink-muted); }
+[data-design="03-minimal-clean"] .cd-sep { color: var(--border); }
+
 /* Nav */
 [data-design="03-minimal-clean"] #nav {
   background: var(--white);

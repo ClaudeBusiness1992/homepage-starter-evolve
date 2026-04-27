@@ -535,3 +535,13 @@
   [data-design="09-luxe-atelier"] .pcard:last-child { border-bottom: none; }
   [data-design="09-luxe-atelier"] .acard { border-right: none; padding: 2rem 0; }
 }
+
+/* Countdown — luxe boutique */
+[data-design="09-luxe-atelier"] .countdown-section { background: var(--lx-bg-2); color: var(--lx-ink); border-top: 1px solid var(--lx-line); border-bottom: 1px solid var(--lx-line); }
+[data-design="09-luxe-atelier"] .countdown-section .lbl { color: var(--accent); font-style: italic; letter-spacing: .35em; }
+[data-design="09-luxe-atelier"] .countdown-section .h2 { color: var(--lx-ink); font-family: var(--serif); font-weight: 400; }
+[data-design="09-luxe-atelier"] .countdown-section .sub { color: rgba(26,26,26,.65); font-style: italic; }
+[data-design="09-luxe-atelier"] .cd-box { background: transparent; border: 1px solid var(--lx-line); border-radius: 0; }
+[data-design="09-luxe-atelier"] .cd-num { color: var(--accent); font-family: var(--serif); font-style: italic; font-weight: 400; }
+[data-design="09-luxe-atelier"] .cd-lbl { color: rgba(26,26,26,.5); font-family: var(--serif); font-style: italic; text-transform: uppercase; letter-spacing: .25em; }
+[data-design="09-luxe-atelier"] .cd-sep { color: var(--lx-line); }

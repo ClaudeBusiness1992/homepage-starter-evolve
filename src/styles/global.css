@@ -548,6 +548,12 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
   cursor: not-allowed;
 }
 .bk-grid textarea { resize: vertical; min-height: 80px; }
+.bk-date-hint {
+  font-size: .82rem;
+  color: var(--accent);
+  font-weight: 600;
+  margin-top: .15rem;
+}
 .bk-status { margin: 1.25rem 0 0; font-size: .9rem; color: var(--ink-muted); min-height: 1.4em; }
 .bk-status--success { color: var(--sage); font-weight: 600; }
 .bk-status--error { color: var(--error); font-weight: 600; }
@@ -561,8 +567,15 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
   .booking-form { padding: 1.5rem; }
 }
 
-/* ── COUNTDOWN (optional add-on) ── */
-.countdown-section { background: var(--ink); color: var(--cream); padding: 5rem 0; }
+/* ── COUNTDOWN (optional add-on, kompakt — teilt sich Slot mit Hero) ── */
+.countdown-section {
+  background: var(--ink);
+  color: var(--cream);
+  padding: clamp(2.5rem, 5vh, 4rem) 0;
+  min-height: 0 !important; /* override global section min-height */
+  scroll-snap-align: none;
+  padding-top: calc(var(--nav-h) + 1.5rem);
+}
 .countdown-section .lbl { color: var(--accent-light); }
 .cd-inner { text-align: center; max-width: 760px; margin: 0 auto; }
 .cd-h2 { color: var(--cream); margin: .5rem 0 1rem; }

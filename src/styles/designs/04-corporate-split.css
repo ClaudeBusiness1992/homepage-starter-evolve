@@ -191,3 +191,13 @@
   [data-design="04-corporate-split"] .stats-grid > div:nth-child(2) { border-left: 1px solid rgba(255,255,255,.08); }
   [data-design="04-corporate-split"] .stats-grid > div:nth-child(3) { border-left: none; }
 }
+
+/* Countdown — corporate cream */
+[data-design="04-corporate-split"] .countdown-section { background: var(--cream); color: var(--ink); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+[data-design="04-corporate-split"] .countdown-section .lbl { color: var(--accent-text); }
+[data-design="04-corporate-split"] .countdown-section .h2 { color: var(--ink); }
+[data-design="04-corporate-split"] .countdown-section .sub { color: var(--ink-muted); }
+[data-design="04-corporate-split"] .cd-box { background: #fff; border: 1px solid var(--border); }
+[data-design="04-corporate-split"] .cd-num { color: var(--accent); }
+[data-design="04-corporate-split"] .cd-lbl { color: var(--ink-muted); }
+[data-design="04-corporate-split"] .cd-sep { color: var(--border); }

@@ -468,3 +468,15 @@
 @media (max-width: 768px) {
   [data-design="10-pop-studio"] .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Countdown — pop sticker */
+[data-design="10-pop-studio"] .countdown-section { background: var(--po-purple); color: #fff; border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); }
+[data-design="10-pop-studio"] .countdown-section .lbl { background: var(--po-yellow); color: var(--ink); }
+[data-design="10-pop-studio"] .countdown-section .h2 { color: #fff; }
+[data-design="10-pop-studio"] .countdown-section .sub { color: rgba(255,255,255,.85); }
+[data-design="10-pop-studio"] .cd-box { background: var(--po-bg-2); color: var(--ink); border: 3px solid var(--ink); border-radius: 16px; box-shadow: 4px 4px 0 var(--ink); }
+[data-design="10-pop-studio"] .cd-box:nth-child(odd) { transform: rotate(-1deg); }
+[data-design="10-pop-studio"] .cd-box:nth-child(even) { transform: rotate(1deg); }
+[data-design="10-pop-studio"] .cd-num { color: var(--accent); font-family: var(--serif); font-weight: 400; }
+[data-design="10-pop-studio"] .cd-lbl { color: var(--ink); font-weight: 700; text-transform: uppercase; }
+[data-design="10-pop-studio"] .cd-sep { display: none; }

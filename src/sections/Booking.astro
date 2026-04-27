@@ -36,10 +36,21 @@ const {
   leadDays = 1,
 } = Astro.props;
 
-// Compute min date (today + leadDays)
+// Compute min date (today + leadDays) and find first available open day
 const today = new Date();
 const min = new Date(today.getTime() + leadDays * 86400000);
+const dayKeysCalc = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+const av = availability as any;
+let firstOpen = new Date(min);
+for (let i = 0; i < 90; i++) {
+  const slots = av[dayKeysCalc[firstOpen.getDay()]];
+  if (Array.isArray(slots) && slots.length > 0) break;
+  firstOpen.setDate(firstOpen.getDate() + 1);
+}
 const minDateStr = min.toISOString().slice(0, 10);
+const defaultDateStr = firstOpen.toISOString().slice(0, 10);
+const max = new Date(today.getTime() + 90 * 86400000);
+const maxDateStr = max.toISOString().slice(0, 10);
 
 // Sprechzeiten-Übersicht aus Availability ableiten — Tage gruppieren mit identischen Slots
 const dayShort: Record<string, string> = {
@@ -131,7 +142,8 @@ if (groupStart) {
 
         <div class="form-group">
           <label for="bk-date">Wunschdatum *</label>
-          <input type="date" id="bk-date" name="date" min={minDateStr} required />
+          <input type="date" id="bk-date" name="date" min={minDateStr} max={maxDateStr} value={defaultDateStr} required />
+          <span id="bk-date-hint" class="bk-date-hint" hidden>Geschlossen — bitte einen anderen Tag wählen.</span>
         </div>
 
         <div class="form-group">
@@ -195,7 +207,8 @@ if (groupStart) {
     // Track when form was first rendered (anti-bot time check)
     const formRenderedAt = Date.now();
 
-    dateEl?.addEventListener('change', () => {
+    const dateHint = form.querySelector('#bk-date-hint');
+    const updateTimeSlots = () => {
       const d = new Date(dateEl.value);
       if (isNaN(d)) { timeEl.disabled = true; return; }
       const slots = availability[dayKeys[d.getDay()]] || [];
@@ -203,7 +216,11 @@ if (groupStart) {
         ? '<option value="">Bitte wählen</option>' + slots.map(s => `<option value="${s}">${s} Uhr</option>`).join('')
         : '<option value="">Keine Termine an diesem Tag</option>';
       timeEl.disabled = slots.length === 0;
-    });
+      if (dateHint) dateHint.hidden = slots.length > 0;
+    };
+    dateEl?.addEventListener('change', updateTimeSlots);
+    // Trigger initial population from default value
+    if (dateEl?.value) updateTimeSlots();
 
     const buildIcs = (data) => {
       const dt = new Date(`${data.date}T${data.time}:00`);

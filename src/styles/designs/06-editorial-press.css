@@ -521,3 +521,13 @@
   [data-design="06-editorial-press"] .pcard > * { grid-column: 2; }
   [data-design="06-editorial-press"] .pcard::before { grid-column: 1; grid-row: 1 / span 5; }
 }
+
+/* Countdown — editorial italic */
+[data-design="06-editorial-press"] .countdown-section { background: var(--cream); color: var(--ink); border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+[data-design="06-editorial-press"] .countdown-section .lbl { color: var(--accent); font-style: italic; }
+[data-design="06-editorial-press"] .countdown-section .h2 { color: var(--ink); font-style: italic; font-weight: 400; }
+[data-design="06-editorial-press"] .countdown-section .sub { color: var(--ink-muted); font-style: italic; }
+[data-design="06-editorial-press"] .cd-box { background: transparent; border: 1px solid rgba(26,26,46,.18); border-radius: 0; }
+[data-design="06-editorial-press"] .cd-num { color: var(--accent); font-family: var(--serif); font-style: italic; }
+[data-design="06-editorial-press"] .cd-lbl { color: var(--ink-muted); font-family: var(--serif); font-style: italic; text-transform: none; letter-spacing: 0; }
+[data-design="06-editorial-press"] .cd-sep { color: var(--ink); opacity: .25; font-family: var(--serif); }

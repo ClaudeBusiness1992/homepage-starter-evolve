@@ -443,3 +443,13 @@
 @media (max-width: 768px) {
   [data-design="08-soft-bloom"] .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Countdown — soft cream rounded */
+[data-design="08-soft-bloom"] .countdown-section { background: linear-gradient(180deg, var(--sb-bg) 0%, var(--sb-bg-2) 100%); color: var(--ink); }
+[data-design="08-soft-bloom"] .countdown-section .lbl { color: var(--accent); font-style: italic; }
+[data-design="08-soft-bloom"] .countdown-section .h2 { color: var(--ink); }
+[data-design="08-soft-bloom"] .countdown-section .sub { color: var(--ink-muted); }
+[data-design="08-soft-bloom"] .cd-box { background: var(--sb-bg-3); border: 1px solid color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 24px; box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 8%, transparent); }
+[data-design="08-soft-bloom"] .cd-num { color: var(--accent); font-family: var(--serif); }
+[data-design="08-soft-bloom"] .cd-lbl { color: var(--ink-muted); }
+[data-design="08-soft-bloom"] .cd-sep { color: var(--accent); opacity: .3; }
