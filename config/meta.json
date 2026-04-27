@@ -17,7 +17,12 @@
         "section": "pricing"
       },
       {
-        "label": "Projekt starten",
+        "label": "Bewertungen",
+        "href": "#reviews",
+        "section": "reviews"
+      },
+      {
+        "label": "Kontakt",
         "href": "#contact",
         "section": "contact",
         "cta": true
@@ -28,7 +33,7 @@
     "tagline": "Websites für kleine Unternehmen",
     "siteName": "pixel&code",
     "phoneDisplay": "[Telefonnummer einfügen]",
-    "siteNameAccent": "&code",
+    "siteNameAccent": "&",
     "email": "hallo@pixelundcode.de",
     "description": "pixel&code baut moderne, schnelle Websites für kleine Unternehmen. Webdesign, SEO und digitale Präsenz aus einer Hand."
   },

@@ -9,8 +9,8 @@ Kontextdatei für Claude Code. Enthält Projektbeschreibung, Architektur-Entsche
 `homepage-starter` ist ein wiederverwendbares Template für einseitige Kunden-Websites (One-Pager).
 Die Agentur **pixel&code** nutzt es als Grundlage für alle Kundenprojekte.
 
-**Prinzip:** Pro Kunde wird das Template kopiert. Drei Config-Dateien konfigurieren Marke, Inhalte und Legal.
-Der Code selbst wird nie angefasst. Deployment auf Netlify Free Tier.
+**Prinzip:** Pro Kunde wird das Template geklont. Vier Config-Dateien konfigurieren Design, Marke, Inhalte und Legal.
+Der Code selbst wird nie angefasst. Deployment auf Vercel Free Tier.
 
 ---
 
@@ -21,9 +21,10 @@ Der Code selbst wird nie angefasst. Deployment auf Netlify Free Tier.
 | Node.js | v22 LTS | Laufzeitumgebung |
 | pnpm | 10.x | Paketmanager (immer pnpm, nie npm) |
 | Astro | 6.x | Static Site Generator |
+| Decap CMS | 3.x | Content-Management (GitHub OAuth Backend) |
 | Vanilla CSS | — | Custom Properties, kein Framework |
 | WOFF2 (self-hosted) | — | DM Serif Display + Outfit, DSGVO-konform |
-| Netlify | — | Deployment + Formulare + Security-Headers |
+| Vercel | — | Deployment + Serverless Functions (OAuth) |
 
 **Betriebssystem (Referenz):** Windows 11 Home (Build 26200)
 **Shell:** PowerShell 5.1 + PortableGit (Bash)
@@ -36,39 +37,64 @@ Alle Kunden-Werte leben in `config/`. Der Code selbst wird nie angefasst.
 
 | Datei | Inhalt |
 |---|---|
-| `config/meta.json` | Marke: siteName, siteNameAccent, design, theme (Farben), nav, Kontakt |
+| `config/design.json` | Aktives Design (ein Wert: `"design": "01-warm-local"`) |
+| `config/meta.json` | Marke: siteName, siteNameAccent, tagline, description, nav, Kontakt + theme (Farben) |
 | `config/content.json` | Seiteninhalte: alle Sektionen mit enabled-Flag, Texte, Bilder, Pakete, Bewertungen |
 | `config/legal.json` | Impressum + Datenschutz: Adresse, Registernummer, Hoster etc. |
-
-> **Wichtig:** `client.config.json` existiert nicht mehr — alles in den drei obigen Dateien.
 
 ---
 
 ## Design-System
 
-Der aktive Stil wird in `config/meta.json → design` gesetzt:
+Der aktive Stil wird in `config/design.json` gesetzt:
 
 ```json
 { "design": "01-warm-local" }
 ```
 
 `Base.astro` liest den Wert und setzt `data-design="{design}"` auf dem `<html>`-Tag.
-Jedes Design überschreibt nur abweichende Styles via `[data-design="..."]`-Selector in:
+`index.astro` wählt über eine Component-Map die richtigen Astro-Komponenten pro Design.
+Design-spezifische CSS-Überschreibungen leben in `src/styles/designs/`.
+
+### Verfügbare Designs
+
+| Key | Charakter | Eigene Komponenten |
+|---|---|---|
+| `01-warm-local` | Warm, lokal, klassisch | — (nutzt alle Fallback-Sektionen) |
+| `02-bold-editorial` | Dunkel, mutig, Magazin | Hero, About, Services |
+| `03-minimal-clean` | Hell, reduziert, typografisch | Hero |
+| `04-corporate-split` | Zweigeteilt, seriös, strukturiert | Hero, About |
+| `05-vibrant-gradient` | Gradient, dynamisch, modern | Hero, Services |
+| `06-editorial-press` | Magazin-Layout, Italic, Issue-Nummern | Hero |
+| `07-terminal-console` | Dev-Aesthetik, Mono, Terminal-Window | Hero |
+| `08-soft-bloom` | Organisch, Pastell, runde Karten | Hero |
+| `09-luxe-atelier` | Premium Boutique, Serif, Ornament | Hero |
+| `10-pop-studio` | Bunt, verspielt, Sticker-Look | Hero |
+
+Design wechseln: `config/design.json` oder im CMS unter "Design auswählen".
+
+### Dateistruktur
 
 ```
-src/styles/designs/01-warm-local.css
-src/styles/designs/02-bold-editorial.css
-src/styles/designs/03-minimal-clean.css
+src/
+  designs/
+    02-bold-editorial/   Hero.astro, About.astro, Services.astro
+    03-minimal-clean/    Hero.astro
+    04-corporate-split/  Hero.astro, About.astro
+    05-vibrant-gradient/ Hero.astro, Services.astro
+    06-editorial-press/  Hero.astro
+    07-terminal-console/ Hero.astro
+    08-soft-bloom/       Hero.astro
+    09-luxe-atelier/     Hero.astro
+    10-pop-studio/       Hero.astro
+  sections/              Shared Fallback-Komponenten (01-warm-local + Fallback)
+  styles/
+    global.css
+    designs/             02–10 *.css (Section-Overrides pro Design)
 ```
-
-| Design | Status |
-|---|---|
-| `01-warm-local` | ✅ fertig |
-| `02-bold-editorial` | 🔨 in Arbeit |
-| `03-minimal-clean` | 🔨 in Arbeit |
-| `04-corporate-trust` | Geplant |
 
 **Regel:** Keine Design-spezifischen Styles in `global.css`. Nur in den Design-Dateien.
+Alle Design-CSS-Dateien werden immer geladen — Scoping passiert über `[data-design="..."]`-Selektoren.
 
 ---
 
@@ -76,25 +102,42 @@ src/styles/designs/03-minimal-clean.css
 
 ### Custom Properties (Tokens)
 
-Alle in `config/meta.json → theme` konfigurierbar, in `Base.astro` per `<style>` auf `:root` gesetzt:
+Vollständige Liste aus `global.css` `:root`:
 
 ```css
---ink          /* Haupttextfarbe */
---cream        /* Hintergrundfarbe */
---accent       /* Akzentfarbe (konfiguriert) */
---accent-text  /* Automatisch: color-mix(in srgb, var(--accent) 75%, #000) — WCAG AA auf hellem Hintergrund */
---sage         /* Sekundärfarbe */
---r            /* Border-radius normal */
---r-lg         /* Border-radius groß */
---r-pill       /* Border-radius Pill: 100px */
+/* Theme-Tokens — werden von Base.astro als inline-style auf <html> gesetzt */
+--ink           /* Haupttextfarbe (aus meta.json → theme.ink) */
+--cream         /* Hintergrundfarbe (aus meta.json → theme.cream) */
+--accent        /* Akzentfarbe (aus meta.json → theme.accent) */
+--accent-light  /* Hover-Akzent (aus meta.json → theme.accentLight) */
+--sage          /* Sekundärfarbe (aus meta.json → theme.sage) */
+
+/* Automatisch berechnet in global.css — nicht konfigurierbar */
+--ink-muted     /* rgba-Variante von --ink */
+--accent-text   /* color-mix(in srgb, var(--accent) 75%, #000) — WCAG AA */
+--white         /* #ffffff */
+--border        /* rgba(26,26,46,.12) */
+--error         /* #e85555 */
+
+/* Layout */
+--nav-h:  72px
+--max-w:  1200px
+--r:      12px
+--r-lg:   20px
+--r-pill: 100px
+--shadow
+--shadow-lg
+
+/* Typografie */
+--serif: 'DM Serif Display', Georgia, serif
+--sans:  'Outfit', system-ui, sans-serif
 ```
 
-`--accent-text` wird nicht in `meta.json` konfiguriert — es wird in `global.css` automatisch aus `--accent` berechnet.
-Dadurch ist jede konfigurierte Akzentfarbe automatisch WCAG-konform auf hellem Hintergrund.
+`--accent-text` wird automatisch aus `--accent` berechnet — jede konfigurierte Akzentfarbe ist damit automatisch WCAG-konform auf hellem Hintergrund.
 
 ### Utility-Klassen
 
-- **`.section--dark`** — Sections mit dunklem Hintergrund (Services, Gallery, Contact) tragen diese Klasse.
+- **`.section--dark`** — Sections mit dunklem Hintergrund tragen diese Klasse.
   Setzt `color: var(--cream)` auf `.h2`, `.sub`, `.lbl` automatisch.
 - **`.section-hd`** — Abstand unter Section-Headern (3.5rem)
 - **`.section-hd--center`** — Zentrierter Section-Header
@@ -115,7 +158,7 @@ Logo-Highlight ohne `split('&')`. In `meta.json`:
 ```json
 { "siteName": "pixel&code", "siteNameAccent": "&code" }
 ```
-Dann in Nav/Footer: der Accent-Teil wird in `<em>` gerendert (accent-colored).
+Der Accent-Teil wird in `<em>` gerendert (accent-colored).
 Kunden ohne Sonderzeichen: `siteNameAccent` weglassen.
 
 ---
@@ -124,7 +167,7 @@ Kunden ohne Sonderzeichen: `siteNameAccent` weglassen.
 
 Alle in `config/content.json` mit `enabled: true/false` steuerbar. Nav filtert deaktivierte automatisch.
 
-| Sektion | Datei | Klasse |
+| Sektion | Fallback-Datei | Klasse |
 |---|---|---|
 | Hero | `src/sections/Hero.astro` | — |
 | Über uns | `src/sections/About.astro` | — |
@@ -142,24 +185,61 @@ Alle in `config/content.json` mit `enabled: true/false` steuerbar. Nav filtert d
 
 Self-hosted (DSGVO-konform — kein Google CDN-Request):
 
-- **Dateien:** `public/fonts/*.woff2` — 12 Dateien (DM Serif Display + Outfit, je 4 Gewichte × latin + latin-ext)
+- **Dateien:** `public/fonts/*.woff2` — 12 Dateien
+  - DM Serif Display: normal 400 + italic 400 × (latin + latin-ext)
+  - Outfit: normal 400/500/600/700 × (latin + latin-ext)
 - **@font-face:** in `src/styles/global.css` ganz oben
 - **Preload:** zwei kritische Dateien in `Base.astro` (`dm-serif-display-normal-400-latin.woff2`, `outfit-normal-400-latin.woff2`)
-- **Cache:** in `netlify.toml` für `public/fonts/` auf 1 Jahr gesetzt
-- **CSP:** `font-src 'self'` (kein externer Font-Host nötig)
-
-> `public/fonts/fonts.css` existiert nicht mehr — war eine Dead File, wurde gelöscht.
+- **Cache:** in `public/_headers` für `/fonts/*` auf 1 Jahr setzen (noch offen)
 
 ---
 
 ## Sicherheit
 
-`netlify.toml` setzt für alle Routen:
-- `Content-Security-Policy` — nur eigene Ressourcen + unsafe-inline für Theme-Injection
-- `X-Frame-Options: DENY`
-- `X-Content-Type-Options: nosniff`
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy` — kein Kamera/Mikro/Geo
+Security-Header für Vercel in `public/_headers` (nicht `netlify.toml`):
+
+```
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Content-Security-Policy: default-src 'self'; ...
+
+/admin/*
+  Content-Security-Policy: ... unsafe-eval ... (Decap CMS benötigt dies)
+```
+
+> `netlify.toml` existiert noch, ist aber Legacy und wird von Vercel ignoriert.
+
+---
+
+## CMS (Decap CMS)
+
+Kunden können Inhalte ohne Code-Zugriff bearbeiten.
+
+### Einloggen
+
+1. `https://[domain]/admin/` aufrufen
+2. "Login with GitHub" klicken
+3. GitHub-Account autorisieren
+
+### Bereiche im CMS
+
+| Bereich | Datei | Inhalt |
+|---|---|---|
+| Design auswählen | `config/design.json` | Aktives Layout |
+| Stammdaten & Design | `config/meta.json` | Name, Farben, Kontakt, Navigation |
+| Inhalte | `config/content.json` | Texte, Bilder, Pakete, Bewertungen |
+| Firmendaten & Impressum | `config/legal.json` | Adresse, Register, Hoster |
+
+### OAuth-Einrichtung (einmalig pro Projekt)
+
+1. GitHub OAuth App erstellen → Settings → Developer Settings → OAuth Apps
+2. Callback URL: `https://[domain]/api/auth`
+3. `client_id` in `public/admin/config.yml` eintragen
+4. `GITHUB_CLIENT_ID` + `GITHUB_CLIENT_SECRET` als Vercel Environment Variables setzen
+5. `public/admin/config.yml → base_url` auf neue Domain setzen
 
 ---
 
@@ -179,8 +259,8 @@ Self-hosted (DSGVO-konform — kein Google CDN-Request):
 pnpm dev              # Entwicklungsserver → http://localhost:4321
 pnpm build            # Produktions-Build → dist/
 pnpm preview          # Build lokal vorschauen
-netlify deploy        # Preview-Deploy
-netlify deploy --prod # Produktions-Deploy
+vercel                # Preview-Deploy
+vercel --prod         # Produktions-Deploy
 ```
 
 ---
@@ -232,10 +312,10 @@ npm install -g pnpm
 pnpm --version
 ```
 
-### 4. Netlify CLI
+### 4. Vercel CLI
 ```powershell
-pnpm add -g netlify-cli
-netlify login
+pnpm add -g vercel
+vercel login
 ```
 
 ### 5. Claude Code
@@ -257,13 +337,17 @@ pnpm dev
 ## Pro Kunde: Checkliste
 
 1. Repo klonen: `git clone <repo-url> kunde-name && cd kunde-name`
-2. Design wählen: `config/meta.json → design`
-3. Marke eintragen: `config/meta.json` — siteName, siteNameAccent, theme (Farben), nav, Kontakt
+2. Design wählen: `config/design.json → design`
+3. Marke eintragen: `config/meta.json` — siteName, siteNameAccent, tagline, theme (Farben), nav, Kontakt
 4. Inhalte eintragen: `config/content.json` — alle Sektionen befüllen, nicht benötigte auf `enabled: false`
 5. Legal eintragen: `config/legal.json` — alle `[…]`-Platzhalter ersetzen
 6. Domain eintragen: `astro.config.mjs → site`
 7. OG-Bild erstellen: `public/og-image.jpg` (1200×630px)
-8. `pnpm build` → `dist/` auf Netlify hochladen
+8. Neues Vercel-Projekt anlegen + GitHub-Repo verbinden
+9. Environment Variables setzen: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
+10. GitHub OAuth App Callback URL auf neue Domain aktualisieren
+11. `public/admin/config.yml → base_url` + `client_id` auf neue Domain/App setzen
+12. `pnpm build` prüfen, dann Vercel-Deploy anstoßen
 
 ---
 
@@ -274,5 +358,6 @@ pnpm dev
 - [ ] `.gitignore`: `.env.local`, `.env.*.local`, `.env.production` ergänzen
 - [ ] `public/og-image.jpg` Platzhalter erstellen (1200×630px)
 - [ ] Datenschutz-Seite: Google-Fonts-Abschnitt entfernen (jetzt self-hosted)
-- [ ] Design 02 und 03 fertigstellen
-- [ ] Design 04: `04-corporate-trust` (Beratung, Kanzleien)
+- [ ] `netlify.toml` entfernen (Legacy, wird von Vercel ignoriert)
+- [ ] Font-Cache-Header in `public/_headers` ergänzen (1 Jahr für `/fonts/*`)
+- [ ] Design-CSS 02–05 vervollständigen

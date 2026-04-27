@@ -75,9 +75,9 @@
 [data-design="04-corporate-split"] .stat-n { color: #fff; }
 [data-design="04-corporate-split"] .stat-l { color: rgba(255,255,255,.45); }
 
-/* Pricing */
+/* Pricing — same cream as the rest, only Stats/Contact/Footer break the rhythm with dark */
 [data-design="04-corporate-split"] #pricing {
-  background: #fff;
+  background: var(--cream);
 }
 [data-design="04-corporate-split"] .pcard {
   border: 1px solid var(--border);

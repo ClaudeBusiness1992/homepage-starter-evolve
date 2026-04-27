@@ -20,7 +20,7 @@
 
 /* About */
 [data-design="05-vibrant-gradient"] #about {
-  background: linear-gradient(180deg, #f8f6ff 0%, #fff 100%);
+  background: linear-gradient(180deg, #fef9f1 0%, #fff 100%);
 }
 [data-design="05-vibrant-gradient"] .acard {
   border-radius: var(--r-lg);
@@ -38,7 +38,7 @@
 
 /* Stats — gradient dark bg */
 [data-design="05-vibrant-gradient"] #stats {
-  background: linear-gradient(135deg, var(--ink) 0%, #2d1b4e 50%, #1a2e4e 100%);
+  background: linear-gradient(135deg, #1a1612 0%, #2a1f1a 50%, #241612 100%);
 }
 [data-design="05-vibrant-gradient"] .stats-grid {
   display: grid;
@@ -57,7 +57,7 @@
 
 /* Pricing — gradient background, featured dark card */
 [data-design="05-vibrant-gradient"] #pricing {
-  background: linear-gradient(180deg, #f8f6ff 0%, #fff 100%);
+  background: linear-gradient(180deg, #fef9f1 0%, #fff 100%);
 }
 [data-design="05-vibrant-gradient"] .pcard {
   border-radius: var(--r-lg);
@@ -68,7 +68,7 @@
   box-shadow: 0 8px 32px rgba(26,26,46,.12);
 }
 [data-design="05-vibrant-gradient"] .pcard.feat {
-  background: linear-gradient(160deg, var(--ink) 0%, #2d1b4e 100%);
+  background: linear-gradient(160deg, #1a1612 0%, #2a1f1a 100%);
   border-color: transparent;
   box-shadow: 0 16px 48px rgba(26,26,46,.25);
 }
@@ -98,7 +98,7 @@
 
 /* Reviews */
 [data-design="05-vibrant-gradient"] #reviews {
-  background: linear-gradient(180deg, #f8f6ff 0%, #fff 100%);
+  background: linear-gradient(180deg, #fef9f1 0%, #fff 100%);
 }
 [data-design="05-vibrant-gradient"] .review-card {
   border-radius: var(--r-lg);
@@ -111,7 +111,7 @@
 
 /* Contact — gradient dark bg */
 [data-design="05-vibrant-gradient"] #contact {
-  background: linear-gradient(135deg, var(--ink) 0%, #2d1b4e 100%);
+  background: linear-gradient(135deg, #1a1612 0%, #2a1f1a 100%);
 }
 [data-design="05-vibrant-gradient"] #contact .h2 { color: #fff; }
 [data-design="05-vibrant-gradient"] #contact .sub { color: rgba(255,255,255,.65); }
@@ -132,7 +132,7 @@
 
 /* Footer */
 [data-design="05-vibrant-gradient"] footer {
-  background: #0d0a1a;
+  background: #0d0a08;
 }
 [data-design="05-vibrant-gradient"] .foot-logo { color: #fff; }
 [data-design="05-vibrant-gradient"] .foot-logo em { color: var(--accent); }

@@ -78,7 +78,7 @@
           "tagline": "Die komplette Lösung",
           "price": "1.499 €",
           "priceNote": "einmalig, zzgl. MwSt.",
-          "featured": true,
+          "featured": false,
           "badge": "Beliebt",
           "features": [
             "Bis zu 5 Unterseiten",
@@ -125,7 +125,7 @@
     },
     "reviews": {
       "enabled": true,
-      "label": "Kundenstimmen",
+      "label": "Kundenbewertungen",
       "headline": "Was unsere Kunden sagen",
       "subline": "Echte Projekte, echte Menschen, echte Ergebnisse.",
       "items": [
