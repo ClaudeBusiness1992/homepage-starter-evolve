@@ -2,8 +2,8 @@
   "extras": {
     "active": {
       "countdown": true,
-      "reviews": false,
-      "booking": false
+      "reviews": true,
+      "booking": true
     },
     "countdown": {
       "label": "Save the Date",
@@ -46,34 +46,82 @@
       ]
     },
     "booking": {
-      "label": "Termin buchen",
+      "staff": [
+        {
+          "name": "Anna Müller"
+        },
+        {
+          "name": "Tom Berger"
+        },
+        {
+          "name": "Egal — wer Zeit hat"
+        }
+      ],
+      "successMessage": "Buchungsanfrage wurde übermittelt. Wir melden uns innerhalb von 24 Stunden zur Bestätigung.",
+      "ctaLabel": "Termin anfragen",
+      "liveSync": false,
+      "leadDays": 1,
       "headline": "Wann darf's losgehen?",
       "subline": "Wählen Sie Service, Mitarbeiter:in und Wunschtermin. Wir bestätigen Ihre Buchung per E-Mail innerhalb von 24 Stunden.",
+      "label": "Termin buchen",
       "emailTo": "termine@beispiel.de",
-      "liveSync": false,
       "calendarId": "",
-      "ctaLabel": "Termin anfragen",
-      "successMessage": "Buchungsanfrage wurde übermittelt. Wir melden uns innerhalb von 24 Stunden zur Bestätigung.",
-      "services": [
-        { "name": "Erstberatung (30 min)", "duration": 30 },
-        { "name": "Strategie-Workshop (60 min)", "duration": 60 },
-        { "name": "Premium-Beratung (90 min)", "duration": 90 }
-      ],
-      "staff": [
-        { "name": "Anna Müller" },
-        { "name": "Tom Berger" },
-        { "name": "Egal — wer Zeit hat" }
-      ],
       "availability": {
-        "monday":    ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
-        "tuesday":   ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
-        "wednesday": ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
-        "thursday":  ["09:00", "10:00", "11:00", "14:00", "15:00", "16:00"],
-        "friday":    ["09:00", "10:00", "11:00", "14:00"],
-        "saturday":  [],
-        "sunday":    []
+        "monday": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "14:00",
+          "15:00",
+          "16:00"
+        ],
+        "tuesday": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "14:00",
+          "15:00",
+          "16:00"
+        ],
+        "wednesday": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "14:00",
+          "15:00",
+          "16:00"
+        ],
+        "thursday": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "14:00",
+          "15:00",
+          "16:00"
+        ],
+        "friday": [
+          "09:00",
+          "10:00",
+          "11:00",
+          "14:00"
+        ],
+        "saturday": [],
+        "sunday": []
       },
-      "leadDays": 1
+      "services": [
+        {
+          "name": "Erstberatung (30 min)",
+          "duration": 30
+        },
+        {
+          "name": "Strategie-Workshop (60 min)",
+          "duration": 60
+        },
+        {
+          "name": "Premium-Beratung (90 min)",
+          "duration": 90
+        }
+      ]
     }
   }
 }
