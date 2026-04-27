@@ -35,6 +35,7 @@ const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
 const { extras: x = {} } = extrasConfig;
 
+// Hero: every design has its own Hero
 const HeroComponents = {
   '01-warm-local':       Hero01,
   '02-bold-editorial':   Hero02,
@@ -48,35 +49,19 @@ const HeroComponents = {
   '10-pop-studio':       Hero10,
 };
 
-const AboutComponents = {
-  '01-warm-local':       About01,
-  '02-bold-editorial':   About02,
-  '03-minimal-clean':    About01,
-  '04-corporate-split':  About04,
-  '05-vibrant-gradient': About01,
-  '06-editorial-press':  About01,
-  '07-terminal-console': About01,
-  '08-soft-bloom':       About01,
-  '09-luxe-atelier':     About01,
-  '10-pop-studio':       About01,
+// About / Services: only overrides; everyone else falls back to default (About01/Services01)
+const AboutOverrides = {
+  '02-bold-editorial':  About02,
+  '04-corporate-split': About04,
 };
-
-const ServicesComponents = {
-  '01-warm-local':       Services01,
+const ServicesOverrides = {
   '02-bold-editorial':   Services02,
-  '03-minimal-clean':    Services01,
-  '04-corporate-split':  Services01,
   '05-vibrant-gradient': Services05,
-  '06-editorial-press':  Services01,
-  '07-terminal-console': Services01,
-  '08-soft-bloom':       Services01,
-  '09-luxe-atelier':     Services01,
-  '10-pop-studio':       Services01,
 };
 
 const Hero     = HeroComponents[design]    ?? Hero01;
-const About    = AboutComponents[design]   ?? About01;
-const Services = ServicesComponents[design] ?? Services01;
+const About    = AboutOverrides[design]    ?? About01;
+const Services = ServicesOverrides[design] ?? Services01;
 
 const navLinks = (meta.nav ?? []).filter(l => !l.section || s[l.section]?.enabled !== false);
 ---
