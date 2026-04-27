@@ -84,7 +84,7 @@
 [data-design="10-pop-studio"] .h2 em,
 [data-design="10-pop-studio"] .h2 i {
   background: var(--accent);
-  color: #fff;
+  color: var(--white);
   padding: 0 .15em;
   border-radius: 8px;
   display: inline-block;
@@ -153,11 +153,11 @@
 /* Services — sticker grid */
 [data-design="10-pop-studio"] #services {
   background: var(--po-purple);
-  color: #fff;
+  color: var(--white);
   position: relative;
   overflow: hidden;
 }
-[data-design="10-pop-studio"] #services .h2 { color: #fff; }
+[data-design="10-pop-studio"] #services .h2 { color: var(--white); }
 [data-design="10-pop-studio"] #services .sub { color: rgba(255,255,255,.85); }
 [data-design="10-pop-studio"] #services .lbl {
   background: var(--po-yellow);
@@ -178,12 +178,12 @@
 }
 [data-design="10-pop-studio"] .scard:nth-child(3n) {
   background: var(--po-pink);
-  color: #fff;
+  color: var(--white);
   transform: rotate(-1deg);
 }
 [data-design="10-pop-studio"] .scard:nth-child(3n) .stitle,
 [data-design="10-pop-studio"] .scard:nth-child(3n) .stxt {
-  color: #fff;
+  color: var(--white);
 }
 [data-design="10-pop-studio"] .scard:hover {
   transform: translate(-3px, -3px) rotate(0deg);
@@ -198,7 +198,7 @@
   height: 48px;
   font-size: 1.3rem;
 }
-[data-design="10-pop-studio"] .scard:nth-child(2n) .sico { background: var(--accent); color: #fff; }
+[data-design="10-pop-studio"] .scard:nth-child(2n) .sico { background: var(--accent); color: var(--white); }
 [data-design="10-pop-studio"] .scard:nth-child(3n) .sico { background: var(--ink); color: var(--po-yellow); }
 [data-design="10-pop-studio"] .stitle {
   font-family: var(--serif);
@@ -225,10 +225,10 @@
   box-shadow: 5px 5px 0 var(--ink);
   transition: transform .2s, box-shadow .2s;
 }
-[data-design="10-pop-studio"] .stats-grid > div:nth-child(1) { background: var(--accent); color: #fff; transform: rotate(-1.5deg); }
+[data-design="10-pop-studio"] .stats-grid > div:nth-child(1) { background: var(--accent); color: var(--white); transform: rotate(-1.5deg); }
 [data-design="10-pop-studio"] .stats-grid > div:nth-child(2) { background: var(--po-yellow); transform: rotate(1deg); }
-[data-design="10-pop-studio"] .stats-grid > div:nth-child(3) { background: var(--po-pink); color: #fff; transform: rotate(-1deg); }
-[data-design="10-pop-studio"] .stats-grid > div:nth-child(4) { background: var(--po-purple); color: #fff; transform: rotate(1.5deg); }
+[data-design="10-pop-studio"] .stats-grid > div:nth-child(3) { background: var(--po-pink); color: var(--white); transform: rotate(-1deg); }
+[data-design="10-pop-studio"] .stats-grid > div:nth-child(4) { background: var(--po-purple); color: var(--white); transform: rotate(1.5deg); }
 [data-design="10-pop-studio"] .stats-grid > div:hover {
   transform: translate(-3px, -3px) rotate(0deg);
   box-shadow: 8px 8px 0 var(--ink);
@@ -269,7 +269,7 @@
 }
 [data-design="10-pop-studio"] .pcard.feat {
   background: var(--accent);
-  color: #fff;
+  color: var(--white);
   transform: rotate(0deg) scale(1.04);
   box-shadow: 8px 8px 0 var(--ink);
 }
@@ -282,7 +282,7 @@
 [data-design="10-pop-studio"] .pcard.feat .amount,
 [data-design="10-pop-studio"] .pcard.feat .note,
 [data-design="10-pop-studio"] .pcard.feat .plist li {
-  color: #fff !important;
+  color: var(--white) !important;
 }
 [data-design="10-pop-studio"] .pcard.feat .plist li::before { color: var(--po-yellow) !important; }
 [data-design="10-pop-studio"] .pcard.feat .pdiv { background: rgba(255,255,255,.25) !important; }
@@ -347,7 +347,7 @@
 [data-design="10-pop-studio"] #gallery { background: var(--po-bg); }
 [data-design="10-pop-studio"] #gallery .h2 { color: var(--ink); }
 [data-design="10-pop-studio"] #gallery .sub { color: var(--ink-muted); }
-[data-design="10-pop-studio"] #gallery .lbl { background: var(--po-pink); color: #fff; border-color: var(--ink); }
+[data-design="10-pop-studio"] #gallery .lbl { background: var(--po-pink); color: var(--white); border-color: var(--ink); }
 [data-design="10-pop-studio"] .gallery-item {
   border: 3px solid var(--ink);
   border-radius: 20px;
@@ -446,7 +446,7 @@
 }
 [data-design="10-pop-studio"] .foot-logo em {
   background: var(--accent);
-  color: #fff;
+  color: var(--white);
   padding: 0 .15em;
   border-radius: 6px;
   transform: rotate(-2deg);

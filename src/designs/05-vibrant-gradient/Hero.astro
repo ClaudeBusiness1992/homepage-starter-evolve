@@ -35,8 +35,8 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 <style>
 #hero {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1612 0%, #2a1f1a 50%, #241612 100%);
-  color: #fff;
+  background: linear-gradient(135deg, var(--vg-bg-1) 0%, var(--vg-bg-2) 50%, var(--vg-bg-3) 100%);
+  color: var(--white);
   display: flex;
   align-items: center;
   padding-top: var(--nav-h);
@@ -86,7 +86,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   font-size: clamp(3rem, 6vw, 5.5rem);
   line-height: 1.1;
   letter-spacing: -.02em;
-  color: #fff;
+  color: var(--white);
   margin-bottom: 1.25rem;
 }
 
@@ -108,7 +108,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 
 .hero-btn-primary {
   background: var(--accent);
-  color: #fff;
+  color: var(--white);
   box-shadow: 0 8px 32px rgba(232,99,27,.35);
 }
 .hero-btn-primary:hover {
@@ -147,7 +147,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 .hs-item strong {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--white);
 }
 .hs-item span {
   font-size: .78rem;

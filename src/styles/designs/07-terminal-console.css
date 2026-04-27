@@ -405,7 +405,7 @@
 [data-design="07-terminal-console"] .review-text,
 [data-design="07-terminal-console"] .review-name,
 [data-design="07-terminal-console"] .review-card * {
-  color: #ffffff;
+  color: var(--tc-text);
 }
 [data-design="07-terminal-console"] .review-card .review-meta,
 [data-design="07-terminal-console"] .review-card .review-date,

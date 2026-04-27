@@ -6,13 +6,13 @@
 
 /* Body */
 [data-design="03-minimal-clean"] body {
-  background: #ffffff;
+  background: var(--white);
   color: var(--ink);
 }
 
 /* Hero — explicit override (light bg) */
 [data-design="03-minimal-clean"] #hero {
-  background: #ffffff;
+  background: var(--white);
   color: var(--ink);
 }
 [data-design="03-minimal-clean"] #hero::before {
@@ -21,13 +21,13 @@
 
 /* Nav */
 [data-design="03-minimal-clean"] #nav {
-  background: #ffffff;
+  background: var(--white);
   box-shadow: none;
   border-bottom: 1px solid var(--border);
   backdrop-filter: none;
 }
 [data-design="03-minimal-clean"] #nav.on {
-  background: #ffffff;
+  background: var(--white);
   backdrop-filter: none;
 }
 [data-design="03-minimal-clean"] .nav-ul a.cta-link {
@@ -38,12 +38,12 @@
 }
 [data-design="03-minimal-clean"] .nav-ul a.cta-link:hover {
   background: var(--ink) !important;
-  color: #fff !important;
+  color: var(--white) !important;
 }
 
 /* About — centered, clean */
 [data-design="03-minimal-clean"] #about {
-  background: #fff;
+  background: var(--white);
   border-bottom: 1px solid var(--border);
 }
 [data-design="03-minimal-clean"] .about-grid {
@@ -145,7 +145,7 @@
 
 /* Stats — inline, minimal */
 [data-design="03-minimal-clean"] #stats {
-  background: #fff;
+  background: var(--white);
   border-bottom: 1px solid var(--border);
 }
 [data-design="03-minimal-clean"] .stats-grid {
@@ -181,7 +181,7 @@
   border: 1px solid var(--border);
   box-shadow: none;
   border-radius: 2px;
-  background: #fff;
+  background: var(--white);
 }
 [data-design="03-minimal-clean"] .pcard:hover {
   box-shadow: none;
@@ -191,7 +191,7 @@
   border-color: var(--ink);
   box-shadow: none;
   transform: none;
-  background: #fff;
+  background: var(--white);
 }
 [data-design="03-minimal-clean"] .pcard.feat:hover {
   transform: translateY(-2px);
@@ -204,7 +204,7 @@
 [data-design="03-minimal-clean"] .pcard.feat .plist li::before { color: var(--sage); }
 [data-design="03-minimal-clean"] .pbadge {
   background: var(--ink);
-  color: #fff;
+  color: var(--white);
   border-radius: 2px;
 }
 [data-design="03-minimal-clean"] .pprice .amount { color: var(--ink); }
@@ -219,7 +219,7 @@
 
 /* Gallery */
 [data-design="03-minimal-clean"] #gallery {
-  background: #fff;
+  background: var(--white);
   border-bottom: 1px solid var(--border);
 }
 [data-design="03-minimal-clean"] .gallery-item {
@@ -239,7 +239,7 @@
   border-radius: 0;
   box-shadow: none;
   border: 1px solid var(--border);
-  background: #fff;
+  background: var(--white);
 }
 [data-design="03-minimal-clean"] .review-card:hover {
   transform: none;
@@ -248,7 +248,7 @@
 
 /* Contact — light bg override */
 [data-design="03-minimal-clean"] #contact {
-  background: #fff;
+  background: var(--white);
   color: var(--ink);
 }
 [data-design="03-minimal-clean"] #contact .h2 { color: var(--ink); }
@@ -266,7 +266,7 @@
 }
 [data-design="03-minimal-clean"] .form-group input,
 [data-design="03-minimal-clean"] .form-group textarea {
-  background: #fff;
+  background: var(--white);
   border-color: rgba(26,26,46,.2);
   color: var(--ink);
   border-radius: 2px;
@@ -287,7 +287,7 @@
 
 /* Footer */
 [data-design="03-minimal-clean"] footer {
-  background: #fff;
+  background: var(--white);
   border-top: 1px solid var(--border);
 }
 [data-design="03-minimal-clean"] .foot-logo { color: var(--ink); }

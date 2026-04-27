@@ -24,7 +24,7 @@ const { label, headline, subline, items } = Astro.props;
 </section>
 
 <style>
-  #services { background: #f0ede8; color: #1a1a2e; }
+  #services { background: var(--bld-cream); color: var(--ink); }
   .sv2-list { border-bottom: 1px solid rgba(26,26,46,.1); }
   .sv2-row {
     display: grid;
@@ -42,7 +42,7 @@ const { label, headline, subline, items } = Astro.props;
     padding-top: .05em;
   }
   .sv2-icon { font-size: 1.4rem; padding-top: .1em; }
-  .sv2-title { font-size: 1.15rem; font-weight: 600; color: #1a1a2e; margin-bottom: .45rem; }
+  .sv2-title { font-size: 1.15rem; font-weight: 600; color: var(--ink); margin-bottom: .45rem; }
   .sv2-text { color: rgba(26,26,46,.55); font-size: .92rem; line-height: 1.7; margin: 0; }
   @media (max-width: 640px) {
     .sv2-row { grid-template-columns: 2.5rem 1fr; }
