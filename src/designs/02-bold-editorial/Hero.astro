@@ -30,8 +30,8 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 <style>
 #hero {
   min-height: 100vh;
-  background: #0d0d0d;
-  color: #f0ede8;
+  background: var(--bld-bg);
+  color: var(--bld-cream);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -73,7 +73,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   font-size: clamp(3.5rem, 8vw, 8rem);
   line-height: 1.0;
   letter-spacing: -.02em;
-  color: #f0ede8;
+  color: var(--bld-cream);
   margin-bottom: 3rem;
   max-width: 14ch;
 }

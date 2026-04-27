@@ -124,7 +124,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y proximity;
+  scroll-snap-type: y mandatory;
   scroll-padding-top: var(--nav-h);
 }
 main > section { scroll-snap-align: start; }
@@ -459,10 +459,49 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 
 /* ── BOOKING (optional add-on) ── */
 .booking-section { background: var(--cream); }
+.bk-hours {
+  max-width: 760px;
+  margin: 0 auto 1.5rem;
+  background: rgba(232,99,27,.05);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r);
+  padding: 1rem 1.25rem;
+}
+.bk-hours-title {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: .04em;
+  display: block;
+  margin-bottom: .65rem;
+}
+.bk-hours-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: .35rem .75rem;
+  margin: 0;
+  padding: 0;
+}
+.bk-hours-list li {
+  font-size: .9rem;
+  color: var(--ink);
+  display: flex;
+  gap: .5rem;
+  align-items: baseline;
+}
+.bk-hours-days {
+  font-weight: 600;
+  min-width: 3.5rem;
+}
+.bk-hours-time {
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
 .booking-form {
   max-width: 760px;
   margin: 0 auto;
-  background: #fff;
+  background: var(--white);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow);
   padding: 2.5rem;

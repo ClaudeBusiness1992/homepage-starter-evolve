@@ -170,7 +170,7 @@
 }
 [data-design="08-soft-bloom"] .sico {
   background: linear-gradient(135deg, var(--accent), var(--accent-light));
-  color: #fff;
+  color: var(--white);
   border-radius: 50%;
   width: 56px;
   height: 56px;
@@ -192,7 +192,7 @@
   color: var(--ink-muted);
 }
 [data-design="08-soft-bloom"] .scard .sico {
-  color: #fff;
+  color: var(--white);
 }
 
 /* Stats — pill cards */
@@ -259,15 +259,15 @@
 }
 [data-design="08-soft-bloom"] .pcard.feat .pname,
 [data-design="08-soft-bloom"] .pcard.feat .ptag {
-  color: #fff !important;
+  color: var(--white) !important;
 }
-[data-design="08-soft-bloom"] .pcard.feat .amount { color: #fff !important; }
+[data-design="08-soft-bloom"] .pcard.feat .amount { color: var(--white) !important; }
 [data-design="08-soft-bloom"] .pcard.feat .note { color: rgba(255,255,255,.7) !important; }
 [data-design="08-soft-bloom"] .pcard.feat .pdiv { background: rgba(255,255,255,.2) !important; }
 [data-design="08-soft-bloom"] .pcard.feat .plist li { color: rgba(255,255,255,.92) !important; }
-[data-design="08-soft-bloom"] .pcard.feat .plist li::before { color: #fff !important; }
+[data-design="08-soft-bloom"] .pcard.feat .plist li::before { color: var(--white) !important; }
 [data-design="08-soft-bloom"] .pbadge {
-  background: #fff;
+  background: var(--sb-bg-3);
   color: var(--accent);
   border-radius: 100px;
   box-shadow: 0 4px 12px rgba(0,0,0,.1);
@@ -299,7 +299,7 @@
   box-shadow: 0 4px 12px rgba(26,26,46,.05);
 }
 [data-design="08-soft-bloom"] .pcard.feat .btn-fill {
-  background: #fff;
+  background: var(--sb-bg-3);
   color: var(--accent);
   box-shadow: 0 6px 0 -2px rgba(0,0,0,.1);
 }

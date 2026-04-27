@@ -40,11 +40,60 @@ const {
 const today = new Date();
 const min = new Date(today.getTime() + leadDays * 86400000);
 const minDateStr = min.toISOString().slice(0, 10);
+
+// Sprechzeiten-Übersicht aus Availability ableiten — Tage gruppieren mit identischen Slots
+const dayShort: Record<string, string> = {
+  monday: 'Mo', tuesday: 'Di', wednesday: 'Mi', thursday: 'Do',
+  friday: 'Fr', saturday: 'Sa', sunday: 'So',
+};
+const dayOrder = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] as const;
+
+const slotKey = (slots: string[]) => slots.length === 0 ? 'closed' : `${slots[0]}–${slots[slots.length - 1]}`;
+
+const hoursGroups: Array<{ days: string; hours: string }> = [];
+let prevKey: string | null = null;
+let groupStart: string | null = null;
+let groupEnd: string | null = null;
+
+for (const day of dayOrder) {
+  const slots: string[] = (availability as any)[day] || [];
+  const key = slotKey(slots);
+  if (key === prevKey) {
+    groupEnd = dayShort[day];
+  } else {
+    if (groupStart) {
+      hoursGroups.push({
+        days: groupStart === groupEnd || !groupEnd ? groupStart : `${groupStart}–${groupEnd}`,
+        hours: prevKey === 'closed' ? 'geschlossen' : `${prevKey} Uhr`,
+      });
+    }
+    groupStart = dayShort[day];
+    groupEnd = dayShort[day];
+    prevKey = key;
+  }
+}
+if (groupStart) {
+  hoursGroups.push({
+    days: groupStart === groupEnd || !groupEnd ? groupStart : `${groupStart}–${groupEnd}`,
+    hours: prevKey === 'closed' ? 'geschlossen' : `${prevKey} Uhr`,
+  });
+}
 ---
 
 <section class="section booking-section" id="booking">
   <div class="wrap">
     <SectionHeader {label} {headline} {subline} center />
+
+    {hoursGroups.length > 0 && (
+      <div class="bk-hours r" aria-label="Sprechzeiten">
+        <span class="bk-hours-title">🕐 Unsere Sprechzeiten</span>
+        <ul class="bk-hours-list">
+          {hoursGroups.map(g => (
+            <li><span class="bk-hours-days">{g.days}</span> <span class="bk-hours-time">{g.hours}</span></li>
+          ))}
+        </ul>
+      </div>
+    )}
 
     <form
       class="booking-form r"

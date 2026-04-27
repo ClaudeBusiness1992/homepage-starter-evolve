@@ -30,7 +30,7 @@ const { label, headline, subline, members } = Astro.props;
 </section>
 
 <style>
-  #about { background: #f0ede8; }
+  #about { background: var(--bld-cream); }
   .ab2-list { border-bottom: 1px solid rgba(26,26,46,.1); }
   .ab2-row {
     display: grid;
@@ -46,11 +46,11 @@ const { label, headline, subline, members } = Astro.props;
   }
   .ab2-initials {
     width: 80px; height: 80px; border-radius: 50%;
-    background: #1a1a2e; color: #f0ede8;
+    background: var(--ink); color: var(--bld-cream);
     display: flex; align-items: center; justify-content: center;
     font-size: 1.2rem; font-weight: 600; letter-spacing: .02em;
   }
-  .ab2-name { font-size: 1.3rem; margin-bottom: .2rem; color: #1a1a2e; }
+  .ab2-name { font-size: 1.3rem; margin-bottom: .2rem; color: var(--ink); }
   .ab2-role { font-size: .875rem; color: var(--accent-text); font-weight: 500; }
   .ab2-bio { margin: 0; color: rgba(26,26,46,.55); font-size: .9rem; line-height: 1.7; }
   @media (max-width: 900px) {

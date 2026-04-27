@@ -269,7 +269,7 @@
 }
 [data-design="06-editorial-press"] .pcard.feat .pbadge {
   background: var(--accent);
-  color: #fff;
+  color: var(--white);
 }
 [data-design="06-editorial-press"] .pcard::before {
   content: counter(pkg, upper-roman);
