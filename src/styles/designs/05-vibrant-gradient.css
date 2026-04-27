@@ -204,3 +204,12 @@
 @media (max-width: 768px) {
   [data-design="05-vibrant-gradient"] .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Countdown — vibrant gradient */
+[data-design="05-vibrant-gradient"] .countdown-section { background: linear-gradient(135deg, #1a1612 0%, #2a1f1a 50%, #241612 100%); color: #fff; }
+[data-design="05-vibrant-gradient"] .countdown-section .lbl { color: var(--accent-light); }
+[data-design="05-vibrant-gradient"] .countdown-section .h2 { color: #fff; }
+[data-design="05-vibrant-gradient"] .cd-box { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: var(--r-lg); }
+[data-design="05-vibrant-gradient"] .cd-num { color: var(--accent-light); }
+[data-design="05-vibrant-gradient"] .cd-lbl { color: rgba(255,255,255,.5); }
+[data-design="05-vibrant-gradient"] .cd-sep { color: rgba(255,255,255,.15); }

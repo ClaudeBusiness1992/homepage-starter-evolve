@@ -251,3 +251,12 @@
   [data-design="02-bold-editorial"] .gallery-item:nth-child(3n+1) { grid-column: span 1; }
   [data-design="02-bold-editorial"] .gallery-item:nth-child(3n+1) .gallery-img { aspect-ratio: 4/3; }
 }
+
+/* Countdown — bold editorial */
+[data-design="02-bold-editorial"] .countdown-section { background: var(--bld-bg); color: var(--bld-cream); }
+[data-design="02-bold-editorial"] .countdown-section .lbl { color: var(--accent-light); }
+[data-design="02-bold-editorial"] .countdown-section .h2 { color: var(--bld-cream); font-family: var(--serif); }
+[data-design="02-bold-editorial"] .cd-box { background: transparent; border: 2px solid var(--bld-cream); border-radius: 0; }
+[data-design="02-bold-editorial"] .cd-num { color: var(--accent); font-family: var(--serif); font-weight: 700; }
+[data-design="02-bold-editorial"] .cd-lbl { color: rgba(240,237,232,.55); }
+[data-design="02-bold-editorial"] .cd-sep { color: rgba(240,237,232,.25); font-family: var(--serif); }
