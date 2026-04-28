@@ -19,25 +19,58 @@ const phClasses = ['gph-a', 'gph-b', 'gph-c', 'gph-d', 'gph-e', 'gph-f'];
 
 <section class="section section--dark" id="gallery">
   <div class="wrap">
-    <SectionHeader {label} {headline} {subline} />
-    <div class="gallery-grid">
-      {items.map((item, i) => (
-        <div class={`gallery-item r d${(i % 3) + 1}`}>
-          <div class={`gallery-img${!item.src ? ' ' + phClasses[i % phClasses.length] : ''}`}>
-            {item.src
-              ? <img src={item.src} alt={item.alt} width="800" height="600" loading="lazy" />
-              : <div class="gallery-placeholder">
-                  <span class="gallery-placeholder-icon" aria-hidden="true">⬡</span>
-                  <span class="gallery-placeholder-txt">Bild einfügen</span>
-                </div>
-            }
-            <div class="gallery-overlay">
-              <span class="gallery-category">{item.category}</span>
-              <span class="gallery-caption">{item.caption}</span>
+    <SectionHeader {label} {headline} {subline} center />
+    <div class="gallery-carousel">
+      <button type="button" class="gallery-nav gallery-nav--prev" aria-label="Vorherige Bilder" data-gallery-prev>‹</button>
+      <div class="gallery-grid" data-gallery-track>
+        {items.map((item, i) => (
+          <div class={`gallery-item r d${(i % 3) + 1}`}>
+            <div class={`gallery-img${!item.src ? ' ' + phClasses[i % phClasses.length] : ''}`}>
+              {item.src
+                ? <img src={item.src} alt={item.alt} width="800" height="600" loading="lazy" />
+                : <div class="gallery-placeholder">
+                    <span class="gallery-placeholder-icon" aria-hidden="true">⬡</span>
+                    <span class="gallery-placeholder-txt">Bild einfügen</span>
+                  </div>
+              }
+              <div class="gallery-overlay">
+                <span class="gallery-category">{item.category}</span>
+                <span class="gallery-caption">{item.caption}</span>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+      <button type="button" class="gallery-nav gallery-nav--next" aria-label="Nächste Bilder" data-gallery-next>›</button>
     </div>
   </div>
 </section>
+
+<script is:inline>
+  (() => {
+    const track = document.querySelector('[data-gallery-track]');
+    if (!track) return;
+    const prev = document.querySelector('[data-gallery-prev]');
+    const next = document.querySelector('[data-gallery-next]');
+    const step = () => {
+      const item = track.querySelector('.gallery-item');
+      if (!item) return track.clientWidth * 0.8;
+      const style = getComputedStyle(track);
+      const gap = parseFloat(style.columnGap || style.gap || '0') || 0;
+      return (item.getBoundingClientRect().width + gap) * 2;
+    };
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      const overflows = max > 1;
+      const atStart = track.scrollLeft <= 1;
+      const atEnd = track.scrollLeft >= max - 1;
+      if (prev) prev.hidden = !overflows || atStart;
+      if (next) next.hidden = !overflows || atEnd;
+    };
+    prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next?.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+</script>

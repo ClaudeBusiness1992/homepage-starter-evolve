@@ -1,5 +1,6 @@
 ---
 interface Props {
+  variant?: 'ticker' | 'pill' | 'hero' | 'light' | 'accent' | 'card';
   label: string;
   headline: string;
   subline: string;
@@ -9,6 +10,7 @@ interface Props {
   expiredText?: string;
 }
 const {
+  variant = 'ticker',
   label,
   headline,
   subline,
@@ -17,61 +19,89 @@ const {
   ctaHref = '#contact',
   expiredText = 'Das Event hat begonnen',
 } = Astro.props;
+
+const dateFmt = (() => {
+  const d = new Date(targetDate);
+  if (isNaN(d.getTime())) return targetDate;
+  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+})();
 ---
 
-<section class="section countdown-section" id="countdown">
+<section class={`section countdown-section countdown--${variant}`} id="countdown">
   <div class="wrap">
-    <div class="cd-inner r">
-      <span class="lbl">{label}</span>
-      <h2 class="cd-h2 h2">{headline}</h2>
-      <p class="cd-sub sub">{subline}</p>
+    {variant === 'ticker' && (
+      <div class="cd-ticker r" data-target={targetDate}>
+        {label && <span class="cd-tk-label">{label}</span>}
+        <span class="cd-tk-sep" aria-hidden="true">·</span>
+        <span class="cd-tk-headline">{headline}</span>
+        <span class="cd-tk-sep" aria-hidden="true">·</span>
+        <span class="cd-tk-date">{dateFmt}</span>
+        <span class="cd-tk-sep" aria-hidden="true">·</span>
+        <span class="cd-tk-timer">
+          <span data-cd="days">--</span><span class="cd-tk-u">d</span>
+          <span data-cd="hours">--</span><span class="cd-tk-u">h</span>
+          <span data-cd="minutes">--</span><span class="cd-tk-u">m</span>
+          <span data-cd="seconds">--</span><span class="cd-tk-u">s</span>
+        </span>
+        <span class="cd-tk-expired" data-cd-expired data-expired-text={expiredText} hidden>{expiredText}</span>
+        {ctaLabel && (
+          <a href={ctaHref} class="cd-tk-cta">{ctaLabel} →</a>
+        )}
+      </div>
+    )}
 
-      <div class="cd-grid" data-target={targetDate}>
-        <div class="cd-box">
-          <span class="cd-num" data-cd="days">--</span>
-          <span class="cd-lbl">Tage</span>
-        </div>
-        <div class="cd-sep" aria-hidden="true">:</div>
-        <div class="cd-box">
-          <span class="cd-num" data-cd="hours">--</span>
-          <span class="cd-lbl">Stunden</span>
-        </div>
-        <div class="cd-sep" aria-hidden="true">:</div>
-        <div class="cd-box">
-          <span class="cd-num" data-cd="minutes">--</span>
-          <span class="cd-lbl">Minuten</span>
-        </div>
-        <div class="cd-sep" aria-hidden="true">:</div>
-        <div class="cd-box">
-          <span class="cd-num" data-cd="seconds">--</span>
-          <span class="cd-lbl">Sekunden</span>
+    {variant === 'pill' && (
+      <div class="cd-pill-wrap r">
+        <div class="cd-pill" data-target={targetDate}>
+          <span class="cd-pill-icon" aria-hidden="true">📅</span>
+          <span class="cd-pill-headline">{headline}</span>
+          <span class="cd-pill-sep" aria-hidden="true">·</span>
+          <span class="cd-pill-counter">
+            noch <span class="cd-pill-num" data-cd="days">--</span> Tagen
+          </span>
+          <span class="cd-pill-expired" data-cd-expired hidden>{expiredText}</span>
+          {ctaLabel && (
+            <a href={ctaHref} class="cd-pill-cta">{ctaLabel} →</a>
+          )}
         </div>
       </div>
+    )}
 
-      <p class="cd-expired" data-cd-expired data-expired-text={expiredText} hidden>{expiredText}</p>
-
-      {ctaLabel && (
-        <a href={ctaHref} class="btn btn-fill cd-cta">{ctaLabel}</a>
-      )}
-    </div>
+    {(variant === 'hero' || variant === 'light' || variant === 'accent' || variant === 'card') && (
+      <div class={`cd-hero cd-hero--${variant} r`} data-target={targetDate}>
+        {label && <span class="lbl cd-hero-lbl">{label}</span>}
+        <h2 class="cd-hero-headline h2">{headline}</h2>
+        {subline && <p class="cd-hero-sub sub">{subline}</p>}
+        <div class="cd-hero-counter">
+          noch <strong data-cd="days">--</strong> Tage
+          · <strong data-cd="hours">--</strong> Std
+          · <strong data-cd="minutes">--</strong> Min
+          · <strong data-cd="seconds">--</strong> Sek
+        </div>
+        <p class="cd-hero-expired" data-cd-expired hidden>{expiredText}</p>
+        {ctaLabel && (
+          <a href={ctaHref} class="btn btn-fill cd-hero-cta">{ctaLabel}</a>
+        )}
+      </div>
+    )}
   </div>
 </section>
 
 <script is:inline>
   (() => {
-    const grid = document.querySelector('#countdown .cd-grid');
-    if (!grid) return;
-    const targetStr = grid.getAttribute('data-target');
+    const root = document.querySelector('#countdown [data-target]');
+    if (!root) return;
+    const targetStr = root.getAttribute('data-target');
     if (!targetStr) return;
     const target = new Date(targetStr).getTime();
     if (isNaN(target)) return;
 
     const expired = document.querySelector('#countdown [data-cd-expired]');
     const els = {
-      days: grid.querySelector('[data-cd="days"]'),
-      hours: grid.querySelector('[data-cd="hours"]'),
-      minutes: grid.querySelector('[data-cd="minutes"]'),
-      seconds: grid.querySelector('[data-cd="seconds"]'),
+      days: root.querySelector('[data-cd="days"]'),
+      hours: root.querySelector('[data-cd="hours"]'),
+      minutes: root.querySelector('[data-cd="minutes"]'),
+      seconds: root.querySelector('[data-cd="seconds"]'),
     };
 
     const pad = n => String(n).padStart(2, '0');
@@ -81,17 +111,17 @@ const {
       if (diff <= 0) {
         Object.values(els).forEach(el => el && (el.textContent = '00'));
         if (expired) { expired.hidden = false; }
-        grid.classList.add('cd-grid--done');
+        root.classList.add('cd-grid--done');
         return false;
       }
       const d = Math.floor(diff / 86400000);
       const h = Math.floor((diff / 3600000) % 24);
       const m = Math.floor((diff / 60000) % 60);
       const s = Math.floor((diff / 1000) % 60);
-      els.days.textContent = pad(d);
-      els.hours.textContent = pad(h);
-      els.minutes.textContent = pad(m);
-      els.seconds.textContent = pad(s);
+      if (els.days) els.days.textContent = pad(d);
+      if (els.hours) els.hours.textContent = pad(h);
+      if (els.minutes) els.minutes.textContent = pad(m);
+      if (els.seconds) els.seconds.textContent = pad(s);
       return true;
     };
 

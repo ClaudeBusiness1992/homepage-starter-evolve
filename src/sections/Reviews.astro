@@ -8,15 +8,17 @@ interface Review {
   date: string;
   text: string;
 }
+interface StatItem { value: number; label: string; }
 interface Props {
   label: string;
   headline: string;
   subline: string;
   items: Review[];
+  stats?: StatItem[];
   agencyName?: string;
   agencyUrl?: string;
 }
-const { label, headline, subline, items, agencyName = '', agencyUrl } = Astro.props;
+const { label, headline, subline, items, stats = [], agencyName = '', agencyUrl } = Astro.props;
 const delays = ['d1', 'd2', 'd3'];
 
 const avg = items.length
@@ -50,32 +52,46 @@ const jsonLd = {
 <section class="section" id="reviews">
   <div class="wrap">
     <SectionHeader {label} {headline} {subline} center />
-    <div class="reviews-grid">
-      {items.map((review, i) => (
-        <div class={`review-card r ${delays[i % 3]}`}>
-          <div class="review-top">
-            <div class="review-stars" aria-label={`${review.rating} von 5 Sternen`}>
-              {Array.from({ length: review.rating }).map(() => <span aria-hidden="true">★</span>)}
-            </div>
-            {review.verified && (
-              <span class="review-verified" title={agencyName ? `Echtheit wurde von ${agencyName} geprüft` : 'Echtheit geprüft'}>
-                ✓ Verifiziert
-              </span>
-            )}
+    {stats.length > 0 && (
+      <div class="reviews-stats">
+        {stats.map(s => (
+          <div class="reviews-stat">
+            <div class="reviews-stat-v">{s.value}</div>
+            <div class="reviews-stat-l">{s.label}</div>
           </div>
-          <p class="review-text">„{review.text}"</p>
-          <div class="review-footer">
-            <div class="review-author">
-              <div class="review-avatar">{review.name.charAt(0)}</div>
-              <div>
-                <div class="review-name">{review.name}</div>
-                <div class="review-company">{review.company}</div>
+        ))}
+      </div>
+    )}
+    <div class="reviews-carousel">
+      <button type="button" class="gallery-nav gallery-nav--prev" aria-label="Vorherige Bewertungen" data-reviews-prev>‹</button>
+      <div class="reviews-grid" data-reviews-track>
+        {items.map((review, i) => (
+          <div class={`review-card r ${delays[i % 3]}`}>
+            <div class="review-top">
+              <div class="review-stars" aria-label={`${review.rating} von 5 Sternen`}>
+                {Array.from({ length: review.rating }).map(() => <span aria-hidden="true">★</span>)}
               </div>
+              {review.verified && (
+                <span class="review-verified" title={agencyName ? `Echtheit wurde von ${agencyName} geprüft` : 'Echtheit geprüft'}>
+                  ✓ Verifiziert
+                </span>
+              )}
             </div>
-            {review.date && <div class="review-date">{review.date}</div>}
+            <p class="review-text">„{review.text}"</p>
+            <div class="review-footer">
+              <div class="review-author">
+                <div class="review-avatar">{review.name.charAt(0)}</div>
+                <div>
+                  <div class="review-name">{review.name}</div>
+                  <div class="review-company">{review.company}</div>
+                </div>
+              </div>
+              {review.date && <div class="review-date">{review.date}</div>}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+      <button type="button" class="gallery-nav gallery-nav--next" aria-label="Nächste Bewertungen" data-reviews-next>›</button>
     </div>
     <p class="reviews-note r">
       ✓ Alle Bewertungen stammen von verifizierten Kunden, die unsere Leistungen tatsächlich
@@ -84,3 +100,32 @@ const jsonLd = {
     </p>
   </div>
 </section>
+
+<script is:inline>
+  (() => {
+    const track = document.querySelector('[data-reviews-track]');
+    if (!track) return;
+    const prev = document.querySelector('[data-reviews-prev]');
+    const next = document.querySelector('[data-reviews-next]');
+    const step = () => {
+      const item = track.querySelector('.review-card');
+      if (!item) return track.clientWidth * 0.8;
+      const style = getComputedStyle(track);
+      const gap = parseFloat(style.columnGap || style.gap || '0') || 0;
+      return (item.getBoundingClientRect().width + gap) * 2;
+    };
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      const overflows = max > 1;
+      const atStart = track.scrollLeft <= 1;
+      const atEnd = track.scrollLeft >= max - 1;
+      if (prev) prev.hidden = !overflows || atStart;
+      if (next) next.hidden = !overflows || atEnd;
+    };
+    prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next?.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+</script>

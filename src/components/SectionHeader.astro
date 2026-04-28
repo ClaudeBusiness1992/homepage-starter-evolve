@@ -10,7 +10,7 @@ const { label, headline, subline, center = false, class: extraClass = '' } = Ast
 ---
 
 <div class={`section-hd r ${center ? 'section-hd--center' : ''} ${extraClass}`.trim()}>
-  <span class="lbl">{label}</span>
   <h2 class="h2" set:html={headline} />
-  <p class="sub">{subline}</p>
+  {subline && <p class="sub">{subline}</p>}
+  {label && <span class="lbl">{label}</span>}
 </div>

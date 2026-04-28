@@ -55,56 +55,56 @@
       "enabled": true,
       "label": "Transparente Preise",
       "headline": "Kein Versteckspiel bei den Kosten",
-      "subline": "Feste Preise, klarer Leistungsumfang. Keine Überraschungen auf der Rechnung.",
+      "subline": "",
       "packages": [
         {
           "name": "Starter",
-          "tagline": "Der schnelle Einstieg",
+          "tagline": "Eine Seite für den schnellen Start",
           "price": "799 €",
-          "priceNote": "einmalig, zzgl. MwSt.",
+          "priceNote": "einmalig — fertig zum Festpreis, zzgl. MwSt.",
           "featured": false,
           "badge": "",
           "features": [
-            "1-Seiter (Landingpage)",
-            "Responsives Design",
-            "Kontaktformular",
-            "Google Maps Einbindung",
-            "1 Korrekturschleife",
-            "Lieferung in ca. 2 Wochen"
+            "Eine Seite mit allen wichtigen Infos zu Ihrem Unternehmen",
+            "Sieht auf Handy, Tablet und PC gut aus",
+            "Kontaktformular — Anfragen kommen direkt zu Ihnen",
+            "Google-Maps-Karte mit Ihrem Standort",
+            "Eine Korrektur inklusive",
+            "Online in etwa 2 Wochen"
           ]
         },
         {
           "name": "Business",
-          "tagline": "Die komplette Lösung",
+          "tagline": "Für die meisten kleinen Unternehmen genau richtig",
           "price": "1.499 €",
-          "priceNote": "einmalig, zzgl. MwSt.",
+          "priceNote": "einmalig — fertig zum Festpreis, zzgl. MwSt.",
           "featured": false,
-          "badge": "Beliebt",
+          "badge": "",
           "features": [
-            "Bis zu 5 Unterseiten",
-            "Individuelles Design",
-            "SEO-Grundoptimierung",
-            "Kontaktformular",
-            "Google Maps Einbindung",
-            "3 Korrekturschleifen",
-            "Lieferung in 3–4 Wochen"
+            "Bis zu 5 Seiten (z. B. Start, Über uns, Leistungen, Kontakt)",
+            "Eigenes Design — ganz auf Ihr Unternehmen abgestimmt",
+            "Damit Google Sie findet (Grundoptimierung)",
+            "Kontaktformular — Anfragen kommen direkt zu Ihnen",
+            "Google-Maps-Karte mit Ihrem Standort",
+            "Drei Korrekturen inklusive",
+            "Online in etwa 3–4 Wochen"
           ]
         },
         {
           "name": "Premium",
-          "tagline": "Rundum sorglos",
+          "tagline": "Rundum sorglos — wir kümmern uns um alles",
           "price": "2.499 €",
-          "priceNote": "einmalig, zzgl. MwSt.",
+          "priceNote": "einmalig — fertig zum Festpreis, zzgl. MwSt.",
           "featured": false,
           "badge": "",
           "features": [
-            "Bis zu 10 Unterseiten",
-            "Premium-Design",
-            "Vollständige SEO-Optimierung",
-            "Texterstellung inklusive",
-            "Fotografie-Briefing",
-            "3 Monate Pflege inklusive",
-            "Unbegrenzte Korrekturen"
+            "Bis zu 10 Seiten — auch für größere Webseiten geeignet",
+            "Hochwertiges Premium-Design",
+            "Damit Google Sie zuverlässig findet (volle Optimierung)",
+            "Wir schreiben die Texte für Sie",
+            "Beratung, welche Fotos Sie brauchen",
+            "3 Monate Pflege inklusive — Updates und Sicherheit",
+            "So viele Korrekturen wie nötig"
           ]
         }
       ]
