@@ -61,8 +61,8 @@ const restWords = words.slice(1).join(' ');
 
 <style>
   .ed-hero {
-    background: var(--cream);
-    color: var(--ink);
+    background: var(--ep-bg);
+    color: var(--ep-text);
     padding: calc(var(--nav-h) + 2rem) 0 4rem;
     min-height: 100vh;
     display: flex;
@@ -77,7 +77,7 @@ const restWords = words.slice(1).join(' ');
     font-family: var(--serif);
     font-style: italic;
     font-size: .85rem;
-    color: var(--ink);
+    color: var(--ep-text);
     letter-spacing: .02em;
   }
   .ed-meta sup { font-size: .65em; vertical-align: super; }
@@ -85,7 +85,7 @@ const restWords = words.slice(1).join(' ');
   .ed-rule {
     border: 0;
     height: 2px;
-    background: var(--ink);
+    background: var(--ep-text);
     margin: 1rem 0 0;
   }
   .ed-rule + .ed-grid { margin-top: 2.5rem; }
@@ -101,7 +101,7 @@ const restWords = words.slice(1).join(' ');
     font-family: var(--serif);
     font-size: clamp(5rem, 9vw, 8rem);
     line-height: 1;
-    color: var(--accent);
+    color: var(--ep-accent);
     letter-spacing: -.04em;
     margin-bottom: 1.5rem;
     font-style: italic;
@@ -112,9 +112,9 @@ const restWords = words.slice(1).join(' ');
     font-weight: 600;
     letter-spacing: .25em;
     text-transform: uppercase;
-    color: var(--ink);
+    color: var(--ep-text);
     margin-bottom: 1.25rem;
-    border-top: 1px solid var(--ink);
+    border-top: 1px solid var(--ep-text);
     padding-top: .75rem;
     display: inline-block;
   }
@@ -125,12 +125,12 @@ const restWords = words.slice(1).join(' ');
     line-height: 1.05;
     letter-spacing: -.015em;
     margin-bottom: 1.75rem;
-    color: var(--ink);
+    color: var(--ep-text);
     font-weight: 400;
   }
   .ed-h1 i {
     font-style: italic;
-    color: var(--accent);
+    color: var(--ep-accent);
   }
 
   .ed-lead {
@@ -138,14 +138,14 @@ const restWords = words.slice(1).join(' ');
     font-size: 1.15rem;
     font-style: italic;
     line-height: 1.6;
-    color: var(--ink);
+    color: var(--ep-text);
     max-width: 540px;
     margin-bottom: 2rem;
     position: relative;
   }
   .ed-dropcap {
     font-size: 1.4em;
-    color: var(--accent);
+    color: var(--ep-accent);
     font-style: normal;
     margin-right: .15em;
   }
@@ -159,23 +159,23 @@ const restWords = words.slice(1).join(' ');
   .ed-cta {
     font-family: var(--serif);
     font-size: 1rem;
-    color: var(--ink);
+    color: var(--ep-text);
     text-decoration: none;
-    border-bottom: 1.5px solid var(--ink);
+    border-bottom: 1.5px solid var(--ep-text);
     padding-bottom: 4px;
     transition: color .2s, border-color .2s;
     letter-spacing: .01em;
   }
-  .ed-cta:hover { color: var(--accent); border-color: var(--accent); }
+  .ed-cta:hover { color: var(--ep-accent); border-color: var(--ep-accent); }
   .ed-cta-secondary { border-bottom-style: dashed; opacity: .8; }
-  .ed-cta-sep { color: var(--ink); opacity: .35; }
+  .ed-cta-sep { color: var(--ep-text); opacity: .35; }
 
   .ed-aside { display: flex; flex-direction: column; }
 
   .ed-photo {
     aspect-ratio: 3/4;
-    background: var(--ink);
-    color: var(--cream);
+    background: var(--ep-ink);
+    color: var(--ep-on-ink);
     border-radius: 0;
     position: relative;
     overflow: hidden;
@@ -198,7 +198,7 @@ const restWords = words.slice(1).join(' ');
     font-size: 5rem;
     line-height: 1;
     font-style: italic;
-    color: var(--accent);
+    color: var(--ep-accent);
     z-index: 2;
   }
   .ed-photo-stamp {
@@ -217,10 +217,10 @@ const restWords = words.slice(1).join(' ');
     font-family: var(--serif);
     font-style: italic;
     font-size: .85rem;
-    color: var(--ink);
+    color: var(--ep-text);
     opacity: .7;
     margin-top: .85rem;
-    border-bottom: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ep-text);
     padding-bottom: .75rem;
   }
 
@@ -238,16 +238,16 @@ const restWords = words.slice(1).join(' ');
     opacity: .6;
   }
   .ed-toc a {
-    color: var(--ink);
+    color: var(--ep-text);
     text-decoration: none;
     transition: color .2s;
   }
   .ed-toc a i {
-    color: var(--accent);
+    color: var(--ep-accent);
     font-style: italic;
     margin-right: .15rem;
   }
-  .ed-toc a:hover { color: var(--accent); }
+  .ed-toc a:hover { color: var(--ep-accent); }
 
   @media (max-width: 800px) {
     .ed-grid { grid-template-columns: 1fr; gap: 2.5rem; }

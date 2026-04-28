@@ -76,7 +76,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     font-size: .78rem;
     letter-spacing: .25em;
     text-transform: uppercase;
-    color: rgba(26,26,46,.65);
+    color: var(--lx-text-soft);
     margin-bottom: 4rem;
     max-width: 540px;
     margin-left: auto;
@@ -89,7 +89,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     font-size: .85rem;
     letter-spacing: .35em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--lx-accent);
     margin-bottom: 2.5rem;
   }
 
@@ -114,10 +114,10 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   .lx-ornament-line {
     flex: 1;
     height: 1px;
-    background: var(--accent);
+    background: var(--lx-accent);
   }
   .lx-ornament-mark {
-    color: var(--accent);
+    color: var(--lx-accent);
     font-size: 1.1rem;
     font-family: var(--serif);
   }
@@ -127,7 +127,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     font-style: italic;
     font-size: 1.1rem;
     line-height: 1.7;
-    color: rgba(26,26,46,.85);
+    color: var(--lx-text);
     max-width: 520px;
     margin: 0 auto 3rem;
   }
@@ -161,7 +161,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     content: '';
     position: absolute;
     inset: 4px;
-    border: 1px solid var(--accent);
+    border: 1px solid var(--lx-accent);
     opacity: 0;
     transition: opacity .3s, inset .3s;
   }
@@ -172,19 +172,19 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   .lx-cta-primary:hover::before {
     opacity: 1;
     inset: 6px;
-    border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+    border-color: color-mix(in srgb, var(--lx-accent) 50%, transparent);
   }
 
   .lx-cta-secondary {
     font-style: italic;
     font-size: .95rem;
-    color: rgba(26,26,46,.7);
-    border-bottom: 1px solid rgba(26,26,46,.4);
+    color: var(--lx-text-soft);
+    border-bottom: 1px solid var(--lx-line-input-2);
     padding-bottom: 2px;
   }
   .lx-cta-secondary:hover {
-    color: var(--accent);
-    border-color: var(--accent);
+    color: var(--lx-accent);
+    border-color: var(--lx-accent);
   }
 
   .lx-foot {
@@ -193,7 +193,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     font-size: .78rem;
     letter-spacing: .22em;
     text-transform: uppercase;
-    color: rgba(26,26,46,.6);
+    color: var(--lx-text-soft);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -201,7 +201,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     flex-wrap: wrap;
   }
   .lx-foot-dot {
-    color: var(--accent);
+    color: var(--lx-accent);
     font-size: 1.2em;
     line-height: 1;
   }

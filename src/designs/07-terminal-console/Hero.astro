@@ -168,9 +168,9 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     margin: 0;
     white-space: pre-wrap;
   }
-  .tc-prompt { color: var(--accent); font-weight: 700; }
+  .tc-prompt { color: var(--tc-accent); font-weight: 700; }
   .tc-cmd { color: var(--tc-text); }
-  .tc-out { color: var(--tc-accent-3); display: block; }
+  .tc-out { color: var(--tc-accent); display: block; }
 
   .tc-h1 {
     font-family: var(--sans);
@@ -183,7 +183,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   }
   .tc-cursor {
     display: inline-block;
-    color: var(--accent);
+    color: var(--tc-accent);
     margin-left: .1em;
     animation: tc-blink 1.1s steps(2) infinite;
   }
@@ -215,21 +215,21 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
     font-weight: 500;
   }
   .tc-btn-primary {
-    background: var(--accent);
+    background: var(--tc-accent);
     color: var(--tc-bg);
     font-weight: 700;
-    box-shadow: 0 0 0 1px var(--accent), 0 0 24px color-mix(in srgb, var(--accent) 30%, transparent);
+    box-shadow: 0 0 0 1px var(--tc-accent), 0 0 24px color-mix(in srgb, var(--tc-accent) 30%, transparent);
   }
   .tc-btn-primary:hover {
-    background: var(--accent-light);
-    box-shadow: 0 0 0 1px var(--accent-light), 0 0 32px color-mix(in srgb, var(--accent) 50%, transparent);
+    background: var(--tc-accent-2);
+    box-shadow: 0 0 0 1px var(--tc-accent-2), 0 0 32px color-mix(in srgb, var(--tc-accent) 50%, transparent);
   }
   .tc-btn-ghost {
     background: transparent;
     color: var(--tc-text);
     border: 1px solid var(--tc-border-soft);
   }
-  .tc-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .tc-btn-ghost:hover { border-color: var(--tc-accent); color: var(--tc-accent); }
 
   .tc-statusbar {
     display: flex;
@@ -244,7 +244,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   .tc-statusbar .tc-led { width: 6px; height: 6px; }
   .tc-sep { color: var(--tc-border-soft); }
   .tc-spacer { flex: 1; }
-  .tc-time { color: var(--accent); font-variant-numeric: tabular-nums; }
+  .tc-time { color: var(--tc-accent); font-variant-numeric: tabular-nums; }
 
   @media (max-width: 640px) {
     .tc-body { padding: 1.5rem 1.25rem 2rem; }

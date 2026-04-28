@@ -305,18 +305,36 @@ vercel --prod         # Produktions-Deploy
 
 ## Token-Naming-Konvention pro Design
 
-Designs definieren eigene CSS-Custom-Properties als `--<2-char-key>-*`:
+Jedes Design definiert seinen kompletten Theme-Token-Satz oben in `src/styles/designs/<key>.css`. Die globalen Brand-Tokens (`--ink`, `--cream`, `--accent`, `--accent-light`, `--sage` aus `meta.json`) werden **nur dort** referenziert — der Rest des Designs nutzt ausschließlich die eigenen `--<prefix>-*` Tokens. Damit ist der Theme-Block einer Design-Datei der einzige Punkt, an dem Brand und Theme aufeinandertreffen.
 
-| Design | Prefix | Bedeutung |
+| Design | Prefix | Datei |
 |---|---|---|
-| 02 Bold Editorial | `--bld-*` | bg, cream |
-| 05 Vibrant Gradient | `--vg-*` | warm-darks (heroisch isoliert) |
-| 07 Terminal Console | `--tc-*` | bg/text/border slate |
-| 08 Soft Bloom | `--sb-*` | cream pastels + wave SVGs |
-| 09 Luxe Atelier | `--lx-*` | premium cream + line |
-| 10 Pop Studio | `--po-*` | bg + bright accents |
+| 01 Warm Local | `--wl-*` | `01-warm-local.css` |
+| 02 Bold Editorial | `--bld-*` | `02-bold-editorial.css` |
+| 03 Minimal Clean | `--mc-*` | `03-minimal-clean.css` |
+| 04 Corporate Split | `--cs-*` | `04-corporate-split.css` |
+| 05 Vibrant Gradient | `--vg-*` | `05-vibrant-gradient.css` |
+| 06 Editorial Press | `--ep-*` | `06-editorial-press.css` |
+| 07 Terminal Console | `--tc-*` | `07-terminal-console.css` |
+| 08 Soft Bloom | `--sb-*` | `08-soft-bloom.css` |
+| 09 Luxe Atelier | `--lx-*` | `09-luxe-atelier.css` |
+| 10 Pop Studio | `--po-*` | `10-pop-studio.css` |
 
-Designs **ohne** eigene Tokens (01, 03, 04, 06) verwenden die globalen `--ink/--cream/--accent/--accent-light/--sage` direkt.
+### Semantisches Vokabular pro Token-Block
+
+Jeder Block deckt mindestens diese Bedeutungen ab — Namen variieren je Design:
+
+```
+Surfaces:   --<x>-bg, --<x>-bg-2, --<x>-surface
+Text:       --<x>-text, --<x>-text-soft, --<x>-text-mute
+Lines:      --<x>-line, --<x>-line-soft, --<x>-line-strong
+Accents:    --<x>-accent, --<x>-accent-2, --<x>-on-accent
+Inversion:  --<x>-ink, --<x>-on-ink (für invertierte Karten/Sektionen)
+```
+
+Design-spezifische Extras (z.B. `--po-yellow`, `--vg-bg-1..4`, `--sb-wave-1/-2`, `--mono`) gehören ebenfalls in den Token-Block.
+
+**Regel:** Innerhalb von `[data-design="..."]` keine direkte Verwendung von `var(--ink/--cream/--accent/...)` mehr. Stattdessen über das Design-Token-Alias gehen. Per-Design-Astros (`src/designs/<key>/*.astro`) folgen derselben Regel.
 
 ## Section-Background-Konvention
 

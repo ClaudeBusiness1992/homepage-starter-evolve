@@ -62,7 +62,7 @@ const secondHalf = words.slice(half).join(' ');
 <style>
   .po-hero {
     background: var(--po-bg);
-    color: var(--ink);
+    color: var(--po-ink);
     min-height: 100vh;
     padding: calc(var(--nav-h) + 3rem) 0 0;
     display: flex;
@@ -82,7 +82,7 @@ const secondHalf = words.slice(half).join(' ');
     width: 180px;
     height: 180px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--po-accent);
     top: 12%;
     right: 5%;
     opacity: .85;
@@ -91,7 +91,7 @@ const secondHalf = words.slice(half).join(' ');
   .po-shape-square {
     width: 120px;
     height: 120px;
-    background: var(--sage);
+    background: var(--po-purple);
     top: 55%;
     left: 4%;
     transform: rotate(15deg);
@@ -136,7 +136,7 @@ const secondHalf = words.slice(half).join(' ');
     top: calc(var(--nav-h) + 2rem);
     right: 8%;
     background: var(--po-yellow);
-    color: #1a1a1a;
+    color: var(--po-text);
     padding: .5rem 1rem;
     border-radius: 100px;
     font-size: .8rem;
@@ -146,12 +146,12 @@ const secondHalf = words.slice(half).join(' ');
     display: inline-flex;
     align-items: center;
     gap: .4rem;
-    box-shadow: 4px 4px 0 var(--ink);
+    box-shadow: 4px 4px 0 var(--po-ink);
     z-index: 3;
   }
   .po-sticker-rotate-1 { transform: rotate(-8deg); }
   .po-sticker-star {
-    color: var(--accent);
+    color: var(--po-accent);
     font-size: 1rem;
     animation: po-pulse 1.6s ease-in-out infinite;
   }
@@ -174,7 +174,7 @@ const secondHalf = words.slice(half).join(' ');
     font-size: clamp(3rem, 7vw, 6.5rem);
     line-height: 1.05;
     letter-spacing: -.025em;
-    color: var(--ink);
+    color: var(--po-ink);
     margin-bottom: 2rem;
     font-weight: 400;
   }
@@ -186,18 +186,18 @@ const secondHalf = words.slice(half).join(' ');
   }
   .po-h1-mark {
     display: inline-block;
-    background: var(--accent);
-    color: var(--white);
+    background: var(--po-accent);
+    color: var(--po-on-accent);
     padding: 0 .25em;
     border-radius: 12px;
     transform: rotate(-1.5deg);
     font-style: italic;
-    box-shadow: 6px 6px 0 var(--ink);
+    box-shadow: 6px 6px 0 var(--po-ink);
   }
 
   .po-sub {
     font-size: 1.15rem;
-    color: var(--ink);
+    color: var(--po-ink);
     line-height: 1.65;
     max-width: 580px;
     margin: 0 auto 2.5rem;
@@ -222,25 +222,25 @@ const secondHalf = words.slice(half).join(' ');
     text-transform: uppercase;
     letter-spacing: .04em;
     transition: transform .2s, box-shadow .2s;
-    border: 2px solid var(--ink);
+    border: 2px solid var(--po-ink);
   }
   .po-btn-primary {
-    background: var(--ink);
+    background: var(--po-ink);
     color: var(--po-bg);
-    box-shadow: 5px 5px 0 var(--accent);
+    box-shadow: 5px 5px 0 var(--po-accent);
   }
   .po-btn-primary:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 7px 7px 0 var(--accent);
+    box-shadow: 7px 7px 0 var(--po-accent);
   }
   .po-btn-ghost {
     background: var(--po-bg-2);
-    color: var(--ink);
-    box-shadow: 5px 5px 0 var(--sage);
+    color: var(--po-ink);
+    box-shadow: 5px 5px 0 var(--po-purple);
   }
   .po-btn-ghost:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 7px 7px 0 var(--sage);
+    box-shadow: 7px 7px 0 var(--po-purple);
   }
   .po-btn-arrow {
     transition: transform .2s;
@@ -251,12 +251,12 @@ const secondHalf = words.slice(half).join(' ');
 
   .po-marquee {
     margin-top: 3rem;
-    background: var(--ink);
+    background: var(--po-ink);
     color: var(--po-bg);
     padding: 1rem 0;
     overflow: hidden;
-    border-top: 3px solid var(--accent);
-    border-bottom: 3px solid var(--accent);
+    border-top: 3px solid var(--po-accent);
+    border-bottom: 3px solid var(--po-accent);
     transform: rotate(-1.5deg);
     margin-left: -2rem;
     margin-right: -2rem;

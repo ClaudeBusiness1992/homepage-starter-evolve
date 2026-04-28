@@ -24,26 +24,26 @@ const { label, headline, subline, items } = Astro.props;
 </section>
 
 <style>
-  #services { background: var(--bld-cream); color: var(--ink); }
-  .sv2-list { border-bottom: 1px solid rgba(26,26,46,.1); }
+  #services { background: var(--bld-cream); color: var(--bld-on-cream); }
+  .sv2-list { border-bottom: 1px solid var(--bld-line-cream); }
   .sv2-row {
     display: grid;
     grid-template-columns: 3.5rem 2rem 1fr;
     gap: 2.5rem;
     align-items: start;
     padding: 2.5rem 0;
-    border-top: 1px solid rgba(26,26,46,.1);
+    border-top: 1px solid var(--bld-line-cream);
   }
   .sv2-num {
     font-family: var(--serif);
     font-size: clamp(1.4rem, 2.5vw, 2rem);
-    color: var(--accent);
+    color: var(--bld-accent);
     line-height: 1;
     padding-top: .05em;
   }
   .sv2-icon { font-size: 1.4rem; padding-top: .1em; }
-  .sv2-title { font-size: 1.15rem; font-weight: 600; color: var(--ink); margin-bottom: .45rem; }
-  .sv2-text { color: rgba(26,26,46,.55); font-size: .92rem; line-height: 1.7; margin: 0; }
+  .sv2-title { font-size: 1.15rem; font-weight: 600; color: var(--bld-on-cream); margin-bottom: .45rem; }
+  .sv2-text { color: var(--bld-on-cream-soft); font-size: .92rem; line-height: 1.7; margin: 0; }
   @media (max-width: 640px) {
     .sv2-row { grid-template-columns: 2.5rem 1fr; }
     .sv2-icon { display: none; }
