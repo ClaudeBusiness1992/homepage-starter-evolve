@@ -7,6 +7,7 @@
       "gallery": true
     },
     "countdown": {
+      "variant": "light",
       "label": "Save the Date",
       "headline": "Workshop am 15. Mai 2026",
       "subline": "Plätze sind begrenzt — sichern Sie sich Ihren rechtzeitig.",
@@ -43,6 +44,46 @@
           "verified": true,
           "date": "Januar 2026",
           "text": "Wir hatten genaue Vorstellungen und die wurden perfekt umgesetzt. Besonders die Bildergalerie und das Kontaktformular funktionieren einwandfrei."
+        },
+        {
+          "name": "Max Mustermann",
+          "company": "Platzhalter GmbH",
+          "rating": 5,
+          "verified": true,
+          "date": "Dezember 2025",
+          "text": "Hier kommt eine echte Kundenbewertung rein — bitte ersetzen, sobald Feedback vorliegt."
+        },
+        {
+          "name": "Erika Beispiel",
+          "company": "Platzhalter & Co.",
+          "rating": 5,
+          "verified": true,
+          "date": "November 2025",
+          "text": "Hier kommt eine echte Kundenbewertung rein — bitte ersetzen, sobald Feedback vorliegt."
+        },
+        {
+          "name": "Jonas Platzhalter",
+          "company": "Beispielfirma",
+          "rating": 5,
+          "verified": true,
+          "date": "Oktober 2025",
+          "text": "Hier kommt eine echte Kundenbewertung rein — bitte ersetzen, sobald Feedback vorliegt."
+        },
+        {
+          "name": "Anna Demo",
+          "company": "Demo Agentur",
+          "rating": 5,
+          "verified": true,
+          "date": "September 2025",
+          "text": "Hier kommt eine echte Kundenbewertung rein — bitte ersetzen, sobald Feedback vorliegt."
+        },
+        {
+          "name": "Tim Test",
+          "company": "Test Studio",
+          "rating": 5,
+          "verified": true,
+          "date": "August 2025",
+          "text": "Hier kommt eine echte Kundenbewertung rein — bitte ersetzen, sobald Feedback vorliegt."
         }
       ]
     },
@@ -51,12 +92,20 @@
       "headline": "Projekte die begeistern",
       "subline": "Ein Blick auf einige unserer abgeschlossenen Kundenprojekte.",
       "items": [
-        { "src": "", "alt": "Projekt 1", "caption": "Schreinerei Weber",   "category": "Webdesign" },
-        { "src": "", "alt": "Projekt 2", "caption": "Praxis Dr. Müller",   "category": "Landingpage" },
-        { "src": "", "alt": "Projekt 3", "caption": "Café Sonnenschein",   "category": "Webdesign" },
-        { "src": "", "alt": "Projekt 4", "caption": "Elektro Bauer GmbH", "category": "SEO" },
-        { "src": "", "alt": "Projekt 5", "caption": "Yoga Studio Mitte",  "category": "Landingpage" },
-        { "src": "", "alt": "Projekt 6", "caption": "Friseur Haargenau",  "category": "Webdesign" }
+        { "src": "", "alt": "Projekt 1",  "caption": "Schreinerei Weber",    "category": "Webdesign"    },
+        { "src": "", "alt": "Projekt 2",  "caption": "Praxis Dr. Müller",    "category": "Landingpage"  },
+        { "src": "", "alt": "Projekt 3",  "caption": "Café Sonnenschein",    "category": "Webdesign"    },
+        { "src": "", "alt": "Projekt 4",  "caption": "Elektro Bauer GmbH",   "category": "SEO"          },
+        { "src": "", "alt": "Projekt 5",  "caption": "Yoga Studio Mitte",    "category": "Landingpage"  },
+        { "src": "", "alt": "Projekt 6",  "caption": "Friseur Haargenau",    "category": "Webdesign"    },
+        { "src": "", "alt": "Projekt 7",  "caption": "Platzhalter 7",        "category": "Webdesign"    },
+        { "src": "", "alt": "Projekt 8",  "caption": "Platzhalter 8",        "category": "Landingpage"  },
+        { "src": "", "alt": "Projekt 9",  "caption": "Platzhalter 9",        "category": "SEO"          },
+        { "src": "", "alt": "Projekt 10", "caption": "Platzhalter 10",       "category": "Webdesign"    },
+        { "src": "", "alt": "Projekt 11", "caption": "Platzhalter 11",       "category": "Landingpage"  },
+        { "src": "", "alt": "Projekt 12", "caption": "Platzhalter 12",       "category": "SEO"          },
+        { "src": "", "alt": "Projekt 13", "caption": "Platzhalter 13",       "category": "Webdesign"    },
+        { "src": "", "alt": "Projekt 14", "caption": "Platzhalter 14",       "category": "Landingpage"  }
       ]
     },
     "booking": {
@@ -76,8 +125,8 @@
       "liveSync": false,
       "leadDays": 1,
       "headline": "Wann darf's losgehen?",
-      "subline": "Wählen Sie Service, Mitarbeiter:in und Wunschtermin. Wir bestätigen Ihre Buchung per E-Mail innerhalb von 24 Stunden.",
-      "label": "Termin buchen",
+      "subline": "Service, Mitarbeiter:in und Wunschtermin wählen — Bestätigung innerhalb von 24 Stunden.",
+      "label": "",
       "emailTo": "termine@beispiel.de",
       "calendarId": "",
       "availability": {

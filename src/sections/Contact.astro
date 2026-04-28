@@ -1,4 +1,8 @@
 ---
+interface Avail {
+  monday?: string[]; tuesday?: string[]; wednesday?: string[];
+  thursday?: string[]; friday?: string[]; saturday?: string[]; sunday?: string[];
+}
 interface Props {
   label: string;
   headline: string;
@@ -6,8 +10,62 @@ interface Props {
   email: string;
   phone: string;
   phoneDisplay: string;
+  availability?: Avail;
 }
-const { label, headline, subline, email, phone, phoneDisplay } = Astro.props;
+const { label, headline, subline, email, phone, phoneDisplay, availability = {} } = Astro.props;
+
+// Aus den Buchungs-Slots (z.B. ["09:00","10:00","11:00","14:00"]) lesbare
+// Zeitfenster ableiten — aufeinanderfolgende 1-h-Slots werden zu einem Bereich
+// "09–12 Uhr" zusammengefasst, lückenhafte Tage erhalten mehrere Bereiche.
+const dayShort: Record<string, string> = {
+  monday: 'Mo', tuesday: 'Di', wednesday: 'Mi', thursday: 'Do',
+  friday: 'Fr', saturday: 'Sa', sunday: 'So',
+};
+const dayOrder = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] as const;
+const av: any = availability;
+
+const slotsToRanges = (slots: string[]): string => {
+  if (!slots || slots.length === 0) return 'geschlossen';
+  const toMin = (s: string) => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
+  const toHHMM = (mins: number) => `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
+  const sorted = [...slots].map(toMin).sort((a, b) => a - b);
+  const ranges: Array<[number, number]> = [];
+  let start = sorted[0], end = sorted[0] + 60;
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === end) end = sorted[i] + 60;
+    else { ranges.push([start, end]); start = sorted[i]; end = sorted[i] + 60; }
+  }
+  ranges.push([start, end]);
+  return ranges.map(([s, e]) => `${toHHMM(s)}–${toHHMM(e)}`).join(', ') + ' Uhr';
+};
+
+const hoursGroups: Array<{ days: string; hours: string }> = [];
+let prevKey: string | null = null;
+let groupStart: string | null = null;
+let groupEnd: string | null = null;
+for (const day of dayOrder) {
+  const slots: string[] = av[day] || [];
+  const key = slotsToRanges(slots);
+  if (key === prevKey) {
+    groupEnd = dayShort[day];
+  } else {
+    if (groupStart) {
+      hoursGroups.push({
+        days: groupStart === groupEnd || !groupEnd ? groupStart : `${groupStart}–${groupEnd}`,
+        hours: prevKey!,
+      });
+    }
+    groupStart = dayShort[day];
+    groupEnd = dayShort[day];
+    prevKey = key;
+  }
+}
+if (groupStart) {
+  hoursGroups.push({
+    days: groupStart === groupEnd || !groupEnd ? groupStart : `${groupStart}–${groupEnd}`,
+    hours: prevKey!,
+  });
+}
 ---
 
 <section class="section section--dark" id="contact">
@@ -23,6 +81,16 @@ const { label, headline, subline, email, phone, phoneDisplay } = Astro.props;
           <a href={`mailto:${email}`} class="btn btn-email">✉&nbsp; {email}</a>
           <a href={`tel:${phone}`}    class="btn btn-phone">☎&nbsp; {phoneDisplay}</a>
         </div>
+        {hoursGroups.length > 0 && (
+          <div class="contact-hours r">
+            <h3 class="contact-hours-title">Öffnungszeiten</h3>
+            <ul class="contact-hours-list">
+              {hoursGroups.map(g => (
+                <li><span class="contact-hours-days">{g.days}</span><span class="contact-hours-time">{g.hours}</span></li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       <!-- Formular -->

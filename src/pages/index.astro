@@ -21,7 +21,6 @@ import About04  from '../designs/04-corporate-split/About.astro';
 import Services01 from '../sections/Services.astro';
 import Services02 from '../designs/02-bold-editorial/Services.astro';
 import Services05 from '../designs/05-vibrant-gradient/Services.astro';
-import Stats    from '../sections/Stats.astro';
 import Countdown from '../sections/Countdown.astro';
 import Pricing  from '../sections/Pricing.astro';
 import Gallery  from '../sections/Gallery.astro';
@@ -87,11 +86,10 @@ const navLinks = ctaIdx >= 0
     {s.about.enabled     && <About     {...s.about} />}
     {s.services.enabled  && <Services  {...s.services} />}
     {x.active?.gallery   && x.gallery  && <Gallery   {...x.gallery} />}
-    {s.stats?.enabled    && <Stats     items={s.stats.items} />}
     {s.pricing?.enabled  && <Pricing   {...s.pricing} />}
-    {x.active?.reviews   && x.reviews  && <Reviews  {...x.reviews} agencyName={meta.siteName} agencyUrl={Astro.site?.href} />}
+    {x.active?.reviews   && x.reviews  && <Reviews  {...x.reviews} stats={s.stats?.enabled ? s.stats.items : []} agencyName={meta.siteName} agencyUrl={Astro.site?.href} />}
     {x.active?.booking   && x.booking  && <Booking  {...x.booking} />}
-    {s.contact?.enabled  && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} />}
+    {s.contact?.enabled  && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} availability={x.booking?.availability} />}
     {s.footer?.enabled   && <Footer    siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} copyright={meta.copyright} links={s.footer.links} />}
   </main>
 </Base>
