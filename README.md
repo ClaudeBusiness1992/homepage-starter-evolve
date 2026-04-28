@@ -1,4 +1,4 @@
-# homepage-starter
+# homepage-starter-evolve
 
 Wiederverwendbares One-Pager-Template für Kunden-Websites der Agentur **pixel&code**.  
 Pro Kunde wird das Repo geklont. Konfiguration ausschließlich über JSON-Dateien — der Code wird nie angefasst.
