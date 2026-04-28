@@ -25,18 +25,18 @@ const { label, headline, subline, items } = Astro.props;
 </section>
 
 <style>
-  #services { background: var(--white); color: var(--ink); }
+  #services { background: var(--vg-light-bg); color: var(--vg-light-text); }
   .sv5-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
   }
   .sv5-card {
-    background: var(--white);
+    background: var(--vg-light-bg);
     border-radius: var(--r-lg);
     overflow: hidden;
     box-shadow: 0 2px 16px rgba(26,26,46,.06);
-    border: 1px solid rgba(26,26,46,.06);
+    border: 1px solid var(--vg-light-line);
     transition: transform .25s, box-shadow .25s;
     display: flex;
     flex-direction: column;
@@ -46,13 +46,13 @@ const { label, headline, subline, items } = Astro.props;
     box-shadow: 0 14px 40px rgba(26,26,46,.13);
   }
   .sv5-top {
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+    background: linear-gradient(135deg, var(--vg-accent) 0%, var(--vg-accent-2) 100%);
     padding: 2rem 2rem 1.5rem;
   }
   .sv5-icon { font-size: 2.2rem; display: block; }
   .sv5-body { padding: 1.5rem 2rem 2rem; flex: 1; }
-  .sv5-title { font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: .5rem; }
-  .sv5-text { color: var(--ink-muted); font-size: .9rem; line-height: 1.7; margin: 0; }
+  .sv5-title { font-size: 1.1rem; font-weight: 600; color: var(--vg-light-text); margin-bottom: .5rem; }
+  .sv5-text { color: var(--vg-light-text-soft); font-size: .9rem; line-height: 1.7; margin: 0; }
   @media (max-width: 900px) { .sv5-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 540px) { .sv5-grid { grid-template-columns: 1fr; } }
 </style>

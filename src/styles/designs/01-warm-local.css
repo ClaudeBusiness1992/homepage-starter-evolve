@@ -1,0 +1,351 @@
+/* ── DESIGN 01: WARM LOCAL ─────────────────────────────────────────── */
+/* Cream-dominant warmes Theme. "Warm, lokal, klassisch" — cream als
+   Grundton, Footer dunkel als Erdung, Stats mit Orange-Akzent statt
+   Vollfläche. Surface- und Text-Tokens sind feste Werte; nur Accent
+   ist zur Brand gebrückt, damit der Kunde im CMS seine Akzentfarbe
+   ändern kann. */
+
+[data-design="01-warm-local"] {
+  /* Surfaces — cream-dominant */
+  --wl-bg:           #f5f0e8;   /* primärer cream BG */
+  --wl-bg-soft:      #fbf7f0;   /* leicht heller (Subtle-Zone) */
+  --wl-bg-warm:      #efe8dc;   /* leicht wärmer (alternierende Zone) */
+  --wl-surface:      #ffffff;   /* Cards, Forms */
+  --wl-bg-deep:      #0f0f1e;   /* Footer-Erdung */
+  --wl-bg-dark:      #1a1a2e;   /* Dark-Akzent (z.B. feat-Pricing) */
+
+  /* Text — fest auf cream */
+  --wl-text:         #1a1a2e;
+  --wl-text-soft:    #4a4a6a;
+  --wl-text-mute:    rgba(26,26,46,.5);
+  --wl-on-dark:      #f5f0e8;
+  --wl-on-dark-soft: rgba(245,240,232,.7);
+  --wl-on-dark-mute: rgba(245,240,232,.5);
+  --wl-on-dark-trace: rgba(245,240,232,.4);
+
+  /* Lines */
+  --wl-line:         rgba(26,26,46,.12);
+  --wl-line-soft:    rgba(26,26,46,.06);
+
+  /* Accents — Brand-Bridge */
+  --wl-accent:       var(--accent);
+  --wl-accent-2:     var(--accent-light);
+  --wl-accent-text:  var(--accent-text);
+  --wl-accent-tint:  color-mix(in srgb, var(--accent) 6%, transparent);
+  --wl-accent-tint2: color-mix(in srgb, var(--accent) 12%, transparent);
+  --wl-on-accent:    #ffffff;
+  --wl-sage:         var(--sage);
+}
+
+/* Body */
+[data-design="01-warm-local"] body {
+  background: var(--wl-bg);
+  color: var(--wl-text);
+}
+
+/* Nav — cream blend */
+[data-design="01-warm-local"] #nav {
+  background: color-mix(in srgb, var(--wl-bg) 96%, transparent);
+}
+[data-design="01-warm-local"] #nav.on {
+  box-shadow: 0 1px 0 var(--wl-line), 0 4px 16px rgba(26,26,46,.05);
+}
+[data-design="01-warm-local"] .logo { color: var(--wl-text); }
+[data-design="01-warm-local"] .logo em { color: var(--wl-accent); }
+[data-design="01-warm-local"] .nav-ul a { color: var(--wl-text); }
+[data-design="01-warm-local"] .nav-ul a:hover { color: var(--wl-accent); }
+[data-design="01-warm-local"] .nav-ul a.cta-link {
+  background: var(--wl-accent);
+  color: var(--wl-on-accent);
+}
+[data-design="01-warm-local"] .nav-ul a.cta-link:hover { background: var(--wl-accent-2); }
+[data-design="01-warm-local"] .burger span { background: var(--wl-text); }
+
+/* Hero — CREAM (statt dunkel) */
+[data-design="01-warm-local"] #hero {
+  background: var(--wl-bg);
+  color: var(--wl-text);
+}
+[data-design="01-warm-local"] #hero::before {
+  background: radial-gradient(circle, var(--wl-accent-tint) 0%, transparent 68%);
+}
+[data-design="01-warm-local"] .hero-h1 { color: var(--wl-text); }
+[data-design="01-warm-local"] .hero-h1 i { color: var(--wl-accent-text); }
+[data-design="01-warm-local"] .hero-lbl { color: var(--wl-accent-text); }
+[data-design="01-warm-local"] .hero-sub { color: var(--wl-text-soft); }
+
+/* Hero-Buttons: ghost auf cream → dark outline statt cream-on-dark */
+[data-design="01-warm-local"] #hero .btn-ghost {
+  background: rgba(26,26,46,.04);
+  color: var(--wl-text);
+  border: 1.5px solid var(--wl-line);
+}
+[data-design="01-warm-local"] #hero .btn-ghost:hover {
+  background: rgba(26,26,46,.08);
+  border-color: var(--wl-line);
+}
+
+/* Browser-Mockup auf cream: Glow softer */
+[data-design="01-warm-local"] .browser {
+  box-shadow: var(--shadow-lg), 0 0 80px var(--wl-accent-tint);
+}
+
+/* Section labels / utilities */
+[data-design="01-warm-local"] .lbl { color: var(--wl-accent-text); }
+[data-design="01-warm-local"] .sub { color: var(--wl-text-soft); }
+
+/* About — kompakte cream cards (passt in 100vh) */
+[data-design="01-warm-local"] #about { background: var(--wl-bg); }
+[data-design="01-warm-local"] .about-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+[data-design="01-warm-local"] .acard {
+  background: var(--wl-surface);
+  border: 1px solid var(--wl-line-soft);
+}
+[data-design="01-warm-local"] .aphoto {
+  aspect-ratio: 1 / 1;          /* Quadrat statt 3:4 — deutlich kompakter */
+}
+[data-design="01-warm-local"] .aphoto-placeholder::before {
+  width: 60px;
+  height: 60px;
+  margin-bottom: .65rem;
+}
+[data-design="01-warm-local"] .abody {
+  padding: 1.1rem 1.35rem 1.4rem;
+}
+[data-design="01-warm-local"] .aname {
+  color: var(--wl-text);
+  font-size: 1.2rem;
+  margin-bottom: .15rem;
+}
+[data-design="01-warm-local"] .arole {
+  color: var(--wl-accent-text);
+  margin-bottom: .5rem;
+}
+[data-design="01-warm-local"] .atext {
+  color: var(--wl-text-soft);
+  font-size: .88rem;
+  line-height: 1.6;
+}
+
+/* Services — CREAM (statt .section--dark) mit subtilen accent-cards */
+[data-design="01-warm-local"] #services {
+  background: var(--wl-bg-warm);
+  color: var(--wl-text);
+  border-top: 1px solid var(--wl-line-soft);
+  border-bottom: 1px solid var(--wl-line-soft);
+}
+[data-design="01-warm-local"] #services .h2 { color: var(--wl-text); }
+[data-design="01-warm-local"] #services .sub { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] #services .lbl { color: var(--wl-accent-text); }
+[data-design="01-warm-local"] .scard {
+  background: var(--wl-surface);
+  border: 1px solid var(--wl-line-soft);
+  box-shadow: 0 2px 12px rgba(26,26,46,.04);
+}
+[data-design="01-warm-local"] .scard:hover {
+  background: var(--wl-surface);
+  border-color: var(--wl-accent-tint2);
+  box-shadow: 0 8px 28px rgba(26,26,46,.08);
+}
+[data-design="01-warm-local"] .scard:nth-child(1) .sico { background: color-mix(in srgb, var(--wl-accent) 12%, transparent); color: var(--wl-accent-text); }
+[data-design="01-warm-local"] .scard:nth-child(2) .sico { background: color-mix(in srgb, var(--wl-sage) 16%, transparent); color: var(--wl-sage); }
+[data-design="01-warm-local"] .scard:nth-child(3) .sico { background: color-mix(in srgb, var(--wl-accent-2) 14%, transparent); color: var(--wl-accent-text); }
+[data-design="01-warm-local"] .scard:nth-child(4) .sico { background: rgba(124,111,154,.18); color: #5b4f7f; }
+[data-design="01-warm-local"] .scard:nth-child(5) .sico { background: color-mix(in srgb, var(--wl-accent) 12%, transparent); color: var(--wl-accent-text); }
+[data-design="01-warm-local"] .scard:nth-child(6) .sico { background: color-mix(in srgb, var(--wl-sage) 16%, transparent); color: var(--wl-sage); }
+[data-design="01-warm-local"] .stitle { color: var(--wl-text); }
+[data-design="01-warm-local"] .stxt { color: var(--wl-text-soft); }
+
+/* Stats — CREAM mit großen Orange-Zahlen (statt Orange-Vollfläche) */
+[data-design="01-warm-local"] #stats {
+  background: var(--wl-bg);
+  padding: 5rem 0;
+  border-top: 1px solid var(--wl-line);
+  border-bottom: 1px solid var(--wl-line);
+}
+[data-design="01-warm-local"] .stat-n { color: var(--wl-accent); }
+[data-design="01-warm-local"] .stat-l { color: var(--wl-text-soft); }
+
+/* Gallery — CREAM (statt dunkel) */
+[data-design="01-warm-local"] #gallery {
+  background: var(--wl-bg-soft);
+  color: var(--wl-text);
+}
+[data-design="01-warm-local"] #gallery .h2 { color: var(--wl-text); }
+[data-design="01-warm-local"] #gallery .sub { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] #gallery .lbl { color: var(--wl-accent-text); }
+[data-design="01-warm-local"] .gallery-item {
+  border: 1px solid var(--wl-line-soft);
+  background: var(--wl-surface);
+}
+[data-design="01-warm-local"] .gallery-overlay {
+  background: linear-gradient(to top, rgba(26,26,46,.85) 0%, transparent 55%);
+}
+[data-design="01-warm-local"] .gallery-category { color: var(--wl-accent-2); }
+[data-design="01-warm-local"] .gallery-placeholder-icon { color: var(--wl-text-mute); }
+[data-design="01-warm-local"] .gallery-placeholder-txt { color: var(--wl-text-mute); }
+
+/* Pricing — cream mit dark feat-Card als Akzent */
+[data-design="01-warm-local"] #pricing { background: var(--wl-bg); }
+[data-design="01-warm-local"] .pcard {
+  background: var(--wl-surface);
+  border: 1px solid var(--wl-line-soft);
+}
+[data-design="01-warm-local"] .pcard.feat {
+  background: var(--wl-bg-dark);
+  color: var(--wl-on-dark);
+  border-color: var(--wl-bg-dark);
+}
+[data-design="01-warm-local"] .pname { color: var(--wl-text); }
+[data-design="01-warm-local"] .feat .pname { color: var(--wl-on-dark); }
+[data-design="01-warm-local"] .ptag { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] .feat .ptag { color: var(--wl-on-dark-mute); }
+[data-design="01-warm-local"] .pprice .amount { color: var(--wl-text); }
+[data-design="01-warm-local"] .feat .pprice .amount { color: var(--wl-accent-2); }
+[data-design="01-warm-local"] .pprice .note { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] .feat .pprice .note { color: var(--wl-on-dark-trace); }
+[data-design="01-warm-local"] .pdiv { background: var(--wl-line); }
+[data-design="01-warm-local"] .feat .pdiv { background: rgba(255,255,255,.1); }
+[data-design="01-warm-local"] .plist li { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] .feat .plist li { color: var(--wl-on-dark-soft); }
+[data-design="01-warm-local"] .plist li::before { color: var(--wl-sage); }
+[data-design="01-warm-local"] .feat .plist li::before { color: var(--wl-accent-2); }
+[data-design="01-warm-local"] .pbadge {
+  background: var(--wl-accent);
+  color: var(--wl-on-accent);
+}
+[data-design="01-warm-local"] .pricing-note { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] .pricing-note a { color: var(--wl-accent); }
+
+/* Reviews — cream */
+[data-design="01-warm-local"] #reviews { background: var(--wl-bg-soft); }
+[data-design="01-warm-local"] .review-card {
+  background: var(--wl-surface);
+  border: 1px solid var(--wl-line-soft);
+}
+[data-design="01-warm-local"] .review-stars { color: var(--wl-accent); }
+[data-design="01-warm-local"] .review-text { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] .review-avatar {
+  background: var(--wl-accent);
+  color: var(--wl-on-accent);
+}
+[data-design="01-warm-local"] .review-name { color: var(--wl-text); }
+[data-design="01-warm-local"] .review-company,
+[data-design="01-warm-local"] .review-date { color: var(--wl-text-soft); }
+
+/* Contact — CREAM (statt dunkel) mit dark-toned Form */
+[data-design="01-warm-local"] #contact {
+  background: var(--wl-bg);
+  color: var(--wl-text);
+}
+[data-design="01-warm-local"] #contact .h2 { color: var(--wl-text); }
+[data-design="01-warm-local"] #contact .sub { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] #contact .lbl { color: var(--wl-accent-text); }
+[data-design="01-warm-local"] .contact-form-wrap {
+  background: var(--wl-surface);
+  border: 1px solid var(--wl-line-soft);
+  box-shadow: 0 8px 28px rgba(26,26,46,.06);
+}
+[data-design="01-warm-local"] .form-group label { color: var(--wl-text); }
+[data-design="01-warm-local"] .form-optional { color: var(--wl-text-mute); }
+[data-design="01-warm-local"] .form-group input,
+[data-design="01-warm-local"] .form-group textarea {
+  background: var(--wl-bg-soft);
+  border: 1.5px solid var(--wl-line);
+  color: var(--wl-text);
+}
+[data-design="01-warm-local"] .form-group input::placeholder,
+[data-design="01-warm-local"] .form-group textarea::placeholder {
+  color: var(--wl-text-mute);
+}
+[data-design="01-warm-local"] .form-group input:focus-visible,
+[data-design="01-warm-local"] .form-group textarea:focus-visible {
+  background: var(--wl-surface);
+  border-color: var(--wl-accent);
+  box-shadow: 0 0 0 3px var(--wl-accent-tint2);
+}
+[data-design="01-warm-local"] .form-check label { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] .form-check label a { color: var(--wl-accent); }
+[data-design="01-warm-local"] .btn-phone {
+  background: rgba(26,26,46,.04);
+  color: var(--wl-text);
+  border: 1.5px solid var(--wl-line);
+}
+[data-design="01-warm-local"] .btn-phone:hover {
+  background: rgba(26,26,46,.08);
+  border-color: var(--wl-accent);
+  color: var(--wl-accent);
+}
+
+/* Buttons (global) auf cream */
+[data-design="01-warm-local"] .btn-fill,
+[data-design="01-warm-local"] .btn-email,
+[data-design="01-warm-local"] .btn-submit {
+  background: var(--wl-accent);
+  color: var(--wl-on-accent);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--wl-accent) 35%, transparent);
+}
+[data-design="01-warm-local"] .btn-fill:hover,
+[data-design="01-warm-local"] .btn-email:hover,
+[data-design="01-warm-local"] .btn-submit:hover {
+  background: var(--wl-accent-2);
+}
+[data-design="01-warm-local"] .btn-outline {
+  color: var(--wl-text);
+  border-color: var(--wl-line);
+}
+[data-design="01-warm-local"] .btn-outline:hover {
+  border-color: var(--wl-accent);
+  color: var(--wl-accent);
+}
+
+/* Legal pages */
+[data-design="01-warm-local"] .legal-page { background: var(--wl-bg); }
+[data-design="01-warm-local"] .legal-h1,
+[data-design="01-warm-local"] .legal-section h2,
+[data-design="01-warm-local"] .legal-section h3 { color: var(--wl-text); }
+[data-design="01-warm-local"] .legal-section p,
+[data-design="01-warm-local"] .legal-section li,
+[data-design="01-warm-local"] .legal-section ul { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] .legal-section a { color: var(--wl-accent); }
+[data-design="01-warm-local"] .legal-note {
+  background: var(--wl-surface);
+  border: 1px solid var(--wl-line-soft);
+  border-left: 3px solid var(--wl-accent);
+  color: var(--wl-text-soft);
+}
+
+/* Footer — cream, mit Hairline-Trennung zur letzten Sektion */
+[data-design="01-warm-local"] footer {
+  background: var(--wl-bg-warm);
+  border-top: 1px solid var(--wl-line);
+}
+[data-design="01-warm-local"] .foot-logo { color: var(--wl-text); }
+[data-design="01-warm-local"] .foot-logo em { color: var(--wl-accent); }
+[data-design="01-warm-local"] .foot-links a,
+[data-design="01-warm-local"] .foot-cookie-btn { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] .foot-links a:hover,
+[data-design="01-warm-local"] .foot-cookie-btn:hover { color: var(--wl-accent); }
+[data-design="01-warm-local"] .foot-copy { color: var(--wl-text-mute); }
+
+/* Countdown — CREAM warm-tinted (statt dunkel) */
+[data-design="01-warm-local"] .countdown-section {
+  background: var(--wl-bg-warm);
+  color: var(--wl-text);
+  border-bottom: 1px solid var(--wl-line);
+}
+[data-design="01-warm-local"] .countdown-section .lbl { color: var(--wl-accent-text); }
+[data-design="01-warm-local"] .cd-h2 { color: var(--wl-text); }
+[data-design="01-warm-local"] .cd-sub { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] .cd-box {
+  background: var(--wl-surface);
+  border: 1px solid var(--wl-line);
+}
+[data-design="01-warm-local"] .cd-num { color: var(--wl-accent); }
+[data-design="01-warm-local"] .cd-lbl { color: var(--wl-text-soft); }
+[data-design="01-warm-local"] .cd-sep { color: var(--wl-line); }

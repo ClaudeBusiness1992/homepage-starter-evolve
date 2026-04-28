@@ -124,13 +124,11 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
   scroll-padding-top: var(--nav-h);
 }
-main > section { scroll-snap-align: start; }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-snap-type: none; }
-}
+/* scroll-snap entfernt — proximity verursachte ruckelige Pull-Bewegungen
+   beim Loslassen des Scrolls. Smooth scroll für Anchor-Klicks bleibt aktiv,
+   scroll-padding-top sorgt für korrektes Offset unter der Fixed-Nav. */
 
 body {
   font-family: var(--sans);
@@ -567,48 +565,81 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
   .booking-form { padding: 1.5rem; }
 }
 
-/* ── COUNTDOWN (optional add-on, kompakt — teilt sich Slot mit Hero) ── */
+/* ── COUNTDOWN (optional add-on, kompakter Banner über Hero, außerhalb von <main>) ── */
+/* Ziel: Countdown + Hero zusammen passen exakt in 100vh.
+   Countdown ~ 380px → Hero bekommt 100vh - 380px Mindesthöhe und reduziertes Padding. */
+:root { --cd-h: 0px; }                 /* default — kein Countdown */
+body:has(.countdown-section) { --cd-h: 380px; }
+body:has(.countdown-section) #hero {
+  min-height: calc(100vh - var(--cd-h));
+  align-items: flex-start;
+  padding-top: 2rem;
+}
+body:has(.countdown-section) .hero-grid {
+  padding: 2rem 0;                     /* statt 5rem — passt mit Countdown auf 100vh */
+}
+@media (max-width: 768px) {
+  body:has(.countdown-section) { --cd-h: 460px; }
+}
+
 .countdown-section {
   background: var(--ink);
   color: var(--cream);
-  padding: clamp(2.5rem, 5vh, 4rem) 0;
-  min-height: 0 !important; /* override global section min-height */
-  scroll-snap-align: none;
-  padding-top: calc(var(--nav-h) + 1.5rem);
+  padding: clamp(1rem, 2vh, 1.75rem) 0 clamp(1.25rem, 2.5vh, 2rem);
+  min-height: 0 !important;
+  padding-top: calc(var(--nav-h) + clamp(.85rem, 2vh, 1.5rem));
 }
-.countdown-section .lbl { color: var(--accent-light); }
+.countdown-section .lbl { color: var(--accent-light); font-size: .8rem; margin-bottom: .65rem; }
 .cd-inner { text-align: center; max-width: 760px; margin: 0 auto; }
-.cd-h2 { color: var(--cream); margin: .5rem 0 1rem; }
-.cd-sub { color: rgba(245,240,232,.65); margin-bottom: 2.5rem; }
-.cd-grid { display: inline-flex; align-items: stretch; gap: .85rem; margin-bottom: 2rem; flex-wrap: wrap; justify-content: center; }
+.cd-h2 {
+  color: var(--cream);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin: .15rem 0 .45rem;
+  line-height: 1.15;
+}
+.cd-sub {
+  color: rgba(245,240,232,.7);
+  font-size: .92rem;
+  margin: 0 auto 1.4rem;
+  max-width: 560px;
+  line-height: 1.5;
+}
+.cd-grid {
+  display: flex;
+  align-items: stretch;
+  gap: .5rem;
+  margin: 0 auto 1.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 .cd-box {
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.12);
-  border-radius: var(--r-lg);
-  padding: 1.25rem 1.5rem;
-  min-width: 96px;
+  border-radius: var(--r);
+  padding: .65rem .9rem;
+  min-width: 76px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .cd-num {
   font-family: var(--serif);
-  font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+  font-size: clamp(1.65rem, 3.2vw, 2.2rem);
   line-height: 1;
   color: var(--accent-light);
   font-variant-numeric: tabular-nums;
 }
 .cd-lbl {
-  font-size: .72rem;
-  letter-spacing: .15em;
+  font-size: .66rem;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  color: rgba(245,240,232,.55);
-  margin-top: .5rem;
+  color: rgba(245,240,232,.6);
+  margin-top: .35rem;
 }
 .cd-sep {
   font-family: var(--serif);
-  font-size: clamp(2rem, 3.5vw, 2.6rem);
-  color: rgba(245,240,232,.25);
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+  color: rgba(245,240,232,.3);
   align-self: center;
 }
 .cd-grid--done .cd-num { color: rgba(245,240,232,.4); }
@@ -616,14 +647,20 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
   font-family: var(--serif);
   font-style: italic;
   color: var(--accent-light);
-  font-size: 1.1rem;
-  margin-bottom: 1.25rem;
+  font-size: 1rem;
+  margin-bottom: .75rem;
 }
-.cd-cta { display: inline-block; }
+.cd-cta {
+  display: inline-block;
+  font-size: .9rem;
+  padding: .7rem 1.5rem;
+}
 
 @media (max-width: 640px) {
   .cd-sep { display: none; }
-  .cd-box { min-width: 70px; padding: .85rem 1rem; }
+  .cd-box { min-width: 64px; padding: .5rem .7rem; }
+  .cd-grid { gap: .4rem; margin-bottom: 1.4rem; }
+  .cd-num { font-size: clamp(1.4rem, 7vw, 1.9rem); }
 }
 
 /* ── CONTACT ── */

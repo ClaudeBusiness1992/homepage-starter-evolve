@@ -97,7 +97,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 }
 
 .hero-left {
-  background: var(--cream);
+  background: var(--cs-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,7 +115,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   font-weight: 700;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--cs-accent);
   margin-bottom: 1.5rem;
 }
 
@@ -123,14 +123,14 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   font-family: var(--serif);
   font-size: clamp(2.6rem, 4.5vw, 4.2rem);
   line-height: 1.1;
-  color: var(--ink);
+  color: var(--cs-text);
   margin-bottom: 1.25rem;
   letter-spacing: -.01em;
 }
 
 .hero-sub {
   font-size: 1rem;
-  color: var(--ink-muted);
+  color: var(--cs-text-soft);
   line-height: 1.75;
   margin-bottom: 2.5rem;
   max-width: 440px;
@@ -139,7 +139,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
 
 .hero-right {
-  background: var(--ink);
+  background: var(--cs-ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -189,7 +189,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 
 .deco-icon {
   font-size: 1rem;
-  color: var(--accent);
+  color: var(--cs-accent);
   flex-shrink: 0;
 }
 

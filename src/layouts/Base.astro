@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/designs/01-warm-local.css';
 import '../styles/designs/02-bold-editorial.css';
 import '../styles/designs/03-minimal-clean.css';
 import '../styles/designs/04-corporate-split.css';
@@ -72,6 +73,12 @@ const themeStyle = `
     <CookieBanner />
 
     <script is:inline>
+      // Reload immer oben starten — sonst verbirgt scroll-restoration den Countdown-Header
+      // beim Reload, weil der Browser die letzte Scroll-Position wiederherstellt.
+      // Ausnahme: echte Anchor-Links (#about etc.) werden vom Browser sauber positioniert.
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      if (!location.hash) window.scrollTo(0, 0);
+
       // Nav scroll effect
       const nav = document.getElementById('nav');
       window.addEventListener('scroll', () => nav?.classList.toggle('on', scrollY > 20), { passive: true });

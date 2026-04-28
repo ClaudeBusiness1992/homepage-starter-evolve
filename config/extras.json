@@ -3,7 +3,8 @@
     "active": {
       "countdown": true,
       "reviews": true,
-      "booking": true
+      "booking": true,
+      "gallery": true
     },
     "countdown": {
       "label": "Save the Date",
@@ -43,6 +44,19 @@
           "date": "Januar 2026",
           "text": "Wir hatten genaue Vorstellungen und die wurden perfekt umgesetzt. Besonders die Bildergalerie und das Kontaktformular funktionieren einwandfrei."
         }
+      ]
+    },
+    "gallery": {
+      "label": "Unsere Arbeiten",
+      "headline": "Projekte die begeistern",
+      "subline": "Ein Blick auf einige unserer abgeschlossenen Kundenprojekte.",
+      "items": [
+        { "src": "", "alt": "Projekt 1", "caption": "Schreinerei Weber",   "category": "Webdesign" },
+        { "src": "", "alt": "Projekt 2", "caption": "Praxis Dr. Müller",   "category": "Landingpage" },
+        { "src": "", "alt": "Projekt 3", "caption": "Café Sonnenschein",   "category": "Webdesign" },
+        { "src": "", "alt": "Projekt 4", "caption": "Elektro Bauer GmbH", "category": "SEO" },
+        { "src": "", "alt": "Projekt 5", "caption": "Yoga Studio Mitte",  "category": "Landingpage" },
+        { "src": "", "alt": "Projekt 6", "caption": "Friseur Haargenau",  "category": "Webdesign" }
       ]
     },
     "booking": {

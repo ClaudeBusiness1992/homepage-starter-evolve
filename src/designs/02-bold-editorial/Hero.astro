@@ -31,7 +31,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
 #hero {
   min-height: 100vh;
   background: var(--bld-bg);
-  color: var(--bld-cream);
+  color: var(--bld-text);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -64,7 +64,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   font-weight: 700;
   letter-spacing: .2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--bld-accent);
   margin-bottom: 1.5rem;
 }
 
@@ -73,7 +73,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   font-size: clamp(3.5rem, 8vw, 8rem);
   line-height: 1.0;
   letter-spacing: -.02em;
-  color: var(--bld-cream);
+  color: var(--bld-text);
   margin-bottom: 3rem;
   max-width: 14ch;
 }
@@ -82,14 +82,14 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   display: flex;
   align-items: flex-start;
   gap: 4rem;
-  border-top: 1px solid rgba(240,237,232,.15);
+  border-top: 1px solid var(--bld-line);
   padding-top: 2rem;
 }
 
 .hero-sub {
   flex: 1;
   font-size: 1rem;
-  color: rgba(240,237,232,.55);
+  color: var(--bld-text-soft);
   line-height: 1.75;
   max-width: 420px;
 }
@@ -105,7 +105,7 @@ const { label, headline, subline, ctaPrimary, ctaSecondary } = Astro.props;
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 80px;
-  background: var(--cream);
+  background: var(--bld-cream);
   clip-path: polygon(0 100%, 100% 0, 100% 100%);
 }
 

@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: ClaudeBusiness1992/hompage-starter
+  repo: ClaudeBusiness1992/homepage-starter-evolve
   branch: main
   client_id: Ov23lijI6FiImrx8EcYE
   base_url: https://homepage-starter-evolve.vercel.app
@@ -132,21 +132,6 @@ collections:
                         name: "features"
                         widget: "list"
                         field: { label: "Feature", name: "item", widget: "string" }
-              - label: "Galerie"
-                name: "gallery"
-                widget: "object"
-                collapsed: true
-                fields:
-                  - { label: "Überschrift", name: "headline", widget: "string" }
-                  - { label: "Unterzeile", name: "subline", widget: "text" }
-                  - label: "Bilder"
-                    name: "items"
-                    widget: "list"
-                    fields:
-                      - { label: "Bild", name: "src", widget: "image" }
-                      - { label: "Alt-Text", name: "alt", widget: "string" }
-                      - { label: "Bildunterschrift", name: "caption", widget: "string" }
-                      - { label: "Kategorie", name: "category", widget: "string" }
               - label: "Kontakt"
                 name: "contact"
                 widget: "object"
@@ -184,6 +169,7 @@ collections:
                 hint: "Hier kannst du jedes Add-on direkt an-/ausschalten. Die Detail-Einstellungen weiter unten kannst du beruhigt zugeklappt lassen — die Toggles funktionieren auch ohne sie zu öffnen."
                 fields:
                   - { label: "📅 Countdown / Event", name: "countdown", widget: "boolean", default: false, hint: "Zeigt einen Live-Countdown zu einem Event auf der Website." }
+                  - { label: "🖼️ Galerie", name: "gallery", widget: "boolean", default: false, hint: "Zeigt eine Bildergalerie mit Projekten/Arbeiten." }
                   - { label: "⭐ Kundenbewertungen", name: "reviews", widget: "boolean", default: false, hint: "Zeigt die Bewertungs-Sektion mit Sternen und Zitaten." }
                   - { label: "📋 Online-Buchung", name: "booking", widget: "boolean", default: false, hint: "Zeigt das Buchungsformular für Termine (Service, Mitarbeiter:in, Datum, Uhrzeit)." }
 
@@ -200,6 +186,24 @@ collections:
                   - { label: "Button-Text", name: "ctaLabel", widget: "string", required: false, default: "Jetzt anmelden" }
                   - { label: "Button-Link", name: "ctaHref", widget: "string", required: false, default: "#contact", hint: "z.B. #contact für das Kontaktformular oder eine vollständige URL" }
                   - { label: "Text nach Ablauf", name: "expiredText", widget: "string", required: false, default: "Das Event hat begonnen" }
+
+              # ── Galerie-Detail-Einstellungen ──
+              - label: "🖼️ Galerie — Inhalte"
+                name: "gallery"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Label (kleine Überschrift)", name: "label", widget: "string", required: false, default: "Unsere Arbeiten" }
+                  - { label: "Überschrift", name: "headline", widget: "string", required: false, default: "" }
+                  - { label: "Unterzeile", name: "subline", widget: "text", required: false, default: "" }
+                  - label: "Bilder"
+                    name: "items"
+                    widget: "list"
+                    fields:
+                      - { label: "Bild", name: "src", widget: "image" }
+                      - { label: "Alt-Text", name: "alt", widget: "string" }
+                      - { label: "Bildunterschrift", name: "caption", widget: "string" }
+                      - { label: "Kategorie", name: "category", widget: "string" }
 
               # ── Bewertungen-Detail-Einstellungen (umgezogen aus Inhalte) ──
               - label: "⭐ Bewertungen — Inhalte"

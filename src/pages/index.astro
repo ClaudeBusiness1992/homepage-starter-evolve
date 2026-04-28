@@ -66,6 +66,7 @@ const Services = ServicesOverrides[design] ?? Services01;
 // Build nav links: base nav + active add-ons
 const baseNav = (meta.nav ?? []).filter(l => !l.section || s[l.section]?.enabled !== false);
 const addonNav = [];
+if (x.active?.gallery && x.gallery) addonNav.push({ label: 'Galerie',     href: '#gallery', section: 'gallery' });
 if (x.active?.reviews && x.reviews) addonNav.push({ label: 'Bewertungen', href: '#reviews', section: 'reviews' });
 if (x.active?.booking && x.booking) addonNav.push({ label: 'Buchung',     href: '#booking',  section: 'booking' });
 
@@ -79,12 +80,13 @@ const navLinks = ctaIdx >= 0
 <Base meta={meta} theme={theme} design={design}>
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={navLinks} />
 
+  {x.active?.countdown && x.countdown && <Countdown {...x.countdown} />}
+
   <main id="main">
-    {x.active?.countdown && x.countdown && <Countdown {...x.countdown} />}
     {s.hero.enabled      && <Hero      {...s.hero} mockupUrl={Astro.site ? Astro.site.host : undefined} />}
     {s.about.enabled     && <About     {...s.about} />}
     {s.services.enabled  && <Services  {...s.services} />}
-    {s.gallery?.enabled  && <Gallery   {...s.gallery} />}
+    {x.active?.gallery   && x.gallery  && <Gallery   {...x.gallery} />}
     {s.stats?.enabled    && <Stats     items={s.stats.items} />}
     {s.pricing?.enabled  && <Pricing   {...s.pricing} />}
     {x.active?.reviews   && x.reviews  && <Reviews  {...x.reviews} agencyName={meta.siteName} agencyUrl={Astro.site?.href} />}

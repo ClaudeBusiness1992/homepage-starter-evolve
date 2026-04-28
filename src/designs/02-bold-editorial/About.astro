@@ -31,28 +31,28 @@ const { label, headline, subline, members } = Astro.props;
 
 <style>
   #about { background: var(--bld-cream); }
-  .ab2-list { border-bottom: 1px solid rgba(26,26,46,.1); }
+  .ab2-list { border-bottom: 1px solid var(--bld-line-cream); }
   .ab2-row {
     display: grid;
     grid-template-columns: 2.5rem 80px 1fr 2fr;
     gap: 2.5rem;
     align-items: center;
     padding: 2.5rem 0;
-    border-top: 1px solid rgba(26,26,46,.1);
+    border-top: 1px solid var(--bld-line-cream);
   }
-  .ab2-num { font-family: var(--serif); font-size: 1rem; color: var(--accent); }
+  .ab2-num { font-family: var(--serif); font-size: 1rem; color: var(--bld-accent); }
   .ab2-photo img {
     width: 80px; height: 80px; border-radius: 50%; object-fit: cover; display: block;
   }
   .ab2-initials {
     width: 80px; height: 80px; border-radius: 50%;
-    background: var(--ink); color: var(--bld-cream);
+    background: var(--bld-on-cream); color: var(--bld-cream);
     display: flex; align-items: center; justify-content: center;
     font-size: 1.2rem; font-weight: 600; letter-spacing: .02em;
   }
-  .ab2-name { font-size: 1.3rem; margin-bottom: .2rem; color: var(--ink); }
-  .ab2-role { font-size: .875rem; color: var(--accent-text); font-weight: 500; }
-  .ab2-bio { margin: 0; color: rgba(26,26,46,.55); font-size: .9rem; line-height: 1.7; }
+  .ab2-name { font-size: 1.3rem; margin-bottom: .2rem; color: var(--bld-on-cream); }
+  .ab2-role { font-size: .875rem; color: var(--bld-accent); font-weight: 500; }
+  .ab2-bio { margin: 0; color: var(--bld-on-cream-soft); font-size: .9rem; line-height: 1.7; }
   @media (max-width: 900px) {
     .ab2-row { grid-template-columns: 80px 1fr; grid-template-rows: auto auto; gap: 1rem 1.5rem; }
     .ab2-num { display: none; }
