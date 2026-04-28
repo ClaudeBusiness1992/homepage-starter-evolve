@@ -367,6 +367,57 @@ pnpm dev
 
 ---
 
+## Multi-Device-Workflow
+
+Das Projekt wird auf mehreren Rechnern bearbeitet. **GitHub ist die Single Source of Truth**, nicht die lokale Kopie.
+
+### Grundregeln
+
+- **Niemals in Cloud-Sync-Ordnern arbeiten** (iCloud Drive, OneDrive, Dropbox) — der `.git`-Ordner und Lock-Files führen zu Repo-Korruption. Pro Rechner ein lokaler Ordner *außerhalb* der Cloud (z.B. `C:\ClaudeBusiness\`).
+- **Sync ausschließlich via Git** — `git pull` zum Holen, `git push` zum Hochladen. Niemals Ordner zwischen Rechnern kopieren.
+- **Repo-Standort:** `https://github.com/ClaudeBusiness1992/homepage-starter-evolve.git`, Branch `main`.
+- **Vercel:** Push auf `main` triggert automatisch ein Live-Deployment. Nicht auf `main` pushen, was nicht live gehen soll.
+
+### Tagesablauf (jedes Mal)
+
+```powershell
+# 1. ARBEITSBEGINN — neuesten Stand holen
+cd "C:\ClaudeBusiness\Claude Homepage\homepage-starter"
+git pull
+
+# 2. ARBEITEN
+pnpm dev   # Server starten, Änderungen testen
+
+# 3. ARBEITSENDE — Änderungen sichern
+git add .
+git commit -m "feat: ... / fix: ... / chore: ..."
+git push   # → triggert Vercel-Deploy
+```
+
+### Häufige Fallstricke
+
+| Problem | Ursache | Lösung |
+|---|---|---|
+| "Your branch is behind 'origin/main'" | Anderer Rechner / Browser-Edit hat gepusht | `git pull` ausführen |
+| "Your branch is ahead of 'origin/main' by N commits" | Lokal committed, vergessen zu pushen | `git push` ausführen |
+| "Updates were rejected because the remote contains work..." | Auf beiden Seiten Commits parallel | `git pull` (Auto-Merge), bei Konflikten manuell auflösen, dann `git push` |
+| Vercel zeigt alten Stand | Vergessen zu pushen | `git push` ausführen |
+
+### Browser-Edits auf github.com vermeiden
+
+Direkte Edits auf github.com (z.B. README im Web-UI ändern) erzeugen Commits, die lokale Kopien nicht haben. **Wenn unvermeidbar:** auf jedem aktiven Rechner danach `git pull` ausführen, bevor weitergearbeitet wird. Lieber lokal ändern → committen → pushen.
+
+### Claude Code starten
+
+Claude Code immer aus dem Projekt-Ordner starten, damit `CLAUDE.md` und `.claude/settings.json` korrekt geladen werden:
+
+```powershell
+cd "C:\ClaudeBusiness\Claude Homepage\homepage-starter"
+claude
+```
+
+---
+
 ## Pro Kunde: Checkliste
 
 1. Repo klonen: `git clone <repo-url> kunde-name && cd kunde-name`
