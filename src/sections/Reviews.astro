@@ -1,5 +1,7 @@
 ---
 import SectionHeader from '../components/SectionHeader.astro';
+import legalConfig from '../../config/legal.json';
+
 interface Review {
   name: string;
   company: string;
@@ -17,8 +19,15 @@ interface Props {
   stats?: StatItem[];
   agencyName?: string;
   agencyUrl?: string;
+  telephone?: string;
 }
-const { label, headline, subline, items, stats = [], agencyName = '', agencyUrl } = Astro.props;
+const { label, headline, subline, items, stats = [], agencyName = '', agencyUrl, telephone } = Astro.props;
+
+const { legal: l } = legalConfig;
+const isPlaceholder = (v: string) => !v || v.startsWith('[');
+const hasAddress = !isPlaceholder(l.address.street) && !isPlaceholder(l.address.city);
+const hasTel = !isPlaceholder(telephone ?? '') || !isPlaceholder(l.contact.phone);
+const tel = !isPlaceholder(telephone ?? '') ? telephone : (!isPlaceholder(l.contact.phone) ? l.contact.phone : undefined);
 const delays = ['d1', 'd2', 'd3'];
 
 const avg = items.length
@@ -31,6 +40,16 @@ const jsonLd = {
   '@id': '#business',
   name: agencyName,
   ...(agencyUrl ? { url: agencyUrl } : {}),
+  ...(tel ? { telephone: tel } : {}),
+  ...(hasAddress ? {
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: l.address.street,
+      postalCode: l.address.zip,
+      addressLocality: l.address.city,
+      addressCountry: 'DE',
+    }
+  } : {}),
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: avg,

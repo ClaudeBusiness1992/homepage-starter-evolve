@@ -527,14 +527,32 @@ claude
 
 ## Offene Punkte (für später)
 
-- [ ] `stat-l` Text-Kontrast prüfen (Accent-Hintergrund, kleiner Text)
-- [ ] `public/og-image.jpg` Platzhalter erstellen (1200×630px) — bei Live-Schaltung pflicht
-- [ ] Datenschutz-Seite: Google-Fonts-Abschnitt entfernen (jetzt self-hosted)
-- [ ] `astro:assets` `<Image>` für Kundenbilder (AVIF/WebP-Auto-Generation)
-- [ ] Conditional CSS-Loading per Design (statt alle 9 Override-CSS global)
-- [ ] Component-Map dynamisch via `import.meta.glob`
-- [ ] Design 05/10 weitere Hardcoded-Colors zu Tokens
-- [ ] Form-Group Selector entkoppeln (`global.css` umstrukturieren)
-- [ ] `theme.fonts` in `meta.json` einführen (aktuell nur in global.css editierbar)
-- [ ] `headline.split('. ')` durch strukturierte CMS-Felder ersetzen (1-3 Linien)
-- [ ] Schema.org LocalBusiness — `address` + `telephone` Pflichtfelder ergänzen
+- [x] `stat-l` Text-Kontrast — `var(--ink)` statt `var(--white)` auf Accent-Hintergrund ✓
+- [x] Datenschutz-Seite: Google-Fonts-Abschnitt durch self-hosted-Beschreibung ersetzt ✓
+- [x] Schema.org LocalBusiness — `address` + `telephone` aus `legal.json`/`meta.json` ✓
+- [x] Conditional CSS-Loading — `import.meta.glob + ?inline`, nur aktives Design im HTML ✓
+- [x] Service-Icon Hardcoded Colors → `color-mix(in srgb, var(--accent-light)/var(--sage) ...)` ✓
+
+- [ ] `public/og-image.jpg` erstellen (1200×630px, PNG/JPEG) — **Pflicht vor Live-Schaltung**.
+  Empfehlung: in Figma/Canva aus Logo + Tagline + Hintergrundfarbe (`theme.cream`) erstellen,
+  als `public/og-image.jpg` ablegen. Pfad ist in `Base.astro` bereits verdrahtet.
+
+- [ ] `astro:assets` `<Image>` für Kundenbilder — CMS-Bilder liegen in `public/uploads/` als URL-Strings.
+  Für AVIF/WebP-Auto-Generation braucht es entweder Vercel Image Service (`@astrojs/vercel`) oder
+  manuelle Konvertierung. Aktuell werden Bilder mit `loading="lazy"` + expliziten Dimensionen
+  ausgeliefert — für die meisten Projekte ausreichend. Nur angehen wenn Page-Speed kritisch.
+
+- [ ] `theme.fonts` in `meta.json` — Schriftpaar konfigurierbar machen (Serif + Sans).
+  Erfordert: neues `fonts`-Objekt in `meta.json` + CMS-Schema-Eintrag in `config.yml` +
+  `@font-face`-Generierung in `Base.astro`. Komplex, nur wenn Kunden mehrere Schriftpaare brauchen.
+
+- [ ] `headline.split('. ')` durch strukturierte CMS-Felder ersetzen — `hero.headlineLine1/2/3` statt
+  Freitext mit Punkt-Trennung. Erfordert: `content.json`-Schemaänderung + CMS-config.yml Update +
+  alle Hero-Komponenten (10×) anpassen. Erst angehen wenn CMS-UX-Problem auftritt.
+
+- [ ] Form-Group Selector entkoppeln — `.form-group input` → explizite Klassen wie `.form-input`.
+  Nur CSS-Architektur, kein funktionaler Unterschied. Niedrige Priorität.
+
+- [ ] Component-Map dynamisch via `import.meta.glob` — die explizite 10-Einträge-Map in `index.astro`
+  durch Glob ersetzen. Aktuell ist die explizite Map verständlicher; erst bei > 12 Designs lohnt
+  die Abstraktion.

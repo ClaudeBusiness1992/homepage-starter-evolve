@@ -97,7 +97,7 @@ const navLinks = [
     {s.services.enabled  && <Services  {...s.services} />}
     {x.active?.gallery   && x.gallery  && <Gallery   {...x.gallery} />}
     {s.pricing?.enabled  && <Pricing   {...s.pricing} />}
-    {x.active?.reviews   && x.reviews  && <Reviews  {...x.reviews} stats={s.stats?.enabled ? s.stats.items : []} agencyName={meta.siteName} agencyUrl={Astro.site?.href} />}
+    {x.active?.reviews   && x.reviews  && <Reviews  {...x.reviews} stats={s.stats?.enabled ? s.stats.items : []} agencyName={meta.siteName} agencyUrl={Astro.site?.href} telephone={meta.phone} />}
     {x.active?.booking   && x.booking  && <Booking  {...x.booking} />}
     {(s.contact?.enabled || s.footer?.enabled) && (
       <div class="contact-footer-snap">
