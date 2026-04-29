@@ -199,7 +199,7 @@ const navLinks = [
     wheelAcc += e.deltaY;
     clearTimeout(wheelTimer);
     wheelTimer = setTimeout(() => { wheelAcc = 0; }, 200);
-    if (Math.abs(wheelAcc) < 60) return;   // Mindest-Delta für einen echten Scroll
+    if (Math.abs(wheelAcc) < 66) return;   // Mindest-Delta für einen echten Scroll
     const dir = wheelAcc;
     wheelAcc = 0;
     clearTimeout(wheelTimer);

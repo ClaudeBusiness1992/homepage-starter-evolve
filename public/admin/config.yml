@@ -199,6 +199,7 @@ collections:
                   - label: "Bilder"
                     name: "items"
                     widget: "list"
+                    summary: "{{caption}} · {{category}}"
                     fields:
                       - { label: "Bild", name: "src", widget: "image" }
                       - { label: "Alt-Text", name: "alt", widget: "string" }

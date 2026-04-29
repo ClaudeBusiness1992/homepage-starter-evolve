@@ -13,18 +13,19 @@
       "label": "Das Team",
       "headline": "Zwei Köpfe, eine Leidenschaft",
       "subline": "Wir sind ein kleines, eingespieltes Team aus Designer und Entwickler — und wir lieben es, Ideen in funktionierende Websites zu verwandeln.",
+      "intro": "Wir glauben, dass jedes Unternehmen — egal wie klein — eine Website verdient, die wirklich wirkt. Deshalb arbeiten wir persönlich, direkt und ohne Agentur-Overhead. Hier kannst du euren gemeinsamen Ansatz, eure Geschichte oder das beschreiben, was euch von anderen unterscheidet.",
       "members": [
         {
           "name": "[Dein Name]",
           "role": "Design & Konzept",
-          "bio": "Hier deine persönliche Beschreibung einfügen. Was treibt dich an? Was machst du besonders gerne? Was bringst du aus deiner Erfahrung mit?",
-          "photo": ""
+          "bio": "Hier deine persönliche Beschreibung einfügen — was treibt dich an, was bringst du aus deiner Erfahrung mit, was machst du besonders gerne?",
+          "photo": "https://i.pravatar.cc/600?img=65"
         },
         {
           "name": "[Dein Name]",
           "role": "Entwicklung & SEO",
-          "bio": "Hier deine persönliche Beschreibung einfügen. Was treibt dich an? Was machst du besonders gerne? Was bringst du aus deiner Erfahrung mit?",
-          "photo": ""
+          "bio": "Hier deine persönliche Beschreibung einfügen — was treibt dich an, was bringst du aus deiner Erfahrung mit, was machst du besonders gerne?",
+          "photo": "https://i.pravatar.cc/600?img=57"
         }
       ]
     },

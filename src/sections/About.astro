@@ -10,18 +10,20 @@ interface Props {
   label: string;
   headline: string;
   subline: string;
+  intro?: string;
   members: Member[];
 }
-const { label, headline, subline, members } = Astro.props;
+const { label, headline, subline, intro, members } = Astro.props;
 ---
 
 <section class="section" id="about">
   <div class="wrap">
     <SectionHeader {label} {headline} {subline} center />
+    {intro && <p class="about-intro r">{intro}</p>}
     <div class="about-grid">
       {members.map((m, i) => (
         <div class={`acard r d${i + 1}`}>
-          <div class="aphoto" {...(m.photo ? {'data-lightbox': m.photo, 'data-alt': m.name} : {})}>
+          <div class="aphoto" {...(m.photo ? {'data-lightbox': m.photo, 'data-alt': m.name, 'data-caption': m.name, 'data-category': m.role} : {})}>
             {m.photo
               ? <img src={m.photo} alt={m.name} width="600" height="800" loading="lazy" />
               : <div class="aphoto-placeholder">Foto hier einfügen<br />600 × 800 px empfohlen</div>

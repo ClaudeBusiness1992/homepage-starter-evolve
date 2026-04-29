@@ -415,6 +415,53 @@
       });
 
       CMS.registerWidget('design-picker', DesignPickerControl, null);
+
+      // ── Gallery preview panel for "erweiterungen" entry ──────────────
+      var ErweiterungenPreview = createClass({
+        render: function() {
+          var entry    = this.props.entry;
+          var extras   = entry.getIn(['data', 'extras']);
+          var gallery  = extras && extras.get('gallery');
+          var items    = gallery && gallery.get('items');
+          var active   = extras && extras.getIn(['active', 'gallery']);
+          var arr      = items ? items.toJS() : [];
+
+          var wrap = function(children) {
+            return h('div', { style: { fontFamily: 'system-ui, -apple-system, sans-serif', padding: '20px', boxSizing: 'border-box' } }, children);
+          };
+
+          if (!arr.length) {
+            return wrap(h('p', { style: { color: '#9ca3af', fontSize: '13px' } }, 'Noch keine Galerie-Bilder vorhanden.'));
+          }
+
+          return wrap([
+            h('div', { key: 'hd', style: { display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px', flexWrap: 'wrap' } },
+              h('span', { style: { fontSize: '15px', fontWeight: 700, color: '#111827' } }, 'Galerie-Vorschau'),
+              h('span', { style: {
+                fontSize: '11px', fontWeight: 600, padding: '2px 9px', borderRadius: '100px',
+                background: active ? '#dcfce7' : '#fee2e2',
+                color:      active ? '#166534' : '#991b1b',
+              } }, active ? '● aktiv' : '○ inaktiv'),
+              h('span', { style: { fontSize: '12px', color: '#9ca3af' } }, arr.length + ' Bilder')
+            ),
+            h('div', { key: 'grid', style: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '10px' } },
+              arr.map(function(item, i) {
+                return h('div', { key: i, style: { borderRadius: '8px', overflow: 'hidden', border: '1px solid #e5e7eb', boxShadow: '0 2px 8px rgba(0,0,0,.07)' } },
+                  item.src
+                    ? h('img', { src: item.src, alt: item.alt || '', style: { width: '100%', height: '110px', objectFit: 'cover', display: 'block' } })
+                    : h('div', { style: { height: '110px', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af', fontSize: '11px' } }, 'Kein Bild'),
+                  h('div', { style: { padding: '6px 9px', background: '#fff' } },
+                    item.category && h('div', { style: { fontSize: '9px', fontWeight: 700, letterSpacing: '.1em', textTransform: 'uppercase', color: '#e8631b', marginBottom: '2px' } }, item.category),
+                    h('div', { style: { fontSize: '11px', fontWeight: 600, color: '#1a1a2e', lineHeight: 1.3 } }, item.caption || '—')
+                  )
+                );
+              })
+            )
+          ]);
+        }
+      });
+
+      CMS.registerPreviewTemplate('erweiterungen', ErweiterungenPreview);
     </script>
   </body>
 </html>
