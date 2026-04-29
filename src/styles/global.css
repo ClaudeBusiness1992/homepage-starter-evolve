@@ -995,6 +995,7 @@ body:has(.countdown--card)   { --cd-h: 320px; }
   padding: .25rem var(--gal-peek) .25rem 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  touch-action: pan-x;
 }
 @media (max-width: 900px) { .gallery-grid { --gal-visible: 2; } }
 @media (max-width: 600px) { .gallery-grid { --gal-visible: 1.05; } }
@@ -1109,6 +1110,7 @@ body:has(.countdown--card)   { --cd-h: 320px; }
   scroll-padding-inline-start: 1.5rem;
   padding: .25rem var(--rev-peek) .25rem 1.5rem;
   scrollbar-width: none;
+  touch-action: pan-x;
 }
 .reviews-grid::-webkit-scrollbar { display: none; }
 .reviews-grid > .review-card { scroll-snap-align: start; }
