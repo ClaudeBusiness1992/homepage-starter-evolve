@@ -170,9 +170,21 @@ const navLinks = [
     }
   };
 
-  // Wheel: intercept vertical scrolls; let horizontal pass through (carousels)
+  // Ist el innerhalb eines horizontal scrollbaren Containers?
+  const inHScroll = (el) => {
+    while (el && el !== document.body) {
+      const s = window.getComputedStyle(el);
+      if ((s.overflowX === 'auto' || s.overflowX === 'scroll')
+          && el.scrollWidth > el.clientWidth + 2) return true;
+      el = el.parentElement;
+    }
+    return false;
+  };
+
+  // Wheel: nur klar-vertikale Gesten abfangen; diagonal / horizontal → Karussell
   window.addEventListener('wheel', (e) => {
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) return; // diagonal / horizontal
+    if (inHScroll(e.target)) return;                             // innerhalb Karussell
     e.preventDefault();
     go(e.deltaY);
   }, { passive: false });
