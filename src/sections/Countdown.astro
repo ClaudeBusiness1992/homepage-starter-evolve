@@ -88,6 +88,23 @@ const dateFmt = (() => {
 </section>
 
 <script is:inline>
+  // Measure actual countdown height and expose as --cd-h so the hero can fill
+  // the remaining viewport (countdown + hero = 100dvh) regardless of variant/content.
+  (() => {
+    const cd = document.querySelector('.countdown-section');
+    if (!cd) return;
+    const setH = () => {
+      document.documentElement.style.setProperty('--cd-h', cd.offsetHeight + 'px');
+    };
+    setH();
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(setH).observe(cd);
+    } else {
+      window.addEventListener('resize', setH);
+      window.addEventListener('orientationchange', setH);
+    }
+  })();
+
   (() => {
     const root = document.querySelector('#countdown [data-target]');
     if (!root) return;

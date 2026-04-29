@@ -26,9 +26,10 @@ interface Props {
     sage: string;
   };
   design?: string;
+  noindex?: boolean;
 }
 
-const { meta, theme, design = '01-warm-local' } = Astro.props;
+const { meta, theme, design = '01-warm-local', noindex = false } = Astro.props;
 const canonicalUrl = Astro.url.href;
 const ogImage = meta.image ?? '/og-image.jpg';
 
@@ -48,6 +49,7 @@ const themeStyle = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{meta.siteName}</title>
     <meta name="description" content={meta.description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="preload" as="font" type="font/woff2" href="/fonts/dm-serif-display-normal-400-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/outfit-normal-400-latin.woff2" crossorigin />
     <link rel="canonical" href={canonicalUrl} />
@@ -91,6 +93,7 @@ const themeStyle = `
         burger?.classList.toggle('x', open);
         navLinks?.classList.toggle('open', open);
         burger?.setAttribute('aria-expanded', String(open));
+        navLinks?.setAttribute('aria-hidden', String(!open));
       }
 
       burger?.addEventListener('click', () => setNavOpen(!navLinks?.classList.contains('open')));
@@ -129,6 +132,30 @@ const themeStyle = `
       }, { threshold: 0.14 });
 
       document.querySelectorAll('.r').forEach(el => io.observe(el));
+
+      // Scroll-Spy: aktiver Nav-Link spiegelt sichtbare Section
+      (() => {
+        const linkMap = new Map();
+        document.querySelectorAll('#navLinks a[href*="#"]').forEach(a => {
+          const id = a.getAttribute('href').split('#')[1];
+          if (id) linkMap.set(id, a);
+        });
+        if (!linkMap.size) return;
+        const sections = [...linkMap.keys()]
+          .map(id => document.getElementById(id))
+          .filter(Boolean);
+        if (!sections.length) return;
+        const setActive = (id) => {
+          linkMap.forEach((a, k) => a.classList.toggle('active', k === id));
+        };
+        const spy = new IntersectionObserver((entries) => {
+          // wähle den Eintrag mit höchstem Sichtbarkeitsanteil
+          const visible = entries.filter(e => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          if (visible[0]) setActive(visible[0].target.id);
+        }, { threshold: [0.4, 0.6, 0.8], rootMargin: `-${getComputedStyle(document.documentElement).getPropertyValue('--nav-h') || '70px'} 0px -30% 0px` });
+        sections.forEach(s => spy.observe(s));
+      })();
     </script>
   </body>
 </html>

@@ -440,8 +440,8 @@
   border-radius: 12px;
   color: var(--po-text);
 }
-[data-design="10-pop-studio"] .form-group input:focus,
-[data-design="10-pop-studio"] .form-group textarea:focus {
+[data-design="10-pop-studio"] .form-group input:focus-visible,
+[data-design="10-pop-studio"] .form-group textarea:focus-visible {
   border-color: var(--po-accent);
   box-shadow: 4px 4px 0 var(--po-accent);
 }

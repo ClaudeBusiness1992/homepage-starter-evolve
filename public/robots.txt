@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
 
 # Sitemap-URL vor Live-Schaltung auf Produktionsdomain anpassen (astro.config.mjs → site)
 Sitemap: https://ihre-domain.de/sitemap-index.xml

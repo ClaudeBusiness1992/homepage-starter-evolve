@@ -480,8 +480,8 @@
   font-family: var(--mono);
   border-radius: 4px;
 }
-[data-design="07-terminal-console"] .form-group input:focus,
-[data-design="07-terminal-console"] .form-group textarea:focus {
+[data-design="07-terminal-console"] .form-group input:focus-visible,
+[data-design="07-terminal-console"] .form-group textarea:focus-visible {
   border-color: var(--tc-accent);
   box-shadow: 0 0 0 1px var(--tc-accent);
 }
@@ -546,9 +546,9 @@
   font-family: var(--mono);
   border-radius: 4px;
 }
-[data-design="07-terminal-console"] .bk-grid input:focus,
-[data-design="07-terminal-console"] .bk-grid select:focus,
-[data-design="07-terminal-console"] .bk-grid textarea:focus {
+[data-design="07-terminal-console"] .bk-grid input:focus-visible,
+[data-design="07-terminal-console"] .bk-grid select:focus-visible,
+[data-design="07-terminal-console"] .bk-grid textarea:focus-visible {
   border-color: var(--tc-accent);
   box-shadow: 0 0 0 1px var(--tc-accent);
 }

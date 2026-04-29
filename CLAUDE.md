@@ -144,6 +144,46 @@ Vollständige Liste aus `global.css` `:root`:
 
 ---
 
+## Fullpage-Scroll-Snap-Layout
+
+Der One-Pager nutzt CSS `scroll-snap-type: y mandatory` auf `html`. Jede Sektion belegt genau eine Viewport-Höhe.
+
+### Geometrie-Regel
+
+| Snap-Target | Height | Warum |
+|---|---|---|
+| `.hero-snap` (offsetTop = 0) | `100dvh` + `padding-top: var(--nav-h)` | JS scrollt auf `max(0, 0 − 72) = 0`. Viewport zeigt y=0..800. Ohne padding wäre der Countdown hinter der Nav. `calc(100dvh − nav-h)` würde About 72 px früher einblenden. |
+| `main > section` (offsetTop > 0) | `calc(100dvh − var(--nav-h))` | JS scrollt auf `offsetTop − navH`. Sektion füllt y=72..800 exakt. |
+| `.contact-footer-snap` | `calc(100dvh − var(--nav-h))` | Wie alle anderen Sektionen. |
+
+**Wichtig:** Die `main > section`-Regel greift nur auf **direkte Kinder von `<main>`**. Sections innerhalb von `.hero-snap` (Countdown, Hero) und `.contact-footer-snap` (Contact, Footer) sind **keine** direkten Kinder — sie erben die Höhe nicht und müssen separat geregelt werden.
+
+### Fill-Height-Sections (About / Services / Gallery / Reviews)
+
+Damit Inhalte den gesamten verfügbaren Raum nutzen (statt zu zentrieren und unten abzuschneiden):
+
+```css
+/* Wrap wird Flex-Container, füllt die gesamte Section-Höhe */
+#about > .wrap,
+#services > .wrap,
+#gallery > .wrap,
+#reviews > .wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+/* Content-Grid nimmt den Restplatz nach section-hd ein */
+#about .about-grid    { flex: 1; min-height: 0; }
+#services .srv-grid   { flex: 1; min-height: 0; }
+#gallery .gallery-carousel { flex: 1; min-height: 0; }
+#reviews .reviews-carousel { flex: 1; min-height: 0; }
+```
+
+Gallery-Bilder nutzen `position: absolute; inset: 0` statt `aspect-ratio`, weil aspect-ratio mit flex-allocated row-height kollidiert.
+
+---
+
 ## Komponenten
 
 | Komponente | Props | Zweck |
@@ -276,19 +316,40 @@ vercel --prod         # Produktions-Deploy
 
 ---
 
-## Audit-Slash-Commands
+## Sub-Agents (8 nummerierte Audit-Agenten)
 
-7 Qualitäts-Audits, im Projekt-Root via Claude Code:
+Alle Audits sind als **Sub-Agents** unter `.claude/agents/` abgelegt — KEINE Slash-Commands mehr. Aufruf via `Agent`-Tool mit `subagent_type: "<n>-<name>"` oder vom Hauptagent automatisch.
 
-| Command | Prüft | Wann |
-|---|---|---|
-| `/audit-architecture` | Modul-Grenzen, Dependency-Richtung | Nach Refactoring |
-| `/audit-customizing` | Hardcoded Werte, Customizing-Readiness | Pro Kunden-Branch |
-| `/audit-quality` | Naming, Duplikate, Dead Code | Wöchentlich |
-| `/audit-ui` | Komponenten-Konsistenz, Button-States | Nach Style-Änderungen |
-| `/audit-a11y` | WCAG 2.1 AA, ARIA, Kontraste | Vor Release |
-| `/audit-performance` | Bundle, Bilder, Hydration | Vor Release |
-| `/audit-security-seo` | CSP, Meta-Tags, Sitemap | Vor Live-Schaltung |
+| # | Sub-Agent | Prüft | Wann |
+|---|---|---|---|
+| 1 | `1-architecture` | Modul-Grenzen, Dependency-Richtung, Layer-Trennung | Nach Refactoring |
+| 2 | `2-customizing` | Hardcoded Werte, Customizing-Readiness, Branding-Boundaries | Pro Kunden-Branch |
+| 3 | `3-quality` | Naming, Duplikate, Dead Code, Komplexität | Wöchentlich / vor Merge |
+| 4 | `4-ui` | Komponenten-Konsistenz, Tokens, Button-States (statisch) | Nach Style-Änderungen |
+| 5 | `5-a11y` | WCAG 2.1 AA, ARIA, semantisches HTML, Kontraste | Vor Release |
+| 6 | `6-performance` | Bundle, Bilder, Hydration, Render-Kosten | Vor Release |
+| 7 | `7-security-seo` | Secrets, XSS, CSP, Meta-Tags, Sitemap, JSON-LD | Vor Live-Schaltung |
+| 8 | `8-visual-tester` | **Live-Browser-Test:** Layout, Snap, Bündigkeit, Empty-Space, Kontrast (Mobile/Laptop/Desktop via Playwright) | Vor jeder „fertig"-Meldung bei UI-/Layout-Änderungen |
+
+### Trigger: „starte die sub agents"
+
+Wenn der User **„starte die sub agents"** (oder eine eindeutige Variante davon) sagt, **alle 8 Sub-Agents parallel anstoßen** über mehrere `Agent`-Tool-Calls in einer einzigen Message. Danach die 8 Reports zu einem Gesamt-Audit aggregieren mit:
+
+- **Health-Score-Übersicht** pro Bereich
+- **Kritische Befunde** (Critical über alle Agents)
+- **Top-10 Fix-Priorität** (cross-cutting nach Impact)
+- **Empfohlener Fix-Workflow** (Reihenfolge: Architektur → Customizing → Quality → UI → A11y → Perf → Sec/SEO → Visual)
+
+### Voraussetzungen für `8-visual-tester`
+
+- Playwright installiert: `pnpm add -D playwright && npx playwright install chromium`
+- Dev-Server läuft: `pnpm dev` (default `http://localhost:4321`)
+- Script: `tools/visual-test.mjs`
+- Output: `.screenshots/<timestamp>/<viewport>/` (gitignored)
+
+### Einzelaufruf
+
+Wenn nur ein Aspekt geprüft werden soll, einzelnen Sub-Agent direkt via `Agent`-Tool aufrufen, z.B. `subagent_type: "8-visual-tester"` mit konkretem Prompt für das Layout-Problem.
 
 ---
 

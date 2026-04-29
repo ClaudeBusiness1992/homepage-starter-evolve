@@ -134,7 +134,7 @@
 
 /* Services — CREAM (statt .section--dark) mit subtilen accent-cards */
 [data-design="01-warm-local"] #services {
-  background: var(--wl-bg-warm);
+  background: var(--wl-bg);
   color: var(--wl-text);
   border-top: 1px solid var(--wl-line-soft);
   border-bottom: 1px solid var(--wl-line-soft);
@@ -173,7 +173,7 @@
 
 /* Gallery — CREAM (statt dunkel) */
 [data-design="01-warm-local"] #gallery {
-  background: var(--wl-bg-soft);
+  background: var(--wl-bg);
   color: var(--wl-text);
 }
 [data-design="01-warm-local"] #gallery .h2 { color: var(--wl-text); }
@@ -223,7 +223,7 @@
 [data-design="01-warm-local"] .pricing-note a { color: var(--wl-accent); }
 
 /* Reviews — cream */
-[data-design="01-warm-local"] #reviews { background: var(--wl-bg-soft); }
+[data-design="01-warm-local"] #reviews { background: var(--wl-bg); }
 [data-design="01-warm-local"] .review-card {
   background: var(--wl-surface);
   border: 1px solid var(--wl-line-soft);
