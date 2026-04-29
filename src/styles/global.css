@@ -467,8 +467,8 @@ main > section:not(#hero) > .wrap {
 .sico { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font-size: 1.2rem; margin-bottom: .8rem; }
 .scard:nth-child(1) .sico { background: color-mix(in srgb, var(--accent) 15%, transparent); }
 .scard:nth-child(2) .sico { background: color-mix(in srgb, var(--sage) 20%, transparent); }
-.scard:nth-child(3) .sico { background: rgba(255,140,66,.14); }
-.scard:nth-child(4) .sico { background: rgba(124,111,154,.2); }
+.scard:nth-child(3) .sico { background: color-mix(in srgb, var(--accent-light) 14%, transparent); }
+.scard:nth-child(4) .sico { background: color-mix(in srgb, var(--sage) 20%, transparent); }
 .scard:nth-child(5) .sico { background: color-mix(in srgb, var(--accent) 15%, transparent); }
 .scard:nth-child(6) .sico { background: color-mix(in srgb, var(--sage) 20%, transparent); }
 .stitle { font-family: var(--serif); font-size: 1.15rem; margin-bottom: .35rem; color: var(--cream); text-wrap: balance; }
@@ -478,7 +478,7 @@ main > section:not(#hero) > .wrap {
 #stats { background: var(--accent); padding: 4rem 0; }
 .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; text-align: center; }
 .stat-n { font-family: var(--serif); font-size: clamp(2.5rem,5vw,4rem); color: var(--white); line-height: 1; margin-bottom: .35rem; }
-.stat-l { font-size: .88rem; font-weight: 500; color: var(--white); }
+.stat-l { font-size: .88rem; font-weight: 500; color: var(--ink); }
 
 /* ── PRICING ── */
 #pricing { background: var(--cream); }
