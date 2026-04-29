@@ -1,0 +1,185 @@
+---
+// Lightbox — triggered by any element with data-lightbox="<src>" data-alt="<alt>"
+---
+
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Bild in Vollansicht">
+  <div class="lb-bg"></div>
+  <div class="lb-box">
+    <button class="lb-close" type="button" aria-label="Schließen">✕</button>
+    <img class="lb-img" src="" alt="" />
+  </div>
+</div>
+
+<style is:global>
+
+/* ── LIGHTBOX DIALOG ── */
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s ease, visibility .25s ease;
+}
+#lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.lb-bg {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.88);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+.lb-box {
+  position: relative;
+  width: min(60vw, 92vw);
+  height: min(60vh, 88vh);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(.88);
+  transition: transform .28s cubic-bezier(.34,1.56,.64,1);
+}
+#lightbox.is-open .lb-box { transform: scale(1); }
+
+.lb-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--r-lg);
+  display: block;
+  box-shadow: 0 40px 100px rgba(0,0,0,.7);
+}
+.lb-close {
+  position: absolute;
+  top: -2rem;
+  right: -2rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, transform .2s;
+  backdrop-filter: blur(4px);
+}
+.lb-close:hover { background: rgba(255,255,255,.28); transform: scale(1.1); }
+.lb-close:focus-visible { outline: 2px solid rgba(255,255,255,.7); outline-offset: 2px; }
+
+/* ── HOVER-TRIGGER — Gallery images ── */
+@keyframes lb-shake {
+  0%,100% { transform: rotate(0deg) scale(1); }
+  18%     { transform: rotate(-2.5deg) scale(1.04); }
+  36%     { transform: rotate(2.5deg) scale(1.04); }
+  54%     { transform: rotate(-1.5deg) scale(1.02); }
+  72%     { transform: rotate(1.5deg) scale(1.02); }
+  88%     { transform: rotate(-.5deg) scale(1.01); }
+}
+
+/* Gallery: cursor + disable default scale-hover so shake has clean slate */
+.gallery-img[data-lightbox] { cursor: zoom-in; }
+.gallery-img[data-lightbox] img {
+  transition: filter .3s ease;
+  transform: none !important; /* cancel the default :hover scale */
+}
+.gallery-img[data-lightbox]:hover img {
+  filter: grayscale(40%) brightness(.82);
+  animation: lb-shake .48s ease-out;
+}
+
+/* "Click me" badge — centered, fades + pops in on hover */
+.gallery-img[data-lightbox]::after,
+.aphoto[data-lightbox]::after {
+  content: 'Click me ↗';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(.75);
+  background: rgba(255,255,255,.95);
+  color: #1a1a2e;
+  padding: .35rem 1rem;
+  border-radius: 100px;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+  z-index: 6;
+}
+.gallery-img[data-lightbox]:hover::after,
+.aphoto[data-lightbox]:hover::after {
+  opacity: 1;
+  transform: translate(-50%,-50%) scale(1);
+}
+
+/* ── HOVER-TRIGGER — About photos ── */
+.aphoto[data-lightbox] { cursor: zoom-in; }
+.aphoto[data-lightbox] img { transition: filter .3s ease; }
+.aphoto[data-lightbox]:hover img {
+  filter: grayscale(40%) brightness(.82);
+  animation: lb-shake .48s ease-out;
+}
+
+/* Respect reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .gallery-img[data-lightbox]:hover img,
+  .aphoto[data-lightbox]:hover img { animation: none; }
+  .lb-box { transition: none; }
+}
+
+</style>
+
+<script is:inline>
+(function () {
+  const lb  = document.getElementById('lightbox');
+  if (!lb) return;
+  const img  = lb.querySelector('.lb-img');
+  const btn  = lb.querySelector('.lb-close');
+  const bg   = lb.querySelector('.lb-bg');
+
+  const open = (src, alt) => {
+    img.src = src;
+    img.alt = alt || '';
+    lb.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => btn?.focus());
+  };
+
+  const close = () => {
+    lb.classList.remove('is-open');
+    document.body.style.overflow = '';
+    lb.addEventListener('transitionend', () => { img.src = ''; }, { once: true });
+  };
+
+  // Delegation — click any [data-lightbox] element
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-lightbox]');
+    if (!t) return;
+    const src = t.dataset.lightbox || t.querySelector('img')?.src || '';
+    const alt = t.dataset.alt    || t.querySelector('img')?.alt || '';
+    if (src) open(src, alt);
+  });
+
+  btn?.addEventListener('click', close);
+  bg?.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lb.classList.contains('is-open')) close();
+  });
+}());
+</script>

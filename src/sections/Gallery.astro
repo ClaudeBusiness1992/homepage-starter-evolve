@@ -25,7 +25,8 @@ const phClasses = ['gph-a', 'gph-b', 'gph-c', 'gph-d', 'gph-e', 'gph-f'];
       <div class="gallery-grid" data-gallery-track>
         {items.map((item, i) => (
           <div class={`gallery-item r d${(i % 3) + 1}`}>
-            <div class={`gallery-img${!item.src ? ' ' + phClasses[i % phClasses.length] : ''}`}>
+            <div class={`gallery-img${!item.src ? ' ' + phClasses[i % phClasses.length] : ''}`}
+                 {...(item.src ? {'data-lightbox': item.src, 'data-alt': item.alt} : {})}>
               {item.src
                 ? <img src={item.src} alt={item.alt} width="800" height="600" loading="lazy" />
                 : <div class="gallery-placeholder">
