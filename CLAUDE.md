@@ -40,6 +40,7 @@ Alle Kunden-Werte leben in `config/`. Der Code selbst wird nie angefasst.
 | `config/design.json` | Aktives Design (ein Wert: `"design": "01-warm-local"`) |
 | `config/meta.json` | Marke: siteName, siteNameAccent, tagline, description, nav, Kontakt + theme (Farben) |
 | `config/content.json` | Seiteninhalte: alle Sektionen mit enabled-Flag, Texte, Bilder, Pakete, Bewertungen |
+| `config/extras.json` | Add-ons: Countdown, Galerie, Bewertungen, Buchung — je mit `active.<key>: true/false` |
 | `config/legal.json` | Impressum + Datenschutz: Adresse, Registernummer, Hoster etc. |
 
 ---
@@ -180,7 +181,7 @@ Damit Inhalte den gesamten verfügbaren Raum nutzen (statt zu zentrieren und unt
 #reviews .reviews-carousel { flex: 1; min-height: 0; }
 ```
 
-Gallery-Bilder nutzen `position: absolute; inset: 0` statt `aspect-ratio`, weil aspect-ratio mit flex-allocated row-height kollidiert.
+Gallery-Items sind `display: flex; flex-direction: column` — `.gallery-img` mit `flex: 1; min-height: 0` füllt den Raum, `.gallery-item-body` (Cream-Textbalken) ist `flex-shrink: 0` darunter. Kein `position: absolute; inset: 0` mehr.
 
 ---
 
@@ -191,6 +192,7 @@ Gallery-Bilder nutzen `position: absolute; inset: 0` statt `aspect-ratio`, weil 
 | `SectionHeader.astro` | `label`, `headline`, `subline`, `center?` | Wiederverwendbarer Label + H2 + Subline Block |
 | `Nav.astro` | `siteName`, `siteNameAccent?`, `links` | Navigation, Burger-Menü, Logo |
 | `CookieBanner.astro` | — | TTDSG-konformer Cookie-Banner (global in Base.astro) |
+| `Lightbox.astro` | — | Vollbild-Overlay für Galerie- und About-Bilder. Global in `Base.astro` eingebunden. Trigger: `data-lightbox="<src>"` + `data-alt` + `data-caption` + `data-category` auf jedem Element. Klick irgendwo schließt; ‹/›-Pfeile navigieren innerhalb der Section-Gruppe; Touch-Swipe; ← → Tastatur. |
 
 ### siteNameAccent
 
@@ -207,17 +209,19 @@ Kunden ohne Sonderzeichen: `siteNameAccent` weglassen.
 
 Alle in `config/content.json` mit `enabled: true/false` steuerbar. Nav filtert deaktivierte automatisch.
 
-| Sektion | Fallback-Datei | Klasse |
-|---|---|---|
-| Hero | `src/sections/Hero.astro` | — |
-| Über uns | `src/sections/About.astro` | — |
-| Leistungen | `src/sections/Services.astro` | `section--dark` |
-| Galerie | `src/sections/Gallery.astro` | `section--dark` |
-| Kennzahlen | `src/sections/Stats.astro` | — |
-| Preise | `src/sections/Pricing.astro` | — |
-| Bewertungen | `src/sections/Reviews.astro` | — |
-| Kontakt | `src/sections/Contact.astro` | `section--dark` |
-| Footer | `src/sections/Footer.astro` | — |
+| Sektion | Fallback-Datei | Klasse | Quelle |
+|---|---|---|---|
+| Hero | `src/sections/Hero.astro` | — | `content.json` |
+| Über uns | `src/sections/About.astro` | — | `content.json` — unterstützt `intro` (Freitext) + `members[].photo` (Lightbox) |
+| Leistungen | `src/sections/Services.astro` | `section--dark` | `content.json` |
+| Galerie | `src/sections/Gallery.astro` | `section--dark` | `extras.json` (Add-on) |
+| Kennzahlen | `src/sections/Stats.astro` | — | `content.json` |
+| Preise | `src/sections/Pricing.astro` | — | `content.json` |
+| Bewertungen | `src/sections/Reviews.astro` | — | `extras.json` (Add-on) |
+| Buchung | `src/sections/Booking.astro` | — | `extras.json` (Add-on) |
+| Countdown | `src/sections/Countdown.astro` | — | `extras.json` (Add-on) — wird in `.hero-snap` über dem Hero eingeblendet |
+| Kontakt | `src/sections/Contact.astro` | `section--dark` | `content.json` |
+| Footer | `src/sections/Footer.astro` | — | `content.json` |
 
 ---
 
@@ -271,7 +275,7 @@ Kunden können Inhalte ohne Code-Zugriff bearbeiten.
 | Design auswählen | `config/design.json` | Aktives Layout |
 | Stammdaten & Design | `config/meta.json` | Name, Farben, Kontakt, Navigation |
 | Inhalte | `config/content.json` | Texte, Bilder, Pakete |
-| Erweiterungen / Add-ons | `config/extras.json` | Countdown, Bewertungen, Buchung (alle deaktivierbar) |
+| Erweiterungen / Add-ons | `config/extras.json` | Countdown, Galerie, Bewertungen, Buchung — Toggle + Inhalte. Galerie: visuelles Bild-Preview-Panel im Admin (rechts). |
 | Firmendaten & Impressum | `config/legal.json` | Adresse, Register, Hoster |
 
 ### Add-ons (Erweiterungen)

@@ -1,18 +1,20 @@
 ---
-// Lightbox — triggered by any element with data-lightbox="<src>" data-alt="<alt>"
+// Lightbox — triggered by any element with data-lightbox="<src>" data-alt="<alt>" data-caption="<text>"
 ---
 
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="Bild in Vollansicht">
   <div class="lb-bg"></div>
   <div class="lb-box">
-    <button class="lb-close" type="button" aria-label="Schließen">✕</button>
+    <button class="lb-arr lb-prev" type="button" aria-label="Vorheriges Bild" hidden>‹</button>
     <img class="lb-img" src="" alt="" />
+    <button class="lb-arr lb-next" type="button" aria-label="Nächstes Bild" hidden>›</button>
+    <div class="lb-caption"></div>
   </div>
 </div>
 
 <style is:global>
 
-/* ── LIGHTBOX DIALOG ── */
+/* ── LIGHTBOX OVERLAY ── */
 #lightbox {
   position: fixed;
   inset: 0;
@@ -24,10 +26,8 @@
   visibility: hidden;
   transition: opacity .25s ease, visibility .25s ease;
 }
-#lightbox.is-open {
-  opacity: 1;
-  visibility: visible;
-}
+#lightbox.is-open { opacity: 1; visibility: visible; }
+
 .lb-bg {
   position: absolute;
   inset: 0;
@@ -35,40 +35,48 @@
   backdrop-filter: blur(6px);
   cursor: pointer;
 }
+
+/* ── BOX — wraps tightly around image width ── */
 .lb-box {
   position: relative;
-  width: min(60vw, 92vw);
-  height: min(60vh, 88vh);
   z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-flex;
+  flex-direction: column;
+  overflow: visible;      /* buttons dürfen außerhalb liegen */
   transform: scale(.88);
   transition: transform .28s cubic-bezier(.34,1.56,.64,1);
 }
 #lightbox.is-open .lb-box { transform: scale(1); }
 
+/* ── BILD — 80 % Bildschirm, Platz für Caption abgezogen ── */
 .lb-img {
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 80vw;
+  max-height: calc(80vh - 3.5rem);
   width: auto;
   height: auto;
   object-fit: contain;
-  border-radius: var(--r-lg);
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
   display: block;
-  box-shadow: 0 40px 100px rgba(0,0,0,.7);
+  box-shadow: 0 32px 90px rgba(0,0,0,.75);
+  flex-shrink: 0;
+  cursor: pointer;
 }
-.lb-close {
+
+/* ── PFEILE — 0.5 rem Abstand zur linken / rechten Bildkante ── */
+.lb-arr {
   position: absolute;
-  top: -2rem;
-  right: -2rem;
-  width: 2.25rem;
-  height: 2.25rem;
-  background: rgba(255,255,255,.15);
-  border: 1px solid rgba(255,255,255,.3);
+  /* Bildmitte = Mitte lb-box minus halbe Caption-Höhe (≈1.75rem) */
+  top: calc(50% - 1.75rem);
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.25);
   border-radius: 50%;
   color: #fff;
-  font-size: 1rem;
+  font-size: 1.4rem;
+  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -76,37 +84,59 @@
   transition: background .2s, transform .2s;
   backdrop-filter: blur(4px);
 }
-.lb-close:hover { background: rgba(255,255,255,.28); transform: scale(1.1); }
-.lb-close:focus-visible { outline: 2px solid rgba(255,255,255,.7); outline-offset: 2px; }
+.lb-arr:hover { background: rgba(255,255,255,.26); transform: translateY(-50%) scale(1.08); }
+.lb-arr:focus-visible { outline: 2px solid rgba(255,255,255,.7); outline-offset: 2px; }
+/* right-edge of prev = .5rem left of lb-box left edge */
+.lb-prev { right: calc(100% + .5rem); }
+/* left-edge of next = .5rem right of lb-box right edge */
+.lb-next { left:  calc(100% + .5rem); }
+.lb-arr[hidden] { display: none; }
 
-/* ── HOVER-TRIGGER — Gallery images ── */
+/* ── CAPTION — weiß wie About-Karte ── */
+.lb-caption {
+  min-height: 2.8rem;
+  padding: .6rem 1.1rem;
+  background: #ffffff;
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+  color: var(--ink, #1a1a2e);
+  font-size: .82rem;
+  font-weight: 500;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── HOVER-TRIGGER ── */
 @keyframes lb-shake {
   0%,100% { transform: rotate(0deg) scale(1); }
-  18%     { transform: rotate(-2.5deg) scale(1.04); }
-  36%     { transform: rotate(2.5deg) scale(1.04); }
-  54%     { transform: rotate(-1.5deg) scale(1.02); }
-  72%     { transform: rotate(1.5deg) scale(1.02); }
-  88%     { transform: rotate(-.5deg) scale(1.01); }
+  20%     { transform: rotate(-1.2deg) scale(1.015); }
+  40%     { transform: rotate(1.2deg)  scale(1.015); }
+  60%     { transform: rotate(-.7deg)  scale(1.008); }
+  80%     { transform: rotate(.7deg)   scale(1.008); }
 }
 
-/* Gallery: cursor + disable default scale-hover so shake has clean slate */
 .gallery-img[data-lightbox] { cursor: zoom-in; }
-.gallery-img[data-lightbox] img {
-  transition: filter .3s ease;
-  transform: none !important; /* cancel the default :hover scale */
-}
+.gallery-img[data-lightbox] img { transition: filter .3s ease; }
 .gallery-img[data-lightbox]:hover img {
-  filter: grayscale(40%) brightness(.82);
-  animation: lb-shake .48s ease-out;
+  filter: grayscale(35%) brightness(.85);
+  animation: lb-shake .55s ease-out forwards;
 }
 
-/* "Click me" badge — centered, fades + pops in on hover */
+.aphoto[data-lightbox] { cursor: zoom-in; }
+.aphoto[data-lightbox] img { transition: filter .3s ease; }
+.aphoto[data-lightbox]:hover img {
+  filter: grayscale(35%) brightness(.85);
+  animation: lb-shake .55s ease-out forwards;
+}
+
+/* "Click me" badge */
 .gallery-img[data-lightbox]::after,
 .aphoto[data-lightbox]::after {
   content: 'Click me ↗';
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%,-50%) scale(.75);
   background: rgba(255,255,255,.95);
   color: #1a1a2e;
@@ -128,37 +158,52 @@
   transform: translate(-50%,-50%) scale(1);
 }
 
-/* ── HOVER-TRIGGER — About photos ── */
-.aphoto[data-lightbox] { cursor: zoom-in; }
-.aphoto[data-lightbox] img { transition: filter .3s ease; }
-.aphoto[data-lightbox]:hover img {
-  filter: grayscale(40%) brightness(.82);
-  animation: lb-shake .48s ease-out;
-}
-
-/* Respect reduced-motion */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .gallery-img[data-lightbox]:hover img,
   .aphoto[data-lightbox]:hover img { animation: none; }
   .lb-box { transition: none; }
 }
 
+/* Mobile: Pfeile ins Bild wenn kein Platz daneben */
+@media (max-width: 700px) {
+  .lb-prev { right: auto; left: .5rem; top: 50%; }
+  .lb-next { left: auto; right: .5rem; top: 50%; }
+}
+
 </style>
 
 <script is:inline>
 (function () {
-  const lb  = document.getElementById('lightbox');
+  const lb        = document.getElementById('lightbox');
   if (!lb) return;
-  const img  = lb.querySelector('.lb-img');
-  const btn  = lb.querySelector('.lb-close');
-  const bg   = lb.querySelector('.lb-bg');
+  const img       = lb.querySelector('.lb-img');
+  const bg        = lb.querySelector('.lb-bg');
+  const btnPrev   = lb.querySelector('.lb-prev');
+  const btnNext   = lb.querySelector('.lb-next');
+  const captionEl = lb.querySelector('.lb-caption');
 
-  const open = (src, alt) => {
-    img.src = src;
-    img.alt = alt || '';
+  let srcs = [];
+  let idx  = 0;
+
+  const showSlide = (i) => {
+    img.src = srcs[i].src;
+    img.alt = srcs[i].alt || '';
+    if (captionEl) {
+      const parts = [srcs[i].category, srcs[i].caption].filter(Boolean);
+      captionEl.textContent = parts.length ? parts.join(' — ') : ' ';
+    }
+    if (btnPrev) btnPrev.hidden = srcs.length <= 1 || i === 0;
+    if (btnNext) btnNext.hidden = srcs.length <= 1 || i === srcs.length - 1;
+  };
+
+  const open = (src, alt, group) => {
+    srcs = (group && group.length) ? group : [{ src, alt }];
+    idx  = srcs.findIndex(s => s.src === src);
+    if (idx < 0) idx = 0;
+    showSlide(idx);
     lb.classList.add('is-open');
     document.body.style.overflow = 'hidden';
-    requestAnimationFrame(() => btn?.focus());
   };
 
   const close = () => {
@@ -167,19 +212,49 @@
     lb.addEventListener('transitionend', () => { img.src = ''; }, { once: true });
   };
 
-  // Delegation — click any [data-lightbox] element
+  const goPrev = () => { if (idx > 0)               { idx--; showSlide(idx); } };
+  const goNext = () => { if (idx < srcs.length - 1) { idx++; showSlide(idx); } };
+
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-lightbox]');
     if (!t) return;
     const src = t.dataset.lightbox || t.querySelector('img')?.src || '';
-    const alt = t.dataset.alt    || t.querySelector('img')?.alt || '';
-    if (src) open(src, alt);
+    const alt = t.dataset.alt      || t.querySelector('img')?.alt || '';
+    if (!src) return;
+    const section = t.closest('section');
+    const group = section
+      ? [...section.querySelectorAll('[data-lightbox]')]
+          .filter(el => el.dataset.lightbox)
+          .map(el => ({
+            src:      el.dataset.lightbox,
+            alt:      el.dataset.alt      || el.querySelector('img')?.alt || '',
+            caption:  el.dataset.caption  || '',
+            category: el.dataset.category || '',
+          }))
+      : null;
+    open(src, alt, group);
   });
 
-  btn?.addEventListener('click', close);
-  bg?.addEventListener('click', close);
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lb.classList.contains('is-open')) close();
+  lb.addEventListener('click', (e) => {
+    if (!e.target.closest('.lb-arr')) close();
   });
+  btnPrev?.addEventListener('click', (e) => { e.stopPropagation(); goPrev(); });
+  btnNext?.addEventListener('click', (e) => { e.stopPropagation(); goNext(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('is-open')) return;
+    if (e.key === 'Escape')     close();
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); goPrev(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); goNext(); }
+  });
+
+  let touchStartX = 0;
+  lb.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  lb.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) { dx < 0 ? goNext() : goPrev(); }
+  }, { passive: true });
 }());
 </script>
