@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import CookieBanner from '../components/CookieBanner.astro';
+import Lightbox from '../components/Lightbox.astro';
 
 // Nur das aktive Design laden — alle anderen werden nicht in die Seite injiziert.
 // import.meta.glob mit ?inline liefert CSS als String; eager: true löst beim Build auf.
@@ -70,6 +71,7 @@ const themeStyle = `
     <a href="#main" class="skip-link">Zum Inhalt springen</a>
     <slot />
     <CookieBanner />
+    <Lightbox />
 
     <script is:inline>
       // Reload immer oben starten — sonst verbirgt scroll-restoration den Countdown-Header
