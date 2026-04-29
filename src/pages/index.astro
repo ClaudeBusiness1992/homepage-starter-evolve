@@ -152,9 +152,9 @@ const navLinks = [
     window.scrollTo({ top, behavior: 'smooth' });
 
     const done = () => {
-      html.style.scrollSnapType = '';         // re-enable snap
+      html.style.scrollSnapType = '';
       clearTimeout(lockTimer);
-      lockTimer = setTimeout(unlock, 400);    // absorb trailing momentum events
+      lockTimer = setTimeout(unlock, 700);    // 700 ms: Momentum-Events abklingen lassen
     };
 
     // scrollend fires when the smooth-scroll animation fully completes.
@@ -181,12 +181,29 @@ const navLinks = [
     return false;
   };
 
-  // Wheel: nur klar-vertikale Gesten abfangen; diagonal / horizontal → Karussell
+  // Wheel-Delta-Akkumulator: Momentum-Events nach einem Snap summieren sich
+  // erst ab 60 px auf — so springt kein zweites Snap durch Trägheit aus.
+  let wheelAcc = 0;
+  let wheelTimer = null;
+
   window.addEventListener('wheel', (e) => {
     if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) return; // diagonal / horizontal
     if (inHScroll(e.target)) return;                             // innerhalb Karussell
     e.preventDefault();
-    go(e.deltaY);
+    if (locked) {
+      // Navigation läuft — Akkumulator nullen, damit Momentum nicht auflädt
+      wheelAcc = 0;
+      clearTimeout(wheelTimer);
+      return;
+    }
+    wheelAcc += e.deltaY;
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(() => { wheelAcc = 0; }, 200);
+    if (Math.abs(wheelAcc) < 60) return;   // Mindest-Delta für einen echten Scroll
+    const dir = wheelAcc;
+    wheelAcc = 0;
+    clearTimeout(wheelTimer);
+    go(dir);
   }, { passive: false });
 
   // Arrow / Page keys — skip when a form field has focus

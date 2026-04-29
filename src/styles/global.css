@@ -1025,12 +1025,8 @@ body:has(.countdown--card)   { --cd-h: 320px; }
 .gallery-nav:hover { background: var(--accent-light); transform: translateY(-50%) scale(1.08); }
 .gallery-nav:focus-visible { outline: 2px solid var(--white); outline-offset: 3px; }
 .gallery-nav[hidden] { display: none; }
-.gallery-nav--prev { left: -24px; }
-.gallery-nav--next { right: -24px; }
-@media (max-width: 768px) {
-  .gallery-nav--prev { left: 4px; }
-  .gallery-nav--next { right: 4px; }
-}
+.gallery-nav--prev { left: 8px; }
+.gallery-nav--next { right: 8px; }
 .gallery-img {
   position: relative;
   aspect-ratio: 4/3;
@@ -1106,9 +1102,8 @@ body:has(.countdown--card)   { --cd-h: 320px; }
   overflow-y: hidden;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  /* Erste Karte bündig links mit .reviews-stats-Box, rechts Peek-Space. */
-  scroll-padding-inline-start: 1.5rem;
-  padding: .25rem var(--rev-peek) .25rem 1.5rem;
+  scroll-padding-inline-start: 0;
+  padding: .25rem var(--rev-peek) .25rem 0;
   scrollbar-width: none;
   touch-action: pan-x;
 }
