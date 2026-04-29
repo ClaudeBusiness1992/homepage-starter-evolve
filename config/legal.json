@@ -25,9 +25,9 @@
     "professionalRegulations": "",
     "supervisoryAuthority": "",
     "hosting": {
-      "provider": "Netlify Inc.",
-      "address": "512 2nd Street, Suite 200, San Francisco, CA 94107, USA",
-      "privacyUrl": "https://www.netlify.com/privacy/"
+      "provider": "Vercel Inc.",
+      "address": "340 Pine Street Suite 701, San Francisco, CA 94104, USA",
+      "privacyUrl": "https://vercel.com/legal/privacy-policy"
     },
     "dataProtectionOfficer": "",
     "analytics": {

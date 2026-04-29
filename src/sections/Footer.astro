@@ -29,3 +29,19 @@ const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.
     </div>
   </div>
 </footer>
+
+<script is:inline>
+  // Footer-Höhe messen und als --footer-h exposen, damit Contact + Footer
+  // sich exakt 100dvh teilen können (Footer am unteren Rand sichtbar, sobald
+  // die letzte Section angesnappt ist).
+  (() => {
+    const f = document.querySelector('footer');
+    if (!f) return;
+    const setH = () => {
+      document.documentElement.style.setProperty('--footer-h', f.offsetHeight + 'px');
+    };
+    setH();
+    if ('ResizeObserver' in window) new ResizeObserver(setH).observe(f);
+    else { window.addEventListener('resize', setH); window.addEventListener('orientationchange', setH); }
+  })();
+</script>

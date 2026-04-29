@@ -19,7 +19,7 @@ const hasAuthority = l.supervisoryAuthority && !l.supervisoryAuthority.startsWit
 const hasProfession = l.professionalRegulations && !l.professionalRegulations.startsWith('[');
 ---
 
-<Base meta={{ siteName: meta.siteName + ' — Impressum', description: 'Impressum gemäß §5 DDG' }} theme={theme} design={design}>
+<Base meta={{ siteName: meta.siteName + ' — Impressum', description: 'Impressum gemäß §5 DDG' }} theme={theme} design={design} noindex={true}>
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={meta.nav} />
 
   <main id="main" class="legal-page">

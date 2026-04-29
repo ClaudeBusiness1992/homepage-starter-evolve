@@ -62,34 +62,130 @@ const Hero     = HeroComponents[design]    ?? Hero01;
 const About    = AboutOverrides[design]    ?? About01;
 const Services = ServicesOverrides[design] ?? Services01;
 
-// Build nav links: base nav + active add-ons
-const baseNav = (meta.nav ?? []).filter(l => !l.section || s[l.section]?.enabled !== false);
-const addonNav = [];
-if (x.active?.gallery && x.gallery) addonNav.push({ label: 'Galerie',     href: '#gallery', section: 'gallery' });
-if (x.active?.reviews && x.reviews) addonNav.push({ label: 'Bewertungen', href: '#reviews', section: 'reviews' });
-if (x.active?.booking && x.booking) addonNav.push({ label: 'Buchung',     href: '#booking',  section: 'booking' });
+// Build nav in actual scroll order (Sections-Reihenfolge unten in <main>):
+// about → services → gallery → pricing → reviews → booking → contact (cta)
+const labelFor = (id: string, fallback: string) =>
+  (meta.nav ?? []).find((l: any) => l.section === id)?.label ?? fallback;
 
-// Insert add-on links before any cta-link (Kontakt) so CTA stays last
-const ctaIdx = baseNav.findIndex(l => l.cta);
-const navLinks = ctaIdx >= 0
-  ? [...baseNav.slice(0, ctaIdx), ...addonNav, ...baseNav.slice(ctaIdx)]
-  : [...baseNav, ...addonNav];
+const cta = (meta.nav ?? []).find((l: any) => l.cta);
+const orderedSections = [
+  { id: 'about',    label: labelFor('about',    'Über uns'),    enabled: s.about?.enabled !== false },
+  { id: 'services', label: labelFor('services', 'Leistungen'),  enabled: s.services?.enabled !== false },
+  { id: 'gallery',  label: 'Galerie',                            enabled: !!(x.active?.gallery && x.gallery) },
+  { id: 'pricing',  label: labelFor('pricing',  'Preise'),      enabled: s.pricing?.enabled !== false },
+  { id: 'reviews',  label: 'Bewertungen',                        enabled: !!(x.active?.reviews && x.reviews) },
+  { id: 'booking',  label: 'Buchung',                            enabled: !!(x.active?.booking && x.booking) },
+];
+
+const navLinks = [
+  ...orderedSections.filter(o => o.enabled).map(o => ({ label: o.label, href: `#${o.id}`, section: o.id })),
+  ...(cta ? [cta] : [{ label: 'Kontakt', href: '#contact', section: 'contact', cta: true }]),
+];
 ---
 
 <Base meta={meta} theme={theme} design={design}>
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={navLinks} />
 
-  {x.active?.countdown && x.countdown && <Countdown {...x.countdown} />}
-
-  <main id="main">
-    {s.hero.enabled      && <Hero      {...s.hero} mockupUrl={Astro.site ? Astro.site.host : undefined} />}
+  <main id="main" tabindex="-1">
+    {(s.hero.enabled || (x.active?.countdown && x.countdown)) && (
+      <div class="hero-snap">
+        {x.active?.countdown && x.countdown && <Countdown {...x.countdown} />}
+        {s.hero.enabled && <Hero {...s.hero} mockupUrl={Astro.site ? Astro.site.host : undefined} />}
+      </div>
+    )}
     {s.about.enabled     && <About     {...s.about} />}
     {s.services.enabled  && <Services  {...s.services} />}
     {x.active?.gallery   && x.gallery  && <Gallery   {...x.gallery} />}
     {s.pricing?.enabled  && <Pricing   {...s.pricing} />}
     {x.active?.reviews   && x.reviews  && <Reviews  {...x.reviews} stats={s.stats?.enabled ? s.stats.items : []} agencyName={meta.siteName} agencyUrl={Astro.site?.href} />}
     {x.active?.booking   && x.booking  && <Booking  {...x.booking} />}
-    {s.contact?.enabled  && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} availability={x.booking?.availability} />}
-    {s.footer?.enabled   && <Footer    siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} copyright={meta.copyright} links={s.footer.links} />}
+    {(s.contact?.enabled || s.footer?.enabled) && (
+      <div class="contact-footer-snap">
+        {s.contact?.enabled  && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} availability={x.booking?.availability} />}
+        {s.footer?.enabled   && <Footer    siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} copyright={meta.copyright} links={s.footer.links} />}
+      </div>
+    )}
   </main>
 </Base>
+
+<script is:inline>
+(function () {
+  const getTargets = () => [
+    ...document.querySelectorAll('#main > section, #main > .hero-snap, #main > .contact-footer-snap')
+  ];
+
+  let locked = false;
+  let lockTimer = null;
+  const html = document.documentElement;
+
+  const unlock = () => {
+    locked = false;
+    clearTimeout(lockTimer);
+  };
+
+  const go = (dir) => {
+    if (locked) return;
+    const list = getTargets();
+    if (!list.length) return;
+
+    const navH = parseFloat(
+      getComputedStyle(html).getPropertyValue('--nav-h') || '72'
+    );
+    const sy = window.scrollY;
+
+    // Current = highest snap target whose snap-position (offsetTop - navH) ≤ scrollY + tolerance
+    let idx = 0;
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].offsetTop - navH <= sy + 5) idx = i;
+    }
+
+    const next = list[idx + (dir > 0 ? 1 : -1)];
+    if (!next) return;
+
+    locked = true;
+
+    // Disable CSS scroll-snap during programmatic scroll — prevents the snap engine
+    // from re-snapping to a different section after our scrollTo lands.
+    html.style.scrollSnapType = 'none';
+
+    const top = Math.max(0, next.offsetTop - navH);
+    window.scrollTo({ top, behavior: 'smooth' });
+
+    const done = () => {
+      html.style.scrollSnapType = '';         // re-enable snap
+      clearTimeout(lockTimer);
+      lockTimer = setTimeout(unlock, 400);    // absorb trailing momentum events
+    };
+
+    // scrollend fires when the smooth-scroll animation fully completes.
+    // Fallback: 1.2 s covers even slow smooth-scroll on heavy pages.
+    if ('onscrollend' in window) {
+      window.addEventListener('scrollend', done, { once: true });
+      lockTimer = setTimeout(() => {
+        window.removeEventListener('scrollend', done);
+        done();
+      }, 1200);
+    } else {
+      lockTimer = setTimeout(done, 900);
+    }
+  };
+
+  // Wheel: intercept vertical scrolls; let horizontal pass through (carousels)
+  window.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    go(e.deltaY);
+  }, { passive: false });
+
+  // Arrow / Page keys — skip when a form field has focus
+  document.addEventListener('keydown', (e) => {
+    const down = e.key === 'ArrowDown' || e.key === 'PageDown';
+    const up   = e.key === 'ArrowUp'   || e.key === 'PageUp';
+    if (!down && !up) return;
+    const tag = (document.activeElement?.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    e.preventDefault();
+    go(down ? 1 : -1);
+  });
+}());
+</script>

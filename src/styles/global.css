@@ -125,17 +125,25 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--nav-h);
+  scroll-snap-type: y mandatory;
 }
-/* scroll-snap entfernt — proximity verursachte ruckelige Pull-Bewegungen
-   beim Loslassen des Scrolls. Smooth scroll für Anchor-Klicks bleibt aktiv,
-   scroll-padding-top sorgt für korrektes Offset unter der Fixed-Nav. */
+/* Jede Section in main ist ein Snap-Target; .hero-snap + .contact-footer-snap (divs) ebenfalls */
+main > section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  /* Exact one-viewport height — no section extends below the fold */
+  height: calc(100dvh - var(--nav-h));
+  overflow: hidden;
+}
 
 body {
   font-family: var(--sans);
   background: var(--cream);
   color: var(--ink);
   line-height: 1.6;
-  overflow-x: hidden;
+  /* clip statt hidden: blockt horizontalen Overflow ohne den Body zum
+     Scroll-Container zu machen (sonst übernimmt er das scroll-snap von html). */
+  overflow-x: clip;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
 }
@@ -149,19 +157,19 @@ body {
 }
 .section,
 main > section:not(#hero) {
-  padding: clamp(1.5rem, 3vh, 3rem) 0;
-  min-height: 100vh;
+  /* Small symmetric padding — keeps equal breathing room above and below.
+     clamp scaled to dvh so the gap stays proportional to the viewport height. */
+  padding: clamp(0.75rem, 1.5dvh, 1.5rem) 0;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
 }
-/* Auf Laptops/Geräten mit geringer Höhe: keine starre 100vh-Mindesthöhe,
-   sonst überlaufen lange Sections (Preise, Buchung) den Viewport. */
-@media (max-height: 820px) {
-  .section,
-  main > section:not(#hero) { min-height: auto; }
-}
+:root { --footer-h: 0px; }
 .section > .wrap,
-main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
+main > section:not(#hero) > .wrap {
+  width: 100%;
+}
 
 .lbl {
   font-size: .85rem;
@@ -291,6 +299,18 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 }
 .nav-ul a:hover { color: var(--accent); }
 .nav-ul a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.nav-ul a.active:not(.cta-link) {
+  color: var(--accent);
+  position: relative;
+}
+.nav-ul a.active:not(.cta-link)::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -.45rem;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
 .nav-ul a.cta-link {
   background: var(--accent);
   color: var(--white);
@@ -319,12 +339,36 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .burger.x span:nth-child(2) { opacity: 0; }
 .burger.x span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+/* ── HERO SNAP UNIT (countdown + hero share one viewport) ──
+   hero-snap sits at offsetTop=0 so the scroll position never goes
+   negative — it stays at 0 and the viewport shows the full 100dvh.
+   We pad the top by nav-h so the countdown / hero content starts
+   below the fixed nav, then clip any overflow.                     */
+.hero-snap {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: 100dvh;
+  padding-top: var(--nav-h);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.hero-snap > #countdown {
+  flex-shrink: 0;
+  padding-block: clamp(0.5rem, 1dvh, 1.25rem);
+}
+.hero-snap > #hero {
+  flex: 1;
+  min-height: 0;
+  padding-top: 0;
+}
+
 /* ── HERO ── */
 #hero {
-  min-height: 100vh;
+  min-height: calc(100dvh - var(--nav-h));
   display: flex;
   align-items: center;
-  padding-top: var(--nav-h);
+  /* padding-top was here to compensate for missing scroll-padding-top — now handled by scroll-padding-top: var(--nav-h) on html */
   background: var(--ink);
   color: var(--cream);
   overflow: hidden;
@@ -395,11 +439,11 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 
 /* ── ABOUT ── */
 #about { background: var(--cream); }
-#about .section-hd { margin-bottom: 1.75rem; }
+#about .section-hd { margin-bottom: 1rem; }
 .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; align-items: stretch; }
 .acard { background: var(--white); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow); transition: transform .3s, box-shadow .3s; display: flex; flex-direction: column; }
 .acard:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-.aphoto { width: 100%; aspect-ratio: 4/3; background: linear-gradient(135deg, #c8b4a0 0%, #a8907c 100%); display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+.aphoto { width: 100%; aspect-ratio: 4/3; max-height: clamp(180px, 38dvh, 360px); background: linear-gradient(135deg, #c8b4a0 0%, #a8907c 100%); display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
 .aphoto-placeholder { text-align: center; color: rgba(26,26,46,.4); font-size: .76rem; font-weight: 500; line-height: 1.5; pointer-events: none; }
 .aphoto-placeholder::before { content: ''; display: block; width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,.22); margin: 0 auto .65rem; }
 .aphoto img { width: 100%; height: 100%; object-fit: cover; }
@@ -416,7 +460,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 
 /* ── SERVICES ── */
 #services { background: var(--ink); color: var(--cream); }
-#services .section-hd { margin-bottom: 2rem; }
+#services .section-hd { margin-bottom: 1.25rem; }
 .srv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; align-items: stretch; }
 .scard { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); border-radius: var(--r-lg); padding: 1.4rem 1.5rem; transition: background .3s, border-color .3s, transform .3s; display: flex; flex-direction: column; height: 100%; }
 .scard:hover { background: rgba(255,255,255,.08); border-color: color-mix(in srgb, var(--accent) 30%, transparent); transform: translateY(-4px); }
@@ -434,7 +478,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 #stats { background: var(--accent); padding: 4rem 0; }
 .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; text-align: center; }
 .stat-n { font-family: var(--serif); font-size: clamp(2.5rem,5vw,4rem); color: var(--white); line-height: 1; margin-bottom: .35rem; }
-.stat-l { font-size: .88rem; font-weight: 500; color: rgba(255,255,255,.8); }
+.stat-l { font-size: .88rem; font-weight: 500; color: var(--white); }
 
 /* ── PRICING ── */
 #pricing { background: var(--cream); }
@@ -465,7 +509,7 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 .plist li::before { content: '✓'; color: var(--sage); font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
 .feat .plist li::before { color: var(--accent-light); }
 .pricing-note { text-align: center; margin-top: 2rem; font-size: .83rem; color: var(--ink-muted); }
-.pricing-note a { color: var(--accent); text-decoration: none; }
+.pricing-note a { color: var(--accent-text); text-decoration: none; }
 
 /* ── BOOKING (optional add-on) ── */
 .booking-section { background: var(--cream); }
@@ -551,9 +595,9 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
   color: var(--ink);
   transition: border-color .2s, box-shadow .2s;
 }
-.bk-grid input:focus,
-.bk-grid select:focus,
-.bk-grid textarea:focus {
+.bk-grid input:focus-visible,
+.bk-grid select:focus-visible,
+.bk-grid textarea:focus-visible {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent);
@@ -562,7 +606,13 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
   opacity: .55;
   cursor: not-allowed;
 }
-.bk-grid textarea { resize: vertical; min-height: 44px; }
+.bk-grid textarea {
+  resize: none;
+  min-height: calc(2lh + 1.1rem);   /* ~2 Zeilen Default-Höhe */
+  max-height: 28dvh;                /* darüber interner Scroll, Form bleibt stabil */
+  field-sizing: content;            /* wächst automatisch mit Inhalt (modern CSS) */
+  overflow-y: auto;
+}
 .bk-date-hint {
   font-size: .82rem;
   color: var(--accent);
@@ -586,8 +636,9 @@ main > section:not(#hero) > .wrap { flex: 1 1 100%; width: 100%; }
 }
 
 /* ── COUNTDOWN (optional add-on, kompakter Banner über Hero, außerhalb von <main>) ── */
-/* Ziel: Countdown + Hero zusammen passen exakt in 100vh.
-   Countdown ~ 380px → Hero bekommt 100vh - 380px Mindesthöhe und reduziertes Padding. */
+/* Ziel: Countdown + Hero teilen sich exakt 100dvh.
+   --cd-h wird per JS in Countdown.astro auf die tatsächliche Countdown-Höhe gesetzt
+   (ResizeObserver). Die statischen Werte hier sind nur Fallback ohne JS. */
 :root { --cd-h: 0px; }                 /* default — kein Countdown */
 body:has(.countdown--ticker) { --cd-h: 96px; }
 body:has(.countdown--pill)   { --cd-h: 110px; }
@@ -595,14 +646,7 @@ body:has(.countdown--hero),
 body:has(.countdown--light),
 body:has(.countdown--accent),
 body:has(.countdown--card)   { --cd-h: 320px; }
-body:has(.countdown-section) #hero {
-  min-height: calc(100vh - var(--cd-h));
-  align-items: flex-start;
-  padding-top: 2rem;
-}
-body:has(.countdown-section) .hero-grid {
-  padding: 2rem 0;                     /* statt 5rem — passt mit Countdown auf 100vh */
-}
+/* Countdown ist jetzt in <main> als eigene Snap-Section — Hero bleibt unverändert */
 @media (max-width: 768px) {
   body:has(.countdown--ticker) { --cd-h: 140px; }
   body:has(.countdown--pill)   { --cd-h: 150px; }
@@ -615,11 +659,8 @@ body:has(.countdown-section) .hero-grid {
 .countdown-section {
   background: var(--ink);
   color: var(--cream);
-  padding: 0;
-  min-height: 0 !important;
-  padding-top: var(--nav-h);
 }
-.countdown--ticker { padding: 0; padding-top: var(--nav-h); }
+.countdown--ticker { padding: 0; }
 .countdown--ticker .wrap { padding: 0; max-width: none; }
 .cd-ticker {
   display: flex;
@@ -686,7 +727,7 @@ body:has(.countdown-section) .hero-grid {
 }
 
 /* ── Variante B: Pill-Banner ── */
-.countdown--pill { padding: 0; padding-top: var(--nav-h); }
+.countdown--pill { padding: 0; }
 .countdown--pill .wrap { padding: .65rem 1.5rem; }
 .cd-pill-wrap { display: flex; justify-content: center; }
 .cd-pill {
@@ -738,9 +779,7 @@ body:has(.countdown-section) .hero-grid {
 .countdown--light,
 .countdown--accent,
 .countdown--card {
-  padding-top: var(--nav-h);
   padding-bottom: clamp(1.25rem, 2.5vh, 2rem);
-  min-height: 0 !important;
 }
 .countdown--hero .wrap,
 .countdown--light .wrap,
@@ -813,7 +852,7 @@ body:has(.countdown-section) .hero-grid {
   font-size: clamp(.95rem, 1.3vw, 1.05rem);
   color: rgba(245,240,232,.8);
   font-variant-numeric: tabular-nums;
-  margin-bottom: 1.1rem;
+  margin-bottom: clamp(1.5rem, 3dvh, 2.25rem);
 }
 .cd-hero-counter strong {
   font-family: var(--serif);
@@ -839,91 +878,26 @@ body:has(.countdown-section) .hero-grid {
 }
 .cd-grid--done .cd-hero-counter strong { color: rgba(245,240,232,.4); }
 .countdown-section .lbl { color: var(--accent-light); font-size: .85rem; margin: 0; }
-.cd-inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 1rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  text-align: left;
-}
-.cd-text { display: flex; flex-direction: column; gap: .15rem; flex: 1 1 auto; min-width: 0; }
-@media (max-width: 768px) {
-  .cd-inner { justify-content: center; text-align: center; }
-  .cd-text { align-items: center; }
-}
-.cd-h2 {
-  color: var(--cream);
-  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
-  margin: 0;
-  line-height: 1.2;
-}
-.cd-sub {
-  color: rgba(245,240,232,.7);
-  font-size: .95rem;
-  margin: 0;
-  max-width: 420px;
-  line-height: 1.45;
-}
-.cd-grid {
-  display: flex;
-  align-items: stretch;
-  gap: .5rem;
-  margin: 0;
-  flex-wrap: nowrap;
-}
-.cd-box {
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: var(--r);
-  padding: .65rem .9rem;
-  min-width: 76px;
+
+/* ── CONTACT + FOOTER SNAP UNIT ── */
+/* Contact + Footer share exactly one viewport as a single snap unit. */
+.contact-footer-snap {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: calc(100dvh - var(--nav-h));
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
-.cd-num {
-  font-family: var(--serif);
-  font-size: clamp(1.6rem, 2.6vw, 2.1rem);
-  line-height: 1;
-  color: var(--accent-light);
-  font-variant-numeric: tabular-nums;
+.contact-footer-snap > section {
+  flex: 1;
+  min-height: 0;
+  /* Tighter padding so content + footer fit in one viewport */
+  padding-block: clamp(0.75rem, 2dvh, 1.5rem);
+  overflow-y: auto;
+  scrollbar-width: none;
 }
-.cd-lbl {
-  font-size: .68rem;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: rgba(245,240,232,.6);
-  margin-top: .3rem;
-}
-.cd-sep {
-  font-family: var(--serif);
-  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
-  color: rgba(245,240,232,.3);
-  align-self: center;
-}
-.cd-grid--done .cd-num { color: rgba(245,240,232,.4); }
-.cd-expired {
-  font-family: var(--serif);
-  font-style: italic;
-  color: var(--accent-light);
-  font-size: 1rem;
-  margin-bottom: .75rem;
-}
-.cd-cta {
-  display: inline-block;
-  font-size: .95rem;
-  padding: .7rem 1.4rem;
-}
-
-@media (max-width: 640px) {
-  .cd-sep { display: none; }
-  .cd-box { min-width: 64px; padding: .5rem .7rem; }
-  .cd-grid { gap: .4rem; margin-bottom: 1.4rem; }
-  .cd-num { font-size: clamp(1.4rem, 7vw, 1.9rem); }
-}
+.contact-footer-snap > section::-webkit-scrollbar { display: none; }
+.contact-footer-snap > footer { flex-shrink: 0; }
 
 /* ── CONTACT ── */
 #contact { background: var(--ink); color: var(--cream); }
@@ -934,20 +908,21 @@ body:has(.countdown-section) .hero-grid {
 .contact-hours {
   margin-top: 2rem;
   padding: 1rem 1.25rem;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.08);
+  background: var(--white);
+  color: var(--ink);
   border-radius: var(--r);
-  border-left: 3px solid var(--accent);
+  border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow);
 }
 .contact-hours-title {
   font-size: .82rem; font-weight: 700; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--accent-light);
+  text-transform: uppercase; color: var(--accent-text);
   margin-bottom: .55rem;
 }
 .contact-hours-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
-.contact-hours-list li { display: flex; gap: 1rem; font-size: .9rem; line-height: 1.5; align-items: baseline; }
-.contact-hours-days { font-weight: 600; min-width: 4rem; color: var(--cream); }
-.contact-hours-time { color: rgba(245,240,232,.88); font-variant-numeric: tabular-nums; }
+.contact-hours-list li { display: flex; gap: 1rem; font-size: .9rem; line-height: 1.5; align-items: baseline; color: var(--ink); }
+.contact-hours-days { font-weight: 600; min-width: 4rem; color: var(--ink); }
+.contact-hours-time { color: var(--ink); font-variant-numeric: tabular-nums; }
 .btn-email { font-size: .95rem; padding: 1rem 2rem; justify-content: center; }
 .btn-phone { background: rgba(255,255,255,.07); color: var(--cream); border: 1.5px solid rgba(255,255,255,.18); font-size: .95rem; padding: 1rem 2rem; justify-content: center; }
 .btn-phone:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.32); }
@@ -1016,8 +991,8 @@ body:has(.countdown-section) .hero-grid {
   overflow-y: hidden;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--gal-peek);
-  padding: .25rem var(--gal-peek);
+  scroll-padding-inline-end: var(--gal-peek);
+  padding: .25rem var(--gal-peek) .25rem 0;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -1025,6 +1000,7 @@ body:has(.countdown-section) .hero-grid {
 @media (max-width: 600px) { .gallery-grid { --gal-visible: 1.05; } }
 .gallery-grid::-webkit-scrollbar { display: none; }
 .gallery-item { border-radius: var(--r-lg); overflow: hidden; scroll-snap-align: start; }
+.gallery-grid > .gallery-item.r { transform: none; transition: opacity .65s ease; }
 .gallery-nav {
   position: absolute;
   top: 50%;
@@ -1092,11 +1068,10 @@ body:has(.countdown-section) .hero-grid {
 #reviews { background: var(--cream); }
 .reviews-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1.5rem 2rem;
-  max-width: 920px;
-  margin: -.5rem auto 3rem;
-  padding: 1.75rem 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: clamp(.75rem, 1.5dvh, 1.5rem) 2rem;
+  margin: -.25rem 0 clamp(1rem, 2.5dvh, 2rem);
+  padding: clamp(.85rem, 1.8dvh, 1.5rem) 1.5rem;
   background: var(--white);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow);
@@ -1124,18 +1099,22 @@ body:has(.countdown-section) .hero-grid {
   display: grid;
   grid-template-rows: 1fr;
   grid-auto-flow: column;
-  grid-auto-columns: clamp(240px, calc((100% - 2 * var(--rev-peek) - var(--rev-visible) * var(--rev-gap)) / var(--rev-visible)), 380px);
+  grid-auto-columns: clamp(240px, calc((100% - var(--rev-peek) - var(--rev-visible) * var(--rev-gap)) / var(--rev-visible)), 380px);
   gap: var(--rev-gap);
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--rev-peek);
-  padding: .25rem var(--rev-peek);
+  /* Erste Karte bündig links mit .reviews-stats-Box, rechts Peek-Space. */
+  scroll-padding-inline-start: 1.5rem;
+  padding: .25rem var(--rev-peek) .25rem 1.5rem;
   scrollbar-width: none;
 }
 .reviews-grid::-webkit-scrollbar { display: none; }
 .reviews-grid > .review-card { scroll-snap-align: start; }
+/* Carousel items must not translateY — that transform escapes overflow:hidden
+   in horizontal scroll containers. Fade-in only. */
+.reviews-grid > .review-card.r { transform: none; transition: opacity .65s ease; }
 @media (max-width: 900px) { .reviews-grid { --rev-visible: 2.2; } }
 @media (max-width: 600px) { .reviews-grid { --rev-visible: 1.15; } }
 .review-card {
@@ -1162,8 +1141,10 @@ body:has(.countdown-section) .hero-grid {
   flex-shrink: 0;
 }
 .review-text { font-size: .9rem; line-height: 1.5; color: var(--ink-muted); flex: 1; font-style: italic; text-wrap: pretty; hyphens: auto; overflow-wrap: anywhere; min-width: 0; margin: 0; }
-.review-footer { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-.review-author { display: flex; align-items: center; gap: .875rem; }
+.review-footer { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; min-width: 0; }
+.review-author { display: flex; align-items: center; gap: .875rem; min-width: 0; flex: 1 1 auto; }
+.review-author > div { min-width: 0; overflow: hidden; }
+.review-name, .review-company { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .review-avatar {
   width: 44px; height: 44px;
   border-radius: 50%;
@@ -1178,19 +1159,76 @@ body:has(.countdown-section) .hero-grid {
 .review-company { font-size: .8rem; color: var(--ink-muted); }
 .review-date { font-size: .78rem; color: var(--ink-muted); white-space: nowrap; }
 .reviews-note {
-  margin-top: 2.5rem;
+  margin: clamp(1rem, 2dvh, 1.75rem) auto 0;
   text-align: center;
-  font-size: .8rem;
+  font-size: .72rem;
   color: var(--ink-muted);
-  max-width: 640px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.7;
-  padding: 1rem 1.5rem;
-  background: color-mix(in srgb, var(--sage) 7%, transparent);
-  border: 1px solid color-mix(in srgb, var(--sage) 15%, transparent);
+  max-width: 720px;
+  line-height: 1.55;
+  padding: .55rem 1rem;
+  background: color-mix(in srgb, var(--sage) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sage) 12%, transparent);
   border-radius: var(--r);
 }
+
+/* ── FILL-HEIGHT SECTIONS ──────────────────────────────────────────
+   About / Services / Gallery / Reviews: the .wrap becomes a flex column
+   so grids and carousels fill all available vertical space instead of
+   centering a content block that overflows at the bottom.             */
+#about > .wrap,
+#services > .wrap,
+#gallery > .wrap,
+#reviews > .wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+/* Section headers stay at their natural height; grids get the rest */
+#about .wrap > .section-hd,
+#services .wrap > .section-hd,
+#gallery .wrap > .section-hd,
+#reviews .wrap > .section-hd { flex-shrink: 0; }
+
+/* About: one grid row stretches to fill the flex height;
+   photos grow inside each card while the text body stays compact */
+#about .about-grid {
+  flex: 1;
+  min-height: 0;
+  grid-template-rows: 1fr;
+}
+#about .acard  { min-height: 0; }
+#about .aphoto { flex: 1; min-height: 0; max-height: none; aspect-ratio: unset; }
+
+/* Services: two grid rows split the flex height equally */
+#services .srv-grid {
+  flex: 1;
+  min-height: 0;
+  grid-template-rows: 1fr 1fr;
+}
+#services .scard { min-height: 0; overflow: hidden; }
+
+/* Gallery: carousel fills remaining height; grid uses 100% of it.
+   Images positioned absolutely in each cell so grid row fractions
+   work independently of the images' natural aspect-ratio.         */
+#gallery .gallery-carousel { flex: 1; min-height: 0; overflow: hidden; }
+#gallery .gallery-grid     { height: 100%; }
+#gallery .gallery-item     { position: relative; overflow: hidden; }
+#gallery .gallery-img      { position: absolute; inset: 0; aspect-ratio: unset; }
+#gallery .gallery-img img  { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* Reviews: carousel fills between stats bar and legal note */
+#reviews .section-hd       { margin-bottom: 1rem; }   /* override global 1.75rem */
+#reviews .reviews-stats    { flex-shrink: 0; }
+#reviews .reviews-carousel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+#reviews .reviews-grid     { flex: 1; min-height: 0; }
+#reviews .reviews-note     { flex-shrink: 0; }
+#reviews .review-card      { min-height: 0; overflow: hidden; }
 
 /* ── LEGAL PAGES (Impressum / Datenschutz) ── */
 .legal-page { padding-top: var(--nav-h); background: var(--cream); min-height: 100vh; }
@@ -1202,7 +1240,7 @@ body:has(.countdown-section) .hero-grid {
 .legal-section p { font-size: .95rem; line-height: 1.8; color: var(--ink-muted); margin-bottom: 1rem; }
 .legal-section ul { padding-left: 1.5rem; margin-bottom: 1rem; color: var(--ink-muted); }
 .legal-section li { font-size: .95rem; line-height: 1.8; }
-.legal-section a { color: var(--accent); text-decoration: none; }
+.legal-section a { color: var(--accent-text); text-decoration: none; }
 .legal-section a:hover { text-decoration: underline; }
 .legal-note {
   margin-top: 3rem;
@@ -1216,7 +1254,10 @@ body:has(.countdown-section) .hero-grid {
 }
 
 /* ── FOOTER ── */
-footer { background: #0f0f1e; padding: 1.75rem 0; }
+footer {
+  background: #0f0f1e;
+  padding: 1.75rem 0;
+}
 .foot-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
 .foot-logo { font-family: var(--serif); font-size: 1.1rem; color: rgba(245,240,232,.75); }
 .foot-logo em { font-style: normal; color: var(--accent); }
@@ -1234,6 +1275,12 @@ footer { background: #0f0f1e; padding: 1.75rem 0; }
   .srv-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
+  /* Mobile: let sections grow naturally; touch scroll + CSS snap handles navigation */
+  main > section {
+    height: auto;
+    min-height: calc(100dvh - var(--nav-h));
+    overflow: visible;
+  }
   .nav-ul {
     display: none;
     position: fixed;
@@ -1263,7 +1310,7 @@ footer { background: #0f0f1e; padding: 1.75rem 0; }
   .foot-links { justify-content: center; }
 }
 @media (max-width: 480px) {
-  .section { padding: 4rem 0; }
+  .section { padding: clamp(1.25rem, 3dvh, 2.5rem) 0; }
   .stats-grid { grid-template-columns: repeat(2,1fr); }
   .contact-btns { flex-direction: column; align-items: center; }
   .btn-email, .btn-phone { width: 100%; justify-content: center; }

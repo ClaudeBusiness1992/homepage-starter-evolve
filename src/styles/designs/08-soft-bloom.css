@@ -407,8 +407,8 @@
 [data-design="08-soft-bloom"] .form-group textarea::placeholder {
   color: var(--sb-text-mute);
 }
-[data-design="08-soft-bloom"] .form-group input:focus,
-[data-design="08-soft-bloom"] .form-group textarea:focus {
+[data-design="08-soft-bloom"] .form-group input:focus-visible,
+[data-design="08-soft-bloom"] .form-group textarea:focus-visible {
   border-color: var(--sb-accent);
   outline: none;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--sb-accent) 12%, transparent);

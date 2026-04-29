@@ -485,8 +485,8 @@
 [data-design="06-editorial-press"] .form-group textarea::placeholder {
   color: var(--ep-input-mute);
 }
-[data-design="06-editorial-press"] .form-group input:focus,
-[data-design="06-editorial-press"] .form-group textarea:focus {
+[data-design="06-editorial-press"] .form-group input:focus-visible,
+[data-design="06-editorial-press"] .form-group textarea:focus-visible {
   border-bottom-color: var(--ep-accent);
   outline: none;
 }

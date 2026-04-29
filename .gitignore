@@ -9,3 +9,6 @@ dist/
 .vercel/
 .DS_Store
 *.log
+.screenshots/
+test-results/
+playwright-report/

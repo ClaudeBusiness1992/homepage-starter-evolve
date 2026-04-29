@@ -144,7 +144,7 @@ if (groupStart) {
         </form>
 
         <!-- Erfolgsmeldung (wird per JS eingeblendet) -->
-        <div class="form-success" id="formSuccess" hidden>
+        <div class="form-success" id="formSuccess" role="status" hidden>
           <div class="form-success-icon">✓</div>
           <h3>Nachricht erhalten!</h3>
           <p>Wir melden uns innerhalb von 24 Stunden bei Ihnen.</p>
@@ -156,6 +156,9 @@ if (groupStart) {
 </section>
 
 <script is:inline>
+  // Track when form was first rendered (anti-bot time check)
+  window.__contactRenderedAt = Date.now();
+
   const form = document.getElementById('contactForm');
   const success = document.getElementById('formSuccess');
 
@@ -219,6 +222,4 @@ if (groupStart) {
     }
   });
 
-  // Track when form was first rendered (anti-bot time check)
-  window.__contactRenderedAt = Date.now();
 </script>

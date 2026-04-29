@@ -3,7 +3,7 @@
 // Gleichwertige Buttons (kein Dark Pattern), einfache Ablehnung, Widerrufbar via Footer-Link.
 ---
 
-<div id="cookie-banner" class="cookie-banner" role="dialog" aria-labelledby="cookie-title" aria-describedby="cookie-desc" hidden>
+<div id="cookie-banner" class="cookie-banner" role="dialog" aria-modal="true" aria-labelledby="cookie-title" aria-describedby="cookie-desc" hidden>
   <div class="cookie-inner">
     <div class="cookie-text">
       <h3 id="cookie-title">Cookies & Datenschutz</h3>
@@ -30,13 +30,28 @@
     const banner = document.getElementById('cookie-banner');
     const stored = localStorage.getItem(KEY);
 
+    function trapFocus(e) {
+      if (e.key !== 'Tab') return;
+      const focusable = [...banner.querySelectorAll('button, a[href]')];
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+
     function show() {
       banner.hidden = false;
+      banner.addEventListener('keydown', trapFocus);
       // Move focus to the secondary button (less aggressive default)
       const target = banner.querySelector('.cookie-btn-secondary');
       if (target) target.focus();
     }
-    function hide() { banner.hidden = true; }
+    function hide() {
+      banner.hidden = true;
+      banner.removeEventListener('keydown', trapFocus);
+    }
 
     function setConsent(value) {
       localStorage.setItem(KEY, JSON.stringify({ value, timestamp: Date.now() }));

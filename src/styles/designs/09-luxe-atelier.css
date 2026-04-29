@@ -478,8 +478,8 @@
 [data-design="09-luxe-atelier"] .form-group textarea::placeholder {
   color: rgba(26,26,26,.35);
 }
-[data-design="09-luxe-atelier"] .form-group input:focus,
-[data-design="09-luxe-atelier"] .form-group textarea:focus {
+[data-design="09-luxe-atelier"] .form-group input:focus-visible,
+[data-design="09-luxe-atelier"] .form-group textarea:focus-visible {
   border-color: var(--lx-accent);
   outline: none;
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--lx-accent) 12%, transparent);

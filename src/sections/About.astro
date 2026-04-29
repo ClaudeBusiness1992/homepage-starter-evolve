@@ -17,7 +17,7 @@ const { label, headline, subline, members } = Astro.props;
 
 <section class="section" id="about">
   <div class="wrap">
-    <SectionHeader {label} headline={headline.replace(',', ',<br />')} {subline} center />
+    <SectionHeader {label} {headline} {subline} center />
     <div class="about-grid">
       {members.map((m, i) => (
         <div class={`acard r d${i + 1}`}>

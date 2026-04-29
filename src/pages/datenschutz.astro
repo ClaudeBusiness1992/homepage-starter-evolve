@@ -17,7 +17,7 @@ const hasDPO = l.dataProtectionOfficer && !l.dataProtectionOfficer.startsWith('[
 const analyticsEnabled = l.analytics?.enabled === true;
 ---
 
-<Base meta={{ siteName: meta.siteName + ' — Datenschutz', description: 'Datenschutzerklärung gemäß DSGVO' }} theme={theme} design={design}>
+<Base meta={{ siteName: meta.siteName + ' — Datenschutz', description: 'Datenschutzerklärung gemäß DSGVO' }} theme={theme} design={design} noindex={true}>
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={meta.nav} />
 
   <main id="main" class="legal-page">
