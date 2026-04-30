@@ -72,16 +72,18 @@ const dateFmt = (() => {
         {label && <span class="lbl cd-hero-lbl">{label}</span>}
         <h2 class="cd-hero-headline h2">{headline}</h2>
         {subline && <p class="cd-hero-sub sub">{subline}</p>}
-        <div class="cd-hero-counter">
-          noch <strong data-cd="days">--</strong> Tage
-          · <strong data-cd="hours">--</strong> Std
-          · <strong data-cd="minutes">--</strong> Min
-          · <strong data-cd="seconds">--</strong> Sek
+        <div class="cd-hero-cta-row">
+          <div class="cd-hero-counter">
+            noch <strong data-cd="days">--</strong> Tage
+            <strong data-cd="hours">--</strong> Std
+            <strong data-cd="minutes">--</strong> Min
+            <strong data-cd="seconds">--</strong> Sek
+          </div>
+          {ctaLabel && (
+            <a href={ctaHref} class="btn btn-fill cd-hero-cta">{ctaLabel}</a>
+          )}
         </div>
         <p class="cd-hero-expired" data-cd-expired hidden>{expiredText}</p>
-        {ctaLabel && (
-          <a href={ctaHref} class="btn btn-fill cd-hero-cta">{ctaLabel}</a>
-        )}
       </div>
     )}
   </div>
