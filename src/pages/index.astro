@@ -114,13 +114,26 @@ const navLinks = [
     ...document.querySelectorAll('#main > section, #main > .hero-snap, #main > .contact-footer-snap')
   ];
 
-  let locked = false;
-  let lockTimer = null;
+  let locked      = false;
+  let animDone    = false;
+  let doneAt      = 0;
+  let scrollTimer = null;
+  let unlockTimer = null;
   const html = document.documentElement;
 
-  const unlock = () => {
-    locked = false;
-    clearTimeout(lockTimer);
+  const unlock = () => { locked = false; animDone = false; doneAt = 0; };
+
+  const scheduleUnlock = () => {
+    clearTimeout(unlockTimer);
+    unlockTimer = setTimeout(unlock, 500);
+  };
+
+  // Called once the page scroll animation is truly finished.
+  const done = () => {
+    html.style.scrollSnapType = '';
+    animDone = true;
+    doneAt   = Date.now();
+    scheduleUnlock();
   };
 
   const go = (dir) => {
@@ -133,7 +146,6 @@ const navLinks = [
     );
     const sy = window.scrollY;
 
-    // Current = highest snap target whose snap-position (offsetTop - navH) ≤ scrollY + tolerance
     let idx = 0;
     for (let i = 0; i < list.length; i++) {
       if (list[i].offsetTop - navH <= sy + 5) idx = i;
@@ -142,35 +154,33 @@ const navLinks = [
     const next = list[idx + (dir > 0 ? 1 : -1)];
     if (!next) return;
 
-    locked = true;
-
-    // Disable CSS scroll-snap during programmatic scroll — prevents the snap engine
-    // from re-snapping to a different section after our scrollTo lands.
+    locked   = true;
+    animDone = false;
     html.style.scrollSnapType = 'none';
 
     const top = Math.max(0, next.offsetTop - navH);
     window.scrollTo({ top, behavior: 'smooth' });
 
-    const done = () => {
-      html.style.scrollSnapType = '';
-      clearTimeout(lockTimer);
-      lockTimer = setTimeout(unlock, 700);    // 700 ms: Momentum-Events abklingen lassen
-    };
-
-    // scrollend fires when the smooth-scroll animation fully completes.
-    // Fallback: 1.2 s covers even slow smooth-scroll on heavy pages.
     if ('onscrollend' in window) {
-      window.addEventListener('scrollend', done, { once: true });
-      lockTimer = setTimeout(() => {
-        window.removeEventListener('scrollend', done);
+      // Filter to document-level scroll only — carousel/gallery scrollend events
+      // bubble to window too and would prematurely trigger done().
+      const onEnd = (e) => {
+        // Viewport scrollend targets document or documentElement; element scrolls target the element itself.
+        if (e.target !== document && e.target !== document.documentElement) return;
+        window.removeEventListener('scrollend', onEnd);
+        clearTimeout(scrollTimer);
         done();
-      }, 1200);
+      };
+      window.addEventListener('scrollend', onEnd);
+      scrollTimer = setTimeout(() => {
+        window.removeEventListener('scrollend', onEnd);
+        done();
+      }, 1400);
     } else {
-      lockTimer = setTimeout(done, 900);
+      scrollTimer = setTimeout(done, 1000);
     }
   };
 
-  // Ist el innerhalb eines horizontal scrollbaren Containers?
   const inHScroll = (el) => {
     while (el && el !== document.body) {
       const s = window.getComputedStyle(el);
@@ -181,32 +191,36 @@ const navLinks = [
     return false;
   };
 
-  // Wheel-Delta-Akkumulator: Momentum-Events nach einem Snap summieren sich
-  // erst ab 60 px auf — so springt kein zweites Snap durch Trägheit aus.
   let wheelAcc = 0;
   let wheelTimer = null;
 
   window.addEventListener('wheel', (e) => {
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) return; // diagonal / horizontal
-    if (inHScroll(e.target)) return;                             // innerhalb Karussell
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) return;
+    if (inHScroll(e.target)) return;
     e.preventDefault();
     if (locked) {
-      // Navigation läuft — Akkumulator nullen, damit Momentum nicht auflädt
       wheelAcc = 0;
       clearTimeout(wheelTimer);
+      if (animDone) {
+        // Absorb trackpad momentum — but cap at 1800 ms to prevent infinite lock.
+        if (Date.now() - doneAt < 1800) {
+          scheduleUnlock();
+        } else {
+          unlock();
+        }
+      }
       return;
     }
     wheelAcc += e.deltaY;
     clearTimeout(wheelTimer);
     wheelTimer = setTimeout(() => { wheelAcc = 0; }, 200);
-    if (Math.abs(wheelAcc) < 66) return;   // Mindest-Delta für einen echten Scroll
+    if (Math.abs(wheelAcc) < 66) return;
     const dir = wheelAcc;
     wheelAcc = 0;
     clearTimeout(wheelTimer);
     go(dir);
   }, { passive: false });
 
-  // Arrow / Page keys — skip when a form field has focus
   document.addEventListener('keydown', (e) => {
     const down = e.key === 'ArrowDown' || e.key === 'PageDown';
     const up   = e.key === 'ArrowUp'   || e.key === 'PageUp';
