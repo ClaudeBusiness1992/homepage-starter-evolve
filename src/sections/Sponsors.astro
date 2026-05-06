@@ -1,0 +1,96 @@
+---
+import SectionHeader from '../components/SectionHeader.astro';
+
+interface Sponsor {
+  name: string;
+  logo: string;
+  url?: string;
+  tier: 'top' | 'middle' | 'little';
+  description?: string;
+}
+
+interface Props {
+  label: string;
+  headline: string;
+  subline?: string;
+  items: Sponsor[];
+}
+
+const { label, headline, subline = '', items } = Astro.props;
+
+const top    = items.filter(s => s.tier === 'top');
+const middle = items.filter(s => s.tier === 'middle');
+const little = items.filter(s => s.tier === 'little');
+---
+
+<section class="section" id="sponsors">
+  <div class="wrap">
+    <SectionHeader {label} {headline} {subline} center />
+
+    {top.length > 0 && (
+      <div class="sponsors-row">
+        <p class="sponsors-tier-label">Hauptsponsor</p>
+        <div class="sponsors-grid sponsors-grid--top">
+          {top.map(s => (
+            <a
+              href={s.url ?? '#'}
+              class="sponsor-card sponsor-card--top r"
+              target={s.url ? '_blank' : undefined}
+              rel={s.url ? 'noopener noreferrer' : undefined}
+              title={s.name}
+            >
+              <div class="sponsor-logo-wrap">
+                <img src={s.logo} alt={s.name} loading="lazy" />
+              </div>
+              <span class="sponsor-name">{s.name}</span>
+              {s.description && <span class="sponsor-desc">{s.description}</span>}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {middle.length > 0 && (
+      <div class="sponsors-row">
+        <p class="sponsors-tier-label">Förderer</p>
+        <div class="sponsors-grid sponsors-grid--middle">
+          {middle.map(s => (
+            <a
+              href={s.url ?? '#'}
+              class="sponsor-card sponsor-card--middle r d1"
+              target={s.url ? '_blank' : undefined}
+              rel={s.url ? 'noopener noreferrer' : undefined}
+              title={s.name}
+            >
+              <div class="sponsor-logo-wrap">
+                <img src={s.logo} alt={s.name} loading="lazy" />
+              </div>
+              <span class="sponsor-name">{s.name}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {little.length > 0 && (
+      <div class="sponsors-row">
+        <p class="sponsors-tier-label">Unterstützer</p>
+        <div class="sponsors-grid sponsors-grid--little">
+          {little.map(s => (
+            <a
+              href={s.url ?? '#'}
+              class="sponsor-card sponsor-card--little r d2"
+              target={s.url ? '_blank' : undefined}
+              rel={s.url ? 'noopener noreferrer' : undefined}
+              title={s.name}
+            >
+              <div class="sponsor-logo-wrap">
+                <img src={s.logo} alt={s.name} loading="lazy" />
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</section>

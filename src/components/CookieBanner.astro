@@ -81,10 +81,10 @@
     position: fixed;
     bottom: 1rem; left: 1rem; right: 1rem;
     z-index: 1000;
-    background: var(--ink, #1a1a2e);
-    color: var(--cream, #f5f0e8);
-    border-radius: var(--r-lg, 20px);
-    box-shadow: var(--shadow-lg, 0 12px 48px rgba(0,0,0,.3));
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
     padding: 1.5rem;
     /* Safe-Area auf iPhones mit Home-Indikator */
     padding-bottom: max(1.5rem, calc(1.5rem + env(safe-area-inset-bottom)));
@@ -97,18 +97,18 @@
   }
   .cookie-inner { display: flex; flex-direction: column; gap: 1.25rem; }
   .cookie-text h3 {
-    font-family: var(--serif, 'DM Serif Display', Georgia, serif);
+    font-family: var(--serif);
     font-size: 1.15rem;
     margin-bottom: .4rem;
-    color: var(--cream, #f5f0e8);
+    color: var(--cream);
   }
   .cookie-text p {
     font-size: .9rem;
     line-height: 1.6;
-    color: rgba(245,240,232,.78);
+    color: color-mix(in srgb, var(--cream) 78%, var(--ink));
   }
   .cookie-text a {
-    color: var(--accent-light, #ff8c42);
+    color: var(--accent-light);
     text-decoration: underline;
   }
   .cookie-actions {
@@ -131,16 +131,16 @@
   }
   .cookie-btn:hover { transform: translateY(-1px); }
   .cookie-btn-primary {
-    background: var(--accent, #e8631b);
-    color: white;
+    background: var(--accent);
+    color: var(--cream);
   }
-  .cookie-btn-primary:hover { background: var(--accent-light, #ff8c42); }
+  .cookie-btn-primary:hover { background: var(--accent-light); }
   .cookie-btn-secondary {
     background: transparent;
-    color: var(--cream, #f5f0e8);
-    border-color: rgba(245,240,232,.3);
+    color: var(--cream);
+    border-color: color-mix(in srgb, var(--cream) 30%, transparent);
   }
-  .cookie-btn-secondary:hover { border-color: rgba(245,240,232,.6); }
+  .cookie-btn-secondary:hover { border-color: color-mix(in srgb, var(--cream) 60%, transparent); }
 
   @keyframes cookie-slide-up {
     from { opacity: 0; transform: translateY(20px); }

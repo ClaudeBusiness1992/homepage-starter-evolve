@@ -4,10 +4,12 @@
       "countdown": true,
       "reviews": true,
       "booking": true,
-      "gallery": true
+      "gallery": true,
+      "sponsors": false,
+      "sidebarAds": false
     },
     "countdown": {
-      "variant": "light",
+      "variant": "hero",
       "label": "Save the Date",
       "headline": "Workshop am 15. Mai 2026",
       "subline": "Plätze sind begrenzt — sichern Sie sich Ihren rechtzeitig.",
@@ -126,7 +128,7 @@
       "leadDays": 1,
       "headline": "Wann darf's losgehen?",
       "subline": "Service, Mitarbeiter:in und Wunschtermin wählen — Bestätigung innerhalb von 24 Stunden.",
-      "label": "",
+      "label": "Termin buchen",
       "emailTo": "termine@beispiel.de",
       "calendarId": "",
       "availability": {
@@ -185,6 +187,38 @@
           "duration": 90
         }
       ]
+    },
+    "sponsors": {
+      "label": "Unsere Partner",
+      "headline": "Sponsoren & Förderer",
+      "subline": "Herzlichen Dank an alle, die dieses Event ermöglichen.",
+      "items": [
+        { "tier": "top",    "name": "Hauptsponsor GmbH",  "logo": "https://placehold.co/220x80/C9A84C/fff?text=TOP+SPONSOR",   "url": "https://example.com", "description": "Platin-Partner" },
+        { "tier": "middle", "name": "Förderer AG",         "logo": "https://placehold.co/140x56/888/fff?text=SPONSOR",          "url": "https://example.com" },
+        { "tier": "middle", "name": "Partner GmbH",        "logo": "https://placehold.co/140x56/888/fff?text=SPONSOR",          "url": "https://example.com" },
+        { "tier": "middle", "name": "Unterstützer KG",     "logo": "https://placehold.co/140x56/888/fff?text=SPONSOR",          "url": "https://example.com" },
+        { "tier": "little", "name": "Klein 1",             "logo": "https://placehold.co/80x40/ccc/333?text=S1",               "url": "" },
+        { "tier": "little", "name": "Klein 2",             "logo": "https://placehold.co/80x40/ccc/333?text=S2",               "url": "" },
+        { "tier": "little", "name": "Klein 3",             "logo": "https://placehold.co/80x40/ccc/333?text=S3",               "url": "" },
+        { "tier": "little", "name": "Klein 4",             "logo": "https://placehold.co/80x40/ccc/333?text=S4",               "url": "" },
+        { "tier": "little", "name": "Klein 5",             "logo": "https://placehold.co/80x40/ccc/333?text=S5",               "url": "" }
+      ]
+    },
+    "sidebarAds": {
+      "left": {
+        "enabled": true,
+        "image": "",
+        "url": "",
+        "alt": "Werbung links",
+        "label": "Anzeige"
+      },
+      "right": {
+        "enabled": true,
+        "image": "",
+        "url": "",
+        "alt": "Werbung rechts",
+        "label": "Anzeige"
+      }
     }
   }
 }

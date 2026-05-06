@@ -31,7 +31,7 @@
 .lb-bg {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,.88);
+  background: var(--overlay-bg);
   backdrop-filter: blur(6px);
   cursor: pointer;
 }
@@ -57,7 +57,7 @@
   object-fit: contain;
   border-radius: var(--r-lg) var(--r-lg) 0 0;
   display: block;
-  box-shadow: 0 32px 90px rgba(0,0,0,.75);
+  box-shadow: 0 32px 90px color-mix(in srgb, var(--ink) 75%, transparent);
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -71,10 +71,10 @@
   z-index: 2;
   width: 2.5rem;
   height: 2.5rem;
-  background: rgba(255,255,255,.05);
-  border: 1px solid rgba(255,255,255,.12);
+  background: color-mix(in srgb, var(--white) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--white) 12%, transparent);
   border-radius: 50%;
-  color: rgba(255,255,255,.45);
+  color: color-mix(in srgb, var(--white) 45%, transparent);
   font-size: 1.4rem;
   line-height: 1;
   cursor: pointer;
@@ -84,13 +84,13 @@
   transition: background .18s, border-color .18s, color .18s, transform .18s;
 }
 .lb-arr:hover {
-  background: rgba(255,255,255,.22);
-  border-color: rgba(255,255,255,.45);
-  color: #fff;
+  background: color-mix(in srgb, var(--white) 22%, transparent);
+  border-color: color-mix(in srgb, var(--white) 45%, transparent);
+  color: var(--cream);
   backdrop-filter: blur(4px);
   transform: translateY(-50%) scale(1.08);
 }
-.lb-arr:focus-visible { outline: 2px solid rgba(255,255,255,.7); outline-offset: 2px; }
+.lb-arr:focus-visible { outline: 2px solid color-mix(in srgb, var(--white) 70%, transparent); outline-offset: 2px; }
 /* right-edge of prev = .5rem left of lb-box left edge */
 .lb-prev { right: calc(100% + .5rem); }
 /* left-edge of next = .5rem right of lb-box right edge */
@@ -101,9 +101,9 @@
 .lb-caption {
   min-height: 2.8rem;
   padding: .6rem 1.1rem;
-  background: #ffffff;
+  background: var(--bg-card);
   border-radius: 0 0 var(--r-lg) var(--r-lg);
-  color: var(--ink, #1a1a2e);
+  color: var(--cream);
   font-size: .82rem;
   font-weight: 500;
   text-align: center;
@@ -143,8 +143,8 @@
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%,-50%) scale(.75);
-  background: rgba(255,255,255,.95);
-  color: #1a1a2e;
+  background: color-mix(in srgb, var(--white) 95%, transparent);
+  color: var(--ink);
   padding: .35rem 1rem;
   border-radius: 100px;
   font-size: .75rem;
