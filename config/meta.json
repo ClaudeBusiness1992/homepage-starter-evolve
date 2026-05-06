@@ -33,10 +33,10 @@
     "description": "pixel&code baut moderne, schnelle Websites für kleine Unternehmen. Webdesign, SEO und digitale Präsenz aus einer Hand."
   },
   "theme": {
-    "ink": "#1a1a2e",
+    "ink": "#1c1c1c",
     "cream": "#f5f0e8",
-    "accent": "#e8631b",
-    "accentLight": "#ff8c42",
+    "accent": "#c8520e",
+    "accentLight": "#d96520",
     "sage": "#4a7c6f"
   }
 }

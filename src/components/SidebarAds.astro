@@ -1,0 +1,45 @@
+---
+interface Ad {
+  enabled: boolean;
+  image?: string;
+  url?: string;
+  alt?: string;
+  label?: string;
+}
+
+interface Props {
+  left?: Ad;
+  right?: Ad;
+}
+
+const { left, right } = Astro.props;
+const showLeft  = left?.enabled  && (left?.image  || true);
+const showRight = right?.enabled && (right?.image || true);
+---
+
+{(showLeft || showRight) && (
+  <div class="sidebar-ads" aria-hidden="true">
+    {showLeft && (
+      <div class="sidebar-ad sidebar-ad--left">
+        {left?.label && <span class="sidebar-ad-label">{left.label}</span>}
+        <a href={left?.url ?? '#'} target={left?.url ? '_blank' : undefined} rel="noopener noreferrer" class="sidebar-ad-link" tabindex="-1">
+          {left?.image
+            ? <img src={left.image} alt={left?.alt ?? 'Anzeige'} loading="lazy" />
+            : <div class="sidebar-ad-placeholder">Ihre Werbung hier</div>
+          }
+        </a>
+      </div>
+    )}
+    {showRight && (
+      <div class="sidebar-ad sidebar-ad--right">
+        {right?.label && <span class="sidebar-ad-label">{right.label}</span>}
+        <a href={right?.url ?? '#'} target={right?.url ? '_blank' : undefined} rel="noopener noreferrer" class="sidebar-ad-link" tabindex="-1">
+          {right?.image
+            ? <img src={right.image} alt={right?.alt ?? 'Anzeige'} loading="lazy" />
+            : <div class="sidebar-ad-placeholder">Ihre Werbung hier</div>
+          }
+        </a>
+      </div>
+    )}
+  </div>
+)}

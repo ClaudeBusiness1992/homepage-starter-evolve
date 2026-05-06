@@ -3,9 +3,6 @@ import '../styles/global.css';
 import CookieBanner from '../components/CookieBanner.astro';
 import Lightbox from '../components/Lightbox.astro';
 
-// Nur das aktive Design laden — alle anderen werden nicht in die Seite injiziert.
-// import.meta.glob mit ?inline liefert CSS als String; eager: true löst beim Build auf.
-const designStyles = import.meta.glob('../styles/designs/*.css', { query: '?inline', import: 'default', eager: true }) as Record<string, string>;
 
 interface Props {
   meta: {
@@ -27,7 +24,6 @@ interface Props {
 const { meta, theme, design = '01-warm-local', noindex = false } = Astro.props;
 const canonicalUrl = Astro.url.href;
 const ogImage = meta.image ?? '/og-image.jpg';
-const activeDesignStyle = (designStyles[`../styles/designs/${design}.css`] ?? '') as string;
 
 const themeStyle = `
   --ink: ${theme.ink};
@@ -64,8 +60,6 @@ const themeStyle = `
     <meta name="twitter:description" content={meta.description} />
     <meta name="twitter:image"       content={new URL(ogImage, Astro.url).href} />
 
-    <!-- Design-spezifisches CSS (nur aktives Design) -->
-    {activeDesignStyle && <style is:global set:html={activeDesignStyle} />}
   </head>
   <body>
     <a href="#main" class="skip-link">Zum Inhalt springen</a>

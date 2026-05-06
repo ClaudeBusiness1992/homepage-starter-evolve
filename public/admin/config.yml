@@ -172,6 +172,8 @@ collections:
                   - { label: "🖼️ Galerie", name: "gallery", widget: "boolean", default: false, hint: "Zeigt eine Bildergalerie mit Projekten/Arbeiten." }
                   - { label: "⭐ Kundenbewertungen", name: "reviews", widget: "boolean", default: false, hint: "Zeigt die Bewertungs-Sektion mit Sternen und Zitaten." }
                   - { label: "📋 Online-Buchung", name: "booking", widget: "boolean", default: false, hint: "Zeigt das Buchungsformular für Termine (Service, Mitarbeiter:in, Datum, Uhrzeit)." }
+                  - { label: "🏅 Sponsoren", name: "sponsors", widget: "boolean", default: false, hint: "Zeigt eine Sponsor-Sektion mit 3 Klassen: Top, Middle, Little." }
+                  - { label: "📢 Sidebar-Werbung", name: "sidebarAds", widget: "boolean", default: false, hint: "Zeigt Werbeblöcke links und rechts neben der Seite (nur bei sehr breiten Bildschirmen)." }
 
               # ── Countdown-Detail-Einstellungen ──
               - label: "📅 Countdown — Detail-Einstellungen"
@@ -191,7 +193,7 @@ collections:
               - label: "🖼️ Galerie — Inhalte"
                 name: "gallery"
                 widget: "object"
-                collapsed: true
+                collapsed: false
                 fields:
                   - { label: "Label (kleine Überschrift)", name: "label", widget: "string", required: false, default: "Unsere Arbeiten" }
                   - { label: "Überschrift", name: "headline", widget: "string", required: false, default: "" }
@@ -199,12 +201,13 @@ collections:
                   - label: "Bilder"
                     name: "items"
                     widget: "list"
-                    summary: "{{caption}} · {{category}}"
+                    summary: "{{fields.caption}} · {{fields.category}}"
+                    hint: "Klicke auf '+ Bild hinzufügen' um ein neues Bild einzufügen. Reihenfolge per Drag & Drop ändern."
                     fields:
-                      - { label: "Bild", name: "src", widget: "image" }
-                      - { label: "Alt-Text", name: "alt", widget: "string" }
-                      - { label: "Bildunterschrift", name: "caption", widget: "string" }
-                      - { label: "Kategorie", name: "category", widget: "string" }
+                      - { label: "Bild hochladen", name: "src", widget: "image", hint: "JPG oder PNG, mindestens 800×600 px" }
+                      - { label: "Alt-Text (für Screenreader)", name: "alt", widget: "string", hint: "Kurze Bildbeschreibung, z.B. 'Schreinerei Weber – Eingangsbereich'" }
+                      - { label: "Bildunterschrift", name: "caption", widget: "string", hint: "Wird unter dem Bild angezeigt, z.B. Firmenname oder Projektname" }
+                      - { label: "Kategorie", name: "category", widget: "string", hint: "z.B. Webdesign, Landingpage oder SEO" }
 
               # ── Bewertungen-Detail-Einstellungen (umgezogen aus Inhalte) ──
               - label: "⭐ Bewertungen — Inhalte"
@@ -267,6 +270,59 @@ collections:
                       - { label: "Freitag", name: "friday", widget: "list", required: false, default: [], field: { label: "Uhrzeit", name: "time", widget: "string" } }
                       - { label: "Samstag", name: "saturday", widget: "list", required: false, default: [], field: { label: "Uhrzeit", name: "time", widget: "string" } }
                       - { label: "Sonntag", name: "sunday", widget: "list", required: false, default: [], field: { label: "Uhrzeit", name: "time", widget: "string" } }
+
+              # ── Sponsoren-Detail-Einstellungen ──
+              - label: "🏅 Sponsoren — Inhalte"
+                name: "sponsors"
+                widget: "object"
+                collapsed: true
+                fields:
+                  - { label: "Label (kleine Überschrift)", name: "label", widget: "string", required: false, default: "Unsere Partner" }
+                  - { label: "Überschrift", name: "headline", widget: "string", required: false, default: "Sponsoren & Förderer" }
+                  - { label: "Unterzeile", name: "subline", widget: "text", required: false, default: "" }
+                  - label: "Sponsoren"
+                    name: "items"
+                    widget: "list"
+                    summary: "{{fields.tier}} — {{fields.name}}"
+                    hint: "Top = große Logos (Hauptsponsor), Middle = mittelgroße Logos (Förderer), Little = kleine Logos (Unterstützer)"
+                    fields:
+                      - label: "Klasse"
+                        name: "tier"
+                        widget: "select"
+                        options:
+                          - { label: "Top-Sponsor (groß, gold)", value: "top" }
+                          - { label: "Middle-Sponsor (mittel)", value: "middle" }
+                          - { label: "Little-Sponsor (klein, grau)", value: "little" }
+                      - { label: "Name", name: "name", widget: "string" }
+                      - { label: "Logo", name: "logo", widget: "image", hint: "PNG mit transparentem Hintergrund empfohlen" }
+                      - { label: "Website-URL", name: "url", widget: "string", required: false, default: "", hint: "Wohin soll der Sponsor-Link führen?" }
+                      - { label: "Kurzbeschreibung (nur Top)", name: "description", widget: "string", required: false, default: "", hint: "Wird nur bei Top-Sponsoren angezeigt, z.B. Platin-Partner" }
+
+              # ── Sidebar-Werbung-Detail-Einstellungen ──
+              - label: "📢 Sidebar-Werbung — Konfiguration"
+                name: "sidebarAds"
+                widget: "object"
+                collapsed: true
+                hint: "Die Werbeblöcke erscheinen nur auf Bildschirmen ab ca. 1580 px Breite (Desktop), damit das Layout nicht gestört wird."
+                fields:
+                  - label: "Linke Seite"
+                    name: "left"
+                    widget: "object"
+                    fields:
+                      - { label: "Aktiv", name: "enabled", widget: "boolean", default: true }
+                      - { label: "Bild", name: "image", widget: "image", required: false, default: "" }
+                      - { label: "Ziel-URL", name: "url", widget: "string", required: false, default: "" }
+                      - { label: "Alt-Text", name: "alt", widget: "string", required: false, default: "Werbung links" }
+                      - { label: "Beschriftung", name: "label", widget: "string", required: false, default: "Anzeige" }
+                  - label: "Rechte Seite"
+                    name: "right"
+                    widget: "object"
+                    fields:
+                      - { label: "Aktiv", name: "enabled", widget: "boolean", default: true }
+                      - { label: "Bild", name: "image", widget: "image", required: false, default: "" }
+                      - { label: "Ziel-URL", name: "url", widget: "string", required: false, default: "" }
+                      - { label: "Alt-Text", name: "alt", widget: "string", required: false, default: "Werbung rechts" }
+                      - { label: "Beschriftung", name: "label", widget: "string", required: false, default: "Anzeige" }
 
       # ── FIRMENDATEN ──────────────────────────────────────────────────
       - name: "firmendaten"

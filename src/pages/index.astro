@@ -3,64 +3,29 @@ import metaConfig    from '../../config/meta.json';
 import designConfig  from '../../config/design.json';
 import contentConfig from '../../config/content.json';
 import extrasConfig  from '../../config/extras.json';
-import Base     from '../layouts/Base.astro';
-import Nav      from '../components/Nav.astro';
-import Hero01   from '../sections/Hero.astro';
-import Hero02   from '../designs/02-bold-editorial/Hero.astro';
-import Hero03   from '../designs/03-minimal-clean/Hero.astro';
-import Hero04   from '../designs/04-corporate-split/Hero.astro';
-import Hero05   from '../designs/05-vibrant-gradient/Hero.astro';
-import Hero06   from '../designs/06-editorial-press/Hero.astro';
-import Hero07   from '../designs/07-terminal-console/Hero.astro';
-import Hero08   from '../designs/08-soft-bloom/Hero.astro';
-import Hero09   from '../designs/09-luxe-atelier/Hero.astro';
-import Hero10   from '../designs/10-pop-studio/Hero.astro';
-import About01  from '../sections/About.astro';
-import About02  from '../designs/02-bold-editorial/About.astro';
-import About04  from '../designs/04-corporate-split/About.astro';
+import Base      from '../layouts/Base.astro';
+import Nav       from '../components/Nav.astro';
+import Hero01    from '../sections/Hero.astro';
+import About01   from '../sections/About.astro';
 import Services01 from '../sections/Services.astro';
-import Services02 from '../designs/02-bold-editorial/Services.astro';
-import Services05 from '../designs/05-vibrant-gradient/Services.astro';
 import Countdown from '../sections/Countdown.astro';
 import Pricing  from '../sections/Pricing.astro';
 import Gallery  from '../sections/Gallery.astro';
 import Reviews  from '../sections/Reviews.astro';
-import Booking  from '../sections/Booking.astro';
-import Contact  from '../sections/Contact.astro';
-import Footer   from '../sections/Footer.astro';
+import Booking   from '../sections/Booking.astro';
+import Sponsors  from '../sections/Sponsors.astro';
+import Contact   from '../sections/Contact.astro';
+import Footer    from '../sections/Footer.astro';
+import SidebarAds from '../components/SidebarAds.astro';
 
 const { design = '01-warm-local' } = designConfig;
 const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
 const { extras: x = {} } = extrasConfig;
 
-// Hero: every design has its own Hero
-const HeroComponents = {
-  '01-warm-local':       Hero01,
-  '02-bold-editorial':   Hero02,
-  '03-minimal-clean':    Hero03,
-  '04-corporate-split':  Hero04,
-  '05-vibrant-gradient': Hero05,
-  '06-editorial-press':  Hero06,
-  '07-terminal-console': Hero07,
-  '08-soft-bloom':       Hero08,
-  '09-luxe-atelier':     Hero09,
-  '10-pop-studio':       Hero10,
-};
-
-// About / Services: only overrides; everyone else falls back to default (About01/Services01)
-const AboutOverrides = {
-  '02-bold-editorial':  About02,
-  '04-corporate-split': About04,
-};
-const ServicesOverrides = {
-  '02-bold-editorial':   Services02,
-  '05-vibrant-gradient': Services05,
-};
-
-const Hero     = HeroComponents[design]    ?? Hero01;
-const About    = AboutOverrides[design]    ?? About01;
-const Services = ServicesOverrides[design] ?? Services01;
+const Hero     = Hero01;
+const About    = About01;
+const Services = Services01;
 
 // Build nav in actual scroll order (Sections-Reihenfolge unten in <main>):
 // about → services → gallery → pricing → reviews → booking → contact (cta)
@@ -73,8 +38,9 @@ const orderedSections = [
   { id: 'services', label: labelFor('services', 'Leistungen'),  enabled: s.services?.enabled !== false },
   { id: 'gallery',  label: 'Galerie',                            enabled: !!(x.active?.gallery && x.gallery) },
   { id: 'pricing',  label: labelFor('pricing',  'Preise'),      enabled: s.pricing?.enabled !== false },
-  { id: 'reviews',  label: 'Bewertungen',                        enabled: !!(x.active?.reviews && x.reviews) },
-  { id: 'booking',  label: 'Buchung',                            enabled: !!(x.active?.booking && x.booking) },
+  { id: 'reviews',  label: 'Bewertungen',                        enabled: !!(x.active?.reviews  && x.reviews) },
+  { id: 'booking',  label: 'Buchung',                            enabled: !!(x.active?.booking  && x.booking) },
+  { id: 'sponsors', label: 'Sponsoren',                          enabled: !!(x.active?.sponsors && x.sponsors) },
 ];
 
 const navLinks = [
@@ -98,7 +64,8 @@ const navLinks = [
     {x.active?.gallery   && x.gallery  && <Gallery   {...x.gallery} />}
     {s.pricing?.enabled  && <Pricing   {...s.pricing} />}
     {x.active?.reviews   && x.reviews  && <Reviews  {...x.reviews} stats={s.stats?.enabled ? s.stats.items : []} agencyName={meta.siteName} agencyUrl={Astro.site?.href} telephone={meta.phone} />}
-    {x.active?.booking   && x.booking  && <Booking  {...x.booking} />}
+    {x.active?.booking   && x.booking   && <Booking   {...x.booking} />}
+    {x.active?.sponsors  && x.sponsors  && <Sponsors  {...x.sponsors} />}
     {(s.contact?.enabled || s.footer?.enabled) && (
       <div class="contact-footer-snap">
         {s.contact?.enabled  && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} availability={x.booking?.availability} />}
@@ -106,6 +73,10 @@ const navLinks = [
       </div>
     )}
   </main>
+
+  {x.active?.sidebarAds && x.sidebarAds && (
+    <SidebarAds left={x.sidebarAds.left} right={x.sidebarAds.right} />
+  )}
 </Base>
 
 <script is:inline>
@@ -121,16 +92,20 @@ const navLinks = [
   let unlockTimer = null;
   const html = document.documentElement;
 
-  const unlock = () => { locked = false; animDone = false; doneAt = 0; };
+  // CSS mandatory snap kämpft mit dem JS-Smooth-Scroll: nach scrollTo() landet der
+  // Browser manchmal 1–2 px neben dem Snap-Punkt und springt dann zum nächsten weiter
+  // ("2-Seiten-Spring"). Fix: CSS snap dauerhaft deaktivieren, JS übernimmt komplett.
+  html.style.scrollSnapType = 'none';
+
+  const unlock = () => { locked = false; animDone = false; doneAt = 0; unlockTimer = null; };
 
   const scheduleUnlock = () => {
-    clearTimeout(unlockTimer);
-    unlockTimer = setTimeout(unlock, 500);
+    if (unlockTimer) return;               // never reset — let the current timer expire
+    unlockTimer = setTimeout(unlock, 220); // shorter cooldown for snappier response
   };
 
   // Called once the page scroll animation is truly finished.
   const done = () => {
-    html.style.scrollSnapType = '';
     animDone = true;
     doneAt   = Date.now();
     scheduleUnlock();
@@ -156,7 +131,6 @@ const navLinks = [
 
     locked   = true;
     animDone = false;
-    html.style.scrollSnapType = 'none';
 
     const top = Math.max(0, next.offsetTop - navH);
     window.scrollTo({ top, behavior: 'smooth' });
@@ -175,17 +149,19 @@ const navLinks = [
       scrollTimer = setTimeout(() => {
         window.removeEventListener('scrollend', onEnd);
         done();
-      }, 1400);
+      }, 1200);
     } else {
-      scrollTimer = setTimeout(done, 1000);
+      scrollTimer = setTimeout(done, 900);
     }
   };
 
-  const inHScroll = (el) => {
+  // True if el (or an ancestor) is a scroll container with actual overflow — H or V.
+  // Lets carousels, inner panels, and overflowing textareas scroll naturally.
+  const inScrollContainer = (el) => {
     while (el && el !== document.body) {
       const s = window.getComputedStyle(el);
-      if ((s.overflowX === 'auto' || s.overflowX === 'scroll')
-          && el.scrollWidth > el.clientWidth + 2) return true;
+      if ((s.overflowX === 'auto' || s.overflowX === 'scroll') && el.scrollWidth  > el.clientWidth  + 2) return true;
+      if ((s.overflowY === 'auto' || s.overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 2) return true;
       el = el.parentElement;
     }
     return false;
@@ -195,20 +171,14 @@ const navLinks = [
   let wheelTimer = null;
 
   window.addEventListener('wheel', (e) => {
+    if (window.innerWidth < 768) return;
     if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) return;
-    if (inHScroll(e.target)) return;
+    if (inScrollContainer(e.target)) return;
     e.preventDefault();
     if (locked) {
       wheelAcc = 0;
       clearTimeout(wheelTimer);
-      if (animDone) {
-        // Absorb trackpad momentum — but cap at 1800 ms to prevent infinite lock.
-        if (Date.now() - doneAt < 1800) {
-          scheduleUnlock();
-        } else {
-          unlock();
-        }
-      }
+      if (animDone && Date.now() - doneAt > 1800) unlock(); // safety valve only
       return;
     }
     wheelAcc += e.deltaY;
@@ -221,7 +191,16 @@ const navLinks = [
     go(dir);
   }, { passive: false });
 
+  // Prevent <select> from changing its value on wheel in Chrome (native behaviour
+  // can bypass the window-level e.preventDefault above on some platforms).
+  document.querySelectorAll('select').forEach(sel => {
+    sel.addEventListener('wheel', (e) => {
+      if (window.innerWidth >= 768) e.preventDefault();
+    }, { passive: false });
+  });
+
   document.addEventListener('keydown', (e) => {
+    if (window.innerWidth < 768) return;
     const down = e.key === 'ArrowDown' || e.key === 'PageDown';
     const up   = e.key === 'ArrowUp'   || e.key === 'PageUp';
     if (!down && !up) return;
@@ -229,6 +208,63 @@ const navLinks = [
     if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
     e.preventDefault();
     go(down ? 1 : -1);
+  });
+
+  // ── SETTLE ────────────────────────────────────────────────────────────────
+  // Snaps the page to the nearest section after any scroll that bypassed go()
+  // (scrollbar drag, nav-link anchor jump, window resize, etc.).
+  let settleTimer = null;
+  const settle = () => {
+    if (window.innerWidth < 768) return;
+    if (locked) return;
+    const list = getTargets();
+    if (!list.length) return;
+    const navH = parseFloat(getComputedStyle(html).getPropertyValue('--nav-h') || '72');
+    const sy   = window.scrollY;
+    let closest = list[0], minDist = Infinity;
+    for (const el of list) {
+      const dist = Math.abs(el.offsetTop - navH - sy);
+      if (dist < minDist) { minDist = dist; closest = el; }
+    }
+    if (minDist <= 4) return; // already on a snap point
+    locked = true; animDone = false;
+    window.scrollTo({ top: Math.max(0, closest.offsetTop - navH), behavior: 'smooth' });
+    const onSettle = (e) => {
+      if (e.target !== document && e.target !== document.documentElement) return;
+      window.removeEventListener('scrollend', onSettle);
+      clearTimeout(settleTimer);
+      unlock();
+    };
+    if ('onscrollend' in window) {
+      window.addEventListener('scrollend', onSettle);
+      settleTimer = setTimeout(() => { window.removeEventListener('scrollend', onSettle); unlock(); }, 900);
+    } else {
+      settleTimer = setTimeout(unlock, 900);
+    }
+  };
+
+  if ('onscrollend' in window) {
+    // Fires once after any page scroll ends — including those not from go().
+    window.addEventListener('scrollend', (e) => {
+      if (e.target !== document && e.target !== document.documentElement) return;
+      if (locked) return;
+      settle();
+    });
+  } else {
+    // Fallback: debounce on scroll idle for browsers without scrollend.
+    let idleTimer = null;
+    window.addEventListener('scroll', () => {
+      if (window.innerWidth < 768) return;
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(settle, 150);
+    }, { passive: true });
+  }
+
+  // Re-snap after resize — section offsets shift when the viewport changes.
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(settle, 300);
   });
 }());
 </script>
