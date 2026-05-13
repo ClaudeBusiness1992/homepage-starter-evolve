@@ -343,13 +343,18 @@ main > section:not(#hero) > .wrap {
   border-radius: 2px;
 }
 .nav-ul a.cta-link {
-  background: var(--accent);
-  color: var(--white);
+  background: transparent;
+  color: var(--cream);
+  border: 1.5px solid color-mix(in srgb, var(--cream) 35%, transparent);
   padding: .45rem 1.2rem;
   border-radius: var(--r-pill);
-  transition: background .2s, transform .2s;
+  transition: background .2s, border-color .2s, transform .2s;
 }
-.nav-ul a.cta-link:hover { background: var(--accent-light); transform: translateY(-1px); }
+.nav-ul a.cta-link:hover {
+  background: color-mix(in srgb, var(--cream) 10%, transparent);
+  border-color: color-mix(in srgb, var(--cream) 60%, transparent);
+  transform: translateY(-1px);
+}
 .burger {
   display: none;
   flex-direction: column;
