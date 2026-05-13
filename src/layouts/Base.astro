@@ -7,6 +7,7 @@ import Lightbox from '../components/Lightbox.astro';
 interface Props {
   meta: {
     siteName: string;
+    tagline?: string;
     description: string;
     image?: string;
   };
@@ -24,6 +25,9 @@ interface Props {
 const { meta, theme, design = '01-warm-local', noindex = false } = Astro.props;
 const canonicalUrl = Astro.url.href;
 const ogImage = meta.image ?? '/og-image.jpg';
+const faviconHref = 'data:image/svg+xml,' + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="${theme.accent}"/><text x="16" y="23" font-family="Georgia,serif" font-size="20" fill="white" text-anchor="middle">${meta.siteName.charAt(0).toUpperCase()}</text></svg>`
+);
 
 const themeStyle = `
   --ink: ${theme.ink};
@@ -39,9 +43,10 @@ const themeStyle = `
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{meta.siteName}</title>
+    <title>{meta.siteName}{meta.tagline ? ` — ${meta.tagline}` : ''}</title>
     <meta name="description" content={meta.description} />
     {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/dm-serif-display-normal-400-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/outfit-normal-400-latin.woff2" crossorigin />
     <link rel="canonical" href={canonicalUrl} />

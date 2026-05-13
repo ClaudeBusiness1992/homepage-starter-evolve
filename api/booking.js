@@ -131,7 +131,7 @@ export default async function handler(req, res) {
 
   // Live-Sync: create Google Calendar event
   const saJson = process.env.GOOGLE_SA_JSON;
-  const calendarId = body.calendarId || process.env.GOOGLE_CALENDAR_ID || '';
+  const calendarId = process.env.GOOGLE_CALENDAR_ID || '';
 
   if (!saJson || !calendarId) {
     // Live-Sync nicht konfiguriert → Erfolg melden, Logging ohne PII

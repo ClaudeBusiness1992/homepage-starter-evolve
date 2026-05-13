@@ -81,190 +81,152 @@ const navLinks = [
 
 <script is:inline>
 (function () {
-  const getTargets = () => [
-    ...document.querySelectorAll('#main > section, #main > .hero-snap, #main > .contact-footer-snap')
-  ];
-
-  let locked      = false;
-  let animDone    = false;
-  let doneAt      = 0;
-  let scrollTimer = null;
-  let unlockTimer = null;
   const html = document.documentElement;
 
-  // CSS mandatory snap kämpft mit dem JS-Smooth-Scroll: nach scrollTo() landet der
-  // Browser manchmal 1–2 px neben dem Snap-Punkt und springt dann zum nächsten weiter
-  // ("2-Seiten-Spring"). Fix: CSS snap dauerhaft deaktivieren, JS übernimmt komplett.
-  html.style.scrollSnapType = 'none';
+  function targets() {
+    return [...document.querySelectorAll('#main > .hero-snap, #main > section, #main > .contact-footer-snap')];
+  }
 
-  const unlock = () => { locked = false; animDone = false; doneAt = 0; unlockTimer = null; };
+  function navH() {
+    return parseFloat(getComputedStyle(html).getPropertyValue('--nav-h')) || 72;
+  }
 
-  const scheduleUnlock = () => {
-    if (unlockTimer) return;               // never reset — let the current timer expire
-    unlockTimer = setTimeout(unlock, 220); // shorter cooldown for snappier response
-  };
+  // easeInOutSine — sinusoidal velocity, no hard acceleration anywhere
+  function ease(t) {
+    return -(Math.cos(Math.PI * t) - 1) / 2;
+  }
 
-  // Called once the page scroll animation is truly finished.
-  const done = () => {
-    animDone = true;
-    doneAt   = Date.now();
-    scheduleUnlock();
-  };
+  let animId   = null;
+  let locked   = false;
+  let cooling  = false;  // brief pause after animation so momentum tail can't trigger next section
+  let coolTimer = null;
 
-  const go = (dir) => {
-    if (locked) return;
-    const list = getTargets();
-    if (!list.length) return;
+  function smoothTo(targetY, onDone) {
+    const from = window.scrollY;
+    const dist = targetY - from;
+    if (Math.abs(dist) < 2) { locked = false; if (onDone) onDone(); return; }
+    const dur = 750;
+    let t0 = null;
+    cancelAnimationFrame(animId);
+    function step(ts) {
+      if (!t0) t0 = ts;
+      const p = Math.min((ts - t0) / dur, 1);
+      window.scrollTo(0, from + dist * ease(p));
+      if (p < 1) { animId = requestAnimationFrame(step); }
+      else {
+        window.scrollTo(0, Math.round(targetY)); // land on exact integer pixel
+        locked  = false;
+        acc     = 0;           // flush any accumulated wheel delta
+        cooling = true;
+        clearTimeout(coolTimer);
+        coolTimer = setTimeout(() => { cooling = false; }, 1000); // blocks momentum tail
+        if (onDone) onDone();
+      }
+    }
+    animId = requestAnimationFrame(step);
+  }
 
-    const navH = parseFloat(
-      getComputedStyle(html).getPropertyValue('--nav-h') || '72'
-    );
-    const sy = window.scrollY;
-
+  function currentIdx(list) {
+    const nh = navH(), sy = window.scrollY;
     let idx = 0;
     for (let i = 0; i < list.length; i++) {
-      if (list[i].offsetTop - navH <= sy + 5) idx = i;
+      if (list[i].offsetTop - nh <= sy + 5) idx = i;
     }
+    return idx;
+  }
 
-    const next = list[idx + (dir > 0 ? 1 : -1)];
+  function go(dir) {
+    if (locked) return;
+    const list = targets();
+    const next = list[currentIdx(list) + dir];
     if (!next) return;
+    locked = true;
+    smoothTo(Math.max(0, next.offsetTop - navH()));
+  }
 
-    locked   = true;
-    animDone = false;
-
-    const top = Math.max(0, next.offsetTop - navH);
-    window.scrollTo({ top, behavior: 'smooth' });
-
-    if ('onscrollend' in window) {
-      // Filter to document-level scroll only — carousel/gallery scrollend events
-      // bubble to window too and would prematurely trigger done().
-      const onEnd = (e) => {
-        // Viewport scrollend targets document or documentElement; element scrolls target the element itself.
-        if (e.target !== document && e.target !== document.documentElement) return;
-        window.removeEventListener('scrollend', onEnd);
-        clearTimeout(scrollTimer);
-        done();
-      };
-      window.addEventListener('scrollend', onEnd);
-      scrollTimer = setTimeout(() => {
-        window.removeEventListener('scrollend', onEnd);
-        done();
-      }, 1200);
-    } else {
-      scrollTimer = setTimeout(done, 900);
-    }
-  };
-
-  // True if el (or an ancestor) is a scroll container with actual overflow — H or V.
-  // Lets carousels, inner panels, and overflowing textareas scroll naturally.
-  const inScrollContainer = (el) => {
+  function inScrollable(el) {
     while (el && el !== document.body) {
-      const s = window.getComputedStyle(el);
-      if ((s.overflowX === 'auto' || s.overflowX === 'scroll') && el.scrollWidth  > el.clientWidth  + 2) return true;
+      const s = getComputedStyle(el);
+      // Only block for vertically scrollable containers — horizontal carousels must not
+      // eat vertical scroll events (those should still trigger section navigation).
       if ((s.overflowY === 'auto' || s.overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 2) return true;
       el = el.parentElement;
     }
     return false;
-  };
+  }
 
-  let wheelAcc = 0;
-  let wheelTimer = null;
-
+  // ── Wheel (mouse + trackpad) ─────────────────────────────────────────────
+  // Any vertical gesture triggers exactly one section forward/back.
+  // Threshold 20 = reacts to even a light two-finger nudge.
+  let acc = 0, wt = null, lastGoAt = 0;
   window.addEventListener('wheel', (e) => {
     if (window.innerWidth < 768) return;
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) return;
-    if (inScrollContainer(e.target)) return;
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) return; // skip horizontal swipes
+    if (inScrollable(e.target)) return;
     e.preventDefault();
-    if (locked) {
-      wheelAcc = 0;
-      clearTimeout(wheelTimer);
-      if (animDone && Date.now() - doneAt > 1800) unlock(); // safety valve only
-      return;
-    }
-    wheelAcc += e.deltaY;
-    clearTimeout(wheelTimer);
-    wheelTimer = setTimeout(() => { wheelAcc = 0; }, 200);
-    if (Math.abs(wheelAcc) < 66) return;
-    const dir = wheelAcc;
-    wheelAcc = 0;
-    clearTimeout(wheelTimer);
+    if (locked || cooling) return;
+    if (Date.now() - lastGoAt < 1700) return; // hard inertia guard beyond cooling
+    acc += e.deltaY;
+    clearTimeout(wt);
+    wt = setTimeout(() => { acc = 0; }, 300);
+    if (Math.abs(acc) < 5) return;
+    const dir = acc > 0 ? 1 : -1;
+    acc = 0; clearTimeout(wt);
+    lastGoAt = Date.now();
     go(dir);
   }, { passive: false });
 
-  // Prevent <select> from changing its value on wheel in Chrome (native behaviour
-  // can bypass the window-level e.preventDefault above on some platforms).
-  document.querySelectorAll('select').forEach(sel => {
-    sel.addEventListener('wheel', (e) => {
-      if (window.innerWidth >= 768) e.preventDefault();
-    }, { passive: false });
-  });
-
+  // ── Keyboard ─────────────────────────────────────────────────────────────
   document.addEventListener('keydown', (e) => {
     if (window.innerWidth < 768) return;
-    const down = e.key === 'ArrowDown' || e.key === 'PageDown';
-    const up   = e.key === 'ArrowUp'   || e.key === 'PageUp';
-    if (!down && !up) return;
+    const dn = e.key === 'ArrowDown' || e.key === 'PageDown';
+    const up = e.key === 'ArrowUp'   || e.key === 'PageUp';
+    if (!dn && !up) return;
     const tag = (document.activeElement?.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
     e.preventDefault();
-    go(down ? 1 : -1);
+    go(dn ? 1 : -1);
   });
 
-  // ── SETTLE ────────────────────────────────────────────────────────────────
-  // Snaps the page to the nearest section after any scroll that bypassed go()
-  // (scrollbar drag, nav-link anchor jump, window resize, etc.).
-  let settleTimer = null;
-  const settle = () => {
-    if (window.innerWidth < 768) return;
-    if (locked) return;
-    const list = getTargets();
-    if (!list.length) return;
-    const navH = parseFloat(getComputedStyle(html).getPropertyValue('--nav-h') || '72');
-    const sy   = window.scrollY;
-    let closest = list[0], minDist = Infinity;
-    for (const el of list) {
-      const dist = Math.abs(el.offsetTop - navH - sy);
-      if (dist < minDist) { minDist = dist; closest = el; }
-    }
-    if (minDist <= 4) return; // already on a snap point
-    locked = true; animDone = false;
-    window.scrollTo({ top: Math.max(0, closest.offsetTop - navH), behavior: 'smooth' });
-    const onSettle = (e) => {
-      if (e.target !== document && e.target !== document.documentElement) return;
-      window.removeEventListener('scrollend', onSettle);
-      clearTimeout(settleTimer);
-      unlock();
-    };
-    if ('onscrollend' in window) {
-      window.addEventListener('scrollend', onSettle);
-      settleTimer = setTimeout(() => { window.removeEventListener('scrollend', onSettle); unlock(); }, 900);
-    } else {
-      settleTimer = setTimeout(unlock, 900);
-    }
-  };
-
-  if ('onscrollend' in window) {
-    // Fires once after any page scroll ends — including those not from go().
-    window.addEventListener('scrollend', (e) => {
-      if (e.target !== document && e.target !== document.documentElement) return;
+  // ── Nav link clicks — use same smooth animation ───────────────────────────
+  document.querySelectorAll('#navLinks a[href*="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href').split('#')[1];
+      const el = id && document.getElementById(id);
+      if (!el) return;
+      e.preventDefault();
       if (locked) return;
-      settle();
+      locked = true;
+      smoothTo(Math.max(0, el.offsetTop - navH()));
     });
-  } else {
-    // Fallback: debounce on scroll idle for browsers without scrollend.
-    let idleTimer = null;
-    window.addEventListener('scroll', () => {
-      if (window.innerWidth < 768) return;
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(settle, 150);
-    }, { passive: true });
-  }
+  });
 
-  // Re-snap after resize — section offsets shift when the viewport changes.
-  let resizeTimer = null;
+  // ── Settle — snaps to nearest section after scrollbar drag or resize ──────
+  let st = null;
+  function settle() {
+    if (window.innerWidth < 768 || locked || cooling) return;
+    const list = targets();
+    const nh = navH(), sy = window.scrollY;
+    let best = list[0], bestD = Infinity;
+    for (const el of list) {
+      const d = Math.abs(el.offsetTop - nh - sy);
+      if (d < bestD) { bestD = d; best = el; }
+    }
+    if (bestD <= 8) return;
+    locked = true;
+    smoothTo(Math.max(0, best.offsetTop - nh));
+  }
+  window.addEventListener('scroll', () => {
+    if (window.innerWidth < 768 || locked || cooling) return;
+    clearTimeout(st); st = setTimeout(settle, 250);
+  }, { passive: true });
   window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(settle, 300);
+    clearTimeout(st); st = setTimeout(settle, 300);
+  });
+
+  // ── Chrome select-wheel fix ───────────────────────────────────────────────
+  document.querySelectorAll('select').forEach(sel => {
+    sel.addEventListener('wheel', (e) => { if (window.innerWidth >= 768) e.preventDefault(); }, { passive: false });
   });
 }());
 </script>

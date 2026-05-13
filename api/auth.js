@@ -29,8 +29,9 @@ export default async function handler(req, res) {
 
     if (data.error) {
       res.setHeader('Content-Type', 'text/html');
+      const errMsg = JSON.stringify(`authorization:github:error:${data.error_description}`);
       return res.send(
-        `<script>window.opener.postMessage('authorization:github:error:${data.error_description}','*');window.close();</script>`
+        `<script>window.opener.postMessage(${errMsg},${JSON.stringify(SITE_URL)});window.close();</script>`
       );
     }
 
@@ -48,7 +49,7 @@ export default async function handler(req, res) {
           }
         }
         window.addEventListener('message', receiveMessage, false);
-        window.opener.postMessage('authorizing:github', '*');
+        window.opener.postMessage('authorizing:github', ${JSON.stringify(SITE_URL)});
       })();
     </script>`);
   }

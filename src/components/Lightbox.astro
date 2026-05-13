@@ -247,7 +247,13 @@
   btnNext?.addEventListener('click', (e) => { e.stopPropagation(); goNext(); });
 
   document.addEventListener('keydown', (e) => {
-    if (!lb.classList.contains('is-open')) return;
+    if (!lb.classList.contains('is-open')) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('[data-lightbox]')) {
+        e.preventDefault();
+        e.target.closest('[data-lightbox]').click();
+      }
+      return;
+    }
     if (e.key === 'Escape')     close();
     if (e.key === 'ArrowLeft')  { e.preventDefault(); goPrev(); }
     if (e.key === 'ArrowRight') { e.preventDefault(); goNext(); }

@@ -147,17 +147,34 @@ Vollständige Liste aus `global.css` `:root`:
 
 ## Fullpage-Scroll-Snap-Layout
 
-Der One-Pager nutzt CSS `scroll-snap-type: y mandatory` auf `html`. Jede Sektion belegt genau eine Viewport-Höhe.
+Der One-Pager verwendet **kein CSS `scroll-snap`** — Navigation wird vollständig per JavaScript gesteuert (IIFE in `src/pages/index.astro`). CSS übernimmt nur die Section-Höhen.
+
+### Warum JS statt CSS snap
+
+CSS `scroll-snap-type: y mandatory` kämpft auf Desktop mit JS-`scrollTo()` — Browser und Script animieren gleichzeitig, was zu Zuckern führt. Das JS-System gibt vollständige Kontrolle über Timing, Threshold und Inertia-Blocking.
+
+### JS-Scroll-System (`src/pages/index.astro` `<script is:inline>`)
+
+| Parameter | Wert | Zweck |
+|---|---|---|
+| Animation | 750ms easeInOutSine | Smooth, keine harten Beschleunigungen |
+| Wheel-Threshold | 5 deltaY | Auch leichter Trackpad-Swipe reicht |
+| Cooling nach Animation | 1000ms | Blockiert Windows-Inertia-Tail (~1.5s) |
+| Hard Guard (`lastGoAt`) | 1700ms | Sicherheitsnetz falls Cooling edge case |
+| `inScrollable` | Nur vertikale Container | Horizontale Carousels blockieren keine Section-Nav mehr |
+| `settle` | 8px-Threshold, 250ms Delay | Fängt Scrollbar-Drag und Resize-Reste auf |
+
+**Targets:** `#main > .hero-snap`, `#main > section`, `#main > .contact-footer-snap` — in DOM-Reihenfolge.
 
 ### Geometrie-Regel
 
 | Snap-Target | Height | Warum |
 |---|---|---|
-| `.hero-snap` (offsetTop = 0) | `100dvh` + `padding-top: var(--nav-h)` | JS scrollt auf `max(0, 0 − 72) = 0`. Viewport zeigt y=0..800. Ohne padding wäre der Countdown hinter der Nav. `calc(100dvh − nav-h)` würde About 72 px früher einblenden. |
+| `.hero-snap` (offsetTop = 0) | `100dvh` + `padding-top: var(--nav-h)` | JS scrollt auf `max(0, 0 − 72) = 0`. Viewport zeigt y=0..800. Ohne padding wäre der Countdown hinter der Nav. |
 | `main > section` (offsetTop > 0) | `calc(100dvh − var(--nav-h))` | JS scrollt auf `offsetTop − navH`. Sektion füllt y=72..800 exakt. |
 | `.contact-footer-snap` | `calc(100dvh − var(--nav-h))` | Wie alle anderen Sektionen. |
 
-**Wichtig:** Die `main > section`-Regel greift nur auf **direkte Kinder von `<main>`**. Sections innerhalb von `.hero-snap` (Countdown, Hero) und `.contact-footer-snap` (Contact, Footer) sind **keine** direkten Kinder — sie erben die Höhe nicht und müssen separat geregelt werden.
+**Wichtig:** Die `main > section`-Regel greift nur auf **direkte Kinder von `<main>`**. Sections innerhalb von `.hero-snap` und `.contact-footer-snap` sind keine direkten Kinder und werden separat geregelt.
 
 ### Fill-Height-Sections (About / Services / Gallery / Reviews)
 
