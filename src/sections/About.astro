@@ -23,7 +23,7 @@ const { label, headline, subline, intro, members } = Astro.props;
     <div class="about-grid">
       {members.map((m, i) => (
         <div class={`acard r d${i + 1}`}>
-          <div class="aphoto" {...(m.photo ? {'data-lightbox': m.photo, 'data-alt': m.name, 'data-caption': m.name, 'data-category': m.role} : {})}>
+          <div class="aphoto" {...(m.photo ? {'data-lightbox': m.photo, 'data-alt': m.name, 'data-caption': m.name, 'data-category': m.role, 'tabindex': '0', 'role': 'button', 'aria-label': `Foto von ${m.name} vergrößern`} : {})}>
             {m.photo
               ? <img src={m.photo} alt={m.name} width="600" height="800" loading="lazy" />
               : <div class="aphoto-placeholder">Foto hier einfügen<br />600 × 800 px empfohlen</div>

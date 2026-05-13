@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Bugs & Fixes/404-Seite anlegen.md",
+                "file": "Gründung & Legal/Agentur-Domain und E-Mail einrichten.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "404-Seite anlegen"
+              "title": "Agentur-Domain und E-Mail einrichten"
             }
           }
         ]
@@ -185,7 +185,15 @@
   },
   "active": "14ac8aaed895bce0",
   "lastOpenFiles": [
+    "Bugs & Fixes/Erledigt/Stats-Sektion einbauen oder entfernen.md",
+    "Gründung & Legal/Fragebogen steuerliche Erfassung.md",
+    "Gründung & Legal/Berufshaftpflicht abschließen.md",
+    "Bugs & Fixes/Stats-Sektion einbauen oder entfernen.md",
     "Externe Dienste/Setup-Checkliste pro Projekt.md",
+    "Bugs & Fixes/Favicon ergänzen.md",
+    "Bugs & Fixes/404-Seite anlegen.md",
+    "Bugs & Fixes/Erledigt/404-Seite anlegen.md",
+    "Bugs & Fixes/Erledigt",
     "Qualitätssicherung/Pre-Launch Checkliste.md",
     "Bitte löschen/2026-05-13.md",
     "Bitte löschen/Homepage Starter – ToDo.md",
@@ -198,20 +206,13 @@
     "Geschäftsmodell/Preise validieren.md",
     "Gründung & Legal/Impressum fertigstellen.md",
     "Gründung & Legal/Agentur-Domain und E-Mail einrichten.md",
-    "Gründung & Legal/Berufshaftpflicht abschließen.md",
     "Gründung & Legal/AGB erstellen.md",
     "Gründung & Legal/Geschäftskonto eröffnen.md",
     "Gründung & Legal/Krankenversicherung klären.md",
-    "Gründung & Legal/Fragebogen steuerliche Erfassung.md",
     "Gründung & Legal/Gewerbeanmeldung.md",
     "Gründung & Legal/Freiberufler oder Gewerbe prüfen.md",
     "Roadmap & Features/Schriftpaar konfigurierbar machen.md",
     "Roadmap & Features/OG-Image erstellen.md",
-    "Roadmap & Features/FAQ-Sektion als Add-on.md",
-    "Roadmap & Features/Danke-Seite nach Kontaktformular.md",
-    "Roadmap & Features/Floating CTA einbauen.md",
-    "Roadmap & Features/Social-Media-Links einbauen.md",
-    "Bugs & Fixes/robots.txt Sitemap-URL anpassen.md",
     "Unbenannt.canvas",
     "Externe Dienste",
     "Geschäftsmodell",
