@@ -1,0 +1,52 @@
+---
+import metaConfig   from '../../config/meta.json';
+import designConfig from '../../config/design.json';
+import contentConfig from '../../config/content.json';
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../sections/Footer.astro';
+
+const { design = '01-warm-local' } = designConfig;
+const { meta, theme } = metaConfig;
+const { sections: s } = contentConfig;
+---
+
+<Base meta={{ siteName: meta.siteName + ' — Seite nicht gefunden', description: 'Diese Seite existiert nicht.' }} theme={theme} design={design} noindex={true}>
+  <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={meta.nav} />
+
+  <main id="main" class="legal-page">
+    <div class="wrap legal-wrap not-found-wrap">
+      <p class="not-found-code">404</p>
+      <h1 class="legal-h1">Seite nicht gefunden</h1>
+      <p class="not-found-sub">Die gesuchte Seite existiert nicht oder wurde verschoben.</p>
+      <a href="/" class="btn btn-fill">Zurück zur Startseite <span aria-hidden="true">→</span></a>
+    </div>
+  </main>
+
+  {s.footer?.enabled && (
+    <Footer siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} copyright={meta.copyright} links={s.footer.links} />
+  )}
+</Base>
+
+<style>
+  .not-found-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: calc(100vh - var(--nav-h));
+  }
+  .not-found-code {
+    font-family: var(--serif);
+    font-size: clamp(5rem, 15vw, 10rem);
+    line-height: 1;
+    color: var(--accent);
+    margin: 0 0 1rem;
+    opacity: .25;
+  }
+  .not-found-sub {
+    font-size: 1.1rem;
+    color: var(--ink);
+    opacity: .6;
+    margin: 0 0 2.5rem;
+  }
+</style>
