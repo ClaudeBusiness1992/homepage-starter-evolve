@@ -263,12 +263,12 @@ main > section:not(#hero) > .wrap {
 .btn-fill,
 .btn-email,
 .btn-submit {
-  background: var(--accent);
+  background: color-mix(in srgb, var(--accent) 80%, #000);
   color: var(--white);
 }
 .btn-fill:hover,
 .btn-email:hover,
-.btn-submit:hover { background: var(--accent-light); }
+.btn-submit:hover { background: var(--accent); }
 .btn-ghost {
   background: color-mix(in srgb, var(--cream) 10%, transparent);
   color: var(--cream);
@@ -343,18 +343,13 @@ main > section:not(#hero) > .wrap {
   border-radius: 2px;
 }
 .nav-ul a.cta-link {
-  background: transparent;
-  color: var(--cream);
-  border: 1.5px solid color-mix(in srgb, var(--cream) 35%, transparent);
+  background: color-mix(in srgb, var(--accent) 80%, #000);
+  color: var(--white);
   padding: .45rem 1.2rem;
   border-radius: var(--r-pill);
-  transition: background .2s, border-color .2s, transform .2s;
+  transition: background .2s, transform .2s;
 }
-.nav-ul a.cta-link:hover {
-  background: color-mix(in srgb, var(--cream) 10%, transparent);
-  border-color: color-mix(in srgb, var(--cream) 60%, transparent);
-  transform: translateY(-1px);
-}
+.nav-ul a.cta-link:hover { background: var(--accent); transform: translateY(-1px); }
 .burger {
   display: none;
   flex-direction: column;
@@ -476,7 +471,7 @@ main > section:not(#hero) > .wrap {
 /* ── ABOUT ── */
 #about { background: var(--ink); color: var(--cream); }
 #about .section-hd { margin-bottom: 1rem; }
-#about .lbl { color: var(--accent-light); }
+#about .lbl { color: color-mix(in srgb, var(--cream) 68%, transparent); }
 #about .sub { color: color-mix(in srgb, var(--cream) 82%, var(--ink)); }
 .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; align-items: stretch; }
 .acard { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); overflow: hidden; transition: transform .3s, border-color .3s; display: flex; flex-direction: column; }
@@ -495,7 +490,7 @@ main > section:not(#hero) > .wrap {
 .section--dark { background: var(--ink); color: var(--cream); }
 .section--dark .h2 { color: var(--cream); }
 .section--dark .sub { color: color-mix(in srgb, var(--cream) 85%, var(--ink)); }
-.section--dark .lbl { color: var(--accent-light); }
+.section--dark .lbl { color: color-mix(in srgb, var(--cream) 68%, transparent); }
 
 /* ── SERVICES ── */
 #services { background: var(--ink); color: var(--cream); }
@@ -522,33 +517,33 @@ main > section:not(#hero) > .wrap {
 /* ── PRICING ── */
 #pricing { background: var(--ink); color: var(--cream); }
 #pricing .section-hd { margin-bottom: 2rem; }
-#pricing .lbl { color: var(--accent-light); }
+#pricing .lbl { color: color-mix(in srgb, var(--cream) 68%, transparent); }
 #pricing .sub { color: color-mix(in srgb, var(--cream) 82%, var(--ink)); }
 .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; align-items: stretch; margin-bottom: 1.5rem; }
 .pcard { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r-lg); padding: clamp(1.25rem, 2vw, 2rem); position: relative; transition: transform .5s cubic-bezier(.22,.61,.36,1), border-color .3s, opacity .4s ease; display: flex; flex-direction: column; }
 .pcard > .plist { margin-bottom: auto; }
 .pcard > .btn { margin-top: 1.25rem; }
 .pcard:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--cream) 30%, var(--ink)); }
-.pcard.feat { background: var(--accent); border-color: var(--accent); color: var(--cream); transform: scale(1); z-index: 2; }
+.pcard.feat { background: var(--cream); border-color: var(--cream); color: var(--ink); transform: scale(1); z-index: 2; }
 .pcard.feat:hover { transform: scale(1) translateY(-4px); }
 .pricing-grid:has(.pcard.feat) .pcard:not(.feat) { opacity: .8; }
 .pricing-grid:has(.pcard.feat) .pcard:not(.feat):hover { transform: translateY(-4px); opacity: .95; }
-.pbadge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: var(--white); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: .22rem .9rem; border-radius: var(--r-pill); white-space: nowrap; }
+.pbadge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--cream); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: .22rem .9rem; border-radius: var(--r-pill); white-space: nowrap; }
 .pname { font-family: var(--serif); font-size: clamp(1.2rem, 1.6vw, 1.5rem); margin-bottom: .2rem; }
-.feat .pname { color: var(--cream); }
+.feat .pname { color: var(--ink); }
 .ptag { font-size: .82rem; color: var(--text-soft); margin-bottom: .9rem; display: block; line-height: 1.45; }
-.feat .ptag { color: color-mix(in srgb, var(--cream) 70%, var(--accent)); }
+.feat .ptag { color: color-mix(in srgb, var(--ink) 65%, transparent); }
 .pprice .amount { font-family: var(--serif); font-size: clamp(2rem, 3.2vw, 2.6rem); line-height: 1; color: var(--cream); }
-.feat .pprice .amount { color: var(--cream); font-size: clamp(2.6rem, 4.2vw, 3.4rem); }
+.feat .pprice .amount { color: var(--ink); font-size: clamp(2.6rem, 4.2vw, 3.4rem); }
 .pprice .note { font-size: .78rem; color: var(--text-soft); margin-top: .2rem; line-height: 1.45; }
-.feat .pprice .note { color: color-mix(in srgb, var(--cream) 55%, var(--accent)); }
+.feat .pprice .note { color: color-mix(in srgb, var(--ink) 58%, transparent); }
 .pdiv { height: 1px; background: var(--border-subtle); margin: .65rem 0; }
-.feat .pdiv { background: color-mix(in srgb, var(--cream) 20%, var(--accent)); }
+.feat .pdiv { background: color-mix(in srgb, var(--ink) 15%, transparent); }
 .plist { list-style: none; margin-bottom: .75rem; }
 .plist li { display: flex; align-items: flex-start; gap: .5rem; font-size: clamp(.78rem, 1vw, .88rem); padding: .15rem 0; color: var(--text-soft); line-height: 1.4; text-wrap: pretty; hyphens: auto; }
-.feat .plist li { color: color-mix(in srgb, var(--cream) 80%, var(--accent)); }
+.feat .plist li { color: color-mix(in srgb, var(--ink) 75%, transparent); }
 .plist li::before { content: '✓'; color: var(--accent-light); font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
-.feat .plist li::before { color: var(--cream); }
+.feat .plist li::before { color: color-mix(in srgb, var(--accent) 80%, #000); }
 .pricing-note { text-align: center; margin-top: 2rem; font-size: .83rem; color: color-mix(in srgb, var(--cream) 55%, var(--ink)); }
 .pricing-note a { color: var(--accent-light); text-decoration: none; }
 
