@@ -1,5 +1,5 @@
 ---
-status: offen
+status: erledigt
 bereich: Bugs & Fixes
 ---
 
