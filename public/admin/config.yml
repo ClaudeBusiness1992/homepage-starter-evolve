@@ -16,16 +16,6 @@ collections:
     label: "Website"
     files:
 
-      # ── DESIGN AUSWAHL ───────────────────────────────────────────────
-      - name: "design"
-        label: "Design auswählen"
-        file: "config/design.json"
-        fields:
-          - label: "Website-Design"
-            name: "design"
-            widget: "design-picker"
-            hint: "Wähle das Layout-Design deiner Website. Nach dem Speichern wird die Seite neu gebaut."
-
       # ── STAMMDATEN & DESIGN ──────────────────────────────────────────
       - name: "stammdaten"
         label: "Stammdaten & Design"
