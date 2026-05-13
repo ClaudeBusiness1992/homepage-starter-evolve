@@ -4,11 +4,27 @@ Arbeits-Vault für Produkt und Gründung. Zuletzt geprüft: 2026-05-13.
 
 ---
 
+## Entwicklung
+
+```
+pnpm dev        → http://localhost:4321  (lokaler Dev-Server)
+pnpm build      → dist/                 (Produktions-Build)
+pnpm preview    → Build lokal vorschauen
+```
+
+Claude Code starten (immer aus dem Projektordner):
+```
+cd C:\ClaudeBusiness\homepage-starter-evolve
+claude
+```
+
+---
+
 ## Ordnerstruktur
 
 | Ordner | Inhalt |
 |---|---|
-| [[Bugs & Fixes/Bugs & Fixes\|Bugs & Fixes]] | Bekannte Fehler im Template (5 offen) |
+| [[Bugs & Fixes/Bugs & Fixes\|Bugs & Fixes]] | Bekannte Fehler im Template (4 offen) |
 | [[Roadmap & Features/Roadmap & Features\|Roadmap & Features]] | Geplante Erweiterungen |
 | [[Qualitätssicherung/Qualitätssicherung\|Qualitätssicherung]] | Pre-Launch Checklisten, Standards |
 | [[Gründung & Legal/Gründung & Legal\|Gründung & Legal]] | Gewerbeanmeldung, Steuer, AGB, Versicherung |
@@ -21,7 +37,7 @@ Arbeits-Vault für Produkt und Gründung. Zuletzt geprüft: 2026-05-13.
 
 ### Produkt (Bugs zuerst)
 1. `<title>` um Tagline ergänzen — 5-Minuten-Fix in `Base.astro`
-2. 404-Seite anlegen — `src/pages/404.astro`
+2. ~~404-Seite anlegen — `src/pages/404.astro`~~ ✓
 3. Stats-Bug klären — Sektion einbauen oder sauber entfernen
 4. Favicon-Lösung umsetzen
 
