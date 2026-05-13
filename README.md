@@ -18,6 +18,7 @@ Pro Kunde wird das Repo geklont. Konfiguration ausschließlich über JSON-Dateie
 | Decap CMS | 3.x | Content-Management (GitHub Backend) |
 | Vercel | — | Hosting + Serverless Functions |
 | Vanilla CSS | — | Custom Properties, kein Framework |
+| WOFF2 (self-hosted) | — | DM Serif Display + Outfit, DSGVO-konform |
 
 ---
 
@@ -30,47 +31,33 @@ Alle Kunden-Werte leben in `config/`. Der Code wird nie angefasst.
 | `config/design.json` | Aktives Design (ein Wert) |
 | `config/meta.json` | Marke: siteName, theme (Farben), nav, Kontakt |
 | `config/content.json` | Seiteninhalte: alle Sektionen mit `enabled`-Flag |
+| `config/extras.json` | Add-ons: Countdown, Galerie, Bewertungen, Buchung — je mit Toggle + Inhalten |
 | `config/legal.json` | Impressum + Datenschutz: Adresse, Register, Hoster |
 
 ---
 
-## Design-System
+## Architektur
 
-Der aktive Stil wird in `config/design.json` gesetzt:
-
-```json
-{ "design": "02-bold-editorial" }
-```
-
-`Base.astro` liest den Wert und setzt `data-design="..."` auf dem `<html>`-Tag.  
-`index.astro` lädt pro Sektion die passende Komponente aus der Design-Map.
-
-### Verfügbare Designs
-
-| Key | Charakter | Eigene Komponenten |
-|---|---|---|
-| `01-warm-local` | Warm, lokal, klassisch | Hero |
-| `02-bold-editorial` | Dunkel, mutig, editorial | Hero, About, Services |
-| `03-minimal-clean` | Hell, reduziert, typografisch | Hero |
-| `04-corporate-split` | Zweigeteilt, seriös, strukturiert | Hero, About |
-| `05-vibrant-gradient` | Gradient, dynamisch, modern | Hero, Services |
-
-Design wechseln: im CMS unter **"Design auswählen"** oder direkt in `config/design.json`.
-
-### Dateistruktur
+Das Template basiert auf einer einheitlichen Master-Struktur. Alle Sektionen liegen in `src/sections/`, Styling in `src/styles/global.css`. Pro Kundenprojekt wird ausschließlich über die Config-Dateien angepasst — es gibt keine designspezifischen Komponenten-Varianten.
 
 ```
 src/
-  designs/
-    02-bold-editorial/   Hero.astro, About.astro, Services.astro
-    03-minimal-clean/    Hero.astro
-    04-corporate-split/  Hero.astro, About.astro
-    05-vibrant-gradient/ Hero.astro, Services.astro
-  sections/              Shared Fallback-Komponenten
+  components/       Nav, CookieBanner, Lightbox, SectionHeader
+  layouts/          Base.astro
+  sections/         Hero, About, Services, Gallery, Stats, Pricing,
+                    Reviews, Booking, Countdown, Sponsors, Contact, Footer
   styles/
-    global.css
-    designs/             02-bold-editorial.css, 03-minimal-clean.css, ...
+    global.css      Alle Custom Properties + Layout-Regeln
+config/
+  design.json       Aktives Design
+  meta.json         Marke + Theme-Farben
+  content.json      Seiteninhalte
+  extras.json       Add-ons
+  legal.json        Rechtliche Angaben
 ```
+
+`Base.astro` liest `design.json` und setzt `data-design="..."` auf dem `<html>`-Tag.  
+CSS-Überschreibungen pro Design erfolgen über `[data-design="..."]`-Selektoren in `global.css`.
 
 ---
 
@@ -86,9 +73,10 @@ src/
 
 | Bereich | Datei | Inhalt |
 |---|---|---|
-| Design auswählen | `design.json` | Aktives Layout (visueller Picker) |
+| Design auswählen | `design.json` | Aktives Layout |
 | Stammdaten & Design | `meta.json` | Name, Farben, Kontakt, Navigation |
-| Inhalte | `content.json` | Texte, Bilder, Pakete, Bewertungen |
+| Inhalte | `content.json` | Texte, Bilder, Pakete |
+| Erweiterungen / Add-ons | `extras.json` | Countdown, Galerie, Bewertungen, Buchung |
 | Firmendaten & Impressum | `legal.json` | Adresse, Register, Hoster |
 
 ### OAuth-Einrichtung (einmalig pro Projekt)
@@ -115,19 +103,26 @@ Decap CMS committet Änderungen direkt auf GitHub — das triggert ebenfalls ein
 
 ## Sektionen
 
-Alle in `config/content.json` mit `enabled: true/false` steuerbar. Nav filtert deaktivierte automatisch.
+Alle in `config/content.json` (Kern) bzw. `config/extras.json` (Add-ons) mit `enabled: true/false` steuerbar. Nav filtert deaktivierte automatisch.
 
-| Sektion | Astro-Datei | Anmerkung |
+| Sektion | Datei | Quelle |
 |---|---|---|
-| Hero | design-spezifisch | Jedes Design eigene Komponente |
-| Über uns | About.astro / design-spezifisch | Design 02 + 04 eigene Komponente |
-| Leistungen | Services.astro / design-spezifisch | Design 02 + 05 eigene Komponente |
-| Galerie | Gallery.astro | Design-CSS überschreibt Layout |
-| Kennzahlen | Stats.astro | — |
-| Preise | Pricing.astro | — |
-| Bewertungen | Reviews.astro | — |
-| Kontakt | Contact.astro | Formular mit JS-Validierung |
-| Footer | Footer.astro | — |
+| Hero | `Hero.astro` | `content.json` |
+| Über uns | `About.astro` | `content.json` — unterstützt Intro-Text + Lightbox-Fotos |
+| Leistungen | `Services.astro` | `content.json` |
+| Galerie | `Gallery.astro` | `extras.json` (Add-on) |
+| Kennzahlen | `Stats.astro` | `content.json` |
+| Preise | `Pricing.astro` | `content.json` |
+| Bewertungen | `Reviews.astro` | `extras.json` (Add-on) |
+| Buchung | `Booking.astro` | `extras.json` (Add-on) |
+| Countdown | `Countdown.astro` | `extras.json` (Add-on) — erscheint über dem Hero |
+| Sponsoren | `Sponsors.astro` | `content.json` |
+| Kontakt | `Contact.astro` | `content.json` |
+| Footer | `Footer.astro` | `content.json` |
+
+### Lightbox
+
+Galerie- und About-Bilder öffnen sich in einem Vollbild-Overlay (`Lightbox.astro`, global eingebunden). Trigger: `data-lightbox`, `data-alt`, `data-caption`, `data-category` am jeweiligen Element. Navigation per Pfeiltasten, Swipe und ‹/›-Buttons.
 
 ---
 
@@ -155,20 +150,21 @@ pnpm preview    # Build lokal vorschauen
 ## Pro Kunde: Checkliste
 
 1. Repo klonen: `git clone <repo-url> kunde-name && cd kunde-name`
-2. Design wählen: `config/design.json`
-3. Marke eintragen: `config/meta.json` — siteName, theme (Farben), nav, Kontakt
-4. Inhalte eintragen: `config/content.json` — Sektionen befüllen, nicht benötigte auf `enabled: false`
+2. Marke eintragen: `config/meta.json` — siteName, theme (Farben), nav, Kontakt
+3. Inhalte eintragen: `config/content.json` — Sektionen befüllen, nicht benötigte auf `enabled: false`
+4. Add-ons konfigurieren: `config/extras.json` — Countdown, Galerie, Bewertungen, Buchung aktivieren
 5. Legal eintragen: `config/legal.json` — alle `[…]`-Platzhalter ersetzen
 6. OG-Bild erstellen: `public/og-image.jpg` (1200×630 px)
 7. Domain eintragen: `astro.config.mjs → site`
 8. Neues Vercel-Projekt anlegen + GitHub-Repo verbinden
 9. Environment Variables setzen: `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
 10. GitHub OAuth App Callback URL auf neue Domain aktualisieren
-11. `public/admin/config.yml → base_url` auf neue Domain setzen
+11. `public/admin/config.yml → base_url` + `client_id` auf neue Domain/App setzen
 
 ---
 
 ## Sicherheit
 
-`public/_headers` setzt für alle Routen strikte Security-Header (CSP, X-Frame-Options etc.).  
+`vercel.json` ist die autoritative Quelle für Security-Header (Vercel liest sie vor `public/_headers`).  
+Beide Dateien setzen für alle Routen strikte Header (CSP, X-Frame-Options etc.).  
 `/admin/*` hat eine eigene permissivere CSP — Decap CMS benötigt `unsafe-eval`.
