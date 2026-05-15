@@ -1,20 +1,35 @@
-export default async function handler(req, res) {
-  const { code, provider } = req.query;
-  const SITE_URL = `https://${req.headers.host}`;
+import { randomBytes } from 'crypto';
 
-  // Step 1: Redirect to GitHub
+export default async function handler(req, res) {
+  const { code, state: callbackState, provider } = req.query;
+  const SITE_URL = process.env.SITE_URL || `https://${req.headers.host}`;
+
+  // Step 1: Redirect to GitHub — CSRF-State als Cookie sichern
   if (provider === 'github' && !code) {
+    const state = randomBytes(16).toString('hex');
+    res.setHeader('Set-Cookie', `oauth_state=${state}; HttpOnly; SameSite=Lax; Secure; Path=/api/auth; Max-Age=300`);
     const params = new URLSearchParams({
       client_id: process.env.GITHUB_CLIENT_ID,
       redirect_uri: `${SITE_URL}/api/auth`,
       scope: 'repo',
-      state: 'github',
+      state,
     });
     return res.redirect(302, `https://github.com/login/oauth/authorize?${params}`);
   }
 
   // Step 2: Exchange code for token
   if (code) {
+    // CSRF-State validieren
+    const cookies = Object.fromEntries(
+      (req.headers.cookie || '').split(';')
+        .map(c => c.trim().split('='))
+        .filter(p => p.length === 2)
+        .map(([k, v]) => [k.trim(), decodeURIComponent(v.trim())])
+    );
+    if (!callbackState || !cookies.oauth_state || callbackState !== cookies.oauth_state) {
+      return res.status(403).send('Invalid state — bitte erneut einloggen.');
+    }
+    res.setHeader('Set-Cookie', 'oauth_state=; HttpOnly; SameSite=Lax; Secure; Path=/api/auth; Max-Age=0');
     const response = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
