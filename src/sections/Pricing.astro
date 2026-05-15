@@ -24,11 +24,9 @@ const delays = ['d1','d2','d3'];
     <SectionHeader {label} {headline} {subline} center />
     <div class="pricing-grid">
       {packages.map((pkg, i) => (
-        <div
+        <article
           class={`pcard r ${delays[i % delays.length]} ${pkg.featured ? 'feat' : ''}`}
-          role="button"
-          tabindex="0"
-          aria-pressed={pkg.featured ? 'true' : 'false'}
+          aria-label={pkg.name}
         >
           {pkg.badge && <div class="pbadge">{pkg.badge}</div>}
           <h3 class="pname">{pkg.name}</h3>
@@ -41,10 +39,11 @@ const delays = ['d1','d2','d3'];
           <ul class="plist">
             {pkg.features.map(f => <li>{f}</li>)}
           </ul>
-          <a href="#contact" class={`btn btn-w ${pkg.featured ? 'btn-fill' : 'btn-outline'}`}>
+          <a href="#contact" class={`btn btn-w ${pkg.featured ? 'btn-fill' : 'btn-outline'}`}
+            aria-label={`${pkg.featured ? 'Jetzt anfragen' : 'Anfragen'} — Paket ${pkg.name}`}>
             {pkg.featured ? 'Jetzt anfragen' : 'Anfragen'}
           </a>
-        </div>
+        </article>
       ))}
     </div>
     <p class="pricing-note r">
@@ -63,27 +62,26 @@ const delays = ['d1','d2','d3'];
       if (card.classList.contains('feat')) return;
       cards.forEach((c) => {
         c.classList.remove('feat');
-        c.setAttribute('aria-pressed', 'false');
         const btn = c.querySelector('.btn');
-        if (btn) { btn.classList.replace('btn-fill', 'btn-outline'); btn.textContent = 'Anfragen'; }
+        if (btn) {
+          btn.classList.replace('btn-fill', 'btn-outline');
+          btn.textContent = 'Anfragen';
+          btn.setAttribute('aria-label', `Anfragen — Paket ${c.getAttribute('aria-label')}`);
+        }
       });
       card.classList.add('feat');
-      card.setAttribute('aria-pressed', 'true');
       const btn = card.querySelector('.btn');
-      if (btn) { btn.classList.replace('btn-outline', 'btn-fill'); btn.textContent = 'Jetzt anfragen'; }
+      if (btn) {
+        btn.classList.replace('btn-outline', 'btn-fill');
+        btn.textContent = 'Jetzt anfragen';
+        btn.setAttribute('aria-label', `Jetzt anfragen — Paket ${card.getAttribute('aria-label')}`);
+      }
     };
 
     cards.forEach((card) => {
       card.addEventListener('click', (e) => {
-        // Let the inner CTA link navigate; selection happens on the bubble path naturally
         if (e.target.closest('a.btn')) return;
         select(card);
-      });
-      card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          select(card);
-        }
       });
     });
   })();
