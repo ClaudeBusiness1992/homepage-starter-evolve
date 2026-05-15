@@ -33,6 +33,15 @@ collections:
               - { label: "Telefon (technisch)", name: "phone", widget: "string", hint: "Format: +491234567890 (für tel:-Links)" }
               - { label: "Telefon (Anzeige)", name: "phoneDisplay", widget: "string", hint: "Wird so auf der Website angezeigt, z.B. +49 (0)123 456 789" }
               - { label: "Copyright-Zeile", name: "copyright", widget: "string", hint: "z.B. © 2025 pixel&code. Alle Rechte vorbehalten." }
+              - label: "Navigation"
+                name: "nav"
+                widget: "list"
+                hint: "Menü-Einträge. Reihenfolge per Drag & Drop ändern."
+                fields:
+                  - { label: "Beschriftung", name: "label", widget: "string" }
+                  - { label: "Anker-Link", name: "href", widget: "string", hint: "z.B. #about" }
+                  - { label: "Sektions-Schlüssel", name: "section", widget: "string", hint: "Muss zur Sektions-ID passen — z.B. about, services, pricing, contact" }
+                  - { label: "Als CTA-Button hervorheben", name: "cta", widget: "boolean", default: false }
 
           - label: "Design & Farben"
             name: "theme"
@@ -57,6 +66,8 @@ collections:
                 name: "hero"
                 widget: "object"
                 fields:
+                  - { label: "Sektion anzeigen", name: "enabled", widget: "boolean", default: true }
+                  - { label: "Label (Kicker-Text über Überschrift)", name: "label", widget: "string", required: false, default: "" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
                   - { label: "Button 1 Text", name: "ctaPrimary", widget: "string" }
@@ -66,8 +77,11 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
+                  - { label: "Sektion anzeigen", name: "enabled", widget: "boolean", default: true }
+                  - { label: "Label (Kicker-Text über Überschrift)", name: "label", widget: "string", required: false, default: "" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
+                  - { label: "Intro-Text (Fließtext über Team)", name: "intro", widget: "text", required: false, default: "" }
                   - label: "Team"
                     name: "members"
                     widget: "list"
@@ -81,6 +95,8 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
+                  - { label: "Sektion anzeigen", name: "enabled", widget: "boolean", default: true }
+                  - { label: "Label (Kicker-Text über Überschrift)", name: "label", widget: "string", required: false, default: "" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
                   - label: "Leistungen"
@@ -95,6 +111,7 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
+                  - { label: "Sektion anzeigen", name: "enabled", widget: "boolean", default: true }
                   - label: "Zahlen"
                     name: "items"
                     widget: "list"
@@ -106,6 +123,8 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
+                  - { label: "Sektion anzeigen", name: "enabled", widget: "boolean", default: true }
+                  - { label: "Label (Kicker-Text über Überschrift)", name: "label", widget: "string", required: false, default: "" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
                   - label: "Pakete"
@@ -127,6 +146,8 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
+                  - { label: "Sektion anzeigen", name: "enabled", widget: "boolean", default: true }
+                  - { label: "Label (Kicker-Text über Überschrift)", name: "label", widget: "string", required: false, default: "" }
                   - { label: "Überschrift", name: "headline", widget: "string" }
                   - { label: "Unterzeile", name: "subline", widget: "text" }
               - label: "Footer"
@@ -134,6 +155,7 @@ collections:
                 widget: "object"
                 collapsed: true
                 fields:
+                  - { label: "Sektion anzeigen", name: "enabled", widget: "boolean", default: true }
                   - label: "Links"
                     name: "links"
                     widget: "list"
