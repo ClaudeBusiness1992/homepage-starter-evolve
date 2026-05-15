@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(update-config)",
+      "Bash(pnpm build *)",
+      "Bash(\\\\'.cookie-btn-secondary\\\\')",
+      "Bash('.cookie-btn-secondary')",
+      "Bash(python3 -c ' *)",
+      "Bash(node -e \"const c = JSON.parse\\(require\\('fs'\\).readFileSync\\('config/content.json'\\)\\); const e = JSON.parse\\(require\\('fs'\\).readFileSync\\('config/extras.json'||'config/content.json'\\)\\); console.log\\('countdown enabled:', JSON.stringify\\(c.sections?.countdown || 'not in content'\\)\\); \")",
+      "Bash(node -e \"const e = require\\('fs'\\).readFileSync\\('config/extras.json','utf8'\\); const j = JSON.parse\\(e\\); console.log\\('extras countdown:', JSON.stringify\\(j.countdown||j.sections?.countdown\\)\\);\")",
+      "Bash(New-Item -ItemType Directory -Path \"C:\\\\ClaudeBusiness\\\\homepage-starter-evolve\\\\ToDoList\\\\Bugs & Fixes\\\\Erledigt\" -Force)",
+      "Bash(Out-Null)",
+      "Bash(Move-Item -Path \"C:\\\\ClaudeBusiness\\\\homepage-starter-evolve\\\\ToDoList\\\\Bugs & Fixes\\\\404-Seite anlegen.md\" -Destination \"C:\\\\ClaudeBusiness\\\\homepage-starter-evolve\\\\ToDoList\\\\Bugs & Fixes\\\\Erledigt\\\\404-Seite anlegen.md\")",
+      "PowerShell(New-Item *)",
+      "Bash(Get-ChildItem *)",
+      "Bash(Select-Object Name)",
+      "Bash(del *)",
+      "Bash(grep -rn \"#[0-9A-Fa-f]\\\\{3,6\\\\}\" src/designs/ src/sections/ --include=\"*.astro\" --include=\"*.css\" -l)",
+      "Bash(grep -rn \"#[0-9A-Fa-f]\\\\{3,6\\\\}\" src/ --include=\"*.css\" --include=\"*.astro\")",
+      "Bash(grep -rn \"#[0-9A-Fa-f]\\\\{3,6\\\\}\" src/ --include=\"*.astro\" --include=\"*.css\")",
+      "PowerShell(Get-ChildItem *)",
+      "Bash(gh auth *)",
+      "PowerShell(gh auth *)",
+      "PowerShell(winget install *)",
+      "Bash(gh --version)",
+      "PowerShell(gh *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(Test-Path *)",
+      "PowerShell(gh repo *)"
+    ]
+  }
+}

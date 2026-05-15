@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm *)",
+      "Bash(node *)",
+      "Bash(npx *)",
+      "Bash(curl *)",
+      "Bash(test *)",
+      "Bash(which *)",
+      "Bash(tasklist *)",
+      "Bash(netstat *)",
+      "Bash(sleep *)",
+      "Bash(ls *)",
+      "Bash(du *)",
+      "Bash(find *)",
+      "Read(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "Bash(git *)",
+      "Edit(*)",
+      "Write(*)"
+    ]
+  }
+}
