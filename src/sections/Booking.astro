@@ -109,7 +109,7 @@ if (groupStart) {
       <div class="bk-grid">
         <div class="form-group">
           <label for="bk-service">Service *</label>
-          <select id="bk-service" name="service" required>
+          <select id="bk-service" name="service" required aria-invalid="false" aria-required="true">
             <option value="">Bitte wählen</option>
             {services.map(s => (
               <option value={`${s.name} (${s.duration} Min.)`}>
@@ -121,7 +121,7 @@ if (groupStart) {
 
         <div class="form-group">
           <label for="bk-staff">Mitarbeiter:in *</label>
-          <select id="bk-staff" name="staff" required>
+          <select id="bk-staff" name="staff" required aria-invalid="false" aria-required="true">
             <option value="">Bitte wählen</option>
             {staff.map(p => (
               <option value={p.name}>{p.name}</option>
@@ -131,25 +131,25 @@ if (groupStart) {
 
         <div class="form-group">
           <label for="bk-date">Wunschdatum *</label>
-          <input type="date" id="bk-date" name="date" min={minDateStr} max={maxDateStr} value={defaultDateStr} required />
+          <input type="date" id="bk-date" name="date" min={minDateStr} max={maxDateStr} value={defaultDateStr} required aria-invalid="false" aria-required="true" aria-describedby="bk-date-hint" />
           <span id="bk-date-hint" class="bk-date-hint" hidden>Geschlossen — bitte einen anderen Tag wählen.</span>
         </div>
 
         <div class="form-group">
           <label for="bk-time">Uhrzeit *</label>
-          <select id="bk-time" name="time" required disabled>
+          <select id="bk-time" name="time" required disabled aria-invalid="false" aria-required="true">
             <option value="">Erst Datum wählen</option>
           </select>
         </div>
 
         <div class="form-group">
           <label for="bk-name">Ihr Name *</label>
-          <input type="text" id="bk-name" name="name" required autocomplete="name" />
+          <input type="text" id="bk-name" name="name" required autocomplete="name" aria-invalid="false" aria-required="true" />
         </div>
 
         <div class="form-group">
           <label for="bk-email">E-Mail *</label>
-          <input type="email" id="bk-email" name="email" required autocomplete="email" />
+          <input type="email" id="bk-email" name="email" required autocomplete="email" aria-invalid="false" aria-required="true" />
         </div>
 
         <div class="form-group">
@@ -241,8 +241,15 @@ if (groupStart) {
       status.classList.toggle('bk-status--error', isError);
     };
 
+    const syncAria = () => {
+      form.querySelectorAll('[required]').forEach(el => {
+        el.setAttribute('aria-invalid', el.validity.valid ? 'false' : 'true');
+      });
+    };
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      syncAria();
       if (!form.checkValidity()) { form.reportValidity(); return; }
 
       const fd = new FormData(form);
@@ -264,6 +271,7 @@ if (groupStart) {
           setStatus(json.message || successMessage, false);
           showIcsDownload(data);
           form.reset();
+          form.querySelectorAll('[aria-invalid]').forEach(el => el.setAttribute('aria-invalid', 'false'));
         } catch (err) {
           setStatus('Fehler: ' + err.message + ' — bitte später erneut versuchen oder uns direkt kontaktieren.', true);
         } finally {

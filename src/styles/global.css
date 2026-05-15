@@ -132,7 +132,7 @@
   --shadow-sm: 0 2px 8px color-mix(in srgb, var(--ink) 6%, transparent);
   --shadow-nav: 0 2px 12px color-mix(in srgb, var(--ink) 40%, transparent);
 
-  --section-pad: 0.5cm;
+  --section-pad: 1.25rem;
 
   /* Browser mockup — decorative only, not design-system colors */
   --browser-bg:         #232323;
