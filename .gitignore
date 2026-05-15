@@ -18,3 +18,11 @@ ToDoList/
 
 # Temporäre Lösch-Ablage — nur lokal
 BITTE LÖSCHEN/
+
+# Lokale Claude-Settings (nicht im Repo)
+.claude/settings.local.json
+
+# Audit-/Test-Artefakte — nur lokal
+tools/screenshots/
+audit-sections.cjs
+audit-sections.js
