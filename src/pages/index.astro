@@ -1,13 +1,12 @@
 ---
 import metaConfig    from '../../config/meta.json';
-import designConfig  from '../../config/design.json';
 import contentConfig from '../../config/content.json';
 import extrasConfig  from '../../config/extras.json';
 import Base      from '../layouts/Base.astro';
 import Nav       from '../components/Nav.astro';
-import Hero01    from '../sections/Hero.astro';
-import About01   from '../sections/About.astro';
-import Services01 from '../sections/Services.astro';
+import Hero     from '../sections/Hero.astro';
+import About    from '../sections/About.astro';
+import Services from '../sections/Services.astro';
 import Countdown from '../sections/Countdown.astro';
 import Pricing  from '../sections/Pricing.astro';
 import Gallery  from '../sections/Gallery.astro';
@@ -18,14 +17,9 @@ import Contact   from '../sections/Contact.astro';
 import Footer    from '../sections/Footer.astro';
 import SidebarAds from '../components/SidebarAds.astro';
 
-const { design = '01-warm-local' } = designConfig;
 const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
 const { extras: x = {} } = extrasConfig;
-
-const Hero     = Hero01;
-const About    = About01;
-const Services = Services01;
 
 // Build nav in actual scroll order (Sections-Reihenfolge unten in <main>):
 // about → services → gallery → pricing → reviews → booking → contact (cta)
@@ -49,7 +43,7 @@ const navLinks = [
 ];
 ---
 
-<Base meta={meta} theme={theme} design={design}>
+<Base meta={meta} theme={theme}>
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={navLinks} />
 
   <main id="main" tabindex="-1">

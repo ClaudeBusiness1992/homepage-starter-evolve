@@ -37,7 +37,6 @@ Alle Kunden-Werte leben in `config/`. Der Code selbst wird nie angefasst.
 
 | Datei | Inhalt |
 |---|---|
-| `config/design.json` | Aktives Design (ein Wert: `"design": "01-warm-local"`) |
 | `config/meta.json` | Marke: siteName, siteNameAccent, tagline, description, nav, Kontakt + theme (Farben) |
 | `config/content.json` | Seiteninhalte: alle Sektionen mit enabled-Flag, Texte, Bilder, Pakete, Bewertungen |
 | `config/extras.json` | Add-ons: Countdown, Galerie, Bewertungen, Buchung — je mit `active.<key>: true/false` |
@@ -47,55 +46,23 @@ Alle Kunden-Werte leben in `config/`. Der Code selbst wird nie angefasst.
 
 ## Design-System
 
-Der aktive Stil wird in `config/design.json` gesetzt:
-
-```json
-{ "design": "01-warm-local" }
-```
-
-`Base.astro` liest den Wert und setzt `data-design="{design}"` auf dem `<html>`-Tag.
-`index.astro` wählt über eine Component-Map die richtigen Astro-Komponenten pro Design.
-Design-spezifische CSS-Überschreibungen leben in `src/styles/designs/`.
-
-### Verfügbare Designs
-
-| Key | Charakter | Eigene Komponenten |
-|---|---|---|
-| `01-warm-local` | Warm, lokal, klassisch | — (nutzt alle Fallback-Sektionen) |
-| `02-bold-editorial` | Dunkel, mutig, Magazin | Hero, About, Services |
-| `03-minimal-clean` | Hell, reduziert, typografisch | Hero |
-| `04-corporate-split` | Zweigeteilt, seriös, strukturiert | Hero, About |
-| `05-vibrant-gradient` | Gradient, dynamisch, modern | Hero, Services |
-| `06-editorial-press` | Magazin-Layout, Italic, Issue-Nummern | Hero |
-| `07-terminal-console` | Dev-Aesthetik, Mono, Terminal-Window | Hero |
-| `08-soft-bloom` | Organisch, Pastell, runde Karten | Hero |
-| `09-luxe-atelier` | Premium Boutique, Serif, Ornament | Hero |
-| `10-pop-studio` | Bunt, verspielt, Sticker-Look | Hero |
-
-Design wechseln: `config/design.json` oder im CMS unter "Design auswählen".
+**Ein Template, pro Kunde angepasst.** Es gibt kein Design-Switching mehr.
+Farben, Typografie und Marke werden ausschließlich über `config/meta.json → theme` gesteuert.
+Die Theme-Tokens werden von `Base.astro` als Inline-Style auf `<html>` gesetzt.
 
 ### Dateistruktur
 
 ```
 src/
-  designs/
-    02-bold-editorial/   Hero.astro, About.astro, Services.astro
-    03-minimal-clean/    Hero.astro
-    04-corporate-split/  Hero.astro, About.astro
-    05-vibrant-gradient/ Hero.astro, Services.astro
-    06-editorial-press/  Hero.astro
-    07-terminal-console/ Hero.astro
-    08-soft-bloom/       Hero.astro
-    09-luxe-atelier/     Hero.astro
-    10-pop-studio/       Hero.astro
-  sections/              Shared Fallback-Komponenten (01-warm-local + Fallback)
+  components/    Nav.astro, CookieBanner.astro, Lightbox.astro, SectionHeader.astro, SidebarAds.astro
+  sections/      Hero.astro, About.astro, Services.astro, Pricing.astro, Gallery.astro,
+                 Reviews.astro, Booking.astro, Countdown.astro, Contact.astro, Footer.astro,
+                 Stats.astro, Sponsors.astro
+  layouts/       Base.astro
+  pages/         index.astro, impressum.astro, datenschutz.astro, 404.astro
   styles/
-    global.css
-    designs/             02–10 *.css (Section-Overrides pro Design)
+    global.css   Alle Styles — Tokens, Utility-Klassen, alle Sections
 ```
-
-**Regel:** Keine Design-spezifischen Styles in `global.css`. Nur in den Design-Dateien.
-Alle Design-CSS-Dateien werden immer geladen — Scoping passiert über `[data-design="..."]`-Selektoren.
 
 ---
 
@@ -289,7 +256,6 @@ Kunden können Inhalte ohne Code-Zugriff bearbeiten.
 
 | Bereich | Datei | Inhalt |
 |---|---|---|
-| Design auswählen | `config/design.json` | Aktives Layout |
 | Stammdaten & Design | `config/meta.json` | Name, Farben, Kontakt, Navigation |
 | Inhalte | `config/content.json` | Texte, Bilder, Pakete |
 | Erweiterungen / Add-ons | `config/extras.json` | Countdown, Galerie, Bewertungen, Buchung — Toggle + Inhalte. Galerie: visuelles Bild-Preview-Panel im Admin (rechts). |
@@ -380,49 +346,14 @@ Wenn nur ein Aspekt geprüft werden soll, einzelnen Sub-Agent direkt via `Agent`
 - **Commits:** `feat:`, `fix:`, `chore:`, `style:`
 - **Config:** Kunden-Werte nur in `config/` — nie direkt im Code
 - **CSS:** Custom Properties, keine externen UI-Libraries (kein Tailwind, kein Bootstrap)
-- **Designs:** Überschreibungen nur in `src/styles/designs/*.css` via `[data-design]`
 - **Keine Inline-Styles** für Design-Entscheidungen — alles in CSS-Dateien
 - **WCAG AA:** alle Text-Kontraste müssen 4.5:1 erfüllen (normal), 3:1 (groß/bold)
 - **TS-light:** `.astro`-Frontmatter darf TypeScript-Annotationen nutzen (`interface`, `as`-Casts), Vanilla-JS bleibt für Browser-Scripts. Keine separaten `.ts`-Files.
 
-## Token-Naming-Konvention pro Design
-
-Jedes Design definiert seinen kompletten Theme-Token-Satz oben in `src/styles/designs/<key>.css`. Die globalen Brand-Tokens (`--ink`, `--cream`, `--accent`, `--accent-light`, `--sage` aus `meta.json`) werden **nur dort** referenziert — der Rest des Designs nutzt ausschließlich die eigenen `--<prefix>-*` Tokens. Damit ist der Theme-Block einer Design-Datei der einzige Punkt, an dem Brand und Theme aufeinandertreffen.
-
-| Design | Prefix | Datei |
-|---|---|---|
-| 01 Warm Local | `--wl-*` | `01-warm-local.css` |
-| 02 Bold Editorial | `--bld-*` | `02-bold-editorial.css` |
-| 03 Minimal Clean | `--mc-*` | `03-minimal-clean.css` |
-| 04 Corporate Split | `--cs-*` | `04-corporate-split.css` |
-| 05 Vibrant Gradient | `--vg-*` | `05-vibrant-gradient.css` |
-| 06 Editorial Press | `--ep-*` | `06-editorial-press.css` |
-| 07 Terminal Console | `--tc-*` | `07-terminal-console.css` |
-| 08 Soft Bloom | `--sb-*` | `08-soft-bloom.css` |
-| 09 Luxe Atelier | `--lx-*` | `09-luxe-atelier.css` |
-| 10 Pop Studio | `--po-*` | `10-pop-studio.css` |
-
-### Semantisches Vokabular pro Token-Block
-
-Jeder Block deckt mindestens diese Bedeutungen ab — Namen variieren je Design:
-
-```
-Surfaces:   --<x>-bg, --<x>-bg-2, --<x>-surface
-Text:       --<x>-text, --<x>-text-soft, --<x>-text-mute
-Lines:      --<x>-line, --<x>-line-soft, --<x>-line-strong
-Accents:    --<x>-accent, --<x>-accent-2, --<x>-on-accent
-Inversion:  --<x>-ink, --<x>-on-ink (für invertierte Karten/Sektionen)
-```
-
-Design-spezifische Extras (z.B. `--po-yellow`, `--vg-bg-1..4`, `--sb-wave-1/-2`, `--mono`) gehören ebenfalls in den Token-Block.
-
-**Regel:** Innerhalb von `[data-design="..."]` keine direkte Verwendung von `var(--ink/--cream/--accent/...)` mehr. Stattdessen über das Design-Token-Alias gehen. Per-Design-Astros (`src/designs/<key>/*.astro`) folgen derselben Regel.
-
 ## Section-Background-Konvention
 
-- `.section--dark` ist der **Default** für Services/Gallery/Contact (dunkel via `var(--ink)`)
-- Helle Designs (03, 04, 06, 08, 09) **müssen explizit überschreiben** mit `[data-design] #services { background: ... }` etc.
-- Bei neuen Designs: prüfen ob `.section--dark`-Sektionen Override brauchen, sonst Cream-on-Cream-Fail.
+- `.section--dark` für Services, Gallery, Contact — setzt `background: var(--ink)` und `color: var(--cream)` auf Headings
+- Anpassungen pro Kunde ausschließlich über `meta.json → theme` (ink, cream, accent, accentLight, sage)
 
 ---
 

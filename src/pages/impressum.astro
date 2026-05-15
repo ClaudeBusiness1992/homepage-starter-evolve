@@ -1,13 +1,11 @@
 ---
 import metaConfig    from '../../config/meta.json';
-import designConfig  from '../../config/design.json';
 import contentConfig from '../../config/content.json';
 import legalConfig   from '../../config/legal.json';
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../sections/Footer.astro';
 
-const { design = '01-warm-local' } = designConfig;
 const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
 const { legal: l } = legalConfig;
@@ -19,7 +17,7 @@ const hasAuthority = l.supervisoryAuthority && !l.supervisoryAuthority.startsWit
 const hasProfession = l.professionalRegulations && !l.professionalRegulations.startsWith('[');
 ---
 
-<Base meta={{ siteName: meta.siteName + ' — Impressum', description: 'Impressum gemäß §5 DDG' }} theme={theme} design={design} noindex={true}>
+<Base meta={{ siteName: meta.siteName + ' — Impressum', description: 'Impressum gemäß §5 DDG' }} theme={theme} noindex={true}>
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={meta.nav} />
 
   <main id="main" class="legal-page">
