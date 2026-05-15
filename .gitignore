@@ -12,3 +12,7 @@ dist/
 .screenshots/
 test-results/
 playwright-report/
+
+# Interne Orga — nicht für Kunden-Repos, nicht öffentlich
+ToDoList/
+BITTE LÖSCHEN/

@@ -18,11 +18,10 @@ interface Props {
     accentLight: string;
     sage: string;
   };
-  design?: string;
   noindex?: boolean;
 }
 
-const { meta, theme, design = '01-warm-local', noindex = false } = Astro.props;
+const { meta, theme, noindex = false } = Astro.props;
 const canonicalUrl = Astro.url.href;
 const ogImage = meta.image ?? '/og-image.jpg';
 const faviconHref = 'data:image/svg+xml,' + encodeURIComponent(
@@ -39,7 +38,7 @@ const themeStyle = `
 ---
 
 <!doctype html>
-<html lang="de" style={themeStyle} data-design={design}>
+<html lang="de" style={themeStyle}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
