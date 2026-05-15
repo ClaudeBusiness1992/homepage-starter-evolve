@@ -2,7 +2,7 @@
 // Lightbox — triggered by any element with data-lightbox="<src>" data-alt="<alt>" data-caption="<text>"
 ---
 
-<div id="lightbox" role="dialog" aria-modal="true" aria-label="Bild in Vollansicht">
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Bild in Vollansicht" aria-hidden="true" tabindex="-1">
   <div class="lb-bg"></div>
   <div class="lb-box">
     <button class="lb-arr lb-prev" type="button" aria-label="Vorheriges Bild" hidden>‹</button>
@@ -188,8 +188,9 @@
   const btnNext   = lb.querySelector('.lb-next');
   const captionEl = lb.querySelector('.lb-caption');
 
-  let srcs = [];
-  let idx  = 0;
+  let srcs      = [];
+  let idx       = 0;
+  let triggerEl = null;
 
   const showSlide = (i) => {
     img.src = srcs[i].src;
@@ -202,19 +203,26 @@
     if (btnNext) btnNext.hidden = srcs.length <= 1 || i === srcs.length - 1;
   };
 
-  const open = (src, alt, group) => {
+  const open = (src, alt, group, trigger) => {
+    triggerEl = trigger || null;
     srcs = (group && group.length) ? group : [{ src, alt }];
     idx  = srcs.findIndex(s => s.src === src);
     if (idx < 0) idx = 0;
     showSlide(idx);
+    lb.removeAttribute('aria-hidden');
     lb.classList.add('is-open');
     document.body.style.overflow = 'hidden';
+    const firstBtn = [btnPrev, btnNext].find(b => b && !b.hidden);
+    (firstBtn || lb).focus();
   };
 
   const close = () => {
     lb.classList.remove('is-open');
+    lb.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     lb.addEventListener('transitionend', () => { img.src = ''; }, { once: true });
+    triggerEl?.focus();
+    triggerEl = null;
   };
 
   const goPrev = () => { if (idx > 0)               { idx--; showSlide(idx); } };
@@ -237,7 +245,7 @@
             category: el.dataset.category || '',
           }))
       : null;
-    open(src, alt, group);
+    open(src, alt, group, t);
   });
 
   lb.addEventListener('click', (e) => {
