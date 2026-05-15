@@ -1,0 +1,30 @@
+---
+---
+<script>
+  document.querySelectorAll('[data-carousel]').forEach((carousel) => {
+    if (carousel.dataset.carouselInited) return;
+    carousel.dataset.carouselInited = '1';
+    const track = carousel.querySelector('[data-carousel-track]');
+    if (!track) return;
+    const prev = carousel.querySelector('[data-carousel-prev]');
+    const next = carousel.querySelector('[data-carousel-next]');
+    const itemSel = track.dataset.carouselItem || ':scope > *';
+    const step = () => {
+      const item = track.querySelector(itemSel);
+      if (!item) return track.clientWidth * 0.8;
+      const gap = parseFloat(getComputedStyle(track).columnGap || '0') || 0;
+      return (item.getBoundingClientRect().width + gap) * 2;
+    };
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      const overflows = max > 1;
+      if (prev) prev.hidden = !overflows || track.scrollLeft <= 1;
+      if (next) next.hidden = !overflows || track.scrollLeft >= max - 1;
+    };
+    prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next?.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  });
+</script>
