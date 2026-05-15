@@ -13,5 +13,8 @@ dist/
 test-results/
 playwright-report/
 
+# Interne Orga — lebt in github.com/ClaudeBusiness1992/orga
+ToDoList/
+
 # Temporäre Lösch-Ablage — nur lokal
 BITTE LÖSCHEN/
