@@ -245,7 +245,7 @@ main > section:not(#hero) > .wrap {
   transition: transform .2s, background .2s, box-shadow .2s, border-color .2s, color .2s;
 }
 .btn:hover  { transform: translateY(-2px); }
-.btn:active { transform: translateY(0); box-shadow: none; }
+.btn:active { transform: translateY(1px); box-shadow: none; opacity: .8; }
 .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .btn-fill,
 .btn-email,
@@ -673,7 +673,7 @@ body:has(.countdown--accent),
 body:has(.countdown--card)   { --cd-h: 320px; }
 /* Countdown ist jetzt in <main> als eigene Snap-Section — Hero bleibt unverändert */
 @media (max-width: 768px) {
-  body:has(.countdown--ticker) { --cd-h: 140px; }
+  body:has(.countdown--ticker) { --cd-h: 80px; }
   body:has(.countdown--pill)   { --cd-h: 150px; }
   body:has(.countdown--hero),
   body:has(.countdown--light),
@@ -1145,7 +1145,11 @@ body:has(.countdown--card)   { --cd-h: 320px; }
    in horizontal scroll containers. Fade-in only. */
 .reviews-grid > .review-card.r { transform: none; transition: opacity .65s ease; }
 @media (max-width: 900px) { .reviews-grid { --rev-visible: 2.2; } }
-@media (max-width: 600px) { .reviews-grid { --rev-visible: 1.15; } }
+@media (max-width: 600px) {
+  .reviews-grid { --rev-visible: 1.15; }
+  .review-name { white-space: normal; }
+  .review-date { flex-basis: 100%; text-align: right; }
+}
 .review-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
@@ -1170,10 +1174,11 @@ body:has(.countdown--card)   { --cd-h: 320px; }
   flex-shrink: 0;
 }
 .review-text { font-size: .9rem; line-height: 1.5; color: var(--text-soft); flex: 1; font-style: italic; text-wrap: pretty; hyphens: auto; overflow-wrap: anywhere; min-width: 0; margin: 0; }
-.review-footer { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: nowrap; min-width: 0; }
+.review-footer { display: flex; align-items: center; justify-content: space-between; gap: .4rem .5rem; flex-wrap: wrap; min-width: 0; }
 .review-author { display: flex; align-items: center; gap: .875rem; min-width: 0; flex: 1 1 auto; }
 .review-author > div { min-width: 0; overflow: hidden; }
-.review-name, .review-company { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.review-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.review-company { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .review-avatar {
   width: 44px; height: 44px;
   border-radius: 50%;
@@ -1354,6 +1359,8 @@ footer {
 @media (max-width: 900px) {
   .stats-grid { grid-template-columns: repeat(2,1fr); gap: 2.5rem; }
   .srv-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-ul { gap: .75rem; }
+  .nav-ul a { font-size: .82rem; }
 }
 @media (max-width: 768px) {
   /* Mobile: alle Sections wachsen mit Inhalt — kein Clipping, kein Snap.
@@ -1643,3 +1650,560 @@ footer {
     padding: 1rem;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════ */
+/* MOBILE CARD-SWIPE-NAVIGATION                                     */
+/* Aktiv wenn JS body.swipe-active setzt (nur ≤ 768px)             */
+/* ════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  body.swipe-active { overflow: hidden; --nav-h: 48px; }
+
+  body.swipe-active #main {
+    overflow: hidden;
+    height: calc(100dvh - var(--nav-h) - 50px);
+    margin-top: calc(var(--nav-h) + 50px);
+    position: relative;
+  }
+
+  /* Horizontaler Slide-Track */
+  .mobile-swipe-track {
+    display: flex;
+    height: 100%;
+    will-change: transform;
+  }
+
+  /* Jeder Slide — überschreibt height:auto !important der bestehenden Mobile-Regeln */
+  body.swipe-active #main .mobile-swipe-track > .hero-snap,
+  body.swipe-active #main .mobile-swipe-track > .contact-footer-snap,
+  body.swipe-active #main .mobile-swipe-track > #about,
+  body.swipe-active #main .mobile-swipe-track > #services,
+  body.swipe-active #main .mobile-swipe-track > #gallery,
+  body.swipe-active #main .mobile-swipe-track > #pricing,
+  body.swipe-active #main .mobile-swipe-track > #reviews,
+  body.swipe-active #main .mobile-swipe-track > #booking,
+  body.swipe-active #main .mobile-swipe-track > #contact,
+  body.swipe-active #main .mobile-swipe-track > #sponsors {
+    flex: 0 0 100vw !important;
+    width: 100vw !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    max-height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* Slides mit langen Inhalten: intern scrollbar */
+  body.swipe-active #main .mobile-swipe-track > #booking {
+    overflow-y: auto !important;
+  }
+
+  /* hero-snap: kein extra padding-top — #main startet bereits unter der Nav */
+  body.swipe-active .mobile-swipe-track > .hero-snap { padding-top: 0 !important; }
+  body.swipe-active .mobile-swipe-track > .hero-snap > #hero {
+    height: 100% !important;
+    min-height: 100% !important;
+  }
+
+  /* Burger + Nav-Links ausblenden — Navigation ausschließlich per Swipe */
+  body.swipe-active .burger { display: none !important; }
+  body.swipe-active .nav-ul { display: none !important; }
+
+  /* ── Section-Tab-Strip (unter der Nav, 4-spaltig) ────────────── */
+  #mobile-nav-tabs {
+    position: fixed;
+    top: var(--nav-h);
+    left: 0; right: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: color-mix(in srgb, var(--ink) 96%, #fff);
+    overflow: hidden;
+    z-index: 99;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+    padding: 3px 0;
+  }
+  .mnt {
+    font-family: var(--sans);
+    font-size: .6rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.35);
+    padding: 5px .25rem;
+    margin: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 3px;
+    white-space: nowrap;
+    transition: color .2s, background .2s;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mnt.on {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+
+
+  /* ── Sub-Dots (rechts, vertikal innerhalb einer Section) ──────── */
+  .mobile-sub-dots {
+    position: absolute;
+    right: .65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .msd-sub {
+    display: block;
+    width: 4px; height: 12px;
+    border-radius: 3px;
+    background: rgba(255,255,255,.22);
+    box-shadow: 0 1px 3px rgba(0,0,0,.35);
+    transition: background .25s, height .25s;
+  }
+  .msd-sub.on { background: var(--accent); height: 18px; }
+
+  /* ── Einmaliger Swipe-Hinweis ──────────────────────────────────── */
+  #swipe-hint {
+    position: fixed;
+    bottom: 3.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .35rem;
+    z-index: 300;
+    pointer-events: none;
+  }
+  .swipe-hint-icon {
+    font-size: 1.35rem;
+    color: rgba(255,255,255,.85);
+    animation: swipe-lr 1.5s ease-in-out 2 forwards;
+  }
+  .swipe-hint-txt {
+    font-family: var(--sans);
+    font-size: .68rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+  }
+  @keyframes swipe-lr {
+    0%   { transform: translateX(14px); opacity: .35; }
+    50%  { transform: translateX(-14px); opacity: 1; }
+    100% { transform: translateX(14px); opacity: .35; }
+  }
+
+  /* ── Kompaktere Section-Header in Swipe-Mode ─────────────────── */
+  body.swipe-active .section-hd    { margin-bottom: 1rem !important; }
+  body.swipe-active .about-intro   { display: none !important; }
+
+  /* ── Services: intern scrollbar (Karten stacken vertikal) ──────── */
+  body.swipe-active #services > .wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+  }
+  body.swipe-active #services .srv-grid {
+    grid-template-rows: unset !important;
+    grid-template-columns: 1fr 1fr !important;
+    align-content: start !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    gap: .4rem !important;
+    padding-bottom: .5rem;
+  }
+  body.swipe-active #services .scard {
+    min-height: unset !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: .6rem .7rem !important;
+  }
+  body.swipe-active #services .sico {
+    font-size: 1.1rem !important;
+    width: 28px !important;
+    height: 28px !important;
+    margin-bottom: .35rem !important;
+  }
+  body.swipe-active #services .stitle {
+    font-size: .8rem !important;
+    margin-bottom: .15rem !important;
+  }
+  body.swipe-active #services .stxt {
+    font-size: .7rem !important;
+    line-height: 1.35 !important;
+  }
+
+  /* ── About: vertikales Sub-Carousel (mehrere Mitglieder) ───────── */
+  body.swipe-active #about { position: relative; }
+  body.swipe-active #about > .wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+  }
+  body.swipe-active #about .about-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+  body.swipe-active #about .about-sub-track {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    will-change: transform;
+    transition: transform .4s cubic-bezier(.25,.46,.45,.94);
+  }
+  body.swipe-active #about .acard {
+    flex: 0 0 100%;
+    overflow-y: auto;
+  }
+  body.swipe-active #about .aphoto {
+    flex: 0 0 auto !important;
+    max-height: clamp(130px, 32dvh, 240px) !important;
+    aspect-ratio: 4/3 !important;
+    min-height: unset !important;
+  }
+
+  /* ── Gallery: 4er-Snap-Seiten (block-mäßige Navigation) ────────── */
+  body.swipe-active #gallery { position: relative; }
+  body.swipe-active #gallery > .wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+  }
+  body.swipe-active #gallery .gallery-carousel {
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: y mandatory !important;
+    position: relative !important;
+  }
+  body.swipe-active #gallery .gallery-nav { display: none !important; }
+  body.swipe-active #gallery [data-carousel-track] { display: none !important; }
+  body.swipe-active #gallery .gallery-scroll-grid {
+    display: block;
+  }
+  body.swipe-active #gallery .gallery-snap-page {
+    scroll-snap-align: start;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 1fr 1fr !important;
+    gap: .4rem !important;
+    padding: .2rem !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+  body.swipe-active #gallery .gallery-snap-page .gallery-item {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    /* Höhe wird per JS gesetzt */
+  }
+  body.swipe-active #gallery .gallery-snap-page .gallery-img {
+    overflow: hidden !important;
+    aspect-ratio: unset !important;
+    flex: unset !important;
+    min-height: unset !important;
+    position: relative;
+    /* Höhe wird per JS gesetzt */
+  }
+  body.swipe-active #gallery .gallery-snap-page .gallery-img img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    position: relative !important;
+    inset: auto !important;
+  }
+  body.swipe-active #gallery .gallery-snap-page .gallery-item-body { flex-shrink: 0; padding: .1rem; }
+  body.swipe-active #gallery .gallery-snap-page .gallery-item-cat { font-size: .56rem; }
+  body.swipe-active #gallery .gallery-snap-page .gallery-item-title { font-size: .6rem; margin: 0; }
+
+  /* ── Reviews: vertikales Sub-Carousel (3 Karten / Seite) ────────── */
+  body.swipe-active #reviews { position: relative; }
+  body.swipe-active #reviews > .wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+  body.swipe-active #reviews .section-hd { margin-bottom: .35rem !important; }
+  body.swipe-active #reviews .section-hd .lbl { font-size: .58rem !important; margin-bottom: .05rem !important; }
+  body.swipe-active #reviews .section-hd .h2 { font-size: 1rem !important; margin-bottom: 0 !important; }
+  body.swipe-active #reviews .section-hd .sub { display: none !important; }
+  body.swipe-active #reviews .reviews-stats { display: none !important; }
+  body.swipe-active #reviews .reviews-note { display: none !important; }
+  body.swipe-active #reviews .gallery-nav { display: none !important; }
+  body.swipe-active #reviews .reviews-carousel {
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+  body.swipe-active #reviews .reviews-grid {
+    overflow: hidden !important;
+    scroll-snap-type: none !important;
+    display: block !important;
+    position: relative !important;
+    height: 100% !important;
+  }
+  body.swipe-active #reviews .rev-sub-track {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    will-change: transform;
+    transition: transform .4s cubic-bezier(.25,.46,.45,.94);
+  }
+  body.swipe-active #reviews .rev-sub-page {
+    flex: 0 0 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: .35rem !important;
+    padding: .1rem 0 .2rem !important;
+    box-sizing: border-box !important;
+    height: 100% !important;
+  }
+  body.swipe-active #reviews .review-card {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    padding: .45rem .65rem !important;
+    border-radius: var(--r) !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+  body.swipe-active #reviews .review-text { font-size: .75rem !important; line-height: 1.38 !important; }
+  body.swipe-active #reviews .review-stars { font-size: .82rem !important; }
+  body.swipe-active #reviews .review-avatar { width: 26px !important; height: 26px !important; font-size: .72rem !important; }
+  body.swipe-active #reviews .review-name { font-size: .74rem !important; }
+  body.swipe-active #reviews .review-company { font-size: .64rem !important; }
+  body.swipe-active #reviews .review-date { font-size: .62rem !important; }
+
+  /* ── Pricing: vertikales Sub-Carousel ──────────────────────────── */
+  body.swipe-active #pricing { position: relative; }
+  body.swipe-active #pricing > .wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 0 !important;
+  }
+  body.swipe-active #pricing .pricing-grid {
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    position: relative !important;
+    display: block !important;
+  }
+  body.swipe-active #pricing .pricing-sub-track {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    will-change: transform;
+    transition: transform .4s cubic-bezier(.25,.46,.45,.94);
+  }
+  body.swipe-active #pricing .pcard {
+    flex: 0 0 100% !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  body.swipe-active #pricing .pricing-note { display: none !important; }
+
+  /* ── Kontakt: vertikales Sub-Carousel (Info → Formular) ─────────── */
+  body.swipe-active .contact-footer-snap {
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  body.swipe-active .contact-footer-snap #contact {
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  body.swipe-active .contact-footer-snap footer,
+  body.swipe-active .contact-footer-snap #footer { display: none !important; }
+  body.swipe-active #contact { position: relative; padding: 0 !important; }
+  body.swipe-active #contact > .wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  body.swipe-active #contact .contact-grid {
+    flex: 1 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    position: relative !important;
+    display: block !important;
+  }
+  body.swipe-active #contact .contact-sub-track {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    will-change: transform;
+    transition: transform .4s cubic-bezier(.25,.46,.45,.94);
+  }
+  body.swipe-active #contact .contact-sub-slide {
+    flex: 0 0 100% !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: .5rem 0 .5rem;
+    box-sizing: border-box !important;
+  }
+  body.swipe-active #contact .contact-form-wrap textarea {
+    min-height: unset !important;
+    height: calc(2lh + 1rem) !important;
+    resize: none !important;
+  }
+  body.swipe-active #contact .contact-form-wrap label,
+  body.swipe-active #contact .contact-form-wrap .form-privacy {
+    font-size: .72rem !important;
+  }
+  body.swipe-active #contact .contact-form-wrap input,
+  body.swipe-active #contact .contact-form-wrap select,
+  body.swipe-active #contact .contact-form-wrap textarea {
+    font-size: .82rem !important;
+    padding: .3rem .5rem !important;
+  }
+  body.swipe-active #contact .contact-form-wrap .btn {
+    font-size: .8rem !important;
+    padding: .4rem 1rem !important;
+  }
+
+  /* ── Buchung: kompakt auf einer Seite ──────────────────────────── */
+  body.swipe-active .booking-section .section-hd { display: none !important; }
+  body.swipe-active #booking > .wrap {
+    padding-left: .75rem !important;
+    padding-right: .75rem !important;
+    padding-top: .3rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  body.swipe-active .booking-form {
+    padding: .45rem .5rem !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+  body.swipe-active .bk-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: .3rem .5rem !important;
+  }
+  body.swipe-active .bk-grid .form-group--span2 { grid-column: 1 / -1 !important; }
+  body.swipe-active .bk-grid label { font-size: .64rem !important; }
+  body.swipe-active .bk-grid input,
+  body.swipe-active .bk-grid select {
+    padding: .28rem .45rem !important;
+    font-size: .78rem !important;
+  }
+  body.swipe-active .bk-grid textarea {
+    min-height: unset !important;
+    font-size: .78rem !important;
+    resize: none !important;
+  }
+  body.swipe-active .bk-hint { display: none !important; }
+  body.swipe-active .bk-submit { font-size: .8rem !important; padding: .4rem .85rem !important; }
+  body.swipe-active .bk-actions { margin-top: .35rem !important; gap: .45rem !important; }
+  body.swipe-active #bk-status { font-size: .72rem !important; }
+
+  /* ── Countdown im Swipe-Mode kompakter ─────────────────────────── */
+  body.swipe-active #countdown { padding: 0 !important; }
+  body.swipe-active .cd-ticker {
+    font-size: .6rem !important;
+    padding: .3rem .75rem !important;
+    gap: 0 .55rem !important;
+  }
+  body.swipe-active .cd-tk-cta { display: none !important; }
+
+  /* ── Impressum / Datenschutz im Swipe-Mode (Contact-Slide) ────────── */
+  .swipe-legal {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding: .55rem 0 .1rem;
+    margin-top: auto;
+  }
+  .swipe-legal a {
+    font-family: var(--sans);
+    font-size: .62rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--cream) 50%, transparent);
+    text-decoration: none;
+  }
+  .swipe-legal a:hover { color: var(--cream); }
+
+  /* ── Komprimierte Typografie in Swipe-Mode ──────────────────────── */
+  /* Section-Header: Subline ausblenden, Label + H2 minimal */
+  body.swipe-active .section-hd .sub { display: none !important; }
+  body.swipe-active .section-hd .lbl { font-size: .58rem !important; margin: 0 0 .1rem !important; }
+  body.swipe-active .section-hd .h2 {
+    font-size: clamp(1.05rem, 4.5vw, 1.4rem) !important;
+    line-height: 1.15 !important;
+    margin-bottom: 0 !important;
+  }
+  body.swipe-active .section-hd {
+    padding-top: .3rem !important;
+    padding-bottom: 0 !important;
+    margin-bottom: .45rem !important;
+  }
+  /* Allgemeine Textgrößen im Swipe-Mode */
+  body.swipe-active .sub {
+    font-size: .82rem !important;
+    line-height: 1.45 !important;
+    margin-bottom: .4rem !important;
+  }
+  body.swipe-active .lbl {
+    font-size: .62rem !important;
+    margin-top: .2rem !important;
+    margin-bottom: .15rem !important;
+  }
+  body.swipe-active .hero-h1 {
+    font-size: clamp(1.6rem, 7vw, 2.2rem) !important;
+    line-height: 1.15 !important;
+    margin-bottom: .6rem !important;
+  }
+  body.swipe-active .hero-sub {
+    font-size: .88rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1rem !important;
+  }
+  body.swipe-active .section { padding: .4rem 0 !important; }
+
+  /* ── Einheitliche Reveal-Animation im Swipe-Mode ─────────────────── */
+  /* Kein translateY, kein Stagger — nur einfaches kurzes Fade-in        */
+  body.swipe-active .r {
+    transform: none !important;
+    transition: opacity .3s ease !important;
+  }
+  body.swipe-active .r.d1,
+  body.swipe-active .r.d2,
+  body.swipe-active .r.d3,
+  body.swipe-active .r.d4 {
+    transition-delay: 0s !important;
+  }
+
+}
+/* Ende Mobile Card-Swipe-Navigation */

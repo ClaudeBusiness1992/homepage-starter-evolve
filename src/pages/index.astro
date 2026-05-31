@@ -224,3 +224,399 @@ const navLinks = [
   });
 }());
 </script>
+
+<script is:inline>
+/* ── Mobile Card-Swipe-Navigation ──────────────────────────────── */
+(function () {
+  'use strict';
+  if (window.innerWidth >= 768) return;
+
+  var SWIPE = 44;   /* px-Schwelle für Sektionswechsel    */
+  var DIR   = 8;    /* px bis Richtung festgelegt wird    */
+  var EASE  = 'transform .4s cubic-bezier(.25,.46,.45,.94)';
+  var HKEY  = 'pxc-swipe-v1';  /* localStorage-Key Swipe-Hint      */
+  var PGSZ  = 4;    /* Gallery-Bilder pro Seite (2×2)     */
+
+  /* ── 1. Slides ermitteln ─────────────────────────────────────── */
+  var main = document.getElementById('main');
+  if (!main) return;
+  var slides = [].slice.call(
+    main.querySelectorAll(':scope > .hero-snap, :scope > section, :scope > .contact-footer-snap')
+  );
+  if (!slides.length) return;
+
+  /* ── 2. Swipe-Track aufbauen ─────────────────────────────────── */
+  var track = document.createElement('div');
+  track.className = 'mobile-swipe-track';
+  slides.forEach(function (s) { track.appendChild(s); });
+  main.appendChild(track);
+  document.body.classList.add('swipe-active');
+
+  var cur = 0, busy = false;
+
+  function goTo(n, snap) {
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    cur = n;
+    track.style.transition = snap ? 'none' : EASE;
+    track.style.transform  = 'translateX(calc(' + (-n * 100) + 'vw))';
+    tabSync();
+    if (!snap) {
+      busy = true;
+      setTimeout(function () { busy = false; revealNow(n); }, 460);
+    }
+  }
+
+  function revealNow(n) {
+    var el = slides[n];
+    if (!el) return;
+    el.querySelectorAll('.r').forEach(function (r) { r.classList.add('in'); });
+  }
+
+  /* ── 3. Section-Tab-Strip (unter der Nav) ───────────────────── */
+  var tabBar2 = document.createElement('div');
+  tabBar2.id  = 'mobile-nav-tabs';
+  var navAs   = [].slice.call(document.querySelectorAll('#navLinks a'));
+  var tabEls  = [];
+
+  slides.forEach(function (slide, idx) {
+    var sId = slide.id || '';
+    if (!sId) {
+      var inner = slide.querySelector('[id]');
+      sId = inner ? inner.id : '';
+    }
+    var label = '';
+    for (var ni = 0; ni < navAs.length; ni++) {
+      var href = navAs[ni].getAttribute('href') || '';
+      if (href === '#' + sId || href.endsWith('#' + sId)) {
+        label = navAs[ni].textContent.trim(); break;
+      }
+    }
+    if (!label) {
+      if (slide.classList.contains('hero-snap'))          label = 'Start';
+      else if (slide.classList.contains('contact-footer-snap')) label = 'Kontakt';
+      else label = sId || ('Slide ' + (idx + 1));
+    }
+    var tab = document.createElement('div');
+    tab.className = 'mnt';
+    tab.textContent = label;
+    (function (n) { tab.addEventListener('click', function () { goTo(n); }); })(idx);
+    tabBar2.appendChild(tab);
+    tabEls.push(tab);
+  });
+  document.body.appendChild(tabBar2);
+
+  /* Measure actual nav + tab heights and set #main size precisely */
+  var navEl2 = document.getElementById('nav');
+  function updateMainLayout() {
+    var navH  = navEl2 ? navEl2.offsetHeight : 48;
+    var tabH  = tabBar2.offsetHeight;
+    var total = navH + tabH;
+    tabBar2.style.top    = navH + 'px';
+    main.style.marginTop = total + 'px';
+    main.style.height    = 'calc(100dvh - ' + total + 'px)';
+  }
+  updateMainLayout();
+  window.addEventListener('resize', updateMainLayout, { passive: true });
+
+  function tabSync() {
+    tabEls.forEach(function (t, i) {
+      t.classList.toggle('on', i === cur);
+    });
+  }
+
+  /* ── 4. Sub-Carousels ────────────────────────────────────────── */
+  var subs = {};
+
+  function mkDots(el, n) {
+    var w = document.createElement('div');
+    w.className = 'mobile-sub-dots';
+    for (var i = 0; i < n; i++) {
+      var d = document.createElement('span');
+      d.className = 'msd-sub';
+      w.appendChild(d);
+    }
+    el.appendChild(w);
+    return w;
+  }
+
+  function subSync(id) {
+    var s = subs[id];
+    if (!s || !s.dots) return;
+    var cls = '.msd-sub';
+    [].forEach.call(s.dots.querySelectorAll(cls), function (d, i) {
+      d.classList.toggle('on', i === s.i);
+    });
+  }
+
+  /* About */
+  var aEl   = document.getElementById('about');
+  var aGrid = aEl && aEl.querySelector('.about-grid');
+  if (aGrid) {
+    var cards = [].slice.call(aGrid.querySelectorAll('.acard'));
+    if (cards.length > 1) {
+      var at = document.createElement('div');
+      at.className = 'about-sub-track';
+      cards.forEach(function (c) { at.appendChild(c); });
+      aGrid.appendChild(at);
+      aEl.style.position = 'relative';
+      subs.about = { tr: at, i: 0, n: cards.length, dots: mkDots(aEl, cards.length) };
+      subSync('about');
+    }
+  }
+
+  /* Gallery — 4er-Seiten mit CSS-Scroll-Snap */
+  var gEl  = document.getElementById('gallery');
+  var gOr  = gEl && gEl.querySelector('[data-carousel-track]');
+  var gCar = gEl && gEl.querySelector('.gallery-carousel');
+  if (gEl && gOr && gCar) {
+    var gItems = [].slice.call(gOr.querySelectorAll('.gallery-item'));
+    var gg = document.createElement('div');
+    gg.className = 'gallery-scroll-grid';
+    var pgs = Math.max(1, Math.ceil(gItems.length / PGSZ));
+    for (var p = 0; p < pgs; p++) {
+      var pg = document.createElement('div');
+      pg.className = 'gallery-snap-page';
+      gItems.slice(p * PGSZ, (p + 1) * PGSZ).forEach(function (it) { pg.appendChild(it); });
+      gg.appendChild(pg);
+    }
+    gCar.appendChild(gg);
+    /* loading="lazy" blockiert Bilder in translateX-Containern — sofort laden */
+    [].slice.call(gg.querySelectorAll('img[loading="lazy"]')).forEach(function (img) {
+      img.removeAttribute('loading');
+    });
+    /* Höhen explizit setzen: Seite → Item → Image (flex-Hierarchie nicht zuverlässig) */
+    var gPages = [].slice.call(gg.querySelectorAll('.gallery-snap-page'));
+    var setGallH = function () {
+      var h = gCar.offsetHeight || (window.innerHeight - (navEl2 ? navEl2.offsetHeight : 48) - tabBar2.offsetHeight);
+      if (h <= 20) return;
+      var gap = 4;
+      var rowH = Math.floor((h - gap) / 2);
+      gPages.forEach(function (p) { p.style.height = h + 'px'; });
+      /* Pass 1: Item-Höhe setzen */
+      [].slice.call(gg.querySelectorAll('.gallery-item')).forEach(function (item) {
+        item.style.height = rowH + 'px';
+      });
+      /* Pass 2: Body-Höhe lesen, Image-Höhe setzen */
+      [].slice.call(gg.querySelectorAll('.gallery-item')).forEach(function (item) {
+        var body = item.querySelector('.gallery-item-body');
+        var bodyH = body ? body.offsetHeight : 30;
+        var imgEl = item.querySelector('.gallery-img');
+        if (imgEl) imgEl.style.height = Math.max(40, rowH - bodyH) + 'px';
+      });
+    };
+    setGallH();
+    setTimeout(setGallH, 150);
+    window.addEventListener('resize', setGallH, { passive: true });
+  }
+
+  /* Pricing — vertikales Sub-Carousel */
+  var prEl   = document.getElementById('pricing');
+  var prGrid = prEl && prEl.querySelector('.pricing-grid');
+  if (prEl && prGrid) {
+    var pcards = [].slice.call(prGrid.querySelectorAll('.pcard'));
+    if (pcards.length > 1) {
+      var pt = document.createElement('div');
+      pt.className = 'pricing-sub-track';
+      pcards.forEach(function (c) { pt.appendChild(c); });
+      prGrid.appendChild(pt);
+      prEl.style.position = 'relative';
+      subs.pricing = { tr: pt, i: 0, n: pcards.length, dots: mkDots(prEl, pcards.length) };
+      subSync('pricing');
+    }
+  }
+
+  /* Reviews — vertikales Sub-Carousel (3 Karten pro Seite) */
+  var revEl   = document.getElementById('reviews');
+  var revGrid = revEl && revEl.querySelector('[data-carousel-track]');
+  if (revEl && revGrid) {
+    var revCards = [].slice.call(revGrid.querySelectorAll('.review-card'));
+    var RPSZ = 3;
+    if (revCards.length > 0) {
+      var rt = document.createElement('div');
+      rt.className = 'rev-sub-track';
+      var rPgs = Math.max(1, Math.ceil(revCards.length / RPSZ));
+      for (var rp = 0; rp < rPgs; rp++) {
+        var rpg = document.createElement('div');
+        rpg.className = 'rev-sub-page';
+        revCards.slice(rp * RPSZ, (rp + 1) * RPSZ).forEach(function (c) { rpg.appendChild(c); });
+        rt.appendChild(rpg);
+      }
+      revGrid.appendChild(rt);
+      revEl.style.position = 'relative';
+      subs.reviews = { tr: rt, i: 0, n: rPgs, dots: mkDots(revEl, rPgs) };
+      subSync('reviews');
+    }
+  }
+
+  /* Kontakt — vertikales Sub-Carousel (Info → Formular) */
+  var contEl   = document.getElementById('contact');
+  var contGrid = contEl && contEl.querySelector('.contact-grid');
+  if (contEl && contGrid) {
+    var cInfo = contGrid.querySelector('.contact-info');
+    var cForm = contGrid.querySelector('.contact-form-wrap');
+    if (cInfo && cForm) {
+      var cst  = document.createElement('div');
+      cst.className = 'contact-sub-track';
+      var cs1 = document.createElement('div');
+      cs1.className = 'contact-sub-slide';
+      cs1.appendChild(cInfo);
+      var legal = document.createElement('div');
+      legal.className = 'swipe-legal';
+      legal.innerHTML = '<a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a>';
+      cs1.appendChild(legal);
+      var cs2 = document.createElement('div');
+      cs2.className = 'contact-sub-slide';
+      cs2.appendChild(cForm);
+      cst.appendChild(cs1);
+      cst.appendChild(cs2);
+      contGrid.appendChild(cst);
+      contEl.style.position = 'relative';
+      subs.contact = { tr: cst, i: 0, n: 2, dots: mkDots(contEl, 2) };
+      subSync('contact');
+    }
+  }
+
+  function subId() { /* nur vertikale Sub-Carousels */
+    var s = slides[cur];
+    if (!s) return null;
+    var ks = Object.keys(subs);
+    for (var j = 0; j < ks.length; j++) {
+      var k = ks[j];
+      if (subs[k].horiz) continue;
+      if (s.id === k || (s.querySelector && s.querySelector('#' + k))) return k;
+    }
+    return null;
+  }
+
+  function hSubId() { /* nur horizontale Sub-Carousels */
+    var s = slides[cur];
+    if (!s) return null;
+    var ks = Object.keys(subs);
+    for (var j = 0; j < ks.length; j++) {
+      var k = ks[j];
+      if (!subs[k].horiz) continue;
+      if (s.id === k || (s.querySelector && s.querySelector('#' + k))) return k;
+    }
+    return null;
+  }
+
+  function subGo(dir) {
+    var id = subId();
+    if (!id) return false;
+    var s = subs[id];
+    if (s.n <= 1) return false;
+    var ni = s.i + dir;
+    if (ni < 0 || ni >= s.n) return false;
+    s.i = ni;
+    s.tr.style.transition = EASE;
+    s.tr.style.transform  = 'translateY(calc(' + (-s.i * 100) + '%))';
+    subSync(id);
+    return true;
+  }
+
+  function hSubGo(dir) {
+    var id = hSubId();
+    if (!id) return false;
+    var s = subs[id];
+    if (s.n <= 1) return false;
+    var ni = s.i + dir;
+    if (ni < 0 || ni >= s.n) return false; /* am Rand — Sektionswechsel erlauben */
+    s.i = ni;
+    var W = s.tr.parentElement ? s.tr.parentElement.offsetWidth : window.innerWidth;
+    s.tr.style.transition = EASE;
+    s.tr.style.transform  = 'translateX(' + (-s.i * W) + 'px)';
+    subSync(id);
+    return true;
+  }
+
+  /* ── 5. Touch-Handling ──────────────────────────────────────── */
+  var x0 = 0, y0 = 0, axis = null;
+
+  function lbOpen() {
+    var lb = document.getElementById('lightbox');
+    return lb && lb.classList.contains('is-open');
+  }
+
+  document.addEventListener('touchstart', function (e) {
+    if (lbOpen()) return;
+    x0 = e.touches[0].clientX;
+    y0 = e.touches[0].clientY;
+    axis = null;
+    if (!busy) track.style.transition = 'none';
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function (e) {
+    if (lbOpen()) return;
+    var dx = e.touches[0].clientX - x0;
+    var dy = e.touches[0].clientY - y0;
+    if (!axis) {
+      if (Math.abs(dx) + Math.abs(dy) < DIR) return;
+      axis = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
+    }
+    if (axis === 'h') {
+      e.preventDefault();
+      var hId = hSubId();
+      if (hId) {
+        var hs = subs[hId];
+        var atHEdge = (hs.i === 0 && dx > 0) || (hs.i === hs.n - 1 && dx < 0);
+        if (atHEdge) {
+          track.style.transform = 'translateX(calc(' + (-cur * 100) + 'vw + ' + (dx * 0.18) + 'px))';
+        } else {
+          var W = hs.tr.parentElement ? hs.tr.parentElement.offsetWidth : window.innerWidth;
+          hs.tr.style.transition = 'none';
+          hs.tr.style.transform  = 'translateX(' + (-hs.i * W + dx) + 'px)';
+        }
+      } else {
+        var atEdge = (cur === 0 && dx > 0) || (cur === slides.length - 1 && dx < 0);
+        track.style.transform = 'translateX(calc(' + (-cur * 100) + 'vw + ' + (dx * (atEdge ? 0.18 : 1)) + 'px))';
+      }
+    } else if (axis === 'v' && subId()) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchend', function (e) {
+    if (lbOpen()) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    var dy = e.changedTouches[0].clientY - y0;
+    if (axis === 'h') {
+      var hId2 = hSubId();
+      if (Math.abs(dx) >= SWIPE) {
+        var hDir = dx < 0 ? 1 : -1;
+        if (hId2 && !hSubGo(hDir)) goTo(cur + hDir);
+        else if (!hId2) goTo(cur + hDir);
+      } else {
+        if (hId2) {
+          var hs2 = subs[hId2];
+          var W2  = hs2.tr.parentElement ? hs2.tr.parentElement.offsetWidth : window.innerWidth;
+          hs2.tr.style.transition = EASE;
+          hs2.tr.style.transform  = 'translateX(' + (-hs2.i * W2) + 'px)';
+        }
+        goTo(cur);
+      }
+    } else if (axis === 'v' && Math.abs(dy) >= SWIPE) {
+      subGo(dy < 0 ? 1 : -1);
+    }
+    axis = null;
+  }, { passive: true });
+
+  /* ── 6. Einmaliger Swipe-Hint ────────────────────────────────── */
+  if (!localStorage.getItem(HKEY) && slides.length > 1) {
+    var hint = document.createElement('div');
+    hint.id = 'swipe-hint';
+    hint.innerHTML = '<span class="swipe-hint-icon">⟵ ⟶</span>'
+      + '<span class="swipe-hint-txt">Wischen zum Navigieren</span>';
+    document.body.appendChild(hint);
+    setTimeout(function () {
+      hint.style.transition = 'opacity .5s';
+      hint.style.opacity    = '0';
+      setTimeout(function () { hint.remove(); }, 600);
+    }, 3400);
+    localStorage.setItem(HKEY, '1');
+  }
+
+  /* ── Init ────────────────────────────────────────────────────── */
+  goTo(0, true);
+  revealNow(0);
+}());
+</script>
