@@ -1,6 +1,19 @@
-# CLAUDE.md — homepage-starter
+# CLAUDE.md — homepage-starter-evolve
 
 Kontextdatei für Claude Code. Enthält Projektbeschreibung, Architektur-Entscheidungen und Setup-Anleitung.
+
+## Orga & Aufgaben
+
+Zum Projekt gehört ein Obsidian-Vault im Orga-Repo. Dort sind alle offenen Tasks, Bugs und Regeln dokumentiert — **immer zuerst pullen und reinschauen**.
+
+**Obsidian-Vault:** `C:\ClaudeBusiness\Orga-und-Allgemeines\pixel&code Obsidian\`
+
+```powershell
+cd "C:\ClaudeBusiness\Orga-und-Allgemeines"
+git pull
+```
+
+---
 
 ---
 
