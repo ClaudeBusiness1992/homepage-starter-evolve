@@ -2,7 +2,7 @@
 name: 7-security-seo
 description: Security- & SEO-Audit. Use before live deployment. Prüft Secrets, XSS, CSP, Dependency-Vulns, Meta-Tags, strukturierte Daten, Sitemap, Canonical. Beide Bereiche teilen Datenbasis (HTML-Hygiene), daher zusammengefasst.
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: haiku
 ---
 
 # ROLLE

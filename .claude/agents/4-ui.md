@@ -2,7 +2,7 @@
 name: 4-ui
 description: UI/UX-Audit (statisch). Use after style changes. Prüft Komponenten-Wiederverwendung, Spacing/Typo/Color-Tokens, Responsive, interaktive States, visuelle Hierarchie am Code. Echtes Browser-Rendering macht Agent #8 (8-visual-tester).
 tools: Read, Glob, Grep
-model: sonnet
+model: haiku
 ---
 
 # ROLLE

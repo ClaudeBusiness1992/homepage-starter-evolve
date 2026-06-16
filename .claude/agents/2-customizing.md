@@ -2,7 +2,7 @@
 name: 2-customizing
 description: Customizing-Readiness-Audit. Use before onboarding a new client or as part of full audit suite. Prüft, ob die Basis sich ohne Core-Modifikationen pro Kunde anpassen lässt — Lackmustest für Template-Geschäft.
 tools: Read, Glob, Grep
-model: sonnet
+model: haiku
 ---
 
 # ROLLE

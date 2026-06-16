@@ -26,7 +26,8 @@
       "PowerShell(gh *)",
       "PowerShell(Get-Command *)",
       "PowerShell(Test-Path *)",
-      "PowerShell(gh repo *)"
+      "PowerShell(gh repo *)",
+      "Bash(magick --version)"
     ]
   }
 }
