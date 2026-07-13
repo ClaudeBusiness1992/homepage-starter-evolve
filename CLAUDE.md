@@ -358,7 +358,7 @@ Wenn nur ein Aspekt geprüft werden soll, einzelnen Sub-Agent direkt via `Agent`
 - **Paketmanager:** immer `pnpm`, nie `npm install`
 - **Commits:** `feat:`, `fix:`, `chore:`, `style:`
 - **Config:** Kunden-Werte nur in `config/` — nie direkt im Code
-- **CSS:** Custom Properties, keine externen UI-Libraries (kein Tailwind, kein Bootstrap)
+- **CSS:** Standard ist Custom Properties ohne Framework (kein Tailwind, kein Bootstrap standardmäßig). Das ist der Default, kein Verbot: wenn ein einzelnes Basisformat nachweislich von einem Framework oder einer zusätzlichen Library profitiert (siehe `docs/UI-UX-PRO-MAX-INTEGRATION.md` → Packages), wird es dort eingesetzt, geprüft gegen `docs/WEBSITE_TECHNICAL_GUARDRAILS.md`. Endprodukt-Qualität geht vor Stack-Konservatismus.
 - **Keine Inline-Styles** für Design-Entscheidungen — alles in CSS-Dateien
 - **WCAG AA:** alle Text-Kontraste müssen 4.5:1 erfüllen (normal), 3:1 (groß/bold)
 - **TS-light:** `.astro`-Frontmatter darf TypeScript-Annotationen nutzen (`interface`, `as`-Casts), Vanilla-JS bleibt für Browser-Scripts. Keine separaten `.ts`-Files.
