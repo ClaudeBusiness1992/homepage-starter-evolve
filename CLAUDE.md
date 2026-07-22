@@ -4,14 +4,7 @@ Kontextdatei für Claude Code. Enthält Projektbeschreibung, Architektur-Entsche
 
 ## Orga & Aufgaben
 
-Zum Projekt gehört ein Obsidian-Vault im Orga-Repo. Dort sind alle offenen Tasks, Bugs und Regeln dokumentiert — **immer zuerst pullen und reinschauen**.
-
-**Obsidian-Vault:** `C:\ClaudeBusiness\Orga-und-Allgemeines\pixel&code Obsidian\`
-
-```powershell
-cd "C:\ClaudeBusiness\Orga-und-Allgemeines"
-git pull
-```
+Aufgaben, Bugs und Ideen für dieses Projekt liegen in der To-do-App (`C:\ClaudeBusiness\todo-app\`) unter dem Projekt **„pixel&code"** (Unterkategorien: Bugs & Fixes, Roadmap & Features, Gründung & Legal, Geschäftsmodell, Externe Dienste, Qualitätssicherung).
 
 ---
 
