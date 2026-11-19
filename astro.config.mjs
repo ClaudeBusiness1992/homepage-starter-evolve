@@ -6,5 +6,6 @@ export default defineConfig({
   // Pro Kunde anpassen — wird für Sitemap, Canonical-URLs und OG-Tags benötigt
   site: 'https://ihre-domain.de',
   trailingSlash: 'never',
-  integrations: [sitemap()],
+  // /test ist eine Testseite (noindex) und gehört nicht in die Sitemap.
+  integrations: [sitemap({ filter: (page) => !page.endsWith('/test') })],
 });
