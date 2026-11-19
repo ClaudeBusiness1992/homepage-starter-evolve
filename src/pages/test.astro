@@ -8,13 +8,14 @@ import Footer from '../sections/Footer.astro';
 const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
 
-// Bildfolge: 240 WebP-Bilder (1280×720, freigestellt) unter /scroll/pizza-a1/.
+// Bildfolge: 240 Bilder (1280×720, freigestellt), je als AVIF und als WebP, unter /scroll/pizza-a1/.
+// Die Seite lädt AVIF, wenn der Browser es mit Transparenz darstellt, sonst WebP.
 // `version` hängt an jeder Bildadresse; bei neuen Bildern ändern, damit der Browser sie neu lädt.
 const folge = {
   basis: '/scroll/pizza-a1/',
   anzahl: 240,
   stellen: 4,
-  version: '03aef6f64d98',
+  version: 'c371a85ffb08',
   // Zeichenbereich aus den Bildern: Das Motiv (auch alle fallenden Zutaten) liegt in allen 240 Bildern
   // zwischen x = 345 und x = 929; die volle Höhe bleibt erhalten.
   ausschnittX: 320,
@@ -23,7 +24,7 @@ const folge = {
   // Scrollweg je Bild in Pixeln
   pxProBild: 16,
 };
-const letztesBild = `${folge.basis}bild-${String(folge.anzahl).padStart(folge.stellen, '0')}.webp?v=${folge.version}`;
+const letztesBild = (endung) => `${folge.basis}bild-${String(folge.anzahl).padStart(folge.stellen, '0')}.${endung}?v=${folge.version}`;
 ---
 
 <Base meta={{ siteName: meta.siteName + ' — Scroll-Test', description: 'Testseite für eine Scroll-Animation.' }} theme={theme} noindex={true}>
@@ -60,13 +61,16 @@ const letztesBild = `${folge.basis}bild-${String(folge.anzahl).padStart(folge.st
           aria-label="Pizzateig von oben, der beim Scrollen mit Tomatensauce, Champignons und gelben Paprikastreifen belegt wird"
         ></canvas>
         <noscript>
-          <img
-            class="demo-standbild"
-            src={letztesBild}
-            width="1280"
-            height="720"
-            alt="Pizzateig von oben, belegt mit Tomatensauce, Champignons und gelben Paprikastreifen"
-          />
+          <picture>
+            <source type="image/avif" srcset={letztesBild('avif')} />
+            <img
+              class="demo-standbild"
+              src={letztesBild('webp')}
+              width="1280"
+              height="720"
+              alt="Pizzateig von oben, belegt mit Tomatensauce, Champignons und gelben Paprikastreifen"
+            />
+          </picture>
         </noscript>
         <div class="demo-stand" id="pizzaStand" hidden>
           <div id="pizzaStandText">Bilder werden geladen: 0 von {folge.anzahl}</div>
@@ -142,6 +146,7 @@ const letztesBild = `${folge.basis}bild-${String(folge.anzahl).padStart(folge.st
   .demo-buehne.aktiv canvas {
     display: block;
   }
+  .demo-buehne picture { display: contents; }
   .demo-standbild {
     display: block;
     object-fit: cover; /* schneidet das ganze Bild (1280 × 720) mittig auf denselben Ausschnitt zu */
@@ -225,7 +230,35 @@ const letztesBild = `${folge.basis}bild-${String(folge.anzahl).padStart(folge.st
   const bilder = new Array(n).fill(null); // fertig geladene Image-Objekte
   // Die Versionsangabe in der Adresse bringt neue Bilder nach einem Austausch zum Browser
   // und erlaubt es, unveränderte Bilder dauerhaft zu behalten.
-  const adresse = (i) => d.basis + "bild-" + String(i + 1).padStart(stellen, "0") + ".webp?v=" + d.version;
+  const adresse = (i, e) => d.basis + "bild-" + String(i + 1).padStart(stellen, "0") + "." + e + "?v=" + d.version;
+
+  // ---- Bildformat: AVIF (deutlich kleiner), wenn der Browser AVIF mit Transparenz darstellt, sonst WebP.
+  // Geprüft wird einmal mit einem winzigen AVIF (2x1 Pixel: links deckend, rechts transparent). Ein Browser, der
+  // AVIF nur ohne Alphakanal kann, würde beide Pixel deckend zeigen und bekommt deshalb WebP.
+  const AVIF_PROBE = "data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAAGobWV0YQAAAAAAAAAvaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAFBpY3R1cmVIYW5kbGVyAAAAAA5waXRtAAAAAAABAAAALGlsb2MAAAAARAAAAgABAAAAAQAAAdAAAAAiAAIAAAABAAAB8gAAABoAAABCaWluZgAAAAAAAgAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAGmluZmUCAAAAAAIAAGF2MDFBbHBoYQAAAAAaaXJlZgAAAAAAAAAOYXV4bAACAAEAAQAAANdpcHJwAAAAsWlwY28AAAAUaXNwZQAAAAAAAAACAAAAAQAAABBwaXhpAAAAAAMICAgAAAAMYXYxQ4EADAAAAAATY29scm5jbHgAAgACAAGAAAAAFGlzcGUAAAAAAAAAAgAAAAEAAAAOcGl4aQAAAAABCAAAAAxhdjFDgQAcAAAAADhhdXhDAAAAAHVybjptcGVnOm1wZWdCOmNpY3A6c3lzdGVtczphdXhpbGlhcnk6YWxwaGEAAAAAHmlwbWEAAAAAAAAAAgABBAECgwQAAgQFBocIAAAARG1kYXQKCBgAJsgQEAwgMhYQAACJ7Z2QBvgW2isitF/VxG2RFukiCgcYACbYEBAFMg8QAIbSiSmjT1ZBEiESIig=";
+  function avifMitAlphaMoeglich() {
+    return new Promise((fertigMelden) => {
+      const frist = setTimeout(() => fertigMelden(false), 2000);
+      const probe = new Image();
+      probe.onload = () => {
+        clearTimeout(frist);
+        try {
+          const c = document.createElement("canvas");
+          c.width = 2;
+          c.height = 1;
+          const g = c.getContext("2d", { willReadFrequently: true });
+          g.drawImage(probe, 0, 0);
+          const px = g.getImageData(0, 0, 2, 1).data;
+          fertigMelden(probe.naturalWidth === 2 && px[3] > 200 && px[7] < 50);
+        } catch (e) {
+          fertigMelden(false);
+        }
+      };
+      probe.onerror = () => { clearTimeout(frist); fertigMelden(false); };
+      probe.src = AVIF_PROBE;
+    });
+  }
+  let endung = "webp"; // wird in alleLaden() nach der Prüfung gesetzt
 
   spur.style.setProperty("--scroll-laenge", laenge + "px");
   spur.classList.add("aktiv");
@@ -278,19 +311,20 @@ const letztesBild = `${folge.basis}bild-${String(folge.anzahl).padStart(folge.st
     return best;
   }
 
-  function ladeEinmal(i) {
+  function ladeEinmal(i, e) {
     return new Promise((fertigMelden) => {
       const b = new Image();
       b.onload = () => { bilder[i] = b; fertigMelden(true); };
       b.onerror = () => fertigMelden(false);
-      b.src = adresse(i);
+      b.src = adresse(i, e);
     });
   }
   async function lade(i) {
     zustand[i] = 1;
     offen[stufe[i]]--; // "offen" zählt nur noch nicht begonnene Bilder, sonst steigen freie Anfragen zu früh aus
-    let ok = await ladeEinmal(i);
-    if (!ok) { await new Promise((r) => setTimeout(r, 400)); ok = await ladeEinmal(i); }
+    let ok = await ladeEinmal(i, endung);
+    // Zweiter Versuch nach 400 ms; bei AVIF mit WebP (das Ausweichformat liegt immer daneben).
+    if (!ok) { await new Promise((r) => setTimeout(r, 400)); ok = await ladeEinmal(i, "webp"); }
     if (ok) { zustand[i] = 2; geladen++; } else { zustand[i] = 3; fehlgeschlagen++; }
     fortschritt();
     planen(); // Ist das neue Bild näher an der Scrollposition als das gezeigte, wird es gezeichnet.
@@ -305,6 +339,8 @@ const letztesBild = `${folge.basis}bild-${String(folge.anzahl).padStart(folge.st
     });
   }
   async function alleLaden() {
+    endung = (await avifMitAlphaMoeglich()) ? "avif" : "webp";
+    buehne.dataset.format = endung; // zeigt, welches Format geladen wird (Prüfhilfe)
     await lade(0); // Bild 1 allein und zuerst, damit es nicht um Bandbreite konkurriert
     await nachLoad();
     const arbeiter = async () => {
@@ -376,7 +412,7 @@ const letztesBild = `${folge.basis}bild-${String(folge.anzahl).padStart(folge.st
     zusatz.hidden = true;
     standtext.className = "fehler";
     standtext.setAttribute("role", "alert");
-    standtext.textContent = fehlgeschlagen + " von " + n + " Bildern konnten nicht geladen werden. Bitte laden Sie die Seite neu.";
+    standtext.textContent = (fehlgeschlagen === 1 ? "Ein Bild von " + n + " konnte" : fehlgeschlagen + " von " + n + " Bildern konnten") + " nicht geladen werden. Bitte laden Sie die Seite neu.";
   }
 
   fortschritt();
