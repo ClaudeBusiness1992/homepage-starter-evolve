@@ -28,22 +28,18 @@ const labelFor = (id: string, fallback: string) =>
   (meta.nav ?? []).find((l: any) => l.section === id)?.label ?? fallback;
 
 const cta = (meta.nav ?? []).find((l: any) => l.cta);
-const extraLinks = (meta.nav ?? []).filter((l: any) => l.extra);
 const orderedSections = [
-  { id: 'services', label: labelFor('services', 'Leistungen'),  enabled: s.services?.enabled !== false },
-  { id: 'gallery',  label: labelFor('gallery', 'Galerie'),       enabled: !!(x.active?.gallery && x.gallery) },
-  { id: 'about',    label: labelFor('about',    'Über uns'),    enabled: s.about?.enabled !== false },
-  { id: 'pricing',  label: labelFor('pricing',  'Preise'),      enabled: s.pricing?.enabled !== false },
-  { id: 'reviews',  label: 'Bewertungen',                        enabled: !!(x.active?.reviews  && x.reviews) },
-  { id: 'booking',  label: 'Buchung',                            enabled: !!(x.active?.booking  && x.booking) },
-  { id: 'sponsors', label: 'Sponsoren',                          enabled: !!(x.active?.sponsors && x.sponsors) },
+  { id: 'services', label: labelFor('services', "So funktioniert's"), enabled: s.services?.enabled !== false },
+  { id: 'gallery',  label: labelFor('gallery', 'Unser Sortiment'),      enabled: !!(x.active?.gallery && x.gallery) },
+  { id: 'about',    label: labelFor('about', 'Über uns'),              enabled: s.about?.enabled !== false },
+  { id: 'cta',      label: 'Mitgliedschaft',                            enabled: s.cta?.enabled !== false },
+  { id: 'contact',  label: labelFor('contact', 'Kontakt'),              enabled: s.contact?.enabled !== false },
 ];
 
 const navLinks = [
-  ...orderedSections.filter(o => o.enabled).map(o => ({ label: o.label, href: `#${o.id}`, section: o.id })),
-  ...(cta ? [{ label: labelFor('contact', 'Kontakt'), href: '#contact', section: 'contact' }] : []),
-  ...extraLinks,
-  ...(cta ? [cta] : [{ label: 'Kontakt', href: '#contact', section: 'contact', cta: true }]),
+  ...orderedSections.filter(o => o.enabled).map(o => ({ label: o.label, href: "#" + o.id, section: o.id })),
+  { label: 'Einloggen', href: '#contact', section: 'login' },
+  ...(cta ? [cta] : [{ label: 'Mitglied werden', href: '#contact', section: 'contact', cta: true }]),
 ];
 ---
 

@@ -370,3 +370,68 @@ body.swipe-active *:not(.kat-body)::-webkit-scrollbar { display: none; width: 0;
   justify-content: flex-start;
 }
 
+
+
+/* ── Korrekturen Kacheln, Typ, Hover, Skalierung (ISSUE-20261121) ── */
+/* Kachel-Hervorhebung: kein unpassendes Gruen auf Gruen, dezenter warmer Schein ohne Abschneiden */
+#gallery .gallery-grid {
+  padding-inline: clamp(10px, 1.5vw, 20px) !important;
+  overflow: visible !important;
+}
+:is(#gallery .gallery-item):not(.k1):not(.k2):not(.k3):is(.r.in, :not(.r)):is(:hover, :focus-within) {
+  border-color: rgba(242, 193, 148, 0.6) !important;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, .15),
+              0 14px 28px rgba(0, 0, 0, .35),
+              0 0 18px rgba(242, 193, 148, 0.25) !important;
+}
+
+/* Über uns: AJ Porträt oben buendig mit dem Text / Namen */
+@media (min-width: 769px) {
+  #about .about-grid > .acard:only-child {
+    align-items: flex-start !important;
+  }
+  #about .about-grid > .acard:only-child .aphoto {
+    align-self: flex-start !important;
+    margin-top: 0 !important;
+  }
+  #about .about-grid > .acard:only-child .abody {
+    padding-top: 0 !important;
+  }
+  #about .about-grid > .acard:only-child .aname {
+    margin-top: 0 !important;
+  }
+}
+
+/* Typografische Skalierung für Monitore, kleine Laptops und Smartphones mit grosser Schrift */
+@media (min-width: 769px) {
+  #gallery .gallery-item-body {
+    min-height: clamp(4.5rem, 7vw, 5.8rem) !important;
+    padding: clamp(.4rem, .8vw, .7rem) clamp(.6rem, 1vw, .9rem) !important;
+  }
+  #gallery .gallery-item-title {
+    font-size: clamp(.85rem, 1vw, 1.05rem) !important;
+  }
+  #gallery .gallery-item-cat {
+    font-size: clamp(.72rem, .85vw, .84rem) !important;
+  }
+}
+@media (max-width: 768px) {
+  #gallery .gallery-item-body {
+    min-height: 4.8rem !important;
+    padding: .5rem .65rem !important;
+  }
+  #gallery .gallery-item-title {
+    font-size: clamp(.85rem, 3.8vw, 1.05rem) !important;
+  }
+  #gallery .gallery-item-cat {
+    font-size: clamp(.68rem, 3.2vw, .82rem) !important;
+  }
+  #about .about-grid > .acard:only-child .aname {
+    font-size: clamp(1.2rem, 5.5vw, 1.8rem) !important;
+  }
+  #about .about-grid > .acard:only-child .atext {
+    font-size: clamp(.82rem, 3.6vw, 1rem) !important;
+    line-height: 1.5 !important;
+  }
+}
+
