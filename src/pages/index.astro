@@ -99,7 +99,7 @@ const navLinks = [
     const from = window.scrollY;
     const dist = targetY - from;
     if (Math.abs(dist) < 2) { locked = false; if (onDone) onDone(); return; }
-    const dur = 750;
+    const dur = 525;
     let t0 = null;
     cancelAnimationFrame(animId);
     function step(ts) {
@@ -233,7 +233,7 @@ const navLinks = [
 
   var SWIPE = 44;   /* px-Schwelle für Sektionswechsel    */
   var DIR   = 8;    /* px bis Richtung festgelegt wird    */
-  var EASE  = 'transform .4s cubic-bezier(.25,.46,.45,.94)';
+  var EASE  = 'transform .28s cubic-bezier(.25,.46,.45,.94)';
   var HKEY  = 'pxc-swipe-v1';  /* localStorage-Key Swipe-Hint      */
   var PGSZ  = 4;    /* Gallery-Bilder pro Seite (2×2)     */
 
@@ -260,10 +260,42 @@ const navLinks = [
     track.style.transition = snap ? 'none' : EASE;
     track.style.transform  = 'translateX(calc(' + (-n * 100) + 'vw))';
     tabSync();
+    edgeSync();
+    scheduleNudge();
     if (!snap) {
       busy = true;
-      setTimeout(function () { busy = false; revealNow(n); }, 460);
+      setTimeout(function () { busy = false; revealNow(n); }, 340);
     }
+  }
+
+  /* Dezente Wisch-Andeutung: Randpfeile + sanfter Anstoß, bis zum ersten echten Wischen */
+  var swiped = false, nudged = {}, nudgeT = null;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var edgeL = document.createElement('div'), edgeR = document.createElement('div');
+  edgeL.className = 'swipe-edge swipe-edge--l';
+  edgeR.className = 'swipe-edge swipe-edge--r';
+  edgeL.setAttribute('aria-hidden', 'true'); edgeR.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(edgeL); document.body.appendChild(edgeR);
+  function edgeSync() {
+    edgeL.classList.toggle('off', cur <= 0);
+    edgeR.classList.toggle('off', cur >= slides.length - 1);
+  }
+  function scheduleNudge() {
+    clearTimeout(nudgeT);
+    if (swiped || reduceMotion) return;
+    nudgeT = setTimeout(nudge, 3200);
+  }
+  function nudge() {
+    if (swiped || busy || nudged[cur] || cur >= slides.length - 1) return;
+    if (document.body.classList.contains('kat-open')) return;
+    nudged[cur] = true;
+    track.style.transition = 'transform .45s ease-out';
+    track.style.transform  = 'translateX(calc(' + (-cur * 100) + 'vw - 24px))';
+    setTimeout(function () {
+      if (busy) return;
+      track.style.transition = 'transform .7s ease-in-out';
+      track.style.transform  = 'translateX(calc(' + (-cur * 100) + 'vw))';
+    }, 480);
   }
 
   function revealNow(n) {
@@ -539,6 +571,7 @@ const navLinks = [
 
   document.addEventListener('touchstart', function (e) {
     if (lbOpen()) return;
+    clearTimeout(nudgeT);
     x0 = e.touches[0].clientX;
     y0 = e.touches[0].clientY;
     axis = null;
@@ -582,6 +615,7 @@ const navLinks = [
     if (axis === 'h') {
       var hId2 = hSubId();
       if (Math.abs(dx) >= SWIPE) {
+        swiped = true;
         var hDir = dx < 0 ? 1 : -1;
         if (hId2 && !hSubGo(hDir)) goTo(cur + hDir);
         else if (!hId2) goTo(cur + hDir);
