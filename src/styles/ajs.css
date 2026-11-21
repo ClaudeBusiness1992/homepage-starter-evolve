@@ -348,3 +348,25 @@ body.swipe-active *:not(.kat-body)::-webkit-scrollbar { display: none; width: 0;
   .hero-snap:has(> #countdown) .hero-lbl { margin-bottom: clamp(.3rem, 1dvh, .875rem); }
   .hero-snap:has(> #countdown) .browser { max-width: min(520px, 58dvh); }
 }
+
+
+/* Sortiment: einheitliche Kantenabrundung bei Hover und gleiche Texthöhe */
+#gallery .gallery-item {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+}
+#gallery .gallery-img {
+  border-top-left-radius: var(--r-lg);
+  border-top-right-radius: var(--r-lg);
+  overflow: hidden;
+}
+#gallery .gallery-item-body {
+  min-height: 4.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
