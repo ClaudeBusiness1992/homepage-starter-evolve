@@ -392,13 +392,10 @@ body.swipe-active *:not(.kat-body)::-webkit-scrollbar { display: none; width: 0;
   }
   #about .about-grid > .acard:only-child .aphoto {
     align-self: flex-start !important;
-    margin-top: 0 !important;
+    margin-top: 2.2rem !important; /* Goldener Mittelweg */
   }
   #about .about-grid > .acard:only-child .abody {
     padding-top: 0 !important;
-  }
-  #about .about-grid > .acard:only-child .aname {
-    margin-top: 0 !important;
   }
 }
 
@@ -432,6 +429,55 @@ body.swipe-active *:not(.kat-body)::-webkit-scrollbar { display: none; width: 0;
   #about .about-grid > .acard:only-child .atext {
     font-size: clamp(.82rem, 3.6vw, 1rem) !important;
     line-height: 1.5 !important;
+  }
+}
+
+
+
+/* ── Sortiment Kacheln: Heller Paper-Hintergrund (#FBFAF3) statt Gruen auf Gruen ── */
+#gallery .gallery-item {
+  border-radius: var(--r-lg) !important;
+  overflow: hidden !important;
+  background: #FBFAF3 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18) !important;
+  transition: transform .25s ease, box-shadow .25s ease !important;
+}
+#gallery .gallery-img {
+  border-top-left-radius: var(--r-lg) !important;
+  border-top-right-radius: var(--r-lg) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+#gallery .gallery-img img {
+  border-top-left-radius: var(--r-lg) !important;
+  border-top-right-radius: var(--r-lg) !important;
+  transition: transform .4s ease !important;
+}
+#gallery .gallery-item-body {
+  background: #FBFAF3 !important;
+  border-top: 1px solid rgba(65, 76, 9, 0.12) !important;
+  border-bottom-left-radius: var(--r-lg) !important;
+  border-bottom-right-radius: var(--r-lg) !important;
+}
+#gallery .gallery-item-title {
+  color: #414C09 !important; /* Dunkles Olivgruen auf hellem Paper */
+  font-weight: 700 !important;
+}
+#gallery .gallery-item-cat {
+  color: #97572A !important; /* Warmer Terracotta/Leder-Ton */
+  font-weight: 500 !important;
+}
+
+/* Hover-Verhalten */
+@media (hover: hover) {
+  #gallery .gallery-item:hover {
+    transform: translateY(-6px) !important;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35), 0 0 0 2px rgba(201, 116, 56, 0.6) !important;
+  }
+  #gallery .gallery-item:hover .gallery-img img {
+    transform: scale(1.05) !important;
   }
 }
 
