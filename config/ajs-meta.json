@@ -28,6 +28,12 @@
         "extra": true
       },
       {
+        "label": "Mitgliedschaft",
+        "href": "#cta",
+        "section": "cta",
+        "extra": true
+      },
+      {
         "label": "Mitglied werden",
         "href": "#contact",
         "section": "register",

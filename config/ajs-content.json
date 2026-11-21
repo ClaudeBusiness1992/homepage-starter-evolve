@@ -136,6 +136,10 @@
         {
           "label": "Registrierung",
           "href": "/ajs#contact"
+        },
+        {
+          "label": "Mitgliedschaft",
+          "href": "/ajs#cta"
         }
       ]
     },
