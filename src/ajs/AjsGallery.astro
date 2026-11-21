@@ -62,8 +62,8 @@ const phClasses = ['gph-a', 'gph-b', 'gph-c', 'gph-d', 'gph-e', 'gph-f'];
       <div class="kat-intro">
         <p>{katalog.intro}</p>
         <div class="kat-cta">
-          <a class="btn btn-fill" href={katalog.registerHref}>{katalog.registerLabel}</a>
-          <a class="btn btn-ghost" href={katalog.loginHref}>{katalog.loginLabel}</a>
+          <a class="btn btn-fill" href="#contact" data-kat-close>{katalog.registerLabel}</a>
+          <a class="btn btn-ghost" href="#contact" data-kat-close>{katalog.loginLabel}</a>
         </div>
       </div>
       {katalog.categories.map((c) => (

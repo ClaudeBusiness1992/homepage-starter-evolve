@@ -6,9 +6,9 @@
       "headline": "Guter Geschmack. Persönlich vorbeigebracht.",
       "subline": "Feines Fleisch, Garnelen, Geflügel und mehr. Mit Bedacht ausgewählt, fair kalkuliert und morgens frisch für dich eingekauft. Nachmittags schon an deiner Tür. Nur für Mitglieder von AJ's Inner Circle.",
       "ctaPrimary": "Mitglied werden",
-      "ctaPrimaryHref": "https://ajs-inner-circle.de/registrierung/",
+      "ctaPrimaryHref": "#contact",
       "ctaSecondary": "Einloggen",
-      "ctaSecondaryHref": "https://ajs-inner-circle.de/login/",
+      "ctaSecondaryHref": "#contact",
       "images": [
         {
           "src": "/images/hero-1.webp",
@@ -131,11 +131,11 @@
         },
         {
           "label": "Einloggen",
-          "href": "https://ajs-inner-circle.de/login/"
+          "href": "/ajs#contact"
         },
         {
           "label": "Registrierung",
-          "href": "https://ajs-inner-circle.de/registrierung/"
+          "href": "/ajs#contact"
         }
       ]
     },
@@ -145,9 +145,9 @@
       "headline": "Nicht für jeden. Für den Inner Circle.",
       "subline": "Premium Fleisch & Feinkost, persönlich geliefert in Hamburg. Der Zugang ist begrenzt: Melde dich an, und ich prüfe deine Aufnahme persönlich.",
       "buttonLabel": "Registrierung starten",
-      "buttonHref": "https://ajs-inner-circle.de/registrierung/",
+      "buttonHref": "#contact",
       "secondaryLabel": "Einloggen",
-      "secondaryHref": "https://ajs-inner-circle.de/login/",
+      "secondaryHref": "#contact",
       "image": "/images/banner.webp"
     }
   }

@@ -23,13 +23,13 @@
       },
       {
         "label": "Einloggen",
-        "href": "https://ajs-inner-circle.de/login/",
+        "href": "#contact",
         "section": "login",
         "extra": true
       },
       {
         "label": "Mitglied werden",
-        "href": "https://ajs-inner-circle.de/registrierung/",
+        "href": "#contact",
         "section": "register",
         "cta": true
       }
@@ -45,10 +45,10 @@
     "image": "/images/ajs-og.jpg"
   },
   "theme": {
-    "ink": "#2F3A2E",
-    "cream": "#F1ECE0",
-    "accent": "#C0693C",
-    "accentLight": "#E2A073",
-    "sage": "#8FA08A"
+    "ink": "#414C09",
+    "cream": "#EFEDE0",
+    "accent": "#C97438",
+    "accentLight": "#EDAA72",
+    "sage": "#8B9977"
   }
 }
