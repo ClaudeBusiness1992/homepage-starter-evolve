@@ -13,7 +13,7 @@ body.swipe-active #gallery .gallery-snap-page .gallery-item-body { flex-shrink: 
 @media (max-width: 900px) { .hero-hl { display: none; } .hero-photo-stack { max-height: 34dvh; } }
 
 /* Einzelperson im Über-uns-Block: Porträt links, Text rechts */
-.about-grid:has(> .acard:only-child) { grid-template-columns: 1fr; max-width: 1000px; margin-inline: auto; }
+.about-grid:has(> .acard:only-child) { grid-template-columns: 1fr; max-width: var(--max-w); margin-inline: auto; }
 .about-grid > .acard:only-child { flex-direction: row; }
 #about .about-grid > .acard:only-child .aphoto { flex: 0 0 300px; width: 300px; aspect-ratio: unset; max-height: none; }
 .about-grid > .acard:only-child .abody { padding: 1.6rem 1.8rem; align-self: center; }
@@ -136,7 +136,7 @@ body.swipe-active #gallery .gallery-snap-page .gallery-item-body { flex-shrink: 
 }
 /* Über uns: ohne Kachel, Porträt frei, Text vollständig */
 @media (min-width: 769px) {
-  #about .about-grid:has(> .acard:only-child) { max-width: 1060px; }
+  #about .about-grid:has(> .acard:only-child) { max-width: var(--max-w); }
   #about .about-grid > .acard:only-child { background: none !important; border: 0 !important; box-shadow: none !important; border-radius: 0; overflow: visible; align-items: center; gap: 2.4rem; }
   #about .about-grid > .acard:only-child:hover { transform: none; border: 0; }
   #about .about-grid > .acard:only-child .aphoto { background: none !important; flex: 0 0 clamp(220px, 26vw, 320px); width: clamp(220px, 26vw, 320px); align-self: stretch; }
@@ -353,7 +353,7 @@ body.swipe-active *:not(.kat-body)::-webkit-scrollbar { display: none; width: 0;
 /* ── Über uns: AJ Porträt 40px weiter nach unten ── */
 @media (min-width: 769px) {
   #about .about-grid:has(> .acard:only-child) {
-    max-width: 1060px !important;
+    max-width: var(--max-w) !important;
   }
   #about .about-grid > .acard:only-child {
     background: none !important;
