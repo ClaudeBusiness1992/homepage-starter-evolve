@@ -481,3 +481,78 @@ body.swipe-active *:not(.kat-body)::-webkit-scrollbar { display: none; width: 0;
   }
 }
 
+
+
+/* ── SORTIMENT: Kacheln, Rundung, Zoom & Paper-Hintergrund ── */
+#gallery .gallery-grid {
+  grid-auto-flow: row !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  grid-auto-columns: unset !important;
+  grid-template-rows: 1fr 1fr !important;
+  overflow: visible !important;
+  padding: 0.5rem !important;
+  --gal-gap: 1.1rem !important;
+}
+#gallery .gallery-item {
+  border-radius: var(--r-lg) !important;
+  overflow: hidden !important;
+  background: #FBFAF3 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16) !important;
+  transform: translateZ(0) !important; /* GPU layer bewahrt Kantenrundung */
+  -webkit-mask-image: -webkit-radial-gradient(white, black) !important; /* Fix gegen eckige Kanten beim Zoom in Safari/Chromium */
+  transition: transform .25s ease, box-shadow .25s ease !important;
+}
+#gallery .gallery-img {
+  border-top-left-radius: var(--r-lg) !important;
+  border-top-right-radius: var(--r-lg) !important;
+  overflow: hidden !important;
+  position: relative !important;
+  transform: translateZ(0) !important;
+}
+#gallery .gallery-img img {
+  border-top-left-radius: var(--r-lg) !important;
+  border-top-right-radius: var(--r-lg) !important;
+  transition: transform .35s ease !important;
+  display: block !important;
+  width: 100% !important;
+}
+#gallery .gallery-item:hover .gallery-img img {
+  transform: scale(1.05) !important;
+}
+#gallery .gallery-item-body {
+  background: #FBFAF3 !important;
+  border-top: 1px solid rgba(65, 76, 9, 0.12) !important;
+  padding: .65rem .85rem !important;
+  flex: 1 !important;
+  min-height: 4.8rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+}
+#gallery .gallery-item-title {
+  color: #414C09 !important;
+  font-family: var(--serif) !important;
+  font-weight: 700 !important;
+  font-size: .95rem !important;
+  margin: 0 !important;
+  order: 1 !important;
+}
+#gallery .gallery-item-cat {
+  color: #97572A !important;
+  font-size: .76rem !important;
+  line-height: 1.35 !important;
+  margin-top: .15rem !important;
+  font-weight: 500 !important;
+  order: 2 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+@media (hover: hover) {
+  #gallery .gallery-item:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(201, 116, 56, 0.5) !important;
+  }
+}
+
