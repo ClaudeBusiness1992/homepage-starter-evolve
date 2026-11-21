@@ -1,0 +1,695 @@
+---
+import metaConfig    from '../../config/ajs-meta.json';
+import contentConfig from '../../config/ajs-content.json';
+import extrasConfig  from '../../config/ajs-extras.json';
+import Base      from '../ajs/AjsBase.astro';
+import Nav       from '../ajs/AjsNav.astro';
+import Hero     from '../ajs/AjsHero.astro';
+import About    from '../ajs/AjsAbout.astro';
+import Services from '../ajs/AjsServices.astro';
+import Countdown from '../sections/Countdown.astro';
+import Pricing  from '../sections/Pricing.astro';
+import Gallery  from '../ajs/AjsGallery.astro';
+import Reviews  from '../sections/Reviews.astro';
+import Booking   from '../sections/Booking.astro';
+import Sponsors  from '../sections/Sponsors.astro';
+import Contact   from '../ajs/AjsContact.astro';
+import Cta       from '../ajs/AjsCta.astro';
+import Footer    from '../ajs/AjsFooter.astro';
+import SidebarAds from '../components/SidebarAds.astro';
+
+const { meta, theme } = metaConfig;
+const { sections: s } = contentConfig;
+const { extras: x = {} } = extrasConfig;
+
+// Build nav in actual scroll order (Sections-Reihenfolge unten in <main>):
+// about → services → gallery → pricing → reviews → booking → contact (cta)
+const labelFor = (id: string, fallback: string) =>
+  (meta.nav ?? []).find((l: any) => l.section === id)?.label ?? fallback;
+
+const cta = (meta.nav ?? []).find((l: any) => l.cta);
+const extraLinks = (meta.nav ?? []).filter((l: any) => l.extra);
+const orderedSections = [
+  { id: 'services', label: labelFor('services', 'Leistungen'),  enabled: s.services?.enabled !== false },
+  { id: 'gallery',  label: labelFor('gallery', 'Galerie'),       enabled: !!(x.active?.gallery && x.gallery) },
+  { id: 'about',    label: labelFor('about',    'Über uns'),    enabled: s.about?.enabled !== false },
+  { id: 'pricing',  label: labelFor('pricing',  'Preise'),      enabled: s.pricing?.enabled !== false },
+  { id: 'reviews',  label: 'Bewertungen',                        enabled: !!(x.active?.reviews  && x.reviews) },
+  { id: 'booking',  label: 'Buchung',                            enabled: !!(x.active?.booking  && x.booking) },
+  { id: 'sponsors', label: 'Sponsoren',                          enabled: !!(x.active?.sponsors && x.sponsors) },
+];
+
+const navLinks = [
+  ...orderedSections.filter(o => o.enabled).map(o => ({ label: o.label, href: `#${o.id}`, section: o.id })),
+  ...(cta ? [{ label: labelFor('contact', 'Kontakt'), href: '#contact', section: 'contact' }] : []),
+  ...extraLinks,
+  ...(cta ? [cta] : [{ label: 'Kontakt', href: '#contact', section: 'contact', cta: true }]),
+];
+---
+
+<Base meta={meta} theme={theme}>
+  <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} logo={meta.logo} links={navLinks} />
+
+  <main id="main" tabindex="-1">
+    {(s.hero.enabled || (x.active?.countdown && x.countdown)) && (
+      <div class="hero-snap">
+        {x.active?.countdown && x.countdown && <Countdown {...x.countdown} />}
+        {s.hero.enabled && <Hero {...s.hero} badge={meta.logo} mockupUrl={Astro.site ? Astro.site.host : undefined} />}
+      </div>
+    )}
+    {s.services.enabled  && <Services  {...s.services} />}
+    {x.active?.gallery   && x.gallery  && <Gallery   {...x.gallery} />}
+    {s.about.enabled     && <About     {...s.about} />}
+    {s.cta?.enabled      && <Cta       {...s.cta} />}
+    {s.pricing?.enabled  && <Pricing   {...s.pricing} />}
+    {x.active?.reviews   && x.reviews  && <Reviews  {...x.reviews} stats={s.stats?.enabled ? s.stats.items : []} agencyName={meta.siteName} agencyUrl={Astro.site?.href} telephone={meta.phone} />}
+    {x.active?.booking   && x.booking   && <Booking   {...x.booking} />}
+    {x.active?.sponsors  && x.sponsors  && <Sponsors  {...x.sponsors} />}
+    {(s.contact?.enabled || s.footer?.enabled) && (
+      <div class="contact-footer-snap">
+        {s.contact?.enabled  && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} availability={x.booking?.availability} />}
+        {s.footer?.enabled   && <Footer    siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} logo={meta.logo} copyright={meta.copyright} links={s.footer.links} />}
+      </div>
+    )}
+  </main>
+
+  {x.active?.sidebarAds && x.sidebarAds && (
+    <SidebarAds left={x.sidebarAds.left} right={x.sidebarAds.right} />
+  )}
+</Base>
+
+<script is:inline>
+(function () {
+  const html = document.documentElement;
+
+  function targets() {
+    return [...document.querySelectorAll('#main > .hero-snap, #main > section, #main > .contact-footer-snap')];
+  }
+
+  function navH() {
+    return parseFloat(getComputedStyle(html).getPropertyValue('--nav-h')) || 72;
+  }
+
+  // easeInOutSine — sinusoidal velocity, no hard acceleration anywhere
+  function ease(t) {
+    return -(Math.cos(Math.PI * t) - 1) / 2;
+  }
+
+  let animId   = null;
+  let locked   = false;
+  let cooling  = false;  // brief pause after animation so momentum tail can't trigger next section
+  let coolTimer = null;
+
+  function smoothTo(targetY, onDone) {
+    const from = window.scrollY;
+    const dist = targetY - from;
+    if (Math.abs(dist) < 2) { locked = false; if (onDone) onDone(); return; }
+    const dur = 525;
+    let t0 = null;
+    cancelAnimationFrame(animId);
+    function step(ts) {
+      if (!t0) t0 = ts;
+      const p = Math.min((ts - t0) / dur, 1);
+      window.scrollTo(0, from + dist * ease(p));
+      if (p < 1) { animId = requestAnimationFrame(step); }
+      else {
+        window.scrollTo(0, Math.round(targetY)); // land on exact integer pixel
+        locked  = false;
+        acc     = 0;           // flush any accumulated wheel delta
+        cooling = true;
+        clearTimeout(coolTimer);
+        coolTimer = setTimeout(() => { cooling = false; }, 1000); // blocks momentum tail
+        if (onDone) onDone();
+      }
+    }
+    animId = requestAnimationFrame(step);
+  }
+
+  function currentIdx(list) {
+    const nh = navH(), sy = window.scrollY;
+    let idx = 0;
+    for (let i = 0; i < list.length; i++) {
+      if (list[i].offsetTop - nh <= sy + 5) idx = i;
+    }
+    return idx;
+  }
+
+  function go(dir) {
+    if (locked) return;
+    const list = targets();
+    const next = list[currentIdx(list) + dir];
+    if (!next) return;
+    locked = true;
+    smoothTo(Math.max(0, next.offsetTop - navH()));
+  }
+
+  function inScrollable(el) {
+    while (el && el !== document.body) {
+      const s = getComputedStyle(el);
+      // Only block for vertically scrollable containers — horizontal carousels must not
+      // eat vertical scroll events (those should still trigger section navigation).
+      if ((s.overflowY === 'auto' || s.overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 2) return true;
+      el = el.parentElement;
+    }
+    return false;
+  }
+
+  // ── Wheel (mouse + trackpad) ─────────────────────────────────────────────
+  // Any vertical gesture triggers exactly one section forward/back.
+  // Threshold 20 = reacts to even a light two-finger nudge.
+  let acc = 0, wt = null, lastGoAt = 0;
+  window.addEventListener('wheel', (e) => {
+    if (window.innerWidth < 768) return;
+    if (document.body.classList.contains('kat-open')) { if (!inScrollable(e.target)) e.preventDefault(); return; }
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) return; // skip horizontal swipes
+    if (inScrollable(e.target)) return;
+    e.preventDefault();
+    if (locked || cooling) return;
+    if (Date.now() - lastGoAt < 1700) return; // hard inertia guard beyond cooling
+    acc += e.deltaY;
+    clearTimeout(wt);
+    wt = setTimeout(() => { acc = 0; }, 300);
+    if (Math.abs(acc) < 5) return;
+    const dir = acc > 0 ? 1 : -1;
+    acc = 0; clearTimeout(wt);
+    lastGoAt = Date.now();
+    go(dir);
+  }, { passive: false });
+
+  // ── Keyboard ─────────────────────────────────────────────────────────────
+  document.addEventListener('keydown', (e) => {
+    if (window.innerWidth < 768) return;
+    if (document.body.classList.contains('kat-open')) return;
+    const dn = e.key === 'ArrowDown' || e.key === 'PageDown';
+    const up = e.key === 'ArrowUp'   || e.key === 'PageUp';
+    if (!dn && !up) return;
+    const tag = (document.activeElement?.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    e.preventDefault();
+    go(dn ? 1 : -1);
+  });
+
+  // ── Nav link clicks — use same smooth animation ───────────────────────────
+  document.querySelectorAll('#navLinks a[href*="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href').split('#')[1];
+      const el = id && document.getElementById(id);
+      if (!el) return;
+      e.preventDefault();
+      if (locked) return;
+      locked = true;
+      smoothTo(Math.max(0, el.offsetTop - navH()));
+    });
+  });
+
+  // ── Settle — snaps to nearest section after scrollbar drag or resize ──────
+  let st = null;
+  function settle() {
+    if (window.innerWidth < 768 || locked || cooling) return;
+    const list = targets();
+    const nh = navH(), sy = window.scrollY;
+    let best = list[0], bestD = Infinity;
+    for (const el of list) {
+      const d = Math.abs(el.offsetTop - nh - sy);
+      if (d < bestD) { bestD = d; best = el; }
+    }
+    if (bestD <= 8) return;
+    locked = true;
+    smoothTo(Math.max(0, best.offsetTop - nh));
+  }
+  window.addEventListener('scroll', () => {
+    if (window.innerWidth < 768 || locked || cooling) return;
+    clearTimeout(st); st = setTimeout(settle, 250);
+  }, { passive: true });
+  window.addEventListener('resize', () => {
+    clearTimeout(st); st = setTimeout(settle, 300);
+  });
+
+  // ── Chrome select-wheel fix ───────────────────────────────────────────────
+  document.querySelectorAll('select').forEach(sel => {
+    sel.addEventListener('wheel', (e) => { if (window.innerWidth >= 768) e.preventDefault(); }, { passive: false });
+  });
+}());
+</script>
+
+<script is:inline>
+/* ── Mobile Card-Swipe-Navigation ──────────────────────────────── */
+(function () {
+  'use strict';
+  if (window.innerWidth >= 768) return;
+
+  var SWIPE = 44;   /* px-Schwelle für Sektionswechsel    */
+  var DIR   = 8;    /* px bis Richtung festgelegt wird    */
+  var EASE  = 'transform .28s cubic-bezier(.25,.46,.45,.94)';
+  var HKEY  = 'pxc-swipe-v1';  /* localStorage-Key Swipe-Hint      */
+  var PGSZ  = 4;    /* Gallery-Bilder pro Seite (2×2)     */
+
+  /* ── 1. Slides ermitteln ─────────────────────────────────────── */
+  var main = document.getElementById('main');
+  if (!main) return;
+  var slides = [].slice.call(
+    main.querySelectorAll(':scope > .hero-snap, :scope > section, :scope > .contact-footer-snap')
+  );
+  if (!slides.length) return;
+
+  /* ── 2. Swipe-Track aufbauen ─────────────────────────────────── */
+  var track = document.createElement('div');
+  track.className = 'mobile-swipe-track';
+  slides.forEach(function (s) { track.appendChild(s); });
+  main.appendChild(track);
+  document.body.classList.add('swipe-active');
+
+  var cur = 0, busy = false;
+
+  function goTo(n, snap) {
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    cur = n;
+    track.style.transition = snap ? 'none' : EASE;
+    track.style.transform  = 'translateX(calc(' + (-n * 100) + 'vw))';
+    tabSync();
+    edgeSync();
+    scheduleNudge();
+    if (!snap) {
+      busy = true;
+      setTimeout(function () { busy = false; revealNow(n); }, 340);
+    }
+  }
+
+  /* Dezente Wisch-Andeutung: Randpfeile + sanfter Anstoß, bis zum ersten echten Wischen */
+  var swiped = false, nudged = {}, nudgeT = null;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var edgeL = document.createElement('div'), edgeR = document.createElement('div');
+  edgeL.className = 'swipe-edge swipe-edge--l';
+  edgeR.className = 'swipe-edge swipe-edge--r';
+  edgeL.setAttribute('aria-hidden', 'true'); edgeR.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(edgeL); document.body.appendChild(edgeR);
+  function edgeSync() {
+    edgeL.classList.toggle('off', cur <= 0);
+    edgeR.classList.toggle('off', cur >= slides.length - 1);
+  }
+  function scheduleNudge() {
+    clearTimeout(nudgeT);
+    if (swiped || reduceMotion) return;
+    nudgeT = setTimeout(nudge, 3200);
+  }
+  function nudge() {
+    if (swiped || busy || nudged[cur] || cur >= slides.length - 1) return;
+    if (document.body.classList.contains('kat-open')) return;
+    nudged[cur] = true;
+    track.style.transition = 'transform .45s ease-out';
+    track.style.transform  = 'translateX(calc(' + (-cur * 100) + 'vw - 24px))';
+    setTimeout(function () {
+      if (busy) return;
+      track.style.transition = 'transform .7s ease-in-out';
+      track.style.transform  = 'translateX(calc(' + (-cur * 100) + 'vw))';
+    }, 480);
+  }
+
+  function revealNow(n) {
+    var el = slides[n];
+    if (!el) return;
+    el.querySelectorAll('.r').forEach(function (r) { r.classList.add('in'); });
+  }
+
+  /* ── 3. Section-Tab-Strip (unter der Nav) ───────────────────── */
+  var tabBar2 = document.createElement('div');
+  tabBar2.id  = 'mobile-nav-tabs';
+  var navAs   = [].slice.call(document.querySelectorAll('#navLinks a'));
+  var tabEls  = [];
+
+  slides.forEach(function (slide, idx) {
+    var sId = slide.id || '';
+    if (!sId) {
+      var inner = slide.querySelector('[id]');
+      sId = inner ? inner.id : '';
+    }
+    var label = '';
+    for (var ni = 0; ni < navAs.length; ni++) {
+      var href = navAs[ni].getAttribute('href') || '';
+      if (href === '#' + sId || href.endsWith('#' + sId)) {
+        label = navAs[ni].textContent.trim(); break;
+      }
+    }
+    if (!label) {
+      if (slide.classList.contains('hero-snap'))          label = 'Start';
+      else if (slide.classList.contains('contact-footer-snap')) label = 'Kontakt';
+      else if (sId === 'cta')                               label = 'Beitritt';
+      else label = sId || ('Slide ' + (idx + 1));
+    }
+    var tab = document.createElement('div');
+    tab.className = 'mnt';
+    tab.textContent = label;
+    (function (n) { tab.addEventListener('click', function () { goTo(n); }); })(idx);
+    tabBar2.appendChild(tab);
+    tabEls.push(tab);
+  });
+  document.body.appendChild(tabBar2);
+
+  /* Measure actual nav + tab heights and set #main size precisely */
+  var navEl2 = document.getElementById('nav');
+  function updateMainLayout() {
+    var navH  = navEl2 ? navEl2.offsetHeight : 48;
+    var tabH  = tabBar2.offsetHeight;
+    var total = navH + tabH;
+    tabBar2.style.top    = navH + 'px';
+    main.style.marginTop = total + 'px';
+    main.style.height    = 'calc(100dvh - ' + total + 'px)';
+  }
+  updateMainLayout();
+  window.addEventListener('resize', updateMainLayout, { passive: true });
+
+  /* Interne Anker-Links (z. B. Hero-Buttons) im Swipe-Modus auf goTo() mappen */
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = (a.getAttribute('href') || '').slice(1);
+      if (!id) return;
+      for (var k = 0; k < slides.length; k++) {
+        if (slides[k].id === id || (slides[k].querySelector && slides[k].querySelector('#' + id))) {
+          e.preventDefault();
+          goTo(k);
+          return;
+        }
+      }
+    });
+  });
+
+  function tabSync() {
+    tabEls.forEach(function (t, i) {
+      t.classList.toggle('on', i === cur);
+    });
+  }
+
+  /* ── 4. Sub-Carousels ────────────────────────────────────────── */
+  var subs = {};
+
+  function mkDots(el, n) {
+    var w = document.createElement('div');
+    w.className = 'mobile-sub-dots';
+    for (var i = 0; i < n; i++) {
+      var d = document.createElement('span');
+      d.className = 'msd-sub';
+      w.appendChild(d);
+    }
+    el.appendChild(w);
+    return w;
+  }
+
+  function subSync(id) {
+    var s = subs[id];
+    if (!s || !s.dots) return;
+    var cls = '.msd-sub';
+    [].forEach.call(s.dots.querySelectorAll(cls), function (d, i) {
+      d.classList.toggle('on', i === s.i);
+    });
+  }
+
+  /* About */
+  var aEl   = document.getElementById('about');
+  var aGrid = aEl && aEl.querySelector('.about-grid');
+  if (aGrid) {
+    var cards = [].slice.call(aGrid.querySelectorAll('.acard'));
+    if (cards.length > 1) {
+      var at = document.createElement('div');
+      at.className = 'about-sub-track';
+      cards.forEach(function (c) { at.appendChild(c); });
+      aGrid.appendChild(at);
+      aEl.style.position = 'relative';
+      subs.about = { tr: at, i: 0, n: cards.length, dots: mkDots(aEl, cards.length) };
+      subSync('about');
+    }
+  }
+
+  /* Gallery — 4er-Seiten mit CSS-Scroll-Snap */
+  var gEl  = document.getElementById('gallery');
+  var gOr  = gEl && gEl.querySelector('[data-carousel-track]');
+  var gCar = gEl && gEl.querySelector('.gallery-carousel');
+  if (gEl && gOr && gCar) {
+    var gItems = [].slice.call(gOr.querySelectorAll('.gallery-item'));
+    var gg = document.createElement('div');
+    gg.className = 'gallery-scroll-grid';
+    var pgs = Math.max(1, Math.ceil(gItems.length / PGSZ));
+    for (var p = 0; p < pgs; p++) {
+      var pg = document.createElement('div');
+      pg.className = 'gallery-snap-page';
+      gItems.slice(p * PGSZ, (p + 1) * PGSZ).forEach(function (it) { pg.appendChild(it); });
+      gg.appendChild(pg);
+    }
+    gCar.appendChild(gg);
+    /* loading="lazy" blockiert Bilder in translateX-Containern — sofort laden */
+    [].slice.call(gg.querySelectorAll('img[loading="lazy"]')).forEach(function (img) {
+      img.removeAttribute('loading');
+    });
+    /* Höhen explizit setzen: Seite → Item → Image (flex-Hierarchie nicht zuverlässig) */
+    var gPages = [].slice.call(gg.querySelectorAll('.gallery-snap-page'));
+    var setGallH = function () {
+      var h = gCar.offsetHeight || (window.innerHeight - (navEl2 ? navEl2.offsetHeight : 48) - tabBar2.offsetHeight);
+      if (h <= 20) return;
+      var gap = 4;
+      var rowH = Math.floor((h - gap) / 2);
+      gPages.forEach(function (p) { p.style.height = h + 'px'; });
+      /* Pass 1: Item-Höhe setzen */
+      [].slice.call(gg.querySelectorAll('.gallery-item')).forEach(function (item) {
+        item.style.height = rowH + 'px';
+      });
+      /* Pass 2: Body-Höhe lesen, Image-Höhe setzen */
+      [].slice.call(gg.querySelectorAll('.gallery-item')).forEach(function (item) {
+        var body = item.querySelector('.gallery-item-body');
+        var bodyH = body ? body.offsetHeight : 30;
+        var imgEl = item.querySelector('.gallery-img');
+        if (imgEl) imgEl.style.height = Math.max(40, rowH - bodyH) + 'px';
+      });
+    };
+    if (pgs > 1) {
+      var gDots = mkDots(gEl, pgs);
+      var gSync = function () {
+        var h = gCar.clientHeight || 1;
+        var gi = Math.round(gCar.scrollTop / h);
+        [].forEach.call(gDots.querySelectorAll('.msd-sub'), function (d, i) { d.classList.toggle('on', i === gi); });
+      };
+      gCar.addEventListener('scroll', gSync, { passive: true });
+      gSync();
+    }
+    setGallH();
+    setTimeout(setGallH, 150);
+    window.addEventListener('resize', setGallH, { passive: true });
+  }
+
+  /* Pricing — vertikales Sub-Carousel */
+  var prEl   = document.getElementById('pricing');
+  var prGrid = prEl && prEl.querySelector('.pricing-grid');
+  if (prEl && prGrid) {
+    var pcards = [].slice.call(prGrid.querySelectorAll('.pcard'));
+    if (pcards.length > 1) {
+      var pt = document.createElement('div');
+      pt.className = 'pricing-sub-track';
+      pcards.forEach(function (c) { pt.appendChild(c); });
+      prGrid.appendChild(pt);
+      prEl.style.position = 'relative';
+      subs.pricing = { tr: pt, i: 0, n: pcards.length, dots: mkDots(prEl, pcards.length) };
+      subSync('pricing');
+    }
+  }
+
+  /* Reviews — vertikales Sub-Carousel (3 Karten pro Seite) */
+  var revEl   = document.getElementById('reviews');
+  var revGrid = revEl && revEl.querySelector('[data-carousel-track]');
+  if (revEl && revGrid) {
+    var revCards = [].slice.call(revGrid.querySelectorAll('.review-card'));
+    var RPSZ = 3;
+    if (revCards.length > 0) {
+      var rt = document.createElement('div');
+      rt.className = 'rev-sub-track';
+      var rPgs = Math.max(1, Math.ceil(revCards.length / RPSZ));
+      for (var rp = 0; rp < rPgs; rp++) {
+        var rpg = document.createElement('div');
+        rpg.className = 'rev-sub-page';
+        revCards.slice(rp * RPSZ, (rp + 1) * RPSZ).forEach(function (c) { rpg.appendChild(c); });
+        rt.appendChild(rpg);
+      }
+      revGrid.appendChild(rt);
+      revEl.style.position = 'relative';
+      subs.reviews = { tr: rt, i: 0, n: rPgs, dots: mkDots(revEl, rPgs) };
+      subSync('reviews');
+    }
+  }
+
+  /* Kontakt — vertikales Sub-Carousel (Info → Formular) */
+  var contEl   = document.getElementById('contact');
+  var contGrid = contEl && contEl.querySelector('.contact-grid');
+  if (contEl && contGrid) {
+    var cInfo = contGrid.querySelector('.contact-info');
+    var cForm = contGrid.querySelector('.contact-form-wrap');
+    if (cInfo && cForm) {
+      var cst  = document.createElement('div');
+      cst.className = 'contact-sub-track';
+      var cs1 = document.createElement('div');
+      cs1.className = 'contact-sub-slide';
+      cs1.appendChild(cInfo);
+      var fh = document.createElement('button');
+      fh.type = 'button';
+      fh.className = 'form-hint-mobile';
+      fh.textContent = 'Nachricht über Formular schreiben ↓';
+      fh.addEventListener('click', function () { subGo(1); });
+      cs1.appendChild(fh);
+      var legal = document.createElement('div');
+      legal.className = 'swipe-legal';
+      legal.innerHTML = '<a href="/ajs/impressum">Impressum</a><a href="/ajs/datenschutz">Datenschutz</a>';
+      cs1.appendChild(legal);
+      var cs2 = document.createElement('div');
+      cs2.className = 'contact-sub-slide';
+      cs2.appendChild(cForm);
+      cst.appendChild(cs1);
+      cst.appendChild(cs2);
+      contGrid.appendChild(cst);
+      contEl.style.position = 'relative';
+      subs.contact = { tr: cst, i: 0, n: 2, dots: mkDots(contEl, 2) };
+      subSync('contact');
+    }
+  }
+
+  function subId() { /* nur vertikale Sub-Carousels */
+    var s = slides[cur];
+    if (!s) return null;
+    var ks = Object.keys(subs);
+    for (var j = 0; j < ks.length; j++) {
+      var k = ks[j];
+      if (subs[k].horiz) continue;
+      if (s.id === k || (s.querySelector && s.querySelector('#' + k))) return k;
+    }
+    return null;
+  }
+
+  function hSubId() { /* nur horizontale Sub-Carousels */
+    var s = slides[cur];
+    if (!s) return null;
+    var ks = Object.keys(subs);
+    for (var j = 0; j < ks.length; j++) {
+      var k = ks[j];
+      if (!subs[k].horiz) continue;
+      if (s.id === k || (s.querySelector && s.querySelector('#' + k))) return k;
+    }
+    return null;
+  }
+
+  function subGo(dir) {
+    var id = subId();
+    if (!id) return false;
+    var s = subs[id];
+    if (s.n <= 1) return false;
+    var ni = s.i + dir;
+    if (ni < 0 || ni >= s.n) return false;
+    s.i = ni;
+    s.tr.style.transition = EASE;
+    s.tr.style.transform  = 'translateY(calc(' + (-s.i * 100) + '%))';
+    subSync(id);
+    return true;
+  }
+
+  function hSubGo(dir) {
+    var id = hSubId();
+    if (!id) return false;
+    var s = subs[id];
+    if (s.n <= 1) return false;
+    var ni = s.i + dir;
+    if (ni < 0 || ni >= s.n) return false; /* am Rand — Sektionswechsel erlauben */
+    s.i = ni;
+    var W = s.tr.parentElement ? s.tr.parentElement.offsetWidth : window.innerWidth;
+    s.tr.style.transition = EASE;
+    s.tr.style.transform  = 'translateX(' + (-s.i * W) + 'px)';
+    subSync(id);
+    return true;
+  }
+
+  /* ── 5. Touch-Handling ──────────────────────────────────────── */
+  var x0 = 0, y0 = 0, axis = null;
+
+  function lbOpen() {
+    var lb = document.getElementById('lightbox');
+    return document.body.classList.contains('kat-open') || (lb && lb.classList.contains('is-open'));
+  }
+
+  document.addEventListener('touchstart', function (e) {
+    if (lbOpen()) return;
+    clearTimeout(nudgeT);
+    x0 = e.touches[0].clientX;
+    y0 = e.touches[0].clientY;
+    axis = null;
+    if (!busy) track.style.transition = 'none';
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function (e) {
+    if (lbOpen()) return;
+    var dx = e.touches[0].clientX - x0;
+    var dy = e.touches[0].clientY - y0;
+    if (!axis) {
+      if (Math.abs(dx) + Math.abs(dy) < DIR) return;
+      axis = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
+    }
+    if (axis === 'h') {
+      e.preventDefault();
+      var hId = hSubId();
+      if (hId) {
+        var hs = subs[hId];
+        var atHEdge = (hs.i === 0 && dx > 0) || (hs.i === hs.n - 1 && dx < 0);
+        if (atHEdge) {
+          track.style.transform = 'translateX(calc(' + (-cur * 100) + 'vw + ' + (dx * 0.18) + 'px))';
+        } else {
+          var W = hs.tr.parentElement ? hs.tr.parentElement.offsetWidth : window.innerWidth;
+          hs.tr.style.transition = 'none';
+          hs.tr.style.transform  = 'translateX(' + (-hs.i * W + dx) + 'px)';
+        }
+      } else {
+        var atEdge = (cur === 0 && dx > 0) || (cur === slides.length - 1 && dx < 0);
+        track.style.transform = 'translateX(calc(' + (-cur * 100) + 'vw + ' + (dx * (atEdge ? 0.18 : 1)) + 'px))';
+      }
+    } else if (axis === 'v' && subId()) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchend', function (e) {
+    if (lbOpen()) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    var dy = e.changedTouches[0].clientY - y0;
+    if (axis === 'h') {
+      var hId2 = hSubId();
+      if (Math.abs(dx) >= SWIPE) {
+        swiped = true;
+        var hDir = dx < 0 ? 1 : -1;
+        if (hId2 && !hSubGo(hDir)) goTo(cur + hDir);
+        else if (!hId2) goTo(cur + hDir);
+      } else {
+        if (hId2) {
+          var hs2 = subs[hId2];
+          var W2  = hs2.tr.parentElement ? hs2.tr.parentElement.offsetWidth : window.innerWidth;
+          hs2.tr.style.transition = EASE;
+          hs2.tr.style.transform  = 'translateX(' + (-hs2.i * W2) + 'px)';
+        }
+        goTo(cur);
+      }
+    } else if (axis === 'v' && Math.abs(dy) >= SWIPE) {
+      subGo(dy < 0 ? 1 : -1);
+    }
+    axis = null;
+  }, { passive: true });
+
+  /* ── 6. Einmaliger Swipe-Hint ────────────────────────────────── */
+  if (!localStorage.getItem(HKEY) && slides.length > 1) {
+    var hint = document.createElement('div');
+    hint.id = 'swipe-hint';
+    hint.innerHTML = '<span class="swipe-hint-icon">⟵ ⟶</span>'
+      + '<span class="swipe-hint-txt">Wischen zum Navigieren</span>';
+    document.body.appendChild(hint);
+    setTimeout(function () {
+      hint.style.transition = 'opacity .5s';
+      hint.style.opacity    = '0';
+      setTimeout(function () { hint.remove(); }, 600);
+    }, 3400);
+    localStorage.setItem(HKEY, '1');
+  }
+
+  /* ── Init ────────────────────────────────────────────────────── */
+  goTo(0, true);
+  revealNow(0);
+}());
+</script>

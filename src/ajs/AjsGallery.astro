@@ -1,0 +1,135 @@
+---
+import SectionHeader from '../components/SectionHeader.astro';
+import CarouselScript from '../components/CarouselScript.astro';
+import katalog from '../../config/katalog.json';
+interface GalleryItem {
+  src: string;
+  alt: string;
+  caption: string;
+  category: string;
+  slug?: string;
+}
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  items: GalleryItem[];
+}
+const { label, headline, subline, items } = Astro.props;
+
+const phClasses = ['gph-a', 'gph-b', 'gph-c', 'gph-d', 'gph-e', 'gph-f'];
+---
+
+<section class="section section--dark" id="gallery">
+  <div class="wrap">
+    <SectionHeader {label} {headline} {subline} center />
+    <div class="gallery-carousel" data-carousel>
+      <button type="button" class="gallery-nav gallery-nav--prev" aria-label="Vorherige Bilder" data-carousel-prev>‹</button>
+      <div class="gallery-grid" data-carousel-track data-carousel-item=".gallery-item">
+        {items.map((item, i) => (
+          <div class={`gallery-item r d${(i % 3) + 1}`}>
+            <div class={`gallery-img${!item.src ? ' ' + phClasses[i % phClasses.length] : ''}`}
+                 {...(item.slug ? {'data-katalog': item.slug, 'tabindex': '0', 'role': 'button', 'aria-haspopup': 'dialog', 'aria-label': `${item.caption}: Sortiment ansehen`} : item.src ? {'data-lightbox': item.src, 'data-alt': item.alt, 'data-caption': item.caption, 'data-category': item.category, 'data-description': item.alt, 'tabindex': '0', 'role': 'button', 'aria-label': item.alt ? `${item.alt} vergrößern` : 'Bild vergrößern'} : {})}>
+              {item.src
+                ? <img src={item.src} alt={item.alt} width="800" height="600" loading="lazy" />
+                : <div class="gallery-placeholder">
+                    <span class="gallery-placeholder-icon" aria-hidden="true">⬡</span>
+                    <span class="gallery-placeholder-txt">Bild einfügen</span>
+                  </div>
+              }
+              <div class="gallery-overlay"></div>
+            </div>
+            <div class="gallery-item-body">
+              <span class="gallery-item-cat">{item.category}</span>
+              <p class="gallery-item-title">{item.caption}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button type="button" class="gallery-nav gallery-nav--next" aria-label="Nächste Bilder" data-carousel-next>›</button>
+    </div>
+  </div>
+</section>
+
+<div id="katalog" class="kat" role="dialog" aria-modal="true" aria-labelledby="kat-title" aria-hidden="true" hidden>
+  <div class="kat-bg" data-kat-close></div>
+  <div class="kat-box" tabindex="-1">
+    <div class="kat-head">
+      <h3 id="kat-title" class="kat-title"></h3>
+      <button type="button" class="kat-close" data-kat-close aria-label="Schließen">×</button>
+    </div>
+    <div class="kat-body">
+      <div class="kat-intro">
+        <p>{katalog.intro}</p>
+        <div class="kat-cta">
+          <a class="btn btn-fill" href={katalog.registerHref}>{katalog.registerLabel}</a>
+          <a class="btn btn-ghost" href={katalog.loginHref}>{katalog.loginLabel}</a>
+        </div>
+      </div>
+      {katalog.categories.map((c) => (
+        <section class="kat-cat" data-kat-cat={c.id} hidden>
+          {c.note && <p class="kat-note">{c.note}</p>}
+          <ul class="kat-list">
+            {c.products.map((p) => (
+              <li class="kat-item">
+                <div class="kat-photo">
+                  <img src={p.image} alt="" width="120" height="120" loading="lazy" />
+                  {p.ribbon && <span class="kat-ribbon">{p.ribbon}</span>}
+                </div>
+                <div class="kat-info">
+                  <p class="kat-name">{p.name}</p>
+                  {p.text && <p class="kat-text">{p.text}</p>}
+                  {p.note && <p class="kat-meta">{p.note}</p>}
+                  {p.weight && <p class="kat-meta">{p.weight}</p>}
+                </div>
+                <p class="kat-price">{p.price}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  var kat = document.getElementById('katalog');
+  if (!kat) return;
+  document.body.appendChild(kat);
+  var box = kat.querySelector('.kat-box'), body = kat.querySelector('.kat-body');
+  var title = document.getElementById('kat-title'), trig = null;
+  function open(id, t, el) {
+    trig = el || null;
+    kat.querySelectorAll('[data-kat-cat]').forEach(function (c) { c.hidden = c.getAttribute('data-kat-cat') !== id; });
+    title.textContent = t || '';
+    kat.hidden = false; kat.removeAttribute('aria-hidden');
+    document.body.classList.add('kat-open');
+    body.scrollTop = 0;
+    requestAnimationFrame(function () { kat.classList.add('is-open'); box.focus(); });
+  }
+  function close() {
+    kat.classList.remove('is-open'); kat.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('kat-open');
+    setTimeout(function () { if (!kat.classList.contains('is-open')) kat.hidden = true; }, 220);
+    if (trig) trig.focus(); trig = null;
+  }
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest('[data-kat-close]');
+    if (c && kat.contains(c)) { close(); return; }
+    var t = e.target.closest('[data-katalog]');
+    if (t) open(t.getAttribute('data-katalog'), (t.closest('.gallery-item').querySelector('.gallery-item-title') || {}).textContent, t);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (kat.classList.contains('is-open')) {
+      if (e.key === 'Escape') close();
+      return;
+    }
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('[data-katalog]')) {
+      e.preventDefault(); e.target.closest('[data-katalog]').click();
+    }
+  });
+})();
+</script>
+
+<CarouselScript />

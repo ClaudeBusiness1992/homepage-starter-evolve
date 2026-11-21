@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "nav": [
+      {
+        "label": "So funktioniert's",
+        "href": "#services",
+        "section": "services"
+      },
+      {
+        "label": "Unser Sortiment",
+        "href": "#gallery",
+        "section": "gallery"
+      },
+      {
+        "label": "Über uns",
+        "href": "#about",
+        "section": "about"
+      },
+      {
+        "label": "Kontakt",
+        "href": "#contact",
+        "section": "contact"
+      },
+      {
+        "label": "Einloggen",
+        "href": "https://ajs-inner-circle.de/login/",
+        "section": "login",
+        "extra": true
+      },
+      {
+        "label": "Mitglied werden",
+        "href": "https://ajs-inner-circle.de/registrierung/",
+        "section": "register",
+        "cta": true
+      }
+    ],
+    "copyright": "© 2026 AJ's Inner Circle, Hamburg",
+    "phone": "+491603518963",
+    "tagline": "Feinkost auf festen Liefertouren in Hamburg",
+    "siteName": "AJ's Inner Circle",
+    "logo": "/images/logo.webp",
+    "phoneDisplay": "0160 3518963",
+    "email": "ajsinfo@ajs-inner-circle.de",
+    "description": "Premium Fleisch & Feinkost, persönlich geliefert in Hamburg. Rind, Lamm, Schwein, Geflügel und Meeresfrüchte für Mitglieder von AJ's Inner Circle: frisch eingekauft, fair kalkuliert, nach Gewicht abgerechnet.",
+    "image": "/images/ajs-og.jpg"
+  },
+  "theme": {
+    "ink": "#2F3A2E",
+    "cream": "#F1ECE0",
+    "accent": "#C0693C",
+    "accentLight": "#E2A073",
+    "sage": "#8FA08A"
+  }
+}

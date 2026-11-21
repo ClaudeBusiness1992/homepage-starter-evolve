@@ -1,0 +1,40 @@
+---
+interface NavLink {
+  label: string;
+  href: string;
+  cta?: boolean;
+}
+interface Props {
+  siteName: string;
+  siteNameAccent?: string;
+  logo?: string;
+  links?: NavLink[];
+}
+const { siteName, siteNameAccent, logo, links = [] } = Astro.props;
+const accentIdx = siteNameAccent ? siteName.indexOf(siteNameAccent) : -1;
+const logoBefore = accentIdx > -1 ? siteName.slice(0, accentIdx) : siteName;
+const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.length ?? 0)) : '';
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isHome = path === '/ajs';
+const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href : `/ajs${href}`;
+---
+
+<nav id="nav" aria-label="Hauptnavigation">
+  <div class="wrap">
+    <div class="nav-row">
+      <a href="/ajs" class="logo">{logo && <img src={logo} alt="" class="logo-img" width="44" height="44" />}<span>{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</span></a>
+      {links.length > 0 && (
+        <ul class="nav-ul" id="navLinks">
+          {links.map(l => (
+            <li>
+              <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : ''}>{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      )}
+      <button class="burger" id="burger" aria-label="Menü" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>

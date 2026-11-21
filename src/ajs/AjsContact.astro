@@ -1,0 +1,217 @@
+---
+interface Avail {
+  monday?: string[]; tuesday?: string[]; wednesday?: string[];
+  thursday?: string[]; friday?: string[]; saturday?: string[]; sunday?: string[];
+}
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  email: string;
+  phone: string;
+  phoneDisplay: string;
+  availability?: Avail;
+}
+const { label, headline, subline, email, phone, phoneDisplay, availability = {} } = Astro.props;
+
+// Aus den Buchungs-Slots (z.B. ["09:00","10:00","11:00","14:00"]) lesbare
+// Zeitfenster ableiten – aufeinanderfolgende 1-h-Slots werden zu einem Bereich
+// "09–12 Uhr" zusammengefasst, lückenhafte Tage erhalten mehrere Bereiche.
+const dayShort: Record<string, string> = {
+  monday: 'Mo', tuesday: 'Di', wednesday: 'Mi', thursday: 'Do',
+  friday: 'Fr', saturday: 'Sa', sunday: 'So',
+};
+const dayOrder = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] as const;
+const av: any = availability;
+
+const slotsToRanges = (slots: string[]): string => {
+  if (!slots || slots.length === 0) return 'geschlossen';
+  const toMin = (s: string) => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
+  const toHHMM = (mins: number) => `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
+  const sorted = [...slots].map(toMin).sort((a, b) => a - b);
+  const ranges: Array<[number, number]> = [];
+  let start = sorted[0], end = sorted[0] + 60;
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === end) end = sorted[i] + 60;
+    else { ranges.push([start, end]); start = sorted[i]; end = sorted[i] + 60; }
+  }
+  ranges.push([start, end]);
+  return ranges.map(([s, e]) => `${toHHMM(s)}–${toHHMM(e)}`).join(', ') + ' Uhr';
+};
+
+const hoursGroups: Array<{ days: string; hours: string }> = [];
+let prevKey: string | null = null;
+let groupStart: string | null = null;
+let groupEnd: string | null = null;
+for (const day of dayOrder) {
+  const slots: string[] = av[day] || [];
+  const key = slotsToRanges(slots);
+  if (key === prevKey) {
+    groupEnd = dayShort[day];
+  } else {
+    if (groupStart) {
+      hoursGroups.push({
+        days: groupStart === groupEnd || !groupEnd ? groupStart : `${groupStart}–${groupEnd}`,
+        hours: prevKey!,
+      });
+    }
+    groupStart = dayShort[day];
+    groupEnd = dayShort[day];
+    prevKey = key;
+  }
+}
+if (groupStart) {
+  hoursGroups.push({
+    days: groupStart === groupEnd || !groupEnd ? groupStart : `${groupStart}–${groupEnd}`,
+    hours: prevKey!,
+  });
+}
+---
+
+<section class="section section--dark" id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+
+      <!-- Info-Seite -->
+      <div class="contact-info">
+        <span class="lbl r">{label}</span>
+        <h2 class="h2 r">{headline}</h2>
+        <p class="sub r">{subline}</p>
+        <div class="contact-direct r">
+          <a href={`mailto:${email}`} class="btn btn-email">✉&nbsp; {email}</a>
+          <a href={`tel:${phone}`}    class="btn btn-phone">☎&nbsp; {phoneDisplay}</a>
+        </div>
+        {hoursGroups.length > 0 && dayOrder.some(d => (av[d] || []).length > 0) && (
+          <div class="contact-hours r">
+            <h3 class="contact-hours-title">Öffnungszeiten</h3>
+            <ul class="contact-hours-list">
+              {hoursGroups.map(g => (
+                <li><span class="contact-hours-days">{g.days}</span><span class="contact-hours-time">{g.hours}</span></li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      <!-- Formular -->
+      <div class="contact-form-wrap r d2">
+        <form id="contactForm" data-email={email} novalidate>
+          <input type="text" name="hp" tabindex="-1" autocomplete="off"
+                 class="visually-hidden" aria-hidden="true" />
+
+          <div role="alert" aria-live="polite" id="formErrors" class="form-errors" hidden></div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Name *</label>
+              <input type="text"  id="name"    name="name"    placeholder="Dein Name" required
+                     autocomplete="name" aria-describedby="name-err" aria-invalid="false" />
+              <span id="name-err" class="field-err" hidden>Bitte gib deinen Namen an.</span>
+            </div>
+            <div class="form-group">
+              <label for="email">E-Mail *</label>
+              <input type="email" id="email"   name="email"   placeholder="du@beispiel.de" required
+                     autocomplete="email" aria-describedby="email-err" aria-invalid="false" />
+              <span id="email-err" class="field-err" hidden>Bitte gib eine gültige E-Mail-Adresse an.</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Telefon <span class="form-optional">(optional)</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="+49 000 000000" autocomplete="tel" />
+          </div>
+
+          <div class="form-group">
+            <label for="message">Nachricht *</label>
+            <textarea id="message" name="message" rows="3" placeholder="Wobei kann ich dir helfen?" required
+                      aria-describedby="message-err" aria-invalid="false"></textarea>
+            <span id="message-err" class="field-err" hidden>Bitte schreib eine kurze Nachricht.</span>
+          </div>
+
+          <div class="form-check">
+            <input type="checkbox" id="privacy" name="privacy" required
+                   aria-describedby="privacy-err" aria-invalid="false" />
+            <label for="privacy">
+              Ich habe die <a href="/ajs/datenschutz">Datenschutzerklärung</a> gelesen
+              und stimme zu, dass meine Angaben zur Bearbeitung meiner Anfrage verarbeitet werden. *
+            </label>
+          </div>
+          <span id="privacy-err" class="field-err" hidden>Bitte stimm der Datenschutzerklärung zu.</span>
+
+          <button type="submit" class="btn btn-submit">
+            Nachricht senden →
+          </button>
+        </form>
+
+        <!-- Erfolgsmeldung (wird per JS eingeblendet) -->
+        <div class="form-success" id="formSuccess" role="status" hidden>
+          <div class="form-success-icon">✓</div>
+          <h3>Fast geschafft!</h3>
+          <p>Dein E-Mail-Programm öffnet sich mit deiner Nachricht — einfach absenden, ich melde mich so schnell wie möglich bei dir.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  // AJS: kein Server-Versand — die Nachricht wird als E-Mail an
+  // ajsinfo@ajs-inner-circle.de (data-email) im Mailprogramm geoeffnet.
+  const form = document.getElementById('contactForm');
+  const success = document.getElementById('formSuccess');
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Honeypot: Bots kommentarlos "erfolgreich" verabschieden
+    const hp = form.querySelector('input[name="hp"]');
+    if (hp && hp.value) {
+      form.hidden = true;
+      success.hidden = false;
+      return;
+    }
+
+    const required = form.querySelectorAll('[required]');
+    let valid = true;
+    required.forEach(el => {
+      const invalid = (el.type === 'checkbox' && !el.checked) || (el.type !== 'checkbox' && !el.value.trim());
+      el.classList.toggle('error', invalid);
+      el.setAttribute('aria-invalid', String(invalid));
+      const errId = el.getAttribute('aria-describedby');
+      const errEl = errId ? document.getElementById(errId) : null;
+      if (errEl) errEl.hidden = !invalid;
+      if (invalid) valid = false;
+    });
+    if (!valid) {
+      const errBox = document.getElementById('formErrors');
+      if (errBox) {
+        errBox.textContent = 'Bitte fülle alle Pflichtfelder aus.';
+        errBox.hidden = false;
+      }
+      form.querySelector('[aria-invalid="true"]')?.focus();
+      return;
+    }
+    const errBox = document.getElementById('formErrors');
+    if (errBox) errBox.hidden = true;
+
+    const fd = new FormData(form);
+    const pick = (k) => String(fd.get(k) ?? '').trim();
+    const emailAddr = form.getAttribute('data-email') || 'ajsinfo@ajs-inner-circle.de';
+    const subject = encodeURIComponent(`Anfrage von ${pick('name')}`);
+    const lines = [
+      `Name: ${pick('name')}`,
+      `E-Mail: ${pick('email')}`,
+      ...(pick('phone') ? [`Telefon: ${pick('phone')}`] : []),
+      '',
+      pick('message'),
+    ];
+    window.location.href = `mailto:${emailAddr}?subject=${subject}&body=${encodeURIComponent(lines.join('\n'))}`;
+
+    form.hidden = true;
+    success.hidden = false;
+    success.setAttribute('tabindex', '-1');
+    success.focus();
+  });
+
+</script>

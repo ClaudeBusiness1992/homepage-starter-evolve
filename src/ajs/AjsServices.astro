@@ -1,0 +1,31 @@
+---
+import SectionHeader from '../components/SectionHeader.astro';
+interface ServiceItem {
+  icon: string;
+  image?: string;
+  title: string;
+  text: string;
+}
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  items: ServiceItem[];
+}
+const { label, headline, subline, items } = Astro.props;
+const delays = ['d1','d2','d3','d1','d2','d3'];
+---
+
+<section class="section section--dark" id="services">
+  <div class="wrap">
+    <SectionHeader {label} {headline} {subline} center />
+    <div class="srv-grid">
+      {items.map((item, i) => (
+        <div class={`scard r ${delays[i]}`}>
+          {item.image ? <img class="simg" src={item.image} alt="" width="160" height="160" loading="lazy" /> : <div class="sico">{item.icon}</div>}
+          <div class="sbody">{item.image && <span class="snum">{item.icon}</span>}<h3 class="stitle">{item.title}</h3><p class="stxt">{item.text}</p></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

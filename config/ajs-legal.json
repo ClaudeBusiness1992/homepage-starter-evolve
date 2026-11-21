@@ -1,0 +1,38 @@
+{
+  "legal": {
+    "company": {
+      "name": "AJ's Inner Circle",
+      "legalForm": "Einzelunternehmen",
+      "representedBy": "André Jacobsen"
+    },
+    "address": {
+      "street": "Wehlbrook 20 a",
+      "zip": "22143",
+      "city": "Hamburg",
+      "country": "Deutschland"
+    },
+    "contact": {
+      "phone": "01603518963",
+      "email": "ajsinfo@ajs-inner-circle.de"
+    },
+    "register": {
+      "type": "",
+      "number": "",
+      "court": ""
+    },
+    "vatId": "",
+    "responsibleForContent": "André Jacobsen",
+    "professionalRegulations": "",
+    "supervisoryAuthority": "",
+    "hosting": {
+      "provider": "Vercel Inc.",
+      "address": "340 Pine Street Suite 701, San Francisco, CA 94104, USA",
+      "privacyUrl": "https://vercel.com/legal/privacy-policy"
+    },
+    "dataProtectionOfficer": "",
+    "analytics": {
+      "enabled": false,
+      "tool": ""
+    }
+  }
+}
