@@ -24,7 +24,13 @@ body.swipe-active #gallery .gallery-snap-page .gallery-item-body { flex-shrink: 
 }
 
 /* ═══ AJS: Farbwechsel Olive ↔ Creme, Logo, Schritt-Karten, Banner ═══ */
-:root { --footer-bg: #414C09; }
+:root {
+  --footer-bg: #414C09;
+  /* Header-Paper: Logo-Ring-Creme aufgehellt, grenzt Nav von Olive-Sektionen ab */
+  --nav-bg: #FBFAF3;
+  /* Berry: Logo-Radieschen-Pink #C14F81, für Text auf Paper abgedunkelt (AA) */
+  --berry: #A83A68;
+}
 
 /* Helle Abschnitte: Tokens lokal umkehren (Karten, Ränder, Texte folgen mit) */
 #services, #about, #contact {
@@ -53,6 +59,27 @@ body.swipe-active #gallery .gallery-snap-page .gallery-item-body { flex-shrink: 
 .hero-photo-wrap { position: relative; }
 .hero-badge { position: absolute; left: 1rem; top: 1rem; width: clamp(80px, 7.5vw, 108px); height: auto; border-radius: 50%; background: #FBFAF3; padding: 4px; box-shadow: 0 6px 22px rgba(0,0,0,.4); }
 @media (max-width: 900px) { .hero-badge { left: .6rem; top: .6rem; width: 64px; } }
+
+/* AJS-Header: Paper statt Olive — Abgrenzung zu Hero-/Sortiment-Sektionen.
+   Nur /ajs (ajs.css lädt nur via AjsBase). Text Olive auf Paper 8.87:1 (AA).
+   Hover/Active-Terracotta #97572A auf Paper 5.41:1 (AA); Standard-Accent
+   #C97438 fiele auf Paper mit 3.32 durch und bleibt Footer/dunklen Flächen. */
+#nav { border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
+#nav .logo { color: var(--ink); }
+#nav .logo em { color: #97572A; }
+#nav .nav-ul a:not(.cta-link) { color: var(--ink); }
+#nav .nav-ul a:not(.cta-link):hover { color: #97572A; }
+#nav .nav-ul a:focus-visible { outline-color: #97572A; }
+#nav .nav-ul a.active:not(.cta-link) { color: #97572A; }
+#nav .nav-ul a.active:not(.cta-link)::after { background: #97572A; }
+#nav .burger span { background: var(--ink); }
+@media (max-width: 768px) {
+  #nav .nav-ul { background: var(--nav-bg); border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
+}
+
+/* Berry-Akzente (dezent, nur helle Flächen): Schritt-Nummern + Pricing-Badge */
+#services .snum { color: var(--berry); }
+#pricing .pbadge { background: var(--berry); color: #fff; }
 
 /* Schritt-Karten mit Illustration */
 #services .scard { flex-direction: row; align-items: center; gap: 1.1rem; padding: .9rem 1.2rem .9rem .9rem; box-shadow: 0 2px 14px color-mix(in srgb, var(--cream) 8%, transparent); }
