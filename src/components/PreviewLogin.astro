@@ -149,7 +149,6 @@ const safeClients = (clients ?? []).map((c) => ({
     }
     var hex = sha256Sync((passInput.value || '').trim());
     if (hex === String(hit.passHashSha256).toLowerCase()) {
-      try { sessionStorage.setItem('hp-gate-' + hit.id, '1'); } catch (e2) {}
       location.href = '/' + hit.route;
     } else {
       err.style.display = 'block';
