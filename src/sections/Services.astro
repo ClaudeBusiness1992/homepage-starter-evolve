@@ -12,15 +12,51 @@ interface Props {
   items: ServiceItem[];
 }
 const { label, headline, subline, items } = Astro.props;
-const delays = ['d1','d2','d3','d1','d2','d3'];
+
+// Ergänzende Beispiel-Leistungen für bis zu 3 Zeilen (z. B. 3 Zeilen × 3 Spalten = 9 Leistungen, oder 3 Zeilen × 4 Spalten = 12 Leistungen)
+const extendedItems: ServiceItem[] = [
+  ...items,
+  {
+    icon: '⚡',
+    title: 'Performance & Speed',
+    text: 'Ultraschnelle Ladezeiten durch moderne Core Web Vitals Optimierung und minimalen Code.'
+  },
+  {
+    icon: '🔒',
+    title: 'Sicherheit & DSGVO',
+    text: 'Rechtssichere Umsetzung inklusive Cookie-Management, SSL und kontinuierlicher Absicherung.'
+  },
+  {
+    icon: '📈',
+    title: 'Conversion Optimierung',
+    text: 'Gezielte Call-to-Actions und intuitive Nutzerführung für maximale Kontaktanfragen.'
+  },
+  {
+    icon: '🛠',
+    title: 'Wartung & Support',
+    text: 'Zuverlässige Betreuung, regelmäßige System-Updates und direkte Hilfe bei Fragen.'
+  },
+  {
+    icon: '📊',
+    title: 'Web-Analytics',
+    text: 'DSGVO-konforme Reichweitenanalyse zur kontinuierlichen Verbesserung Ihrer Besucherströme.'
+  },
+  {
+    icon: '💬',
+    title: 'Beratung & Strategie',
+    text: 'Ganzheitliche Begleitung von der ersten Idee bis zur nachhaltigen Online-Positionierung.'
+  }
+];
+
+const delays = ['d1','d2','d3','d1','d2','d3','d1','d2','d3','d1','d2','d3'];
 ---
 
 <section class="section section--dark" id="services">
   <div class="wrap">
     <SectionHeader {label} {headline} {subline} center />
     <div class="srv-grid">
-      {items.map((item, i) => (
-        <div class={`scard r ${delays[i]}`}>
+      {extendedItems.map((item, i) => (
+        <div class={`scard r ${delays[i % delays.length]}`}>
           <div class="sico">{item.icon}</div>
           <h3 class="stitle">{item.title}</h3>
           <p class="stxt">{item.text}</p>

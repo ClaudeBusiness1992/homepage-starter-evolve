@@ -1,0 +1,243 @@
+---
+/* PreviewLogin.astro — Login-Card auf der Root-Seite für Vercel-Deployments.
+   Felder: Profilname + Passwort. Prüft SHA-256 via Pure-JS gegen config/clients.json
+   (nur Hashes im Markup, kein Klartext), setzt sessionStorage 'hp-gate-<id>'
+   und leitet auf /<route> weiter. */
+interface PreviewClient {
+  id: string;
+  label: string;
+  route: string;
+  passHashSha256: string;
+}
+interface Props {
+  clients: PreviewClient[];
+}
+const { clients } = Astro.props;
+const safeClients = (clients ?? []).map((c) => ({
+  id: String(c.id),
+  label: String(c.label),
+  route: String(c.route),
+  passHashSha256: String(c.passHashSha256).toLowerCase(),
+}));
+---
+
+<div class="hp-preview" data-preview data-clients={JSON.stringify(safeClients)}>
+  <form class="hp-preview-card" data-preview-form>
+    <p class="hp-preview-kicker">pixel&amp;code</p>
+    <h1 class="hp-preview-title">Kunden-Vorschau</h1>
+    <p class="hp-preview-sub">Bitte Profilnamen und Passwort eingeben, um die Vorschau zu öffnen.</p>
+    <label class="hp-preview-label" for="hp-preview-profile">Profilname</label>
+    <input
+      id="hp-preview-profile"
+      class="hp-preview-input"
+      type="text"
+      name="profile"
+      placeholder="z. B. ajs oder glowgiver"
+      autocomplete="username"
+      autocapitalize="off"
+      spellcheck="false"
+      required
+    />
+    <label class="hp-preview-label" for="hp-preview-pass">Passwort</label>
+    <input
+      id="hp-preview-pass"
+      class="hp-preview-input"
+      type="password"
+      name="password"
+      placeholder="6 Zeichen"
+      inputmode="numeric"
+      maxlength="6"
+      autocomplete="current-password"
+      required
+    />
+    <p class="hp-preview-error" data-preview-error role="alert" style="display: none;">
+      Profil oder Passwort ist falsch. Bitte erneut versuchen.
+    </p>
+    <button class="btn btn-fill hp-preview-btn" type="submit">Vorschau öffnen</button>
+  </form>
+</div>
+
+<script is:inline>
+(function () {
+  var root = document.querySelector('[data-preview]');
+  if (!root) return;
+  var clients = [];
+  try { clients = JSON.parse(root.getAttribute('data-clients') || '[]'); } catch (e) { clients = []; }
+  var form = root.querySelector('[data-preview-form]');
+  var profileInput = root.querySelector('#hp-preview-profile');
+  var passInput = root.querySelector('#hp-preview-pass');
+  var err = root.querySelector('[data-preview-error]');
+
+  document.documentElement.style.overflow = 'hidden';
+  root.addEventListener('wheel', function (e) { e.stopPropagation(); }, true);
+  root.addEventListener('touchmove', function (e) { e.stopPropagation(); }, { passive: true, capture: true });
+  if (profileInput) profileInput.focus();
+
+  // Pure JavaScript SHA-256 (funktioniert immer, auch im unsicheren HTTP-Context auf mobilen IP-Adressen)
+  function sha256Sync(ascii) {
+    function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
+    var mathPow = Math.pow;
+    var maxWord = mathPow(2, 32);
+    var lengthProperty = 'length';
+    var i, j, result = '';
+    var words = [];
+    var asciiBitLength = ascii[lengthProperty] * 8;
+    var hash = [], k = [], primeCounter = 0, isComposite = {};
+    for (var candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1/3) * maxWord) | 0;
+      }
+    }
+    ascii += '\x80';
+    while (ascii[lengthProperty] % 64 - 56) ascii += '\x00';
+    for (i = 0; i < ascii[lengthProperty]; i++) {
+      j = ascii.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words[lengthProperty]] = ((asciiBitLength / maxWord) | 0);
+    words[words[lengthProperty]] = (asciiBitLength) | 0;
+    for (j = 0; j < words[lengthProperty];) {
+      var w = words.slice(j, j += 16), oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        var w15 = w[i - 15], w2 = w[i - 2];
+        var a = hash[0], e = hash[4];
+        var temp1 = hash[7]
+          + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+          + ((e & hash[5]) ^ ((~e) & hash[6]))
+          + k[i]
+          + (w[i] = (i < 16) ? w[i] : (
+              w[i - 16]
+              + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))
+              + w[i - 7]
+              + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))
+            ) | 0
+          );
+        var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+          + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (var b = 3; b >= 0; b--) {
+        var byteVal = (hash[i] >> (8 * b)) & 255;
+        result += (byteVal < 16 ? '0' : '') + byteVal.toString(16);
+      }
+    }
+    return result;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err.style.display = 'none';
+    var name = (profileInput.value || '').trim().toLowerCase();
+    var hit = null;
+    for (var i = 0; i < clients.length; i++) {
+      var c = clients[i];
+      if (String(c.id).toLowerCase() === name ||
+          String(c.route).toLowerCase() === name ||
+          String(c.label).toLowerCase() === name) { hit = c; break; }
+    }
+    if (!hit) {
+      err.style.display = 'block';
+      profileInput.focus();
+      return;
+    }
+    var hex = sha256Sync((passInput.value || '').trim());
+    if (hex === String(hit.passHashSha256).toLowerCase()) {
+      try { sessionStorage.setItem('hp-gate-' + hit.id, '1'); } catch (e2) {}
+      location.href = '/' + hit.route;
+    } else {
+      err.style.display = 'block';
+      passInput.select();
+      passInput.focus();
+    }
+  });
+}());
+</script>
+
+<style>
+  .hp-preview {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    background: var(--ink);
+  }
+  .hp-preview-card {
+    width: min(24rem, 100%);
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-lg);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    padding: 2.25rem 2rem;
+    text-align: center;
+    color: var(--cream);
+  }
+  .hp-preview-kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin: 0 0 0.5rem;
+  }
+  .hp-preview-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 2rem;
+    color: var(--cream);
+    margin: 0 0 0.5rem;
+  }
+  .hp-preview-sub {
+    font-size: 0.92rem;
+    color: var(--text-soft);
+    margin: 0 0 1.5rem;
+  }
+  .hp-preview-label {
+    display: block;
+    text-align: left;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin: 0 0 0.35rem;
+  }
+  .hp-preview-card .hp-preview-label + .hp-preview-input {
+    margin-bottom: 1rem;
+  }
+  .hp-preview-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem 0.9rem;
+    font-size: 1rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--cream);
+  }
+  .hp-preview-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+  .hp-preview-input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+  .hp-preview-error {
+    font-size: 0.85rem;
+    color: #ff6b6b;
+    margin: 0.25rem 0 0;
+  }
+  .hp-preview-btn {
+    width: 100%;
+    margin-top: 1.25rem;
+    justify-content: center;
+  }
+</style>

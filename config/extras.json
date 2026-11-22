@@ -5,7 +5,7 @@
       "reviews": true,
       "booking": true,
       "gallery": true,
-      "sponsors": false,
+      "sponsors": true,
       "sidebarAds": false
     },
     "countdown": {
@@ -94,20 +94,90 @@
       "headline": "Projekte die begeistern",
       "subline": "Ein Blick auf einige unserer abgeschlossenen Kundenprojekte.",
       "items": [
-        { "src": "https://picsum.photos/seed/coffee42/800/600",  "alt": "Projekt 1",  "caption": "Schreinerei Weber",    "category": "Webdesign"    },
-        { "src": "https://picsum.photos/seed/clinic77/800/600",  "alt": "Projekt 2",  "caption": "Praxis Dr. Müller",    "category": "Landingpage"  },
-        { "src": "https://picsum.photos/seed/bakery15/800/600",  "alt": "Projekt 3",  "caption": "Café Sonnenschein",    "category": "Webdesign"    },
-        { "src": "https://picsum.photos/seed/electric88/800/600","alt": "Projekt 4",  "caption": "Elektro Bauer GmbH",   "category": "SEO"          },
-        { "src": "https://picsum.photos/seed/yoga33/800/600",    "alt": "Projekt 5",  "caption": "Yoga Studio Mitte",    "category": "Landingpage"  },
-        { "src": "https://picsum.photos/seed/salon56/800/600",   "alt": "Projekt 6",  "caption": "Friseur Haargenau",    "category": "Webdesign"    },
-        { "src": "https://picsum.photos/seed/office91/800/600",  "alt": "Projekt 7",  "caption": "Platzhalter 7",        "category": "Webdesign"    },
-        { "src": "https://picsum.photos/seed/store24/800/600",   "alt": "Projekt 8",  "caption": "Platzhalter 8",        "category": "Landingpage"  },
-        { "src": "https://picsum.photos/seed/tech64/800/600",    "alt": "Projekt 9",  "caption": "Platzhalter 9",        "category": "SEO"          },
-        { "src": "https://picsum.photos/seed/garden37/800/600",  "alt": "Projekt 10", "caption": "Platzhalter 10",       "category": "Webdesign"    },
-        { "src": "https://picsum.photos/seed/food19/800/600",    "alt": "Projekt 11", "caption": "Platzhalter 11",       "category": "Landingpage"  },
-        { "src": "https://picsum.photos/seed/sport82/800/600",   "alt": "Projekt 12", "caption": "Platzhalter 12",       "category": "SEO"          },
-        { "src": "https://picsum.photos/seed/hotel55/800/600",   "alt": "Projekt 13", "caption": "Platzhalter 13",       "category": "Webdesign"    },
-        { "src": "https://picsum.photos/seed/travel48/800/600",  "alt": "Projekt 14", "caption": "Platzhalter 14",       "category": "Landingpage"  }
+        {
+          "src": "https://picsum.photos/seed/coffee42/800/600",
+          "alt": "Projekt 1",
+          "caption": "Schreinerei Weber",
+          "category": "Webdesign"
+        },
+        {
+          "src": "https://picsum.photos/seed/clinic77/800/600",
+          "alt": "Projekt 2",
+          "caption": "Praxis Dr. Müller",
+          "category": "Landingpage"
+        },
+        {
+          "src": "https://picsum.photos/seed/bakery15/800/600",
+          "alt": "Projekt 3",
+          "caption": "Café Sonnenschein",
+          "category": "Webdesign"
+        },
+        {
+          "src": "https://picsum.photos/seed/electric88/800/600",
+          "alt": "Projekt 4",
+          "caption": "Elektro Bauer GmbH",
+          "category": "SEO"
+        },
+        {
+          "src": "https://picsum.photos/seed/yoga33/800/600",
+          "alt": "Projekt 5",
+          "caption": "Yoga Studio Mitte",
+          "category": "Landingpage"
+        },
+        {
+          "src": "https://picsum.photos/seed/salon56/800/600",
+          "alt": "Projekt 6",
+          "caption": "Friseur Haargenau",
+          "category": "Webdesign"
+        },
+        {
+          "src": "https://picsum.photos/seed/office91/800/600",
+          "alt": "Projekt 7",
+          "caption": "Platzhalter 7",
+          "category": "Webdesign"
+        },
+        {
+          "src": "https://picsum.photos/seed/store24/800/600",
+          "alt": "Projekt 8",
+          "caption": "Platzhalter 8",
+          "category": "Landingpage"
+        },
+        {
+          "src": "https://picsum.photos/seed/tech64/800/600",
+          "alt": "Projekt 9",
+          "caption": "Platzhalter 9",
+          "category": "SEO"
+        },
+        {
+          "src": "https://picsum.photos/seed/garden37/800/600",
+          "alt": "Projekt 10",
+          "caption": "Platzhalter 10",
+          "category": "Webdesign"
+        },
+        {
+          "src": "https://picsum.photos/seed/food19/800/600",
+          "alt": "Projekt 11",
+          "caption": "Platzhalter 11",
+          "category": "Landingpage"
+        },
+        {
+          "src": "https://picsum.photos/seed/sport82/800/600",
+          "alt": "Projekt 12",
+          "caption": "Platzhalter 12",
+          "category": "SEO"
+        },
+        {
+          "src": "https://picsum.photos/seed/hotel55/800/600",
+          "alt": "Projekt 13",
+          "caption": "Platzhalter 13",
+          "category": "Webdesign"
+        },
+        {
+          "src": "https://picsum.photos/seed/travel48/800/600",
+          "alt": "Projekt 14",
+          "caption": "Platzhalter 14",
+          "category": "Landingpage"
+        }
       ]
     },
     "booking": {
@@ -175,33 +245,80 @@
       },
       "services": [
         {
-          "name": "Erstberatung (30 min)",
+          "name": "Erstberatung",
           "duration": 30
         },
         {
-          "name": "Strategie-Workshop (60 min)",
+          "name": "Strategie-Workshop",
           "duration": 60
         },
         {
-          "name": "Premium-Beratung (90 min)",
+          "name": "Premium-Beratung",
           "duration": 90
         }
       ]
     },
     "sponsors": {
       "label": "Unsere Partner",
-      "headline": "Sponsoren & Förderer",
-      "subline": "Herzlichen Dank an alle, die dieses Event ermöglichen.",
+      "headline": "Starke Partner an unserer Seite",
+      "subline": "Wir arbeiten eng mit führenden Technologie- und Branchenpartnern zusammen.",
       "items": [
-        { "tier": "top",    "name": "Hauptsponsor GmbH",  "logo": "https://placehold.co/220x80/C9A84C/fff?text=TOP+SPONSOR",   "url": "https://example.com", "description": "Platin-Partner" },
-        { "tier": "middle", "name": "Förderer AG",         "logo": "https://placehold.co/140x56/888/fff?text=SPONSOR",          "url": "https://example.com" },
-        { "tier": "middle", "name": "Partner GmbH",        "logo": "https://placehold.co/140x56/888/fff?text=SPONSOR",          "url": "https://example.com" },
-        { "tier": "middle", "name": "Unterstützer KG",     "logo": "https://placehold.co/140x56/888/fff?text=SPONSOR",          "url": "https://example.com" },
-        { "tier": "little", "name": "Klein 1",             "logo": "https://placehold.co/80x40/ccc/333?text=S1",               "url": "" },
-        { "tier": "little", "name": "Klein 2",             "logo": "https://placehold.co/80x40/ccc/333?text=S2",               "url": "" },
-        { "tier": "little", "name": "Klein 3",             "logo": "https://placehold.co/80x40/ccc/333?text=S3",               "url": "" },
-        { "tier": "little", "name": "Klein 4",             "logo": "https://placehold.co/80x40/ccc/333?text=S4",               "url": "" },
-        { "tier": "little", "name": "Klein 5",             "logo": "https://placehold.co/80x40/ccc/333?text=S5",               "url": "" }
+        {
+          "tier": "top",
+          "name": "ApexCloud Systems",
+          "logo": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20230%2068%22%20width%3D%22230%22%20height%3D%2268%22%3E%0A%20%20%20%20%3Crect%20width%3D%22230%22%20height%3D%2268%22%20rx%3D%2210%22%20fill%3D%22%2318181b%22%20stroke%3D%22%2327272a%22%20stroke-width%3D%221.2%22%2F%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(6%2C%209)%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M12%2028%20A6%206%200%200%201%2020%2018%20A8%208%200%200%201%2030%2024%20A5%205%200%200%201%2030%2032%20L14%2032%20A4%204%200%200%201%2012%2028%20Z%22%20fill%3D%22%23ea580c%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2232%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%2215%22%20font-weight%3D%22700%22%20fill%3D%22%23f4f4f5%22%20letter-spacing%3D%22-0.3%22%3EApexCloud%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2246%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%229%22%20font-weight%3D%22600%22%20fill%3D%22%23ea580c%22%20letter-spacing%3D%220.6%22%3EHAUPTPARTNER%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E",
+          "url": "https://example.com",
+          "description": "Cloud-Infrastruktur & Next-Gen Hosting"
+        },
+        {
+          "tier": "top",
+          "name": "Vanguard Tech",
+          "logo": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20230%2068%22%20width%3D%22230%22%20height%3D%2268%22%3E%0A%20%20%20%20%3Crect%20width%3D%22230%22%20height%3D%2268%22%20rx%3D%2210%22%20fill%3D%22%2318181b%22%20stroke%3D%22%2327272a%22%20stroke-width%3D%221.2%22%2F%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(6%2C%209)%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M20%2012%20L31%2016%20V26%20C31%2033%2020%2037%2020%2037%20C20%2037%209%2033%209%2026%20V16%20Z%22%20fill%3D%22none%22%20stroke%3D%22%23f97316%22%20stroke-width%3D%222.2%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2232%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%2215%22%20font-weight%3D%22700%22%20fill%3D%22%23f4f4f5%22%20letter-spacing%3D%22-0.3%22%3EVanguard%20Tech%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2246%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%229%22%20font-weight%3D%22600%22%20fill%3D%22%23f97316%22%20letter-spacing%3D%220.6%22%3EPLATIN-PARTNER%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E",
+          "url": "https://example.com",
+          "description": "Enterprise Security & Performance"
+        },
+        {
+          "tier": "middle",
+          "name": "Luminary AI",
+          "logo": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%2056%22%20width%3D%22180%22%20height%3D%2256%22%3E%0A%20%20%20%20%3Crect%20width%3D%22180%22%20height%3D%2256%22%20rx%3D%2210%22%20fill%3D%22%2318181b%22%20stroke%3D%22%2327272a%22%20stroke-width%3D%221.2%22%2F%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(6%2C%203)%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M20%2012%20L23%2021%20L32%2024%20L23%2027%20L20%2036%20L17%2027%20L8%2024%20L17%2021%20Z%22%20fill%3D%22%23fb923c%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2226%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%2213%22%20font-weight%3D%22700%22%20fill%3D%22%23f4f4f5%22%20letter-spacing%3D%22-0.3%22%3ELuminary%20AI%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2240%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%229%22%20font-weight%3D%22600%22%20fill%3D%22%23fb923c%22%20letter-spacing%3D%220.6%22%3ETECHNOLOGIEPARTNER%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E",
+          "url": "https://example.com"
+        },
+        {
+          "tier": "middle",
+          "name": "Synapse Digital",
+          "logo": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%2056%22%20width%3D%22180%22%20height%3D%2256%22%3E%0A%20%20%20%20%3Crect%20width%3D%22180%22%20height%3D%2256%22%20rx%3D%2210%22%20fill%3D%22%2318181b%22%20stroke%3D%22%2327272a%22%20stroke-width%3D%221.2%22%2F%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(6%2C%203)%22%3E%0A%20%20%20%20%20%20%3Ccircle%20cx%3D%2220%22%20cy%3D%2225%22%20r%3D%2213%22%20fill%3D%22none%22%20stroke%3D%22%23ea580c%22%20stroke-width%3D%222.5%22%2F%3E%3Cellipse%20cx%3D%2220%22%20cy%3D%2225%22%20rx%3D%226%22%20ry%3D%2213%22%20fill%3D%22none%22%20stroke%3D%22%23ea580c%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%222%2C2%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2226%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%2213%22%20font-weight%3D%22700%22%20fill%3D%22%23f4f4f5%22%20letter-spacing%3D%22-0.3%22%3ESynapse%20Digital%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2240%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%229%22%20font-weight%3D%22600%22%20fill%3D%22%23ea580c%22%20letter-spacing%3D%220.6%22%3EDESIGN%20SYSTEMS%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E",
+          "url": "https://example.com"
+        },
+        {
+          "tier": "middle",
+          "name": "HyperCube Media",
+          "logo": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20180%2056%22%20width%3D%22180%22%20height%3D%2256%22%3E%0A%20%20%20%20%3Crect%20width%3D%22180%22%20height%3D%2256%22%20rx%3D%2210%22%20fill%3D%22%2318181b%22%20stroke%3D%22%2327272a%22%20stroke-width%3D%221.2%22%2F%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(6%2C%203)%22%3E%0A%20%20%20%20%20%20%3Cpolygon%20points%3D%2220%2C12%2032%2C18%2032%2C32%2020%2C26%22%20fill%3D%22%23f97316%22%20fill-opacity%3D%220.8%22%2F%3E%3Cpolygon%20points%3D%2220%2C12%208%2C18%2020%2C24%2032%2C18%22%20fill%3D%22%23f97316%22%2F%3E%3Cpolygon%20points%3D%228%2C18%2020%2C24%2020%2C38%208%2C32%22%20fill%3D%22%23f97316%22%20fill-opacity%3D%220.5%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2226%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%2213%22%20font-weight%3D%22700%22%20fill%3D%22%23f4f4f5%22%20letter-spacing%3D%22-0.3%22%3EHyperCube%3C%2Ftext%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2240%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%229%22%20font-weight%3D%22600%22%20fill%3D%22%23f97316%22%20letter-spacing%3D%220.6%22%3ECONTENT%20%26%20MEDIA%3C%2Ftext%3E%0A%20%20%3C%2Fsvg%3E",
+          "url": "https://example.com"
+        },
+        {
+          "tier": "little",
+          "name": "EcoCode Labs",
+          "logo": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20130%2044%22%20width%3D%22130%22%20height%3D%2244%22%3E%0A%20%20%20%20%3Crect%20width%3D%22130%22%20height%3D%2244%22%20rx%3D%2210%22%20fill%3D%22%2318181b%22%20stroke%3D%22%2327272a%22%20stroke-width%3D%221.2%22%2F%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(6%2C%20-3)%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M12%2032%20C12%2018%2024%2016%2030%2014%20C30%2024%2026%2032%2012%2032%20Z%22%20fill%3D%22%23ea580c%22%20fill-opacity%3D%220.85%22%2F%3E%3Cpath%20d%3D%22M12%2032%20Q20%2024%2030%2014%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2227%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%2213%22%20font-weight%3D%22700%22%20fill%3D%22%23f4f4f5%22%20letter-spacing%3D%22-0.3%22%3EEcoCode%3C%2Ftext%3E%0A%20%20%20%20%0A%20%20%3C%2Fsvg%3E",
+          "url": ""
+        },
+        {
+          "tier": "little",
+          "name": "InfiniScale",
+          "logo": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20130%2044%22%20width%3D%22130%22%20height%3D%2244%22%3E%0A%20%20%20%20%3Crect%20width%3D%22130%22%20height%3D%2244%22%20rx%3D%2210%22%20fill%3D%22%2318181b%22%20stroke%3D%22%2327272a%22%20stroke-width%3D%221.2%22%2F%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(6%2C%20-3)%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M14%2025%20C10%2019%208%2031%2014%2031%20C17%2031%2020%2025%2020%2025%20C20%2025%2023%2019%2026%2019%20C32%2019%2030%2031%2026%2031%20C23%2031%2020%2025%2020%2025%20Z%22%20fill%3D%22none%22%20stroke%3D%22%23ea580c%22%20stroke-width%3D%222.4%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2227%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%2213%22%20font-weight%3D%22700%22%20fill%3D%22%23f4f4f5%22%20letter-spacing%3D%22-0.3%22%3EInfiniScale%3C%2Ftext%3E%0A%20%20%20%20%0A%20%20%3C%2Fsvg%3E",
+          "url": ""
+        },
+        {
+          "tier": "little",
+          "name": "Novus Web",
+          "logo": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20130%2044%22%20width%3D%22130%22%20height%3D%2244%22%3E%0A%20%20%20%20%3Crect%20width%3D%22130%22%20height%3D%2244%22%20rx%3D%2210%22%20fill%3D%22%2318181b%22%20stroke%3D%22%2327272a%22%20stroke-width%3D%221.2%22%2F%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(6%2C%20-3)%22%3E%0A%20%20%20%20%20%20%3Cpath%20d%3D%22M20%2012%20L23%2021%20L32%2024%20L23%2027%20L20%2036%20L17%2027%20L8%2024%20L17%2021%20Z%22%20fill%3D%22%23ea580c%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2227%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%2213%22%20font-weight%3D%22700%22%20fill%3D%22%23f4f4f5%22%20letter-spacing%3D%22-0.3%22%3ENovus%20Web%3C%2Ftext%3E%0A%20%20%20%20%0A%20%20%3C%2Fsvg%3E",
+          "url": ""
+        },
+        {
+          "tier": "little",
+          "name": "VectorFlow",
+          "logo": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20130%2044%22%20width%3D%22130%22%20height%3D%2244%22%3E%0A%20%20%20%20%3Crect%20width%3D%22130%22%20height%3D%2244%22%20rx%3D%2210%22%20fill%3D%22%2318181b%22%20stroke%3D%22%2327272a%22%20stroke-width%3D%221.2%22%2F%3E%0A%20%20%20%20%3Cg%20transform%3D%22translate(6%2C%20-3)%22%3E%0A%20%20%20%20%20%20%3Cpolygon%20points%3D%2220%2C12%2032%2C18%2032%2C32%2020%2C26%22%20fill%3D%22%23ea580c%22%20fill-opacity%3D%220.8%22%2F%3E%3Cpolygon%20points%3D%2220%2C12%208%2C18%2020%2C24%2032%2C18%22%20fill%3D%22%23ea580c%22%2F%3E%3Cpolygon%20points%3D%228%2C18%2020%2C24%2020%2C38%208%2C32%22%20fill%3D%22%23ea580c%22%20fill-opacity%3D%220.5%22%2F%3E%0A%20%20%20%20%3C%2Fg%3E%0A%20%20%20%20%3Ctext%20x%3D%2248%22%20y%3D%2227%22%20font-family%3D%22Outfit%2C%20-apple-system%2C%20BlinkMacSystemFont%2C%20sans-serif%22%20font-size%3D%2213%22%20font-weight%3D%22700%22%20fill%3D%22%23f4f4f5%22%20letter-spacing%3D%22-0.3%22%3EVectorFlow%3C%2Ftext%3E%0A%20%20%20%20%0A%20%20%3C%2Fsvg%3E",
+          "url": ""
+        }
       ]
     },
     "sidebarAds": {

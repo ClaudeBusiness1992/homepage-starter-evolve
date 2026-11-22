@@ -1,11 +1,14 @@
 ---
 import SectionHeader from '../components/SectionHeader.astro';
+
 interface Member {
   name: string;
   role: string;
   bio: string;
   photo: string;
+  department?: string;
 }
+
 interface Props {
   label: string;
   headline: string;
@@ -13,14 +16,174 @@ interface Props {
   intro?: string;
   members: Member[];
 }
-const { label, headline, subline, intro, members } = Astro.props;
+
+const { label, headline, subline, intro, members = [] } = Astro.props;
+
+// Beispiel-Erweiterung für Team / Abteilungen:
+// Abteilungen mit jeweils unterschiedlicher Anzahl an Personen:
+// Controlling: 2 Personen
+// Verkauf: 4 Personen
+// Einkauf: 1 Person
+// Marketing: 5 Personen
+// HR: 2 Personen
+// Führung: 3 Personen (Sarah Lindner + 2 Gründer/CEOs)
+const teamSpecialists: Member[] = [
+  // 1. Controlling (2 Personen)
+  {
+    name: 'Fabian Richter',
+    role: 'Financial Controlling',
+    bio: 'Verantwortet Budgetplanung, Liquiditätssteuerung und präzise Kennzahlenanalysen für alle Projekte.',
+    photo: 'https://i.pravatar.cc/600?img=68',
+    department: 'Controlling'
+  },
+  {
+    name: 'Katharina Weiß',
+    role: 'Projekt-Controlling',
+    bio: 'Überwacht Ressourcen, Kostenstrukturen und Wirtschaftlichkeit laufender Kundenaufträge.',
+    photo: 'https://i.pravatar.cc/600?img=49',
+    department: 'Controlling'
+  },
+
+  // 2. Verkauf (4 Personen)
+  {
+    name: 'Maximilian Schwarz',
+    role: 'Key Account Management',
+    bio: 'Betreut strategische Firmenkunden und entwickelt passgenaue digitale Lösungspakete.',
+    photo: 'https://i.pravatar.cc/600?img=59',
+    department: 'Verkauf'
+  },
+  {
+    name: 'Laura Hoffmann',
+    role: 'Sales Representative',
+    bio: 'Begleitet Neukunden von der ersten Anfrage bis zum maßgeschneiderten Vertragsabschluss.',
+    photo: 'https://i.pravatar.cc/600?img=45',
+    department: 'Verkauf'
+  },
+  {
+    name: 'Tim Sommer',
+    role: 'Vertrieb & Partnerschaften',
+    bio: 'Baut nachhaltige Kooperationen und regionale Kundenbeziehungen kontinuierlich aus.',
+    photo: 'https://i.pravatar.cc/600?img=60',
+    department: 'Verkauf'
+  },
+  {
+    name: 'Nadine Wagner',
+    role: 'Client Success Manager',
+    bio: 'Stellt eine erstklassige Betreuung nach Projektabschluss und langfristige Zufriedenheit sicher.',
+    photo: 'https://i.pravatar.cc/600?img=36',
+    department: 'Verkauf'
+  },
+
+  // 3. Einkauf (1 Person)
+  {
+    name: 'Moritz Bauer',
+    role: 'Strategischer Einkauf & Procurement',
+    bio: 'Steuert Lieferantenbeziehungen, Softwarelizenzen und Verhandlungen für beste Konditionen.',
+    photo: 'https://i.pravatar.cc/600?img=11',
+    department: 'Einkauf'
+  },
+
+  // 4. Marketing (5 Personen)
+  {
+    name: 'Elena Rost',
+    role: 'Content & Copywriting',
+    bio: 'Verfasst überzeugende Texte und schärft das Markenprofil für kleine und mittlere Unternehmen.',
+    photo: 'https://i.pravatar.cc/600?img=44',
+    department: 'Marketing'
+  },
+  {
+    name: 'Julian Vogt',
+    role: 'Performance Marketing & SEO',
+    bio: 'Betreut datengestützte Kampagnen und sorgt für nachhaltige Reichweite bei Google und Social Media.',
+    photo: 'https://i.pravatar.cc/600?img=12',
+    department: 'Marketing'
+  },
+  {
+    name: 'Sophie Hartmann',
+    role: 'Brand & Campaign Design',
+    bio: 'Konzipiert visuelle Markenauftritte und reichweitenstarke digitale Werbemittel.',
+    photo: 'https://i.pravatar.cc/600?img=28',
+    department: 'Marketing'
+  },
+  {
+    name: 'Jonas Keller',
+    role: 'Social Media & Community',
+    bio: 'Gestaltet ansprechende Posts, Reels und Storys zur Stärkung der Unternehmenspräsenz.',
+    photo: 'https://i.pravatar.cc/600?img=33',
+    department: 'Marketing'
+  },
+  {
+    name: 'Clara Busch',
+    role: 'SEO & Inbound Marketing',
+    bio: 'Optimiert Webseiten auf organische Auffindbarkeit und messbare Lead-Generierung.',
+    photo: 'https://i.pravatar.cc/600?img=41',
+    department: 'Marketing'
+  },
+
+  // 5. HR (2 Personen)
+  {
+    name: 'Melanie König',
+    role: 'Talent Acquisition & Recruiting',
+    bio: 'Findet herausragende Fachkräfte und gestaltet einen wertschätzenden Bewerbungsprozess.',
+    photo: 'https://i.pravatar.cc/600?img=38',
+    department: 'HR'
+  },
+  {
+    name: 'Christian Meyer',
+    role: 'People & Culture Manager',
+    bio: 'Fördert Teamentwicklung, Weiterbildungsprogramme und eine moderne Unternehmenskultur.',
+    photo: 'https://i.pravatar.cc/600?img=15',
+    department: 'HR'
+  },
+
+  // 6. Führung (Spezialisten vor Gründer/Geschäftsführung)
+  {
+    name: 'Sarah Lindner',
+    role: 'Head of Operations & Design',
+    bio: 'Koordiniert Abteilungsabläufe, Projektstrukturen und Qualitätsstandards im gesamten Team.',
+    photo: 'https://i.pravatar.cc/600?img=47',
+    department: 'Führung'
+  }
+];
+
+// Gründer / Geschäftsführung / CEO kommen zum Schluss in 'Führung'
+const sampleTeamMembers: Member[] = [
+  ...teamSpecialists,
+  ...members.map((m) => ({
+    ...m,
+    department: 'Führung'
+  }))
+];
+
+// Feste, fachlich saubere Reihenfolge der Abteilungen:
+const departmentOrder = ['Controlling', 'Verkauf', 'Einkauf', 'Marketing', 'HR', 'Führung'];
+const availableDepts = [...new Set(sampleTeamMembers.map(m => m.department).filter(Boolean))];
+const departments = departmentOrder.filter(d => availableDepts.includes(d));
 ---
 
 <section class="section" id="about">
   <div class="wrap">
-    <SectionHeader {label} {headline} {subline} center />
-    {intro && <p class="about-intro r">{intro}</p>}
-    <div class="about-grid">
+    <div class="section-hd r section-hd--center">
+      {label && <span class="lbl">{label}</span>}
+      <h2 class="h2 about-headline-duo" set:html={headline} />
+      <h2 class="h2 about-headline-solo" style="display: none;">Leidenschaft für starkes Webdesign</h2>
+      <h2 class="h2 about-headline-team" style="display: none;">Unser Team, eine Vision</h2>
+      <p class="sub about-subline-duo">{subline}</p>
+      <p class="sub about-subline-solo" style="display: none;">Persönliche Betreuung, direkte Kommunikation und individuelle Weblösungen aus einer Hand.</p>
+      <p class="sub about-subline-team" style="display: none;">Erfahrene Spezialisten für Design, Entwicklung, Marketing und Strategie — vereint für Ihren digitalen Erfolg.</p>
+    </div>
+
+    <!-- Abteilungs-Filter (wird nur im Team-Modus sichtbar geschaltet) -->
+    <div class="about-depts" id="about-dept-filters" hidden>
+      {departments.map((dept, i) => (
+        <button type="button" class={`about-dept-btn${i === 0 ? ' is-active' : ''}`} data-dept={dept}>
+          {dept}
+        </button>
+      ))}
+    </div>
+
+    <!-- 1. Duo & Solo Grid (Standard-Container) -->
+    <div class="about-grid" id="about-default-grid">
       {members.map((m, i) => (
         <div class={`acard r d${i + 1}`}>
           <div class="aphoto" {...(m.photo ? {'data-lightbox': m.photo, 'data-alt': m.name, 'data-caption': m.name, 'data-category': m.role, 'data-description': m.bio, 'tabindex': '0', 'role': 'button', 'aria-label': `Foto von ${m.name} vergrößern`} : {})}>
@@ -37,5 +200,112 @@ const { label, headline, subline, intro, members } = Astro.props;
         </div>
       ))}
     </div>
+
+    <!-- 2. Team Carousel Container (2 Reihen mit max 3 Spalten, Swipe links/rechts) -->
+    <div class="about-team-carousel" id="about-team-carousel" hidden>
+      <button type="button" class="about-team-nav about-team-nav--prev" id="about-team-prev" aria-label="Vorherige Teammitglieder">‹</button>
+      <div class="about-team-track" id="about-team-track">
+        {sampleTeamMembers.map((m, i) => (
+          <div class="acard team-card" data-member-dept={m.department}>
+            <div class="aphoto" {...(m.photo ? {'data-lightbox': m.photo, 'data-alt': m.name, 'data-caption': m.name, 'data-category': m.role, 'data-description': m.bio, 'tabindex': '0', 'role': 'button', 'aria-label': `Foto von ${m.name} vergrößern`} : {})}>
+              <img src={m.photo} alt={m.name} width="600" height="800" loading="lazy" />
+            </div>
+            <div class="abody">
+              <span class="team-dept-tag">{m.department}</span>
+              <h3 class="aname">{m.name}</h3>
+              <span class="arole">{m.role}</span>
+              <p class="atext">{m.bio}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <button type="button" class="about-team-nav about-team-nav--next" id="about-team-next" aria-label="Nächste Teammitglieder">›</button>
+    </div>
   </div>
 </section>
+
+<script is:inline>
+(() => {
+  const track = document.getElementById('about-team-track');
+  const prev = document.getElementById('about-team-prev');
+  const next = document.getElementById('about-team-next');
+  const deptButtons = document.querySelectorAll('.about-dept-btn');
+
+  // Abteilungs-Navigation & Filterung
+  const applyFilterByIndex = (targetIdx) => {
+    if (targetIdx < 0 || targetIdx >= deptButtons.length) return;
+    deptButtons.forEach((b, i) => b.classList.toggle('is-active', i === targetIdx));
+    const btn = deptButtons[targetIdx];
+    const dept = btn.getAttribute('data-dept');
+    const cards = track?.querySelectorAll('.team-card') || [];
+    let visibleCount = 0;
+    cards.forEach(card => {
+      const cDept = card.getAttribute('data-member-dept');
+      const matches = (cDept === dept);
+      card.style.display = matches ? '' : 'none';
+      if (matches) visibleCount++;
+    });
+    if (track) {
+      track.setAttribute('data-visible-count', String(visibleCount));
+      track.scrollLeft = 0;
+    }
+    updateNav();
+  };
+
+  const updateNav = () => {
+    if (!track) return;
+    const currentIdx = Array.from(deptButtons).findIndex(b => b.classList.contains('is-active'));
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    const canScrollLeft = track.scrollLeft > 2;
+    const canScrollRight = track.scrollLeft < maxScroll - 2;
+
+    // Pfeil nach links: aktiv, wenn im Track scrollbar ODER eine vorherige Abteilung existiert
+    if (prev) {
+      prev.hidden = !canScrollLeft && currentIdx <= 0;
+    }
+    // Pfeil nach rechts: aktiv, wenn im Track scrollbar ODER eine nächste Abteilung existiert
+    if (next) {
+      next.hidden = !canScrollRight && currentIdx >= deptButtons.length - 1;
+    }
+  };
+
+  if (prev && next && track) {
+    prev.addEventListener('click', () => {
+      const canScrollLeft = track.scrollLeft > 2;
+      if (canScrollLeft) {
+        track.scrollBy({ left: -track.clientWidth * 0.8, behavior: 'smooth' });
+      } else {
+        const currentIdx = Array.from(deptButtons).findIndex(b => b.classList.contains('is-active'));
+        if (currentIdx > 0) {
+          applyFilterByIndex(currentIdx - 1);
+        }
+      }
+    });
+
+    next.addEventListener('click', () => {
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      const canScrollRight = track.scrollLeft < maxScroll - 2;
+      if (canScrollRight) {
+        track.scrollBy({ left: track.clientWidth * 0.8, behavior: 'smooth' });
+      } else {
+        const currentIdx = Array.from(deptButtons).findIndex(b => b.classList.contains('is-active'));
+        if (currentIdx < deptButtons.length - 1) {
+          applyFilterByIndex(currentIdx + 1);
+        }
+      }
+    });
+
+    track.addEventListener('scroll', updateNav, { passive: true });
+    window.addEventListener('resize', updateNav);
+  }
+
+  deptButtons.forEach((btn, idx) => {
+    btn.addEventListener('click', () => {
+      applyFilterByIndex(idx);
+    });
+  });
+
+  // Initial ersten Bereich aktivieren
+  applyFilterByIndex(0);
+})();
+</script>

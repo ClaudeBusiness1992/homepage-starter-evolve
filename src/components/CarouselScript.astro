@@ -9,20 +9,55 @@
     const prev = carousel.querySelector('[data-carousel-prev]');
     const next = carousel.querySelector('[data-carousel-next]');
     const itemSel = track.dataset.carouselItem || ':scope > *';
-    const step = () => {
-      const item = track.querySelector(itemSel);
-      if (!item) return track.clientWidth * 0.8;
-      const gap = parseFloat(getComputedStyle(track).columnGap || '0') || 0;
-      return (item.getBoundingClientRect().width + gap) * 2;
+
+    const getCols = () => {
+      const items = Array.from(track.querySelectorAll(itemSel));
+      const colSet = new Set();
+      items.forEach(it => colSet.add(Math.round(it.offsetLeft)));
+      return Array.from(colSet).sort((a, b) => a - b);
     };
+
+    const navigate = (forward) => {
+      const cols = getCols();
+      const currentScroll = track.scrollLeft;
+      const visibleWidth = track.clientWidth;
+      const maxScroll = track.scrollWidth - track.clientWidth;
+      const padLeft = cols[0] || 0;
+
+      let targetScroll;
+      if (forward) {
+        // Nächster Spalten-Block: Die erste Spalte anspringen, die aktuell rechts außerhalb liegt
+        const rightEdge = currentScroll + visibleWidth;
+        const nextCol = cols.find(c => (c - padLeft) >= (rightEdge - padLeft - 15));
+        if (nextCol !== undefined) {
+          targetScroll = Math.min(maxScroll, nextCol - padLeft);
+        } else {
+          // Wenn weniger als ein ganzer Block übrig ist, bis zum Anschlag gehen
+          targetScroll = maxScroll;
+        }
+      } else {
+        // Vorheriger Spalten-Block
+        const prevCol = [...cols].reverse().find(c => (c - padLeft) <= (currentScroll - visibleWidth + 15));
+        if (prevCol !== undefined) {
+          targetScroll = Math.max(0, prevCol - padLeft);
+        } else {
+          targetScroll = 0;
+        }
+      }
+
+      track.scrollTo({ left: targetScroll, behavior: 'smooth' });
+    };
+
     const update = () => {
+      const padLeft = parseFloat(getComputedStyle(track).paddingLeft) || 0;
       const max = track.scrollWidth - track.clientWidth;
       const overflows = max > 1;
-      if (prev) prev.hidden = !overflows || track.scrollLeft <= 1;
-      if (next) next.hidden = !overflows || track.scrollLeft >= max - 1;
+      if (prev) prev.hidden = !overflows || track.scrollLeft <= padLeft + 2;
+      if (next) next.hidden = !overflows || track.scrollLeft >= max - 2;
     };
-    prev?.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
-    next?.addEventListener('click', () => track.scrollBy({ left:  step(), behavior: 'smooth' }));
+
+    prev?.addEventListener('click', () => navigate(false));
+    next?.addEventListener('click', () => navigate(true));
     track.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
