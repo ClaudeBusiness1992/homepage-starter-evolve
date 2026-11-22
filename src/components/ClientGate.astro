@@ -52,7 +52,6 @@ const { clientId, passHashSha256 } = Astro.props;
   var key = 'hp-gate-' + id;
 
   function unlock() {
-    try { sessionStorage.setItem(key, '1'); } catch (e) {}
     gate.style.display = 'none';
     gate.remove();
     content.style.display = 'block';
@@ -61,10 +60,6 @@ const { clientId, passHashSha256 } = Astro.props;
     document.documentElement.classList.add('is-unlocked');
     document.documentElement.style.overflow = '';
   }
-
-  try {
-    if (sessionStorage.getItem(key) === '1') { unlock(); return; }
-  } catch (e) {}
 
   document.documentElement.style.overflow = 'hidden';
   var form = gate.querySelector('[data-gate-form]');
