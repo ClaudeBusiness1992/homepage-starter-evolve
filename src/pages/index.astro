@@ -2,6 +2,8 @@
 import metaConfig    from '../../config/meta.json';
 import contentConfig from '../../config/content.json';
 import extrasConfig  from '../../config/extras.json';
+import clientsConfig from '../../config/clients.json';
+import PreviewLogin from '../components/PreviewLogin.astro';
 import Base      from '../layouts/Base.astro';
 import Nav       from '../components/Nav.astro';
 import Hero     from '../sections/Hero.astro';
@@ -16,6 +18,7 @@ import Sponsors  from '../sections/Sponsors.astro';
 import Contact   from '../sections/Contact.astro';
 import Footer    from '../sections/Footer.astro';
 import SidebarAds from '../components/SidebarAds.astro';
+import LiveEditor from '../components/LiveEditor.astro';
 
 const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
@@ -41,6 +44,13 @@ const navLinks = [
   ...orderedSections.filter(o => o.enabled).map(o => ({ label: o.label, href: `#${o.id}`, section: o.id })),
   ...(cta ? [cta] : [{ label: 'Kontakt', href: '#contact', section: 'contact', cta: true }]),
 ];
+
+// Kunden-Vorschau-Gate: Auf Vercel (PUBLIC_DEPLOY_TARGET=vercel oder automatisches
+// VERCEL=1 beim Vercel-Build) wird der LiveEditor NICHT gerendert — stattdessen
+// erscheint die schlichte Login-Card. Lokal (pnpm dev) bleibt der LiveEditor aktiv.
+const isPreviewDeploy =
+  import.meta.env.PUBLIC_DEPLOY_TARGET === 'vercel' ||
+  (typeof process !== 'undefined' && process.env?.VERCEL === '1');
 ---
 
 <Base meta={meta} theme={theme}>
@@ -71,6 +81,9 @@ const navLinks = [
   {x.active?.sidebarAds && x.sidebarAds && (
     <SidebarAds left={x.sidebarAds.left} right={x.sidebarAds.right} />
   )}
+  {isPreviewDeploy
+    ? <PreviewLogin clients={clientsConfig.clients} />
+    : <LiveEditor />}
 </Base>
 
 <script is:inline>
@@ -78,7 +91,7 @@ const navLinks = [
   const html = document.documentElement;
 
   function targets() {
-    return [...document.querySelectorAll('#main > .hero-snap, #main > section, #main > .contact-footer-snap')];
+    return [...document.querySelectorAll('#main > .hero-snap, #main > section, #main > .contact-footer-snap')].filter(el => el.getAttribute('data-hpse-hidden') !== 'true');
   }
 
   function navH() {
@@ -113,12 +126,19 @@ const navLinks = [
         acc     = 0;           // flush any accumulated wheel delta
         cooling = true;
         clearTimeout(coolTimer);
-        coolTimer = setTimeout(() => { cooling = false; }, 1000); // blocks momentum tail
+        coolTimer = setTimeout(() => { cooling = false; }, 400); // blocks momentum tail
         if (onDone) onDone();
       }
     }
     animId = requestAnimationFrame(step);
   }
+
+  window.__HPSE_SCROLL_TO__ = function(targetEl) {
+    if (!targetEl) return;
+    const targetY = Math.max(0, targetEl.offsetTop - navH());
+    locked = true;
+    smoothTo(targetY);
+  };
 
   function currentIdx(list) {
     const nh = navH(), sy = window.scrollY;
@@ -159,10 +179,10 @@ const navLinks = [
     if (inScrollable(e.target)) return;
     e.preventDefault();
     if (locked || cooling) return;
-    if (Date.now() - lastGoAt < 1700) return; // hard inertia guard beyond cooling
+    if (Date.now() - lastGoAt < 800) return; // inertia guard for snappy desktop monitors
     acc += e.deltaY;
     clearTimeout(wt);
-    wt = setTimeout(() => { acc = 0; }, 300);
+    wt = setTimeout(() => { acc = 0; }, 200);
     if (Math.abs(acc) < 5) return;
     const dir = acc > 0 ? 1 : -1;
     acc = 0; clearTimeout(wt);

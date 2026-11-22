@@ -1,0 +1,1340 @@
+---
+/* LiveEditor.astro — Modulare Bearbeitungsleiste mit Accordion & Darstellungsoptionen */
+---
+
+<aside id="hpse-editor" class="hpse-editor" aria-label="Live-Editor Bearbeitungsleiste">
+  <button id="hpse-editor-toggle" class="hpse-fab" type="button" aria-expanded="false" aria-controls="hpse-drawer" title="Live-Editor öffnen (Alt + E)">
+    <span class="hpse-fab-icon" aria-hidden="true">⚙</span>
+    <span class="hpse-fab-lbl">Editor</span>
+  </button>
+
+  <div id="hpse-drawer" class="hpse-drawer" role="dialog" aria-modal="true" aria-labelledby="hpse-drawer-title" hidden>
+    <div class="hpse-drawer-head">
+      <div class="hpse-head-info">
+        <h2 id="hpse-drawer-title" class="hpse-title">Live-Editor</h2>
+        <span class="hpse-badge">Modular</span>
+      </div>
+      <button id="hpse-drawer-close" class="hpse-close" type="button" aria-label="Editor schließen">×</button>
+    </div>
+
+    <div class="hpse-drawer-body">
+      <!-- Bereiche mit aufklappbaren Einstellungen -->
+      <div class="hpse-group">
+        <div class="hpse-group-head">
+          <label class="hpse-group-title">Bereiche & Einstellungen</label>
+          <button id="hpse-sections-reset" type="button" class="hpse-text-btn">Alle an</button>
+        </div>
+        <p class="hpse-help">Klicke auf einen Bereich, um Details und Optionen aufzuklappen.</p>
+        
+        <div class="hpse-accordion" id="hpse-accordion">
+          <!-- Countdown -->
+          <div class="hpse-acc-item" data-acc-id="countdown">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label">
+                <input type="checkbox" data-section="countdown" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Event-Countdown</span>
+            </div>
+          </div>
+
+          <!-- Hero -->
+          <div class="hpse-acc-item" data-acc-id="hero">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label">
+                <input type="checkbox" data-section="hero" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Hero (Startbereich)</span>
+            </div>
+          </div>
+
+          <!-- Über uns -->
+          <div class="hpse-acc-item" data-acc-id="about">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" data-section="about" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <button type="button" class="hpse-acc-trigger" aria-expanded="false">
+                <span class="hpse-acc-title">Über uns</span>
+                <span class="hpse-acc-arrow">›</span>
+              </button>
+            </div>
+            <div class="hpse-acc-content" hidden>
+              <div class="hpse-field">
+                <label class="hpse-field-label">Personenanzahl & Aufbau</label>
+                <select id="hpse-var-about" class="hpse-select">
+                  <option value="solo">1 Person (Solo / Porträt links)</option>
+                  <option value="duo" selected>2 Personen (Gründer-Duo)</option>
+                  <option value="team">Team (2 Reihen, swipebar, Abteilungen)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Leistungen -->
+          <div class="hpse-acc-item" data-acc-id="services">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" data-section="services" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <button type="button" class="hpse-acc-trigger" aria-expanded="false">
+                <span class="hpse-acc-title">Leistungen</span>
+                <span class="hpse-acc-arrow">›</span>
+              </button>
+            </div>
+            <div class="hpse-acc-content" hidden>
+              <div class="hpse-fields-grid">
+                <div class="hpse-field">
+                  <label class="hpse-field-label">Spalten</label>
+                  <select id="hpse-var-services-cols" class="hpse-select">
+                    <option value="2">2 Spalten</option>
+                    <option value="3" selected>3 Spalten</option>
+                    <option value="4">4 Spalten</option>
+                  </select>
+                </div>
+                <div class="hpse-field">
+                  <label class="hpse-field-label">Zeilen</label>
+                  <select id="hpse-var-services-rows" class="hpse-select">
+                    <option value="1">1 Zeile</option>
+                    <option value="2" selected>2 Zeilen</option>
+                    <option value="3">3 Zeilen</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Galerie -->
+          <div class="hpse-acc-item" data-acc-id="gallery">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label">
+                <input type="checkbox" data-section="gallery" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Galerie / Sortiment</span>
+            </div>
+          </div>
+
+          <!-- Preise -->
+          <div class="hpse-acc-item" data-acc-id="pricing">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label">
+                <input type="checkbox" data-section="pricing" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Preise</span>
+            </div>
+          </div>
+
+          <!-- Bewertungen -->
+          <div class="hpse-acc-item" data-acc-id="reviews">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label">
+                <input type="checkbox" data-section="reviews" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Bewertungen</span>
+            </div>
+          </div>
+
+          <!-- Buchung -->
+          <div class="hpse-acc-item" data-acc-id="booking">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label">
+                <input type="checkbox" data-section="booking" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Buchung / Termin</span>
+            </div>
+          </div>
+
+          <!-- Sponsoren -->
+          <div class="hpse-acc-item" data-acc-id="sponsors">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label">
+                <input type="checkbox" data-section="sponsors" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Sponsoren / Partner</span>
+            </div>
+          </div>
+
+          <!-- Kontakt -->
+          <div class="hpse-acc-item" data-acc-id="contact">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label">
+                <input type="checkbox" data-section="contact" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Kontakt</span>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="hpse-acc-item" data-acc-id="footer">
+            <div class="hpse-acc-header">
+              <label class="hpse-toggle-label">
+                <input type="checkbox" data-section="footer" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Footer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export & Reset -->
+      <div class="hpse-group">
+        <label class="hpse-group-title">Konfiguration</label>
+        <div class="hpse-action-row">
+          <button id="hpse-export-btn" type="button" class="btn btn-ghost hpse-btn-sm">JSON exportieren</button>
+          <button id="hpse-reset-btn" type="button" class="btn btn-ghost hpse-btn-sm">Zurücksetzen</button>
+        </div>
+        <p id="hpse-export-feedback" class="hpse-feedback" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<style>
+  /* FAB */
+  .hpse-editor {
+    position: relative;
+    z-index: 9999;
+    font-family: var(--sans, system-ui, -apple-system, sans-serif);
+  }
+  .hpse-fab {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    background: #111827;
+    color: #f9fafb;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: none;
+    border-radius: 0 16px 16px 0;
+    padding: 14px 18px 14px 14px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, padding 0.2s ease;
+  }
+  .hpse-fab:hover { background: #1f2937; padding-left: 18px; }
+  .hpse-fab-icon { font-size: var(--fs-lg); line-height: 1; color: var(--accent-light, #ea580c); }
+  .hpse-fab-lbl { font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* Drawer */
+  .hpse-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 330px;
+    max-width: 90vw;
+    background: rgba(17, 24, 39, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 16px 0 36px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #f3f4f6;
+  }
+  .hpse-drawer.is-open { transform: translateX(0); }
+  .hpse-drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .hpse-head-info { display: flex; align-items: center; gap: 8px; }
+  .hpse-title { font-size: 1.1rem; font-weight: 700; color: #fff; margin: 0; }
+  .hpse-badge { font-size: 0.65rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; background: var(--accent, #ea580c); color: #fff; text-transform: uppercase; letter-spacing: 0.05em; }
+  .hpse-close { background: transparent; border: none; color: #9ca3af; font-size: 1.6rem; line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
+  .hpse-close:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+  .hpse-drawer-body {
+    padding: 18px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .hpse-drawer-body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  .hpse-group { display: flex; flex-direction: column; gap: 8px; }
+  .hpse-group-head { display: flex; align-items: center; justify-content: space-between; }
+  .hpse-group-title { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #9ca3af; }
+  .hpse-help { font-size: 0.74rem; color: #6b7280; line-height: 1.4; margin: 0; }
+
+  /* Accordion */
+  .hpse-accordion { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .hpse-acc-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .hpse-acc-item:hover { background: rgba(255, 255, 255, 0.05); }
+  .hpse-acc-item.is-expanded { border-color: rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); }
+  
+  .hpse-acc-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    gap: 12px;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+  .hpse-toggle-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  .hpse-toggle-label input { position: absolute; opacity: 0; pointer-events: none; }
+  .hpse-switch {
+    position: relative;
+    width: 32px;
+    height: 18px;
+    background: #374151;
+    border-radius: 999px;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+  }
+  .hpse-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hpse-toggle-label input:checked + .hpse-switch { background: var(--accent, #ea580c); }
+  .hpse-toggle-label input:checked + .hpse-switch::after { transform: translateX(14px); }
+
+  .hpse-acc-trigger {
+    background: transparent;
+    border: none;
+    color: #e5e7eb;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    height: 100%;
+  }
+  .hpse-acc-title {
+    font-family: inherit;
+    font-size: 0.85rem !important;
+    font-weight: 600;
+    color: #e5e7eb;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+  .hpse-acc-arrow {
+    font-size: 1.1rem;
+    color: #9ca3af;
+    transition: transform 0.2s ease;
+    line-height: 1;
+  }
+  .hpse-acc-item.is-expanded .hpse-acc-arrow {
+    transform: rotate(90deg);
+    color: var(--accent-light, #ea580c);
+  }
+
+  .hpse-acc-content {
+    padding: 12px 14px 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .hpse-sub-help { font-size: 0.75rem; color: #9ca3af; margin: 0; }
+
+  .hpse-fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .hpse-field { display: flex; flex-direction: column; gap: 5px; }
+  .hpse-field-label { font-size: 0.75rem; font-weight: 600; color: #d1d5db; }
+  .hpse-select {
+    background: #1f2937;
+    color: #f3f4f6;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    outline: none;
+    width: 100%;
+  }
+  .hpse-select:focus { border-color: var(--accent, #ea580c); }
+
+  /* Actions */
+  .hpse-action-row { display: flex; gap: 8px; }
+  .hpse-btn-sm {
+    padding: 0 12px !important;
+    font-size: 0.76rem !important;
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    color: #e5e7eb !important;
+    line-height: normal !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+  .hpse-btn-sm:hover { border-color: var(--accent, #ea580c); color: #fff; }
+  .hpse-text-btn { background: transparent; border: none; color: var(--accent-light, #ea580c); font-size: 0.72rem; font-weight: 600; cursor: pointer; padding: 0; }
+  .hpse-text-btn:hover { text-decoration: underline; }
+  .hpse-feedback { font-size: 0.72rem; color: #10b981; margin: 4px 0 0; min-height: 1rem; }
+
+  /* Ausblendungen */
+  :global([data-hpse-hidden="true"]) { display: none !important; }
+  :global(.nav-ul a[data-hpse-nav-hidden="true"]) { display: none !important; }
+
+  /* Wenn eine Sektion zur obersten sichtbaren Sektion wird (z. B. wenn Hero & Countdown aus sind):
+     bündig unter der fixierten Navigation platzieren und Inhalt vertikal mittig zentrieren */
+  :global(#main > section.hpse-first-visible) {
+    padding-top: var(--nav-h) !important;
+    height: 100dvh !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+  :global(#main > section.hpse-first-visible > .wrap) {
+    margin-block: auto !important;
+    flex: 0 1 auto !important;
+  }
+
+  /* ═══ Headlines dynamisch nach Modus (Solo / Duo / Team) ═══ */
+  :global(body.hpse-about-solo #about .about-headline-solo),
+  :global(body.hpse-about-solo #about .about-subline-solo) {
+    display: block !important;
+  }
+  :global(body.hpse-about-solo #about .about-headline-duo),
+  :global(body.hpse-about-solo #about .about-subline-duo),
+  :global(body.hpse-about-solo #about .about-headline-team),
+  :global(body.hpse-about-solo #about .about-subline-team) {
+    display: none !important;
+  }
+
+  :global(body.hpse-about-team #about .about-headline-team),
+  :global(body.hpse-about-team #about .about-subline-team) {
+    display: block !important;
+  }
+  :global(body.hpse-about-team #about .about-headline-duo),
+  :global(body.hpse-about-team #about .about-subline-duo),
+  :global(body.hpse-about-team #about .about-headline-solo),
+  :global(body.hpse-about-team #about .about-subline-solo) {
+    display: none !important;
+  }
+
+  :global(body.hpse-about-duo #about .about-headline-duo),
+  :global(body.hpse-about-duo #about .about-subline-duo) {
+    display: block !important;
+  }
+  :global(body.hpse-about-duo #about .about-headline-solo),
+  :global(body.hpse-about-duo #about .about-subline-solo),
+  :global(body.hpse-about-duo #about .about-headline-team),
+  :global(body.hpse-about-duo #about .about-subline-team) {
+    display: none !important;
+  }
+
+  /* ═══ 1 Person (Solo) sauber zentriert & großzügig proportional abschließend ═══ */
+  :global(body.hpse-about-solo #about-default-grid) {
+    display: flex !important;
+    justify-content: center !important;
+    max-width: 980px !important;
+    margin-inline: auto !important;
+  }
+  :global(body.hpse-about-solo #about-default-grid .acard:nth-child(n+2)) {
+    display: none !important;
+  }
+  :global(body.hpse-about-solo #about-default-grid .acard) {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    max-width: 980px !important;
+    height: 640px !important;
+    min-height: 640px !important;
+    background: var(--bg-card) !important;
+    border-radius: var(--r-lg) !important;
+    overflow: hidden !important;
+  }
+  :global(body.hpse-about-solo #about-default-grid .aphoto) {
+    flex: 0 0 540px !important;
+    width: 540px !important;
+    height: 100% !important;
+    min-height: 640px !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  /* ═══ 2 Personen (Duo) harmonisiert auf 640px Kachelhöhe ═══ */
+  :global(body.hpse-about-duo #about-default-grid) {
+    max-height: 640px !important;
+  }
+  :global(body.hpse-about-duo #about-default-grid .acard) {
+    height: 640px !important;
+    max-height: 640px !important;
+  }
+  :global(body.hpse-about-solo #about-default-grid .aphoto img) {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center 20% !important;
+    display: block !important;
+  }
+  :global(body.hpse-about-solo #about-default-grid .abody) {
+    padding: 3rem 2.5rem !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+  :global(body.hpse-about-solo #about-default-grid .aname) {
+    font-size: clamp(1.8rem, 2.5vw, 2.4rem) !important;
+    margin-bottom: 0.35rem !important;
+  }
+  :global(body.hpse-about-solo #about-default-grid .arole) {
+    font-size: var(--fs-md) !important;
+    margin-bottom: 1.25rem !important;
+  }
+  :global(body.hpse-about-solo #about-default-grid .atext) {
+    font-size: var(--fs-md) !important;
+    line-height: 1.65 !important;
+  }
+  @media (max-width: 760px) {
+    :global(body.hpse-about-solo #about-default-grid .acard) { flex-direction: column !important; height: auto !important; min-height: 0 !important; }
+    :global(body.hpse-about-solo #about-default-grid .aphoto) { flex: 0 0 auto !important; width: 100% !important; height: auto !important; min-height: 0 !important; aspect-ratio: 1 / 1 !important; }
+  }
+
+  /* ═══ Team-Modus: feste Header-Position & dynamische Kachelgrößen je Personenzahl ═══ */
+  :global(body.hpse-about-team #about-default-grid) { display: none !important; }
+  :global(body.hpse-about-team #about) {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding-top: var(--nav-h) !important;
+    padding-bottom: 1.5rem !important;
+    justify-content: flex-start !important;
+    box-sizing: border-box !important;
+  }
+  :global(body.hpse-about-team #about > .wrap) {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+    margin-block: 0 !important;
+    justify-content: flex-start !important;
+  }
+  :global(body.hpse-about-team #about .section-hd) {
+    flex-shrink: 0 !important;
+    margin-bottom: 0.75rem !important;
+  }
+  :global(body.hpse-about-team #about #about-dept-filters) {
+    display: flex !important;
+    flex-shrink: 0 !important;
+    margin-bottom: 1.25rem !important;
+  }
+  :global(body.hpse-about-team #about-team-carousel) {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    flex: 1 !important;
+    min-height: 0 !important;
+  }
+
+  :global(.about-depts) {
+    display: none !important;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  :global(body.hpse-about-team .about-depts) {
+    display: flex !important;
+  }
+  :global(.about-dept-btn) {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: var(--cream);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: var(--fs-sm) !important;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  :global(.about-dept-btn:hover) {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  :global(.about-dept-btn.is-active) {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--white);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+
+  :global(.about-team-carousel) {
+    position: relative;
+    padding-inline: 48px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow: visible;
+  }
+  :global(.about-team-track) {
+    display: grid;
+    grid-template-rows: repeat(2, 310px);
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 2 * 1.25rem) / 3);
+    gap: 1.25rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-block: 8px;
+  }
+  /* 1 Person im Team: Exakt wie Single (großformatig, Foto links 540px, Text rechts zentriert) */
+  :global(.about-team-track[data-visible-count="1"]) {
+    grid-template-rows: 1fr !important;
+    grid-template-columns: 1fr !important;
+    grid-auto-flow: row !important;
+    grid-auto-columns: unset !important;
+    max-width: 980px !important;
+    margin-inline: auto !important;
+  }
+  :global(.about-team-track[data-visible-count="1"] .team-card) {
+    height: 640px !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+  }
+  :global(#about .about-team-track[data-visible-count="1"] .team-card .aphoto) {
+    flex: 0 0 540px !important;
+    width: 540px !important;
+    height: 100% !important;
+    border-top-left-radius: inherit !important;
+    border-bottom-left-radius: inherit !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  :global(#about .about-team-track[data-visible-count="1"] .team-card .abody) {
+    padding: 3rem 2.5rem !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    border-top-right-radius: inherit !important;
+    border-bottom-right-radius: inherit !important;
+    border-bottom-left-radius: 0 !important;
+  }
+  :global(.about-team-track[data-visible-count="1"] .aname) {
+    font-size: clamp(1.8rem, 2.5vw, 2.4rem) !important;
+    margin-bottom: 0.35rem !important;
+  }
+  :global(.about-team-track[data-visible-count="1"] .arole) {
+    font-size: var(--fs-md) !important;
+    margin-bottom: 1.25rem !important;
+  }
+  :global(.about-team-track[data-visible-count="1"] .atext) {
+    font-size: var(--fs-md) !important;
+    line-height: 1.65 !important;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+  }
+
+  /* 2 Personen im Team: Exakt wie Duo (2 Spalten, Foto oben, Text unten) */
+  :global(.about-team-track[data-visible-count="2"]) {
+    grid-template-rows: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-auto-flow: row !important;
+    grid-auto-columns: unset !important;
+    max-width: 100% !important;
+  }
+  :global(.about-team-track[data-visible-count="2"] .team-card) {
+    height: 640px !important;
+    flex-direction: column !important;
+  }
+  :global(#about .about-team-track[data-visible-count="2"] .team-card .aphoto) {
+    flex: 1 1 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    aspect-ratio: unset !important;
+    border-top-left-radius: inherit !important;
+    border-top-right-radius: inherit !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  :global(#about .about-team-track[data-visible-count="2"] .team-card .abody) {
+    flex: 0 0 auto !important;
+    padding: 1.1rem 1.4rem 1.4rem !important;
+    border-bottom-left-radius: inherit !important;
+    border-bottom-right-radius: inherit !important;
+    border-top-right-radius: 0 !important;
+    border-top-left-radius: 0 !important;
+  }
+  :global(.about-team-track[data-visible-count="2"] .aname) {
+    font-size: var(--fs-lg) !important;
+  }
+  :global(.about-team-track[data-visible-count="2"] .arole) {
+    font-size: var(--fs-base) !important;
+  }
+  :global(.about-team-track[data-visible-count="2"] .atext) {
+    font-size: var(--fs-base) !important;
+    line-height: 1.5 !important;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+  }
+
+  /* 3 Personen: 3 Spalten nebeneinander, Side-by-Side Split wie alle Teamkacheln */
+  :global(.about-team-track[data-visible-count="3"]) {
+    grid-template-rows: 1fr !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    grid-auto-flow: row !important;
+    grid-auto-columns: unset !important;
+  }
+  :global(.about-team-track[data-visible-count="3"] .team-card) {
+    height: 640px !important;
+    flex-direction: row !important;
+  }
+  :global(#about .about-team-track[data-visible-count="3"] .team-card .aphoto) {
+    flex: 0 0 44% !important;
+    width: 44% !important;
+    height: 100% !important;
+    border-top-left-radius: inherit !important;
+    border-bottom-left-radius: inherit !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  :global(#about .about-team-track[data-visible-count="3"] .team-card .abody) {
+    padding: 1.25rem 1.15rem !important;
+    border-top-right-radius: inherit !important;
+    border-bottom-right-radius: inherit !important;
+    border-bottom-left-radius: 0 !important;
+  }
+
+  /* 4 Personen: 2×2 Raster, füllt die Seite komplett aus */
+  :global(.about-team-track[data-visible-count="4"]) {
+    grid-template-rows: repeat(2, 310px) !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-auto-flow: row !important;
+    grid-auto-columns: unset !important;
+    gap: 20px !important;
+    height: 640px !important;
+  }
+  :global(.about-team-track[data-visible-count="4"] .team-card) {
+    height: 310px !important;
+  }
+  :global(.about-team-track[data-visible-count="4"] .aphoto) {
+    flex: 0 0 185px !important;
+    width: 185px !important;
+  }
+
+  /* 5 & 6 Personen: 2 Reihen × 3 Spalten, füllt die Seite komplett aus */
+  :global(.about-team-track[data-visible-count="5"]),
+  :global(.about-team-track[data-visible-count="6"]) {
+    grid-template-rows: repeat(2, 310px) !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    grid-auto-flow: row !important;
+    grid-auto-columns: unset !important;
+    gap: 20px !important;
+    height: 640px !important;
+  }
+  :global(.about-team-track[data-visible-count="5"] .team-card),
+  :global(.about-team-track[data-visible-count="6"] .team-card) {
+    height: 310px !important;
+  }
+  :global(.about-team-track[data-visible-count="5"] .aphoto),
+  :global(.about-team-track[data-visible-count="6"] .aphoto) {
+    flex: 0 0 145px !important;
+    width: 145px !important;
+  }
+  :global(.about-team-track::-webkit-scrollbar) { display: none; }
+  :global(.team-card) {
+    scroll-snap-align: start;
+    min-width: 0;
+    display: flex;
+    flex-direction: row;
+    height: 310px;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    transform: translateZ(0);
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    border: 1px solid var(--border-subtle);
+  }
+  :global(#about .team-card .aphoto) {
+    flex: 0 0 42% !important;
+    width: 42% !important;
+    height: 100% !important;
+    aspect-ratio: unset !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    border-top-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+    overflow: hidden;
+  }
+  :global(#about .about-team-track[data-visible-count="4"] .team-card .aphoto) {
+    flex: 0 0 185px !important;
+    width: 185px !important;
+  }
+  :global(#about .about-team-track[data-visible-count="5"] .team-card .aphoto),
+  :global(#about .about-team-track[data-visible-count="6"] .team-card .aphoto) {
+    flex: 0 0 145px !important;
+    width: 145px !important;
+  }
+  :global(.team-card .abody) {
+    padding: 0.85rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    border-top-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+  }
+  :global(.team-card .aname) {
+    font-size: 1.18rem !important;
+    line-height: 1.25 !important;
+    margin-bottom: 2px;
+  }
+  :global(.team-card .arole) {
+    font-size: 0.78rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 5px;
+  }
+  :global(.team-card .atext) {
+    font-size: 0.86rem !important;
+    line-height: 1.45 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  :global(.team-dept-tag) {
+    font-size: 0.72rem !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-light);
+    margin-bottom: 2px;
+  }
+  :global(.about-team-nav) {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    z-index: 5;
+    transition: background 0.2s, transform 0.2s;
+  }
+  :global(.about-team-nav:hover) {
+    background: var(--accent-light);
+    transform: translateY(-50%) scale(1.08);
+  }
+  :global(.about-team-nav--prev) { left: 0; }
+  :global(.about-team-nav--next) { right: 0; }
+  @media (max-width: 900px) {
+    :global(.about-team-track) {
+      grid-auto-columns: calc((100% - 1.25rem) / 2);
+    }
+  }
+  @media (max-width: 640px) {
+    :global(.about-team-track) {
+      grid-auto-columns: 85%;
+    }
+    :global(.about-team-carousel) {
+      padding-inline: 0;
+    }
+    :global(.about-team-nav) {
+      display: none;
+    }
+  }
+
+  /* ═══ Varianten-Overrides: Leistungen (Spalten & Zeilen) ═══ */
+  :global(body.hpse-srv-cols-2 #services .srv-grid) {
+    grid-template-columns: repeat(2, 1fr) !important;
+    max-width: 900px !important;
+    margin-inline: auto !important;
+  }
+  :global(body.hpse-srv-cols-3 #services .srv-grid) {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  :global(body.hpse-srv-cols-4 #services .srv-grid) {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  /* 1 Zeile: Zeilenanzahl im Grid und Limitierung */
+  :global(body.hpse-srv-rows-1 #services .srv-grid) {
+    grid-template-rows: 1fr !important;
+  }
+  :global(body.hpse-srv-rows-1 #services .scard:nth-child(n+3)) {
+    display: none !important;
+  }
+  :global(body.hpse-srv-cols-3.hpse-srv-rows-1 #services .scard:nth-child(n+4)) {
+    display: none !important;
+  }
+  :global(body.hpse-srv-cols-4.hpse-srv-rows-1 #services .scard:nth-child(n+5)) {
+    display: none !important;
+  }
+
+  /* 2 Zeilen */
+  :global(body.hpse-srv-rows-2 #services .srv-grid) {
+    grid-template-rows: 1fr 1fr !important;
+  }
+  :global(body.hpse-srv-cols-2.hpse-srv-rows-2 #services .scard:nth-child(n+5)) {
+    display: none !important;
+  }
+  :global(body.hpse-srv-cols-3.hpse-srv-rows-2 #services .scard:nth-child(n+7)) {
+    display: none !important;
+  }
+  :global(body.hpse-srv-cols-4.hpse-srv-rows-2 #services .scard:nth-child(n+9)) {
+    display: none !important;
+  }
+
+  /* 3 Zeilen */
+  :global(body.hpse-srv-rows-3 #services .srv-grid) {
+    grid-template-rows: 1fr 1fr 1fr !important;
+  }
+  :global(body.hpse-srv-cols-2.hpse-srv-rows-3 #services .scard:nth-child(n+7)) {
+    display: none !important;
+  }
+  :global(body.hpse-srv-cols-3.hpse-srv-rows-3 #services .scard:nth-child(n+10)) {
+    display: none !important;
+  }
+  :global(body.hpse-srv-cols-4.hpse-srv-rows-3 #services .scard:nth-child(n+13)) {
+    display: none !important;
+  }
+  :global(#services .scard) {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 190px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* ═══ Varianten-Overrides: Galerie Raster & Zeilen ═══ */
+  :global(body.hpse-gal-grid #gallery .gallery-grid) {
+    display: grid !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    scroll-snap-type: none !important;
+  }
+  :global(body.hpse-gal-grid #gallery .gallery-nav) {
+    display: none !important;
+  }
+  :global(body.hpse-gal-grid.hpse-gal-cols-2 #gallery .gallery-grid) {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1.25rem !important;
+    max-width: 900px !important;
+    margin-inline: auto !important;
+  }
+  :global(body.hpse-gal-grid.hpse-gal-cols-3 #gallery .gallery-grid) {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 1.25rem !important;
+  }
+  :global(body.hpse-gal-grid.hpse-gal-cols-4 #gallery .gallery-grid) {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 1rem !important;
+  }
+  :global(body.hpse-gal-grid #gallery .gallery-item) {
+    width: auto !important;
+    flex: unset !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+  }
+  :global(body.hpse-gal-grid #gallery .gallery-img) {
+    aspect-ratio: 4/3 !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+  :global(body.hpse-gal-grid #gallery .gallery-img img) {
+    position: static !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Zeilen-Begrenzung Galerie Raster */
+  :global(body.hpse-gal-grid.hpse-gal-cols-2.hpse-gal-rows-1 #gallery .gallery-item:nth-child(n+3)),
+  :global(body.hpse-gal-grid.hpse-gal-cols-3.hpse-gal-rows-1 #gallery .gallery-item:nth-child(n+4)),
+  :global(body.hpse-gal-grid.hpse-gal-cols-4.hpse-gal-rows-1 #gallery .gallery-item:nth-child(n+5)),
+  :global(body.hpse-gal-grid.hpse-gal-cols-2.hpse-gal-rows-2 #gallery .gallery-item:nth-child(n+5)),
+  :global(body.hpse-gal-grid.hpse-gal-cols-3.hpse-gal-rows-2 #gallery .gallery-item:nth-child(n+7)),
+  :global(body.hpse-gal-grid.hpse-gal-cols-4.hpse-gal-rows-2 #gallery .gallery-item:nth-child(n+9)),
+  :global(body.hpse-gal-grid.hpse-gal-cols-2.hpse-gal-rows-3 #gallery .gallery-item:nth-child(n+7)),
+  :global(body.hpse-gal-grid.hpse-gal-cols-3.hpse-gal-rows-3 #gallery .gallery-item:nth-child(n+10)),
+  :global(body.hpse-gal-grid.hpse-gal-cols-4.hpse-gal-rows-3 #gallery .gallery-item:nth-child(n+13)) {
+    display: none !important;
+  }
+
+  :global(#gallery .gallery-carousel) {
+    position: relative;
+    padding-inline: 48px !important;
+    overflow: visible !important;
+  }
+  :global(#gallery .gallery-grid) {
+    overflow-y: visible !important;
+  }
+  :global(#reviews .reviews-carousel) {
+    position: relative;
+    padding-inline: 48px !important;
+    overflow: visible !important;
+  }
+  :global(#reviews .reviews-grid) {
+    overflow-y: visible !important;
+  }
+  :global(#gallery .gallery-nav) {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 10 !important;
+  }
+  :global(#gallery .gallery-nav--prev) { left: 0 !important; }
+  :global(#gallery .gallery-nav--next) { right: 0 !important; }
+  @media (max-width: 768px) {
+    :global(#gallery .gallery-carousel) { padding-inline: 0 !important; }
+    :global(#gallery .gallery-nav) { display: none !important; }
+  }
+</style>
+
+<script is:inline>
+(() => {
+  const STORAGE_KEY = 'hpse_editor_accordion_v3';
+  const fab = document.getElementById('hpse-editor-toggle');
+  const drawer = document.getElementById('hpse-drawer');
+  const closeBtn = document.getElementById('hpse-drawer-close');
+  const accordion = document.getElementById('hpse-accordion');
+  const resetBtn = document.getElementById('hpse-reset-btn');
+  const sectionsResetBtn = document.getElementById('hpse-sections-reset');
+  const exportBtn = document.getElementById('hpse-export-btn');
+  const feedback = document.getElementById('hpse-export-feedback');
+
+  const aboutSelect = document.getElementById('hpse-var-about');
+  const srvColsSelect = document.getElementById('hpse-var-services-cols');
+  const srvRowsSelect = document.getElementById('hpse-var-services-rows');
+  const galModeSelect = document.getElementById('hpse-var-gallery-mode');
+  const galColsSelect = document.getElementById('hpse-var-gallery-cols');
+  const galRowsSelect = document.getElementById('hpse-var-gallery-rows');
+  const galGridOpts = document.getElementById('hpse-gallery-grid-opts');
+
+  if (!fab || !drawer) return;
+
+  const defaultState = {
+    sections: {
+      countdown: true,
+      hero: true,
+      about: true,
+      services: true,
+      gallery: true,
+      pricing: true,
+      reviews: true,
+      booking: true,
+      sponsors: true,
+      contact: true,
+      footer: true,
+    },
+    variants: {
+      about: 'duo',
+      servicesCols: '3',
+      servicesRows: '2',
+      galleryMode: 'carousel',
+      galleryCols: '3',
+      galleryRows: '2'
+    }
+  };
+
+  let state = { ...defaultState };
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      state.sections = { ...defaultState.sections, ...(parsed.sections || {}) };
+      state.variants = { ...defaultState.variants, ...(parsed.variants || {}) };
+    }
+  } catch (e) {}
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+  }
+
+  function setOpen(open) {
+    drawer.hidden = !open;
+    fab.setAttribute('aria-expanded', String(open));
+    if (open) {
+      requestAnimationFrame(() => drawer.classList.add('is-open'));
+    } else {
+      drawer.classList.remove('is-open');
+      setTimeout(() => { if (!drawer.classList.contains('is-open')) drawer.hidden = true; }, 320);
+    }
+  }
+
+  fab.addEventListener('click', () => setOpen(!drawer.classList.contains('is-open')));
+  closeBtn?.addEventListener('click', () => setOpen(false));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('is-open')) setOpen(false);
+    if (e.altKey && (e.key === 'e' || e.key === 'E')) {
+      e.preventDefault();
+      setOpen(!drawer.classList.contains('is-open'));
+    }
+  });
+
+  function scrollToSection(secId) {
+    if (!secId) return;
+    let targetEl = null;
+    if (secId === 'hero' || secId === 'countdown') {
+      targetEl = document.querySelector('.hero-snap') || document.getElementById(secId);
+    } else if (secId === 'contact' || secId === 'footer') {
+      targetEl = document.getElementById(secId) || document.querySelector('.contact-footer-snap');
+    } else {
+      targetEl = document.getElementById(secId);
+    }
+    if (!targetEl) return;
+
+    if (typeof window.__HPSE_SCROLL_TO__ === 'function') {
+      window.__HPSE_SCROLL_TO__(targetEl);
+    } else {
+      const navEl = document.querySelector('.nav') || document.getElementById('nav');
+      const navH = navEl ? navEl.offsetHeight : 72;
+      const targetY = Math.max(0, targetEl.offsetTop - navH);
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+  }
+
+  // Accordion Toggle
+  accordion?.querySelectorAll('.hpse-acc-trigger').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const item = trigger.closest('.hpse-acc-item');
+      const content = item?.querySelector('.hpse-acc-content');
+      const isExpanded = item.classList.contains('is-expanded');
+      const willExpand = !isExpanded;
+      
+      item.classList.toggle('is-expanded', willExpand);
+      trigger.setAttribute('aria-expanded', String(willExpand));
+      if (content) content.hidden = !willExpand;
+
+      // Beim Aufklappen: Seite automatisch zum Zielbereich scrollen
+      if (willExpand) {
+        const secId = item.getAttribute('data-acc-id');
+        scrollToSection(secId);
+      }
+    });
+  });
+
+  function applyState() {
+    // 1. Toggles anwenden
+    Object.entries(state.sections).forEach(([id, enabled]) => {
+      if (id === 'countdown') {
+        const cd = document.getElementById('countdown');
+        if (cd) {
+          cd.setAttribute('data-hpse-hidden', String(!enabled));
+          if (!enabled) document.documentElement.style.setProperty('--cd-h', '0px');
+          else document.documentElement.style.setProperty('--cd-h', (cd.offsetHeight || 96) + 'px');
+        }
+      } else if (id === 'hero') {
+        const h = document.getElementById('hero');
+        if (h) h.setAttribute('data-hpse-hidden', String(!enabled));
+      } else if (id === 'footer') {
+        const ft = document.querySelector('footer');
+        if (ft) ft.setAttribute('data-hpse-hidden', String(!enabled));
+      } else {
+        const el = document.getElementById(id);
+        if (el) el.setAttribute('data-hpse-hidden', String(!enabled));
+      }
+
+      const navLink = document.querySelector(`.nav-ul a[href="#${id}"]`);
+      if (navLink) {
+        navLink.setAttribute('data-hpse-nav-hidden', String(!enabled));
+        if (navLink.parentElement) {
+          navLink.parentElement.style.display = enabled ? '' : 'none';
+        }
+      }
+
+      const cb = accordion?.querySelector(`input[data-section="${id}"]`);
+      if (cb) cb.checked = !!enabled;
+    });
+
+    // Snap container checks
+    const heroSnap = document.querySelector('.hero-snap');
+    if (heroSnap) {
+      const heroOn = state.sections.hero !== false;
+      const cdOn = state.sections.countdown !== false && !!document.getElementById('countdown');
+      const isHeroHidden = !heroOn && !cdOn;
+      heroSnap.setAttribute('data-hpse-hidden', String(isHeroHidden));
+    }
+
+    const cfSnap = document.querySelector('.contact-footer-snap');
+    if (cfSnap) {
+      const contactOn = state.sections.contact !== false;
+      const footerOn = state.sections.footer !== false;
+      // Wenn Kontakt abgewählt ist, darf der 100vh-Snap-Container nicht als leerer Kasten stehen bleiben
+      cfSnap.setAttribute('data-hpse-hidden', String(!contactOn));
+    }
+
+    // Markierung der ersten sichtbaren Sektion für perfekten Abstand unter fixer Nav
+    const allSections = [...document.querySelectorAll('#main > section')];
+    allSections.forEach(s => s.classList.remove('hpse-first-visible'));
+    const heroSnapHidden = heroSnap && heroSnap.getAttribute('data-hpse-hidden') === 'true';
+    if (heroSnapHidden) {
+      const firstVis = allSections.find(s => s.getAttribute('data-hpse-hidden') !== 'true');
+      if (firstVis) firstVis.classList.add('hpse-first-visible');
+    }
+
+    // 2. Varianten anwenden
+    document.body.classList.remove('hpse-about-solo', 'hpse-about-duo', 'hpse-about-team');
+    document.body.classList.add(`hpse-about-${state.variants.about || 'duo'}`);
+    if (aboutSelect) aboutSelect.value = state.variants.about || 'duo';
+
+    // Leistungen Spalten & Zeilen
+    const sCols = state.variants.servicesCols || '3';
+    const sRows = state.variants.servicesRows || '2';
+    document.body.classList.remove('hpse-srv-cols-2', 'hpse-srv-cols-3', 'hpse-srv-cols-4');
+    document.body.classList.add(`hpse-srv-cols-${sCols}`);
+    document.body.classList.remove('hpse-srv-rows-1', 'hpse-srv-rows-2', 'hpse-srv-rows-3');
+    document.body.classList.add(`hpse-srv-rows-${sRows}`);
+    if (srvColsSelect) srvColsSelect.value = sCols;
+    if (srvRowsSelect) srvRowsSelect.value = sRows;
+
+    // Galerie Darstellungsart, Spalten & Zeilen
+    const gMode = state.variants.galleryMode || 'carousel';
+    const gCols = state.variants.galleryCols || '3';
+    const gRows = state.variants.galleryRows || '2';
+    document.body.classList.toggle('hpse-gal-grid', gMode === 'grid');
+    if (galModeSelect) galModeSelect.value = gMode;
+    if (galGridOpts) galGridOpts.hidden = gMode !== 'grid';
+
+    document.body.classList.remove('hpse-gal-cols-2', 'hpse-gal-cols-3', 'hpse-gal-cols-4');
+    document.body.classList.add(`hpse-gal-cols-${gCols}`);
+    document.body.classList.remove('hpse-gal-rows-1', 'hpse-gal-rows-2', 'hpse-gal-rows-3', 'hpse-gal-rows-all');
+    document.body.classList.add(`hpse-gal-rows-${gRows}`);
+    if (galColsSelect) galColsSelect.value = gCols;
+    if (galRowsSelect) galRowsSelect.value = gRows;
+  }
+
+  aboutSelect?.addEventListener('change', (e) => {
+    state.variants.about = e.target.value;
+    saveState();
+    applyState();
+  });
+  srvColsSelect?.addEventListener('change', (e) => {
+    state.variants.servicesCols = e.target.value;
+    saveState();
+    applyState();
+  });
+  srvRowsSelect?.addEventListener('change', (e) => {
+    state.variants.servicesRows = e.target.value;
+    saveState();
+    applyState();
+  });
+  galModeSelect?.addEventListener('change', (e) => {
+    state.variants.galleryMode = e.target.value;
+    saveState();
+    applyState();
+  });
+  galColsSelect?.addEventListener('change', (e) => {
+    state.variants.galleryCols = e.target.value;
+    saveState();
+    applyState();
+  });
+  galRowsSelect?.addEventListener('change', (e) => {
+    state.variants.galleryRows = e.target.value;
+    saveState();
+    applyState();
+  });
+
+  accordion?.addEventListener('change', (e) => {
+    const target = e.target;
+    if (target && target.matches('input[data-section]')) {
+      const secKey = target.getAttribute('data-section');
+      state.sections[secKey] = target.checked;
+      saveState();
+      applyState();
+      // Beim Anschalten eines Bereiches sofort dorthin scrollen/fokussieren
+      if (target.checked) {
+        scrollToSection(secKey);
+      }
+    }
+  });
+
+  sectionsResetBtn?.addEventListener('click', () => {
+    Object.keys(state.sections).forEach(k => state.sections[k] = true);
+    saveState();
+    applyState();
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    state = JSON.parse(JSON.stringify(defaultState));
+    saveState();
+    applyState();
+    if (feedback) {
+      feedback.textContent = 'Auf Standardwerte zurückgesetzt!';
+      setTimeout(() => feedback.textContent = '', 2500);
+    }
+  });
+
+  exportBtn?.addEventListener('click', () => {
+    const jsonStr = JSON.stringify(state, null, 2);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(jsonStr).then(() => {
+        if (feedback) {
+          feedback.textContent = 'Konfiguration kopiert!';
+          setTimeout(() => feedback.textContent = '', 3000);
+        }
+      });
+    } else {
+      prompt('Konfiguration kopieren:', jsonStr);
+    }
+  });
+
+  applyState();
+})();
+</script>

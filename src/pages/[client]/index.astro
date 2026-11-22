@@ -1,0 +1,112 @@
+---
+/* Kunden-Vorschau-Route (/ajs, /glowgiver).
+   Profile + Hashes stammen aus config/clients.json (keine Klartext-Passwörter).
+   Seiten sind per robots "noindex, nofollow" von der Indexierung ausgeschlossen
+   und liegen hinter dem ClientGate-Passwort-Overlay. */
+import clientsConfig from '../../../config/clients.json';
+import metaConfig from '../../../config/meta.json';
+import Base from '../../layouts/Base.astro';
+import ClientGate from '../../components/ClientGate.astro';
+
+export function getStaticPaths() {
+  /* Dedizierte Routen (z. B. /ajs.astro mit eigenem AJS-Auftritt) haben Vorrang:
+     der dynamische [client]-Platzhalter generiert sie nicht, um Duplikate zu vermeiden.
+     (Inline-Konstante: getStaticPaths wird isoliert gebündelt und sieht kein Modul-Scope.) */
+  const dedicated = new Set(['ajs']);
+  return (clientsConfig.clients ?? [])
+    .filter((c) => !dedicated.has(c.route))
+    .map((c) => ({
+      params: { client: c.route },
+      props: { profile: c },
+    }));
+}
+
+const { profile } = Astro.props;
+const { meta, theme } = metaConfig;
+---
+
+<Base
+  meta={{
+    siteName: `${profile.label} — Kunden-Vorschau`,
+    description: 'Geschützte Kunden-Vorschau. Hier entsteht die neue Website.',
+  }}
+  theme={theme}
+  robots="noindex, nofollow"
+>
+  <ClientGate clientId={profile.id} passHashSha256={profile.passHashSha256}>
+    <main id="main">
+      <section class="client-hero">
+        <div class="wrap client-hero-inner">
+          <p class="client-badge">Kunden-Vorschau</p>
+          <h1 class="client-hero-title">{profile.label}</h1>
+          <p class="client-hero-sub">Hier entsteht in K&uuml;rze die neue Website von {profile.label}.</p>
+          <p class="client-hero-status">
+            Status: in Arbeit &mdash; bei Fragen einfach melden unter
+            <a href={`mailto:${meta.email}`}>{meta.email}</a>.
+          </p>
+          <p class="client-hero-actions">
+            <a class="btn btn-fill" href={`mailto:${meta.email}?subject=Vorschau%20${profile.label}`}>Kontakt aufnehmen</a>
+            <a class="btn btn-outline" href="/">Zur&uuml;ck zur Startseite</a>
+          </p>
+        </div>
+      </section>
+    </main>
+  </ClientGate>
+</Base>
+
+<style>
+  .client-hero {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: var(--nav-h);
+    box-sizing: border-box;
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .client-hero-inner {
+    max-width: 42rem;
+  }
+  .client-badge {
+    display: inline-block;
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-card);
+    border-radius: var(--r-pill);
+    padding: 0.4rem 1rem;
+    margin: 0 0 1rem;
+  }
+  .client-hero-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    color: var(--cream);
+    margin: 0 0 0.75rem;
+  }
+  .client-hero-sub {
+    font-size: var(--fs-md);
+    color: var(--text-soft);
+    margin: 0 0 1rem;
+  }
+  .client-hero-status {
+    font-size: var(--fs-base);
+    color: var(--text-softer);
+    margin: 0 0 1.75rem;
+  }
+  .client-hero-status a {
+    color: var(--accent-light);
+  }
+  .client-hero-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0;
+  }
+</style>
