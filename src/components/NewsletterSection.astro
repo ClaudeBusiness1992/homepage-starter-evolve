@@ -9,7 +9,7 @@ const isEnabled = isSectionEnabled('newsletter');
     <div class="wrap">
       <div class="newsletter-box">
         <div class="newsletter-content">
-          <span class="lbl" style="color: #a5b4fc;">Wissen & Neuigkeiten</span>
+          <span class="lbl" style="color: var(--accent-light);">Wissen & Neuigkeiten</span>
           <h2 class="h2" style="margin: 0.5rem 0 1rem; font-size: 2rem;">
             Immer einen Schritt voraus sein
           </h2>
@@ -61,8 +61,9 @@ const isEnabled = isSectionEnabled('newsletter');
 
 <style>
   .newsletter-box {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.08) 100%);
-    border: 1px solid rgba(99, 102, 241, 0.25);
+    background: color-mix(in srgb, var(--cream) 6%, var(--ink));
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+    border-top: 3px solid var(--accent);
     border-radius: 1.5rem;
     padding: 3rem 2.5rem;
     display: grid;
@@ -91,26 +92,26 @@ const isEnabled = isSectionEnabled('newsletter');
     transition: border-color 0.2s;
   }
   .nl-input:focus {
-    border-color: var(--accent, #6366f1);
+    border-color: var(--accent);
   }
   .nl-btn {
     padding: 0.875rem 1.5rem;
-    background: var(--accent, #6366f1);
+    background: var(--accent);
     color: #ffffff;
     border: none;
     border-radius: 0.75rem;
     font-weight: 700;
     font-size: 0.9375rem;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 40%, transparent);
     transition: background 0.2s, transform 0.15s;
     white-space: nowrap;
   }
-  .nl-btn:hover { background: #4f46e5; }
+  .nl-btn:hover { background: color-mix(in srgb, var(--accent) 78%, #000); }
   .nl-btn:active { transform: scale(0.98); }
   .nl-consent {
     font-size: 0.75rem;
-    color: var(--text-muted, #94a3b8);
+    color: color-mix(in srgb, var(--cream) 60%, var(--ink));
     line-height: 1.4;
   }
   .nl-consent-label {
@@ -120,7 +121,7 @@ const isEnabled = isSectionEnabled('newsletter');
     cursor: pointer;
   }
   .nl-consent a {
-    color: #a5b4fc;
+    color: var(--accent-light);
     text-decoration: underline;
   }
   .nl-status-msg {

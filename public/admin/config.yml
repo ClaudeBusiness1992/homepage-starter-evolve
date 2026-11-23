@@ -50,7 +50,7 @@ collections:
               - { label: "Dunkel (Textfarbe)", name: "ink", widget: "string", hint: "Hauptfarbe für Text und dunkle Hintergründe. Farbcode z.B. #1a1a2e = dunkles Blau-Schwarz" }
               - { label: "Hell (Hintergrund)", name: "cream", widget: "string", hint: "Hintergrundfarbe der Website. z.B. #f5f0e8 = warmes Creme-Weiß" }
               - { label: "Akzent (Hauptfarbe)", name: "accent", widget: "string", hint: "Farbe für Buttons und Highlights. z.B. #e8631b = Orange" }
-              - { label: "Akzent Hell (Hover)", name: "accentLight", widget: "string", hint: "Etwas hellere Version der Akzentfarbe, erscheint beim Drüberfahren. z.B. #ff8c42" }
+              - { label: "Highlight Gold", name: "accentLight", widget: "string", hint: "Helle Highlight-Farbe für Labels und Auszeichnungen auf dunklem Grund. z.B. #e2a63b" }
               - { label: "Sekundärfarbe", name: "sage", widget: "string", hint: "Ruhige Zweitfarbe für Badges oder Hintergründe. z.B. #4a7c6f = gedämpftes Grün" }
 
       # ── WEBSITE-INHALTE ──────────────────────────────────────────────
