@@ -20,7 +20,7 @@
     },
     "reviews": {
       "label": "Kundenbewertungen",
-      "headline": "Was unsere Kunden sagen",
+      "headline": "Bewertungen",
       "subline": "Echte Projekte, echte Menschen, echte Ergebnisse.",
       "items": [
         {
@@ -91,7 +91,7 @@
     },
     "gallery": {
       "label": "Unsere Arbeiten",
-      "headline": "Projekte die begeistern",
+      "headline": "Galerie",
       "subline": "Ein Blick auf einige unserer abgeschlossenen Kundenprojekte.",
       "items": [
         {
@@ -196,7 +196,7 @@
       "ctaLabel": "Termin anfragen",
       "liveSync": false,
       "leadDays": 1,
-      "headline": "Wann darf's losgehen?",
+      "headline": "Buchung",
       "subline": "Service, Mitarbeiter:in und Wunschtermin wählen — Bestätigung innerhalb von 24 Stunden.",
       "label": "Termin buchen",
       "emailTo": "termine@beispiel.de",
@@ -260,7 +260,7 @@
     },
     "sponsors": {
       "label": "Unsere Partner",
-      "headline": "Starke Partner an unserer Seite",
+      "headline": "Sponsoren",
       "subline": "Wir arbeiten eng mit führenden Technologie- und Branchenpartnern zusammen.",
       "items": [
         {
