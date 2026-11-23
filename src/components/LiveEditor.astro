@@ -2219,27 +2219,36 @@ const safeTheme = {
     const listEl = document.getElementById('hpse-sort-list');
     if (!listEl) return;
 
-    const curOrder = (state.order || defaultOrder).filter(id => id !== 'countdown' && sectionMeta[id]);
+    let rawOrder = (state.order || defaultOrder).filter(id => id !== 'countdown' && sectionMeta[id]);
+    const middle = rawOrder.filter(id => id !== 'hero' && id !== 'footer');
+    const curOrder = ['hero', ...middle, 'footer'];
 
     listEl.innerHTML = curOrder.map((id, idx) => {
       const meta = sectionMeta[id] || { title: id, icon: '📌' };
       const numStr = String(idx + 1).padStart(2, '0');
-      const isFirst = idx === 0;
-      const isLast = idx === curOrder.length - 1;
+      const isHero = id === 'hero';
+      const isFooter = id === 'footer';
+      const isPinned = isHero || isFooter;
+      const isFirst = idx <= 1;
+      const isLast = idx >= curOrder.length - 2;
       const isEnabled = state.sections[id] !== false;
 
       return `
-        <div class="hpse-sort-card" data-sort-id="${id}" draggable="true">
+        <div class="hpse-sort-card ${isPinned ? 'hpse-sort-card--pinned' : ''}" data-sort-id="${id}" draggable="${!isPinned}">
           <div class="hpse-sort-card-left">
-            <span class="hpse-sort-handle" title="Ziehen zum Verschieben">⠿</span>
+            ${isPinned 
+              ? '<span class="hpse-sort-pin-badge" style="font-size: 0.68rem; font-weight: 700; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #9ca3af;">Fest</span>' 
+              : '<span class="hpse-sort-handle" title="Ziehen zum Verschieben">⠿</span>'}
             <span class="hpse-sort-num">${numStr}</span>
             <span class="hpse-sort-icon">${meta.icon}</span>
-            <span class="hpse-sort-name">${meta.title}</span>
+            <span class="hpse-sort-name">${meta.title} ${isHero ? '(Kopfzeile / Start)' : isFooter ? '(Fußzeile / Ende)' : ''}</span>
             ${!isEnabled ? '<span class="hpse-sort-badge-off">Aus</span>' : ''}
           </div>
           <div class="hpse-sort-card-right">
-            <button type="button" class="hpse-sort-btn hpse-sort-up" data-move-id="${id}" data-dir="up" ${isFirst ? 'disabled' : ''} title="Nach oben">▲</button>
-            <button type="button" class="hpse-sort-btn hpse-sort-down" data-move-id="${id}" data-dir="down" ${isLast ? 'disabled' : ''} title="Nach unten">▼</button>
+            ${isPinned ? '<span style="font-size: 0.72rem; color: #6b7280; font-weight: 600;">' + (isHero ? 'Seite 1' : 'Letzte Seite') + '</span>' : `
+              <button type="button" class="hpse-sort-btn hpse-sort-up" data-move-id="${id}" data-dir="up" ${isFirst ? 'disabled' : ''} title="Nach oben">▲</button>
+              <button type="button" class="hpse-sort-btn hpse-sort-down" data-move-id="${id}" data-dir="down" ${isLast ? 'disabled' : ''} title="Nach unten">▼</button>
+            `}
           </div>
         </div>
       `;
@@ -2581,7 +2590,10 @@ const safeTheme = {
   }
 
   function applyOrder() {
-    const curOrder = (state.order || defaultOrder).filter(id => id !== 'countdown');
+    let rawOrder = (state.order || defaultOrder).filter(id => id !== 'countdown');
+    const middleSections = rawOrder.filter(id => id !== 'hero' && id !== 'footer');
+    const curOrder = ['hero', ...middleSections, 'footer'];
+    state.order = [ ...curOrder ];
 
     // 1. Accordion-Elemente im Editor anordnen
     if (accordion) {
@@ -2597,45 +2609,39 @@ const safeTheme = {
     // 3. Sektionen im Hauptbereich anordnen (#main bzw. .mobile-swipe-track)
     const mainContainer = document.querySelector('.mobile-swipe-track') || document.getElementById('main');
     if (mainContainer) {
-      const movedSnap = new Set();
       const heroSnap = document.querySelector('.hero-snap');
       const cfSnap = document.querySelector('.contact-footer-snap');
 
-      curOrder.forEach(id => {
-        if (id === 'hero') {
-          if (heroSnap && !movedSnap.has(heroSnap)) {
-            mainContainer.appendChild(heroSnap);
-            movedSnap.add(heroSnap);
-          }
-        } else if (id === 'contact' || id === 'footer') {
-          if (cfSnap && !movedSnap.has(cfSnap)) {
-            mainContainer.appendChild(cfSnap);
-            movedSnap.add(cfSnap);
-          }
-          const ct = document.getElementById('contact');
-          const ft = document.querySelector('footer');
-          if (cfSnap && ct && ft) {
-            const ctIdx = curOrder.indexOf('contact');
-            const ftIdx = curOrder.indexOf('footer');
-            if (ftIdx < ctIdx) {
-              cfSnap.prepend(ft);
-            } else {
-              cfSnap.appendChild(ft);
-            }
-          }
-        } else {
-          const sec = document.getElementById(id);
-          if (sec && sec.parentElement === mainContainer) {
-            mainContainer.appendChild(sec);
-          }
-          if (id === 'reviews') {
-            const vrev = document.getElementById('verified-reviews');
-            if (vrev && vrev.parentElement === mainContainer) {
-              mainContainer.appendChild(vrev);
-            }
+      // 1. Hero / Kopfzeile immer fest an erster Position
+      if (heroSnap) {
+        mainContainer.prepend(heroSnap);
+      }
+
+      // 2. Mittlere Inhaltsbereiche in gewünschter Reihenfolge
+      middleSections.forEach(id => {
+        const sec = document.getElementById(id);
+        if (sec && sec.parentElement === mainContainer) {
+          mainContainer.appendChild(sec);
+        }
+        if (id === 'reviews') {
+          const vrev = document.getElementById('verified-reviews');
+          if (vrev && vrev.parentElement === mainContainer) {
+            mainContainer.appendChild(vrev);
           }
         }
       });
+
+      // 3. Fußzeile / Footer immer fest an letzter Position
+      if (cfSnap) {
+        mainContainer.appendChild(cfSnap);
+        const ct = document.getElementById('contact');
+        const ft = document.querySelector('footer');
+        if (ct && ft) {
+          cfSnap.appendChild(ct);
+          cfSnap.appendChild(ft);
+        }
+      }
+    }
 
       // Countdown als modularer Anhang platzieren
       applyCountdown();
