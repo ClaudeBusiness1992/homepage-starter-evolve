@@ -1,0 +1,188 @@
+{
+  "sections": {
+    "hero": {
+      "enabled": true,
+      "label": "Hamburg · Feinkost auf festen Liefertouren",
+      "headline": "Guter Geschmack. Persönlich vorbeigebracht.",
+      "subline": "Feines Fleisch, Garnelen, Geflügel und mehr. Mit Bedacht ausgewählt, fair kalkuliert und morgens frisch für dich eingekauft. Nachmittags schon an deiner Tür. Nur für Mitglieder von AJ's Inner Circle.",
+      "ctaPrimary": "Mitglied werden",
+      "ctaPrimaryHref": "#register",
+      "ctaSecondary": "Einloggen",
+      "ctaSecondaryHref": "#login",
+      "images": [
+        {
+          "src": "/images/hero-1.webp",
+          "alt": "Metzger schneidet ein Tomahawk-Steak auf einem Holzbrett"
+        },
+        {
+          "src": "/images/hero-2.webp",
+          "alt": "Zwei marmorierte Steaks mit Rosmarin und Knoblauch auf dunklem Stein"
+        },
+        {
+          "src": "/images/hero-3.webp",
+          "alt": "Verschiedene rohe Rindfleisch-Zuschnitte mit Gewürzen"
+        }
+      ],
+      "highlights": [
+        {
+          "num": "01",
+          "title": "Persönliche Freigabe",
+          "text": "Jede Registrierung wird von uns geprüft – kein offener Katalog."
+        },
+        {
+          "num": "02",
+          "title": "Feste Stadtteil-Touren",
+          "text": "Lieferung an festgelegten Tagen direkt in deinen Stadtteil."
+        },
+        {
+          "num": "03",
+          "title": "Gewogen vor Ort",
+          "text": "Der Endpreis richtet sich nach dem tatsächlichen Gewicht."
+        }
+      ]
+    },
+    "about": {
+      "enabled": true,
+      "label": "Über uns",
+      "headline": "Hat's geschmeckt?",
+      "subline": "",
+      "intro": "",
+      "tags": [],
+      "members": [
+        {
+          "name": "AJ",
+          "role": "Gründer, ehemaliger Koch und Gastronom",
+          "bio": "Wenn am Tisch alle zufrieden sind, man sich zurücklehnt und denkt „Jo, dat hat schmeckt“, dann hab ich alles richtig gemacht. Genau darum geht’s mir bei AJ’s Inner Circle.\n\nIch bin AJ, ehemaliger Koch und Gastronom. Ich hab viele Jahre in der Küche gestanden und weiß, wie wichtig gute Zutaten sind. Gleichzeitig hab ich mich oft gefragt, warum man im Supermarkt gefühlt immer das Gleiche findet. Gerade bei Fleisch, Garnelen und besonderen Feinkostprodukten wollte ich einfach mehr Auswahl.\n\nAlso hab ich mich auf die Suche gemacht. Nach guten Produkten, vernünftiger Qualität, super Alternativen zum Biofleisch und Preisen, bei denen man nicht gleich schlucken muss. Denn teuer heißt nicht automatisch besser. Mir ist wichtig, dass die Qualität stimmt und der Preis fair bleibt. Für dich genauso wie für mich.\n\nOhne viel Tamtam, ohne unnötigen Schnickschnack. Dafür mit Produkten, hinter denen ich selbst stehen kann. Und das Beste daran? Du bestellst bequem von zu Hause und ich bring dir deine Auswahl direkt nach Hause. Denn am Ende darf Essen auch mal einfach sein.",
+          "photo": "/images/aj.webp"
+        }
+      ]
+    },
+    "services": {
+      "enabled": true,
+      "label": "So funktioniert's",
+      "headline": "Dein Zugang zum Inner Circle",
+      "subline": "Sechs Schritte von der Registrierung bis zur Lieferung vor deine Tür – persönlich betreut, ohne offenen Katalog.",
+      "items": [
+        {
+          "icon": "01",
+          "title": "Registrieren",
+          "text": "Du erstellst kostenlos dein persönliches Kundenkonto.",
+          "image": "/images/schritte/schritt-1.webp"
+        },
+        {
+          "icon": "02",
+          "title": "Freischaltung",
+          "text": "Wir prüfen deine Registrierung persönlich.",
+          "image": "/images/schritte/schritt-2.webp"
+        },
+        {
+          "icon": "03",
+          "title": "Entdecken",
+          "text": "Nach der Freischaltung siehst du unser Sortiment und deine persönlichen Preise.",
+          "image": "/images/schritte/schritt-3.webp"
+        },
+        {
+          "icon": "04",
+          "title": "Vorbestellen",
+          "text": "Du bestellst bequem online für unsere nächste Tour in deinem Stadtteil.",
+          "image": "/images/schritte/schritt-4.webp"
+        },
+        {
+          "icon": "05",
+          "title": "Wir liefern",
+          "text": "Wir bringen deine Bestellung persönlich zu dir.",
+          "image": "/images/schritte/schritt-5.webp"
+        },
+        {
+          "icon": "06",
+          "title": "Wiegen & bezahlen",
+          "text": "Wir wiegen vor Ort, abgerechnet wird nach tatsächlichem Gewicht. Bezahlt wird bequem per Karte.",
+          "image": "/images/schritte/schritt-6.webp"
+        }
+      ]
+    },
+    "stats": {
+      "enabled": false,
+      "items": []
+    },
+    "pricing": {
+      "enabled": true,
+      "label": "Mitgliedschaften & Touren",
+      "headline": "Transparente Konditionen für Mitglieder",
+      "subline": "Keine versteckten Gebühren. Exklusiver Zugang zu unseren Hamburger Feinkost-Touren.",
+      "packages": [
+        {
+          "name": "Inner Circle Regular",
+          "price": "0 €",
+          "period": "Kostenfreie Aufnahme",
+          "highlight": false,
+          "features": [
+            "Persönlicher Account & Freischaltung",
+            "Einsicht in alle Wochenangebote & Preise",
+            "Lieferung auf fester Stadtteil-Tour",
+            "Abrechnung nach exaktem Gewicht vor Ort"
+          ],
+          "ctaLabel": "Jetzt registrieren",
+          "ctaHref": "#register"
+        },
+        {
+          "name": "Gourmet Club Premium",
+          "price": "Priorität",
+          "period": "Für Vielbesteller & Gastro",
+          "highlight": true,
+          "badge": "Beliebt",
+          "features": [
+            "Alle Vorteile des Inner Circle",
+            "Exklusive Vorab-Reservierung seltener Cuts (Dry Aged)",
+            "Wunsch-Zeitfenster bei der Tour-Anfahrt",
+            "Direkter WhatsApp-Draht zu AJ"
+          ],
+          "ctaLabel": "Prioritäts-Zugang anfragen",
+          "ctaHref": "#register"
+        }
+      ]
+    },
+    "contact": {
+      "enabled": true,
+      "label": "Kontakt",
+      "headline": "Ich bin für dich da",
+      "subline": "Fragen zur Registrierung, zu deiner Liefertour oder zu einer Bestellung? Meld dich gern. Ich melde mich so schnell wie möglich bei dir zurück."
+    },
+    "footer": {
+      "enabled": true,
+      "links": [
+        {
+          "label": "Impressum",
+          "href": "/ajs/impressum"
+        },
+        {
+          "label": "Datenschutz",
+          "href": "/ajs/datenschutz"
+        },
+        {
+          "label": "Einloggen",
+          "href": "/ajs#contact"
+        },
+        {
+          "label": "Registrierung",
+          "href": "/ajs#contact"
+        },
+        {
+          "label": "Mitgliedschaft",
+          "href": "/ajs#cta"
+        }
+      ]
+    },
+    "cta": {
+      "enabled": true,
+      "label": "Mitgliedschaft",
+      "headline": "Nicht für jeden. Für den Inner Circle.",
+      "subline": "Premium Fleisch & Feinkost, persönlich geliefert in Hamburg. Der Zugang ist begrenzt: Melde dich an, und ich prüfe deine Aufnahme persönlich.",
+      "buttonLabel": "Registrierung starten",
+      "buttonHref": "#register",
+      "secondaryLabel": "Einloggen",
+      "secondaryHref": "#login",
+      "image": "/images/banner.webp"
+    }
+  }
+}

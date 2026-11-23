@@ -1,0 +1,162 @@
+---
+import '../styles/global.css';
+import '../styles/ajs.css';
+import Lightbox from '../components/Lightbox.astro';
+
+
+interface Props {
+  meta: {
+    siteName: string;
+    tagline?: string;
+    description: string;
+    image?: string;
+  };
+  theme: {
+    ink: string;
+    cream: string;
+    accent: string;
+    accentLight: string;
+    sage: string;
+  };
+  noindex?: boolean;
+}
+
+const { meta, theme, noindex = false } = Astro.props;
+const canonicalUrl = Astro.url.href;
+const ogImage = meta.image ?? '/og-image.jpg';
+const faviconHref = 'data:image/svg+xml,' + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="${theme.accent}"/><text x="16" y="23" font-family="Georgia,serif" font-size="20" fill="white" text-anchor="middle">${meta.siteName.charAt(0).toUpperCase()}</text></svg>`
+);
+
+const themeStyle = `
+  --ink: ${theme.ink};
+  --cream: ${theme.cream};
+  --accent: ${theme.accent};
+  --accent-light: ${theme.accentLight};
+  --sage: ${theme.sage};
+`;
+---
+
+<!doctype html>
+<html lang="de" style={themeStyle}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{meta.siteName}{meta.tagline ? ` – ${meta.tagline}` : ''}</title>
+    <meta name="description" content={meta.description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="icon" type="image/png" href={meta.logo ? "/images/favicon.png" : faviconHref} />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/dm-serif-display-normal-400-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/outfit-normal-400-latin.woff2" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..700&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Space+Grotesk:wght@300..700&family=Syne:wght@400..800&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content={canonicalUrl} />
+    <meta property="og:title"       content={meta.siteName} />
+    <meta property="og:description" content={meta.description} />
+    <meta property="og:image"       content={new URL(ogImage, Astro.url).href} />
+    <meta property="og:locale"      content="de_DE" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content={meta.siteName} />
+    <meta name="twitter:description" content={meta.description} />
+    <meta name="twitter:image"       content={new URL(ogImage, Astro.url).href} />
+
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Zum Inhalt springen</a>
+    <slot />
+    <Lightbox />
+
+    <script is:inline>
+      // Reload immer oben starten – sonst verbirgt scroll-restoration den Countdown-Header
+      // beim Reload, weil der Browser die letzte Scroll-Position wiederherstellt.
+      // Ausnahme: echte Anchor-Links (#about etc.) werden vom Browser sauber positioniert.
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      if (!location.hash) window.scrollTo(0, 0);
+
+      // Nav scroll effect
+      const nav = document.getElementById('nav');
+      window.addEventListener('scroll', () => nav?.classList.toggle('on', scrollY > 20), { passive: true });
+
+      // Mobile nav toggle
+      const burger = document.getElementById('burger');
+      const navLinks = document.getElementById('navLinks');
+
+      function setNavOpen(open) {
+        burger?.classList.toggle('x', open);
+        navLinks?.classList.toggle('open', open);
+        burger?.setAttribute('aria-expanded', String(open));
+        navLinks?.setAttribute('aria-hidden', String(!open));
+      }
+
+      burger?.addEventListener('click', () => setNavOpen(!navLinks?.classList.contains('open')));
+      navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setNavOpen(false)));
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && navLinks?.classList.contains('open')) {
+          setNavOpen(false);
+          burger?.focus();
+        }
+      });
+
+      // Scroll reveal + counter animation
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let countersTriggered = false;
+
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('in');
+          if (e.target.querySelector('[data-count]') && !countersTriggered) {
+            countersTriggered = true;
+            document.querySelectorAll('[data-count]').forEach(el => {
+              const target = +el.dataset.count;
+              if (prefersReducedMotion) { el.textContent = target; return; }
+              const step = target / (1400 / 16);
+              let cur = 0;
+              const tick = () => {
+                cur = Math.min(cur + step, target);
+                el.textContent = Math.round(cur);
+                if (cur < target) requestAnimationFrame(tick);
+              };
+              requestAnimationFrame(tick);
+            });
+          }
+        });
+      }, { threshold: 0.14 });
+
+      document.querySelectorAll('.r').forEach(el => io.observe(el));
+
+      // Scroll-Spy: aktiver Nav-Link spiegelt sichtbare Section
+      (() => {
+        const linkMap = new Map();
+        document.querySelectorAll('#navLinks a[href*="#"]').forEach(a => {
+          const id = a.getAttribute('href').split('#')[1];
+          if (id) linkMap.set(id, a);
+        });
+        if (!linkMap.size) return;
+        const sections = [...new Set([
+          ...[...linkMap.keys()].map(id => document.getElementById(id)),
+          ...document.querySelectorAll('#main > section'),
+          document.getElementById('hero'),
+        ])].filter(Boolean);
+        if (!sections.length) return;
+        const setActive = (id) => {
+          linkMap.forEach((a, k) => a.classList.toggle('active', k === id));
+        };
+        const spy = new IntersectionObserver((entries) => {
+          // wähle den Eintrag mit höchstem Sichtbarkeitsanteil
+          const visible = entries.filter(e => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          if (visible[0]) setActive(visible[0].target.id);
+        }, { threshold: [0.4, 0.6, 0.8], rootMargin: `-${getComputedStyle(document.documentElement).getPropertyValue('--nav-h') || '70px'} 0px -30% 0px` });
+        sections.forEach(s => spy.observe(s));
+      })();
+    </script>
+  </body>
+</html>

@@ -312,14 +312,14 @@ main > section:not(#hero) > .wrap {
 .nav-ul {
   list-style: none;
   display: flex;
-  gap: 2.5rem;
+  gap: clamp(0.6rem, 1.4vw, 1.8rem);
   align-items: center;
 }
 .nav-ul a {
   text-decoration: none;
   color: var(--cream);
   font-weight: 500;
-  font-size: .93rem;
+  font-size: clamp(0.78rem, 0.85vw, 0.93rem);
   white-space: nowrap;
   transition: color .2s;
 }
@@ -1589,7 +1589,7 @@ footer {
   top: -100%;
   left: 1rem;
   z-index: 9999;
-  background: var(--accent);
+  background: color-mix(in srgb, var(--accent) 80%, #000);
   color: var(--white);
   padding: .75rem 1.25rem;
   border-radius: var(--r);
@@ -1759,39 +1759,44 @@ footer {
   body.swipe-active .burger { display: none !important; }
   body.swipe-active .nav-ul { display: none !important; }
 
-  /* ── Section-Tab-Strip (unter der Nav, 4-spaltig) ────────────── */
+  /* ── Section-Tab-Strip (unter der Nav, horizontal scrollbar) ────────────── */
   #mobile-nav-tabs {
     position: fixed;
     top: var(--nav-h);
     left: 0; right: 0;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     background: color-mix(in srgb, var(--ink) 96%, #fff);
-    overflow: hidden;
     z-index: 99;
     border-bottom: 1px solid rgba(255,255,255,.07);
-    padding: 3px 0;
+    padding: 4px 6px;
+    gap: 4px;
+    -webkit-overflow-scrolling: touch;
   }
+  #mobile-nav-tabs::-webkit-scrollbar { display: none; }
   .mnt {
+    flex: 0 0 auto;
     font-family: var(--sans);
-    font-size: .6rem;
+    font-size: .65rem;
     font-weight: 700;
     letter-spacing: .04em;
     text-transform: uppercase;
-    color: rgba(255,255,255,.35);
-    padding: 5px .25rem;
-    margin: 1px;
+    color: rgba(255,255,255,.45);
+    padding: 6px 10px;
+    margin: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    border-radius: 3px;
+    border-radius: 4px;
     white-space: nowrap;
     transition: color .2s, background .2s;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
   }
-  .mnt.on {
+  .mnt.on, .mnt.active {
     color: var(--accent);
     background: color-mix(in srgb, var(--accent) 16%, transparent);
   }

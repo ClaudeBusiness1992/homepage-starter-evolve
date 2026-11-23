@@ -1,0 +1,152 @@
+---
+import { getDb } from '../lib/db';
+import { isSectionEnabled } from '../lib/permissions';
+
+const isEnabled = isSectionEnabled('reviews');
+let reviews: Array<{
+  id: string;
+  author_name: string;
+  rating: number;
+  comment: string;
+  photo_url?: string;
+  photo_approved: number;
+  invoice_ref: string;
+}> = [];
+
+if (isEnabled) {
+  try {
+    const db = getDb();
+    reviews = db.prepare(`
+      SELECT id, author_name, rating, comment, photo_url, photo_approved, invoice_ref
+      FROM reviews
+      WHERE status = 'approved'
+      ORDER BY created_at DESC
+      LIMIT 12
+    `).all() as any[];
+  } catch (e) {
+    console.error('[VerifiedReviews]', e);
+  }
+}
+---
+
+{isEnabled && reviews.length > 0 && (
+  <section class="section" id="verified-reviews">
+    <div class="wrap">
+      <div class="section-hd r section-hd--center">
+        <span class="lbl">Echte Kundenerfahrungen</span>
+        <h2 class="h2">Geprüfte Bewertungen unserer Auftraggeber</h2>
+        <p class="sub">
+          Jede Bewertung stammt nachweislich von Kunden, die unseren Service beauftragt haben — fälschungssicher verifiziert über den QR-Code auf der Rechnung.
+        </p>
+      </div>
+
+      <div class="vrev-grid">
+        {reviews.map((r) => (
+          <div class="vrev-card">
+            <div class="vrev-top">
+              <div class="vrev-badge">
+                <svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <span>Verifizierter Käufer</span>
+              </div>
+              <div class="vrev-stars" aria-label={`${r.rating} von 5 Sternen`}>
+                {'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}
+              </div>
+            </div>
+
+            <p class="vrev-comment">„{r.comment}“</p>
+
+            <div class="vrev-footer">
+              {r.photo_url && r.photo_approved === 1 && (
+                <img src={r.photo_url} alt={`Foto von ${r.author_name}`} class="vrev-photo" loading="lazy" />
+              )}
+              <div>
+                <div class="vrev-author">{r.author_name}</div>
+                <div class="vrev-ref">Rechnungs-Verifikation bestätigt</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .vrev-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.75rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .vrev-card {
+    background: var(--card-bg, rgba(255, 255, 255, 0.03));
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+    border-radius: 1.25rem;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .vrev-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent, #6366f1);
+  }
+  .vrev-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .vrev-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.6rem;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #34d399;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .vrev-stars {
+    color: #fbbf24;
+    font-size: 1.15rem;
+    letter-spacing: 0.05em;
+  }
+  .vrev-comment {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text, #f8fafc);
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+  .vrev-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 1rem;
+  }
+  .vrev-photo {
+    width: 44px;
+    height: 44px;
+    border-radius: 0.5rem;
+    object-fit: cover;
+  }
+  .vrev-author {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--text, #fff);
+  }
+  .vrev-ref {
+    font-size: 0.75rem;
+    color: var(--text-muted, #94a3b8);
+  }
+</style>

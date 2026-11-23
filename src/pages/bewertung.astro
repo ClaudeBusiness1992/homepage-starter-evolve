@@ -1,0 +1,512 @@
+---
+export const prerender = false;
+
+import { verifyInvoiceToken, sha256 } from '../lib/crypto';
+import { getDb } from '../lib/db';
+
+const token = Astro.url.searchParams.get('t') || '';
+let isValid = false;
+let isAlreadyRedeemed = false;
+let invoiceRef = '';
+
+if (token) {
+  const verified = verifyInvoiceToken(token);
+  if (verified && verified.valid) {
+    isValid = true;
+    invoiceRef = verified.invoiceRef;
+
+    const db = getDb();
+    const tokenHash = sha256(token);
+    const row = db.prepare('SELECT status FROM review_tokens WHERE token_hash = ?').get(tokenHash) as { status: string } | undefined;
+    if (row && row.status === 'redeemed') {
+      isAlreadyRedeemed = true;
+    }
+  }
+}
+---
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Ihre Bewertung · Pixel & Code</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #090a0f;
+      --card-bg: #12131a;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --star-active: #fbbf24;
+      --star-inactive: rgba(255, 255, 255, 0.15);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 1.25rem;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .rev-container {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .rev-brand {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .rev-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.75rem;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #a5b4fc;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .rev-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 0.5rem;
+    }
+
+    .rev-sub {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Sterne Bewertung */
+    .star-group {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.5rem 0 1rem;
+    }
+
+    .star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 56px;
+      height: 56px;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s ease;
+      touch-action: manipulation;
+    }
+
+    .star-btn:active {
+      transform: scale(1.15);
+    }
+
+    .star-btn svg {
+      width: 100%;
+      height: 100%;
+      fill: var(--star-inactive);
+      transition: fill 0.2s ease;
+    }
+
+    .star-btn.is-active svg {
+      fill: var(--star-active);
+    }
+
+    .star-label {
+      text-align: center;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #fbbf24;
+      min-height: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Eingabefelder */
+    .form-group {
+      margin-bottom: 1.25rem;
+      text-align: left;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .form-label small {
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    /* Foto-Upload */
+    .photo-upload-box {
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .photo-upload-box:hover {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.03);
+    }
+
+    .photo-preview {
+      display: none;
+      margin-top: 0.75rem;
+      position: relative;
+    }
+
+    .photo-preview img {
+      max-height: 140px;
+      border-radius: 0.5rem;
+      object-fit: cover;
+    }
+
+    .photo-preview-remove {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: #ef4444;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Absenden Button */
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+      transition: background 0.2s, transform 0.15s;
+      min-height: 52px;
+    }
+
+    .submit-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Infoboxen */
+    .msg-box {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    .msg-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    .msg-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .msg-text {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .msg-btn {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="rev-container">
+    { !token || !isValid ? (
+      <div class="msg-box">
+        <span class="msg-icon">⚠️</span>
+        <h1 class="msg-title">Ungültiger QR-Code</h1>
+        <p class="msg-text">
+          Dieser Link ist ungültig oder unvollständig. Bitte scannen Sie den QR-Code auf Ihrer Rechnung erneut mit dem Smartphone.
+        </p>
+        <a href="/" class="msg-btn">Zur Startseite</a>
+      </div>
+    ) : isAlreadyRedeemed ? (
+      <div class="msg-box">
+        <span class="msg-icon">🎉</span>
+        <h1 class="msg-title">Bereits bewertet!</h1>
+        <p class="msg-text">
+          Für die Rechnung <strong>{invoiceRef}</strong> wurde bereits eine Bewertung abgegeben. Wir bedanken uns herzlich für Ihr wertvolles Feedback!
+        </p>
+        <a href="/" class="msg-btn">Zur Startseite</a>
+      </div>
+    ) : (
+      <div id="form-wrapper">
+        <div class="rev-brand">
+          <span class="rev-badge">Verifizierter Käufer · {invoiceRef}</span>
+          <h1 class="rev-title">Wie zufrieden waren Sie?</h1>
+          <p class="rev-sub">Ihr Feedback hilft uns, unseren Service stetig zu verbessern.</p>
+        </div>
+
+        <form id="review-form">
+          <input type="hidden" name="token" value={token} />
+          <input type="hidden" name="rating" id="rating-input" value="5" />
+
+          <!-- Sterne-Wähler -->
+          <div class="star-group" role="radiogroup" aria-label="Bewertung in Sternen">
+            {[1, 2, 3, 4, 5].map((num) => (
+              <button
+                type="button"
+                class="star-btn is-active"
+                data-star={num}
+                aria-label={`${num} von 5 Sternen`}
+              >
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+              </button>
+            ))}
+          </div>
+          <div class="star-label" id="star-desc">5 von 5 Sternen – Ausgezeichnet</div>
+
+          <div class="form-group">
+            <label class="form-label" for="authorName">Ihr Name</label>
+            <input
+              type="text"
+              id="authorName"
+              name="authorName"
+              class="form-input"
+              placeholder="z. B. Michael K."
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="comment">Ihre Erfahrung</label>
+            <textarea
+              id="comment"
+              name="comment"
+              class="form-textarea"
+              placeholder="Was hat Ihnen besonders gut gefallen? Wie verlief Ihr Auftrag?"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Foto anhängen <small>(optional)</small></label>
+            <div class="photo-upload-box" id="upload-trigger">
+              <span style="font-size: 1.5rem; display: block; margin-bottom: 0.25rem;">📷</span>
+              <span style="font-size: 0.875rem; color: #a5b4fc; font-weight: 500;">Foto vom Smartphone oder PC auswählen</span>
+              <input type="file" id="photo-input" name="photo" accept="image/*" capture="environment" style="display: none;" />
+            </div>
+            <div class="photo-preview" id="preview-box">
+              <img id="preview-img" src="" alt="Vorschau" />
+              <div>
+                <button type="button" class="photo-preview-remove" id="remove-photo">Foto entfernen</button>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submit-btn">
+            Bewertung absenden
+          </button>
+        </form>
+
+        <div id="success-screen" class="msg-box" style="display: none;">
+          <span class="msg-icon">✨</span>
+          <h2 class="msg-title">Herzlichen Dank!</h2>
+          <p class="msg-text" id="success-msg">
+            Ihre Bewertung wurde erfolgreich übermittelt. Wir prüfen sie kurz und veröffentlichen sie anschließend auf unserer Website.
+          </p>
+          <a href="/" class="msg-btn">Zurück zur Startseite</a>
+        </div>
+      </div>
+    )}
+  </div>
+
+  <script is:inline>
+    const stars = document.querySelectorAll('.star-btn');
+    const ratingInput = document.getElementById('rating-input');
+    const starDesc = document.getElementById('star-desc');
+    const form = document.getElementById('review-form');
+    const submitBtn = document.getElementById('submit-btn');
+    const formWrapper = document.getElementById('form-wrapper');
+    const successScreen = document.getElementById('success-screen');
+
+    const descriptions = {
+      1: '1 von 5 Sternen – Nicht zufrieden',
+      2: '2 von 5 Sternen – Eher unzufrieden',
+      3: '3 von 5 Sternen – Durchschnittlich',
+      4: '4 von 5 Sternen – Sehr zufrieden',
+      5: '5 von 5 Sternen – Ausgezeichnet',
+    };
+
+    function setRating(val) {
+      if (ratingInput) ratingInput.value = val;
+      stars.forEach((btn, idx) => {
+        if (idx < val) {
+          btn.classList.add('is-active');
+        } else {
+          btn.classList.remove('is-active');
+        }
+      });
+      if (starDesc) starDesc.textContent = descriptions[val] || '';
+    }
+
+    stars.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const val = parseInt(btn.getAttribute('data-star') || '5', 10);
+        setRating(val);
+      });
+    });
+
+    // Foto Upload Trigger
+    const uploadTrigger = document.getElementById('upload-trigger');
+    const photoInput = document.getElementById('photo-input');
+    const previewBox = document.getElementById('preview-box');
+    const previewImg = document.getElementById('preview-img');
+    const removePhotoBtn = document.getElementById('remove-photo');
+
+    if (uploadTrigger && photoInput) {
+      uploadTrigger.addEventListener('click', () => photoInput.click());
+      photoInput.addEventListener('change', () => {
+        if (photoInput.files && photoInput.files[0]) {
+          const file = photoInput.files[0];
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            if (previewImg) previewImg.src = e.target.result;
+            if (previewBox) previewBox.style.display = 'block';
+            if (uploadTrigger) uploadTrigger.style.display = 'none';
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    if (removePhotoBtn && photoInput) {
+      removePhotoBtn.addEventListener('click', () => {
+        photoInput.value = '';
+        if (previewBox) previewBox.style.display = 'none';
+        if (uploadTrigger) uploadTrigger.style.display = 'block';
+      });
+    }
+
+    // Submit Handling
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Wird übermittelt...';
+        }
+
+        const formData = new FormData(form);
+        try {
+          const res = await fetch('/api/public/reviews/submit', {
+            method: 'POST',
+            body: formData,
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            form.style.display = 'none';
+            document.querySelector('.rev-brand').style.display = 'none';
+            if (successScreen) successScreen.style.display = 'block';
+          } else {
+            alert(data.error || 'Fehler beim Übermitteln');
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Bewertung absenden';
+            }
+          }
+        } catch (err) {
+          alert('Netzwerkfehler beim Absenden der Bewertung.');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Bewertung absenden';
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

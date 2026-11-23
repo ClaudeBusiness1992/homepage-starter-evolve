@@ -1,0 +1,386 @@
+---
+import metaConfig    from '../../config/meta.json';
+import contentConfig from '../../config/content.json';
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../sections/Footer.astro';
+
+const { meta, theme } = metaConfig;
+const { sections: s } = contentConfig;
+
+// Bildfolge: 240 WebP-Bilder (1280×720, freigestellt) unter /scroll/pizza-a1/.
+// `version` hängt an jeder Bildadresse; bei neuen Bildern ändern, damit der Browser sie neu lädt.
+const folge = {
+  basis: '/scroll/pizza-a1/',
+  anzahl: 240,
+  stellen: 4,
+  version: '03aef6f64d98',
+  // Zeichenbereich aus den Bildern: Das Motiv (auch alle fallenden Zutaten) liegt in allen 240 Bildern
+  // zwischen x = 345 und x = 929; die volle Höhe bleibt erhalten.
+  ausschnittX: 320,
+  ausschnittBreite: 640,
+  hoehe: 720,
+  // Scrollweg je Bild in Pixeln
+  pxProBild: 16,
+};
+const letztesBild = `${folge.basis}bild-${String(folge.anzahl).padStart(folge.stellen, '0')}.webp?v=${folge.version}`;
+---
+
+<Base meta={{ siteName: meta.siteName + ' — Scroll-Test', description: 'Testseite für eine Scroll-Animation.' }} theme={theme} noindex={true}>
+  <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} links={meta.nav} />
+
+  <main id="main" class="demo-page">
+    <div class="demo-intro wrap">
+      <p class="legal-kicker">Testseite</p>
+      <h1 class="legal-h1">Eine Pizza entsteht beim Scrollen</h1>
+      <p class="demo-lead">
+        Scrollen Sie nach unten: Zuerst kommt die Tomatensauce auf den Teig, dann fallen Champignons und
+        Paprika darauf. Beim Hochscrollen läuft alles rückwärts.
+      </p>
+    </div>
+
+    <div
+      class="demo-spur"
+      id="pizzaSpur"
+      data-basis={folge.basis}
+      data-anzahl={folge.anzahl}
+      data-stellen={folge.stellen}
+      data-version={folge.version}
+      data-ausschnitt-x={folge.ausschnittX}
+      data-breite={folge.ausschnittBreite}
+      data-hoehe={folge.hoehe}
+      data-px-pro-bild={folge.pxProBild}
+    >
+      <div class="demo-buehne" id="pizzaBuehne">
+        <canvas
+          id="pizzaLeinwand"
+          width={folge.ausschnittBreite}
+          height={folge.hoehe}
+          role="img"
+          aria-label="Pizzateig von oben, der beim Scrollen mit Tomatensauce, Champignons und gelben Paprikastreifen belegt wird"
+        ></canvas>
+        <noscript>
+          <img
+            class="demo-standbild"
+            src={letztesBild}
+            width="1280"
+            height="720"
+            alt="Pizzateig von oben, belegt mit Tomatensauce, Champignons und gelben Paprikastreifen"
+          />
+        </noscript>
+        <div class="demo-stand" id="pizzaStand" hidden>
+          <div id="pizzaStandText">Bilder werden geladen: 0 von {folge.anzahl}</div>
+          <progress id="pizzaBalken" max="1" value="0" aria-label="Ladefortschritt"></progress>
+          <div class="demo-stand-zusatz" id="pizzaStandZusatz">Sie können schon scrollen; bis alle Bilder da sind, springt die Folge noch.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-ende wrap">
+      <h2 class="demo-ende-h2">Fertig belegt</h2>
+      <p class="demo-lead">
+        Diese Seite zeigt nur, wie sich eine Scroll-Animation in die Website einfügt. Sie ist nicht verlinkt,
+        und Suchmaschinen sollen sie nicht aufnehmen.
+      </p>
+      <a href="/" class="btn btn-fill">Zur Startseite <span aria-hidden="true">→</span></a>
+    </div>
+  </main>
+
+  {s.footer?.enabled && (
+    <Footer siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} copyright={meta.copyright} links={s.footer.links} />
+  )}
+</Base>
+
+<style>
+  .demo-page {
+    padding-top: var(--nav-h);
+    background: var(--ink);
+  }
+  .demo-intro {
+    max-width: 720px;
+    padding-top: 4rem;
+    padding-bottom: 2.5rem;
+    text-align: center;
+  }
+  .demo-lead {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text-soft);
+    max-width: 52ch;
+    margin: 0 auto;
+  }
+
+  /* Die Spur gibt die Scrolllänge vor; die Bühne bleibt dabei unter der Navigation im Sichtfeld stehen.
+     Ohne JavaScript bleibt die Spur so hoch wie die Bühne und zeigt das letzte Bild. */
+  .demo-spur {
+    position: relative;
+  }
+  .demo-spur.aktiv {
+    height: calc(100vh - var(--nav-h) + var(--scroll-laenge, 0px));
+    height: calc(100dvh - var(--nav-h) + var(--scroll-laenge, 0px));
+  }
+  .demo-buehne {
+    position: sticky;
+    top: var(--nav-h);
+    height: calc(100vh - var(--nav-h));
+    height: calc(100dvh - var(--nav-h));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  /* Bild immer vollständig sichtbar, Seitenverhältnis des Ausschnitts (640 × 720) bleibt erhalten, kein Kasten.
+     Breite: so viel wie die Seite hergibt, höchstens so viel, dass die Höhe in die Bühne passt. */
+  .demo-buehne canvas,
+  .demo-standbild {
+    display: none;
+    width: min(100%, calc((100vh - var(--nav-h)) * 8 / 9));
+    width: min(100%, calc((100dvh - var(--nav-h)) * 8 / 9));
+    height: auto;
+    aspect-ratio: 640 / 720;
+  }
+  .demo-buehne.aktiv canvas {
+    display: block;
+  }
+  .demo-standbild {
+    display: block;
+    object-fit: cover; /* schneidet das ganze Bild (1280 × 720) mittig auf denselben Ausschnitt zu */
+  }
+  /* Ist die Bühne höher als das Bild (Handy hochkant), steht das Bild mittig. Fallende Zutaten sind schon in den
+     Bildern oben angeschnitten; die obere Kante läuft deshalb weich aus statt als harte Linie mitten im Bild. */
+  @media (max-aspect-ratio: 5/6) {
+    .demo-buehne canvas {
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 6%);
+      mask-image: linear-gradient(to bottom, transparent 0, #000 6%);
+    }
+  }
+
+  .demo-stand {
+    position: absolute;
+    left: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    width: min(340px, calc(100% - 24px));
+    padding: .65rem .8rem;
+    border-radius: var(--r);
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--cream);
+    font-size: .85rem;
+    line-height: 1.45;
+    pointer-events: none;
+  }
+  .demo-stand[hidden] { display: none; }
+  .demo-stand progress {
+    display: block;
+    width: 100%;
+    height: 6px;
+    margin: .4rem 0;
+    accent-color: var(--accent-light);
+  }
+  .demo-stand-zusatz { color: var(--text-soft); }
+  .demo-stand .fehler { color: var(--cream); }
+
+  .demo-ende {
+    max-width: 720px;
+    padding-top: 4rem;
+    padding-bottom: 6rem;
+    text-align: center;
+  }
+  .demo-ende-h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    line-height: 1.15;
+    font-weight: 400;
+    margin: 0 0 1rem;
+    color: var(--cream);
+  }
+  .demo-ende .demo-lead { margin-bottom: 2rem; }
+
+  @media (max-width: 600px) {
+    .demo-intro { padding-top: 2.5rem; padding-bottom: 1.5rem; }
+    .demo-ende { padding-top: 3rem; padding-bottom: 4rem; }
+  }
+</style>
+
+<script is:inline>
+(() => {
+  "use strict";
+  const spur = document.getElementById("pizzaSpur");
+  const buehne = document.getElementById("pizzaBuehne");
+  const leinwand = document.getElementById("pizzaLeinwand");
+  if (!spur || !buehne || !leinwand || !leinwand.getContext) return;
+  const ctx = leinwand.getContext("2d");
+  const stand = document.getElementById("pizzaStand");
+  const standtext = document.getElementById("pizzaStandText");
+  const zusatz = document.getElementById("pizzaStandZusatz");
+  const balken = document.getElementById("pizzaBalken");
+
+  const d = spur.dataset;
+  const n = Number(d.anzahl);
+  const stellen = Number(d.stellen);
+  const sx = Number(d.ausschnittX);
+  const sb = Number(d.breite);
+  const sh = Number(d.hoehe);
+  const laenge = (n - 1) * Number(d.pxProBild);
+  const bilder = new Array(n).fill(null); // fertig geladene Image-Objekte
+  // Die Versionsangabe in der Adresse bringt neue Bilder nach einem Austausch zum Browser
+  // und erlaubt es, unveränderte Bilder dauerhaft zu behalten.
+  const adresse = (i) => d.basis + "bild-" + String(i + 1).padStart(stellen, "0") + ".webp?v=" + d.version;
+
+  spur.style.setProperty("--scroll-laenge", laenge + "px");
+  spur.classList.add("aktiv");
+  buehne.classList.add("aktiv");
+  stand.hidden = false;
+
+  // ---- Ladereihenfolge: grob vor fein.
+  // Stufe 0: Bild 1, jedes 16. und das letzte; danach jedes 8., 4., 2. und zuletzt der Rest.
+  const SCHRITTE = [16, 8, 4, 2, 1];
+  const NAH = 6;      // so nah an der Scrollposition werden Bilder ab Stufe 1 vorgezogen
+  const PARALLEL = 6; // gleichzeitige Anfragen
+  const stufe = new Uint8Array(n).fill(255);
+  SCHRITTE.forEach((schritt, s) => { for (let i = 0; i < n; i += schritt) if (stufe[i] === 255) stufe[i] = s; });
+  stufe[n - 1] = 0;
+  const zustand = new Uint8Array(n); // 0 noch nicht begonnen, 1 lädt, 2 geladen, 3 fehlgeschlagen
+  const offen = new Array(SCHRITTE.length).fill(0);
+  for (let i = 0; i < n; i++) offen[stufe[i]]++;
+
+  let geladen = 0;
+  let fehlgeschlagen = 0;
+
+  // Position in der Spur: 0 = Bühne rastet unter der Navigation ein, 1 = Bühne verlässt die Spur.
+  function fortschrittImScroll() {
+    if (laenge <= 0) return 0;
+    const oben = parseFloat(getComputedStyle(buehne).top) || 0;
+    const p = (oben - spur.getBoundingClientRect().top) / laenge;
+    return Math.min(1, Math.max(0, p));
+  }
+  function bildIndex() {
+    return Math.min(n - 1, Math.round(fortschrittImScroll() * (n - 1)));
+  }
+
+  function naechstes() {
+    if (zustand[0] === 0) return 0;
+    let s = 0;
+    while (s < offen.length && offen[s] === 0) s++;
+    if (s === offen.length) return -1;
+    const cur = bildIndex();
+    let best = -1, bestAbstand = Infinity;
+    if (s > 0) {
+      // Grobe Stufe fertig: Bilder direkt an der Scrollposition zuerst
+      for (let i = Math.max(0, cur - NAH); i <= Math.min(n - 1, cur + NAH); i++) {
+        if (zustand[i] === 0 && Math.abs(i - cur) < bestAbstand) { best = i; bestAbstand = Math.abs(i - cur); }
+      }
+      if (best >= 0) return best;
+    }
+    for (let i = 0; i < n; i++) {
+      if (zustand[i] === 0 && stufe[i] === s && Math.abs(i - cur) < bestAbstand) { best = i; bestAbstand = Math.abs(i - cur); }
+    }
+    return best;
+  }
+
+  function ladeEinmal(i) {
+    return new Promise((fertigMelden) => {
+      const b = new Image();
+      b.onload = () => { bilder[i] = b; fertigMelden(true); };
+      b.onerror = () => fertigMelden(false);
+      b.src = adresse(i);
+    });
+  }
+  async function lade(i) {
+    zustand[i] = 1;
+    offen[stufe[i]]--; // "offen" zählt nur noch nicht begonnene Bilder, sonst steigen freie Anfragen zu früh aus
+    let ok = await ladeEinmal(i);
+    if (!ok) { await new Promise((r) => setTimeout(r, 400)); ok = await ladeEinmal(i); }
+    if (ok) { zustand[i] = 2; geladen++; } else { zustand[i] = 3; fehlgeschlagen++; }
+    fortschritt();
+    planen(); // Ist das neue Bild näher an der Scrollposition als das gezeigte, wird es gezeichnet.
+  }
+  // Die Seite soll nicht auf 240 Bilder warten: Bild 1 lädt sofort, alle anderen erst nach dem load-Ereignis
+  // (Bilder, die davor beginnen, halten es offen). Fällt load aus, startet der Rest nach 3 Sekunden.
+  function nachLoad() {
+    return new Promise((fertig) => {
+      if (document.readyState === "complete") { fertig(); return; }
+      window.addEventListener("load", fertig, { once: true });
+      setTimeout(fertig, 3000);
+    });
+  }
+  async function alleLaden() {
+    await lade(0); // Bild 1 allein und zuerst, damit es nicht um Bandbreite konkurriert
+    await nachLoad();
+    const arbeiter = async () => {
+      for (let i = naechstes(); i >= 0; i = naechstes()) await lade(i);
+    };
+    await Promise.all(Array.from({ length: PARALLEL }, arbeiter));
+  }
+
+  // Ist das gewünschte Bild noch nicht da, wird das nächstliegende geladene gezeigt (davor oder dahinter).
+  function naechstesGeladenes(i) {
+    for (let k = 0; k < n; k++) {
+      if (i - k >= 0 && bilder[i - k]) return i - k;
+      if (i + k < n && bilder[i + k]) return i + k;
+    }
+    return -1;
+  }
+
+  // Entpackt wird nur, was gezeigt wird oder gleich gebraucht wird: einige Bilder in Scrollrichtung, wenige dahinter.
+  const VORAUS = 6;
+  const ZURUECK = 2;
+  const entpackt = new Uint8Array(n);
+  let entpackLaeuft = 0;
+  function vorentpacken(i, richtung) {
+    for (let k = -ZURUECK; k <= VORAUS; k++) {
+      const j = i + k * richtung;
+      if (j < 0 || j >= n || !bilder[j] || entpackt[j] || entpackLaeuft >= 3) continue;
+      entpackt[j] = 1;
+      entpackLaeuft++;
+      bilder[j].decode().catch(() => {}).then(() => { entpackLaeuft--; });
+    }
+  }
+
+  let gezeichnet = -1;
+  let letzterIndex = 0;
+  let richtung = 1;
+  let geplant = false;
+  function zeichne(j) {
+    ctx.clearRect(0, 0, leinwand.width, leinwand.height);
+    try { ctx.drawImage(bilder[j], sx, 0, sb, sh, 0, 0, leinwand.width, leinwand.height); } catch (e) { return; }
+    gezeichnet = j;
+    buehne.dataset.bild = String(j + 1); // zeigt, welches Bild gerade gezeichnet ist (Prüfhilfe)
+  }
+  function aktualisiere() {
+    geplant = false;
+    const i = bildIndex();
+    if (i !== letzterIndex) { richtung = i > letzterIndex ? 1 : -1; letzterIndex = i; }
+    const j = naechstesGeladenes(i);
+    if (j >= 0 && j !== gezeichnet) zeichne(j);
+    if (j >= 0) vorentpacken(i, richtung);
+  }
+  function planen() {
+    if (!geplant) {
+      geplant = true;
+      requestAnimationFrame(aktualisiere);
+    }
+  }
+  window.addEventListener("scroll", planen, { passive: true });
+  window.addEventListener("resize", planen);
+
+  // ---- Ladeanzeige: kleiner Hinweis am Rand, die Bildfolge bleibt bedienbar.
+  function fortschritt() {
+    balken.value = (geladen + fehlgeschlagen) / n;
+    standtext.textContent = "Bilder werden geladen: " + geladen + " von " + n;
+    buehne.dataset.geladen = String(geladen);
+    if (geladen + fehlgeschlagen < n) return;
+    if (fehlgeschlagen === 0) { stand.hidden = true; return; }
+    // Fehler bleiben sichtbar
+    balken.hidden = true;
+    zusatz.hidden = true;
+    standtext.className = "fehler";
+    standtext.setAttribute("role", "alert");
+    standtext.textContent = fehlgeschlagen + " von " + n + " Bildern konnten nicht geladen werden. Bitte laden Sie die Seite neu.";
+  }
+
+  fortschritt();
+  aktualisiere();
+  alleLaden();
+})();
+</script>

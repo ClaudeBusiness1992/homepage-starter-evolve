@@ -1,0 +1,1423 @@
+---
+export const prerender = false;
+
+import { validateSession } from '../../lib/auth';
+import { getPermissions } from '../../lib/permissions';
+import { getDb } from '../../lib/db';
+
+const sessionCookie = Astro.cookies.get('hps_admin_session')?.value || Astro.request.headers.get('cookie');
+if (!validateSession(sessionCookie)) {
+  return Astro.redirect('/admin/login');
+}
+
+const perms = getPermissions();
+const db = getDb();
+
+// Schnell-Zähler für das Kachel-Dashboard
+const teamCount = (db.prepare('SELECT COUNT(*) as count FROM team_members').get() as any)?.count || 0;
+const galleryCount = (db.prepare('SELECT COUNT(*) as count FROM gallery_items').get() as any)?.count || 0;
+const pendingReviews = (db.prepare("SELECT COUNT(*) as count FROM reviews WHERE status = 'pending'").get() as any)?.count || 0;
+const approvedReviews = (db.prepare("SELECT COUNT(*) as count FROM reviews WHERE status = 'approved'").get() as any)?.count || 0;
+const activeSocial = (db.prepare("SELECT COUNT(*) as count FROM social_links WHERE is_enabled = 1").get() as any)?.count || 0;
+const newsletterCount = (db.prepare("SELECT COUNT(*) as count FROM newsletter_subscribers WHERE status = 'confirmed'").get() as any)?.count || 0;
+
+const now = new Date();
+const currentYear = now.getFullYear();
+const currentMonth = now.getMonth() + 1;
+const remindersDue = (db.prepare(`
+  SELECT COUNT(*) as count FROM service_reminders
+  WHERE status != 'completed' AND ((due_year = ? AND due_month = ?) OR (due_year < ?))
+`).get(currentYear, currentMonth, currentYear) as any)?.count || 0;
+---
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Kundenbereich · Pixel & Code</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/team-adaptive.css" />
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card-bg: #13151c;
+      --card-hover: #1a1c26;
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #6366f1;
+      --accent-light: #a5b4fc;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Top Bar */
+    .topbar {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0.875rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+    }
+    .brand-name {
+      font-weight: 700;
+      font-size: 1.0625rem;
+    }
+    .brand-tag {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent-light);
+      border-radius: 9999px;
+      font-weight: 600;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn-outline {
+      padding: 0.5rem 0.875rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background 0.2s;
+    }
+    .btn-outline:hover { background: rgba(255, 255, 255, 0.1); }
+    .btn-agency {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fde68a;
+    }
+    .btn-agency:hover { background: rgba(245, 158, 11, 0.25); }
+
+    /* Navigation Pills */
+    .nav-bar {
+      background: #0f1016;
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .nav-btn {
+      padding: 0.5rem 1rem;
+      background: none;
+      border: none;
+      border-radius: 0.5rem;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover { color: var(--text); background: rgba(255, 255, 255, 0.04); }
+    .nav-btn.is-active { color: #fff; background: var(--accent); }
+    .nav-badge {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .nav-badge.danger { background: var(--danger); color: #fff; }
+
+    /* Main Container */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      flex-grow: 1;
+    }
+
+    /* Views */
+    .admin-view { display: none; }
+    .admin-view.is-active { display: block; }
+
+    /* Kachel-Dashboard */
+    .dash-header {
+      margin-bottom: 2rem;
+    }
+    .dash-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .dash-sub {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .tile {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.75rem;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 180px;
+    }
+    .tile:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+    .tile-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .tile-icon {
+      font-size: 2rem;
+    }
+    .tile-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+    .tile-tag.alert {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .tile-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+    .tile-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 1.25rem;
+    }
+    .tile-action {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--accent-light);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Formulare & Modul-Ansichten */
+    .view-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .view-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .view-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      color: #fff;
+      font-size: 0.9375rem;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--accent);
+    }
+    .btn-primary {
+      padding: 0.75rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9375rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: #4f46e5; }
+    .btn-sm {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8125rem;
+    }
+
+    /* Listen-Items */
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .list-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .list-item-main {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .list-thumb {
+      width: 56px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      background: #181920;
+    }
+    .list-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Tabelle */
+    .table-wrap {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+    th, td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Switch */
+    .switch-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+    .switch-input {
+      appearance: none;
+      width: 44px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+      position: relative;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.2s;
+    }
+    .switch-input:checked {
+      background: var(--accent);
+    }
+    .switch-input::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .switch-input:checked::after {
+      transform: translateX(20px);
+    }
+
+    /* QR Code Display */
+    .qr-result-box {
+      margin-top: 1.5rem;
+      background: #fff;
+      color: #0f172a;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .qr-svg-holder {
+      width: 160px;
+      height: 160px;
+    }
+    .qr-svg-holder svg {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="topbar">
+    <a href="/admin" class="brand">
+      <div class="brand-logo">P</div>
+      <div>
+        <div class="brand-name">Pixel & Code</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">Kunden-Portal</div>
+      </div>
+      <span class="brand-tag">Einfach-Modus</span>
+    </a>
+
+    <div class="top-actions">
+      <a href="/" target="_blank" class="btn-outline">
+        <span>🌐</span> Website ansehen
+      </a>
+      <button type="button" class="btn-outline btn-agency" id="btn-open-agency">
+        <span>⚙️</span> Agentur-Rechte
+      </button>
+      <button type="button" class="btn-outline" id="btn-logout">
+        <span>🚪</span> Abmelden
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-bar">
+    <button class="nav-btn is-active" data-view="dashboard">
+      <span>🏠</span> Übersicht
+    </button>
+    {perms.permissions.canEditTeam && (
+      <button class="nav-btn" data-view="team">
+        <span>👥</span> Team <span class="nav-badge">{teamCount}</span>
+      </button>
+    )}
+    {perms.permissions.canEditGallery && (
+      <button class="nav-btn" data-view="gallery">
+        <span>🖼️</span> Galerie <span class="nav-badge">{galleryCount}</span>
+      </button>
+    )}
+    {perms.permissions.canManageReviews && (
+      <button class="nav-btn" data-view="reviews">
+        <span>⭐</span> Bewertungen
+        {pendingReviews > 0 && <span class="nav-badge danger">{pendingReviews}</span>}
+      </button>
+    )}
+    {perms.permissions.canEditSocial && (
+      <button class="nav-btn" data-view="social">
+        <span>🔗</span> Social Media
+      </button>
+    )}
+    {perms.permissions.canManageNewsletter && (
+      <button class="nav-btn" data-view="newsletter">
+        <span>📬</span> Newsletter <span class="nav-badge">{newsletterCount}</span>
+      </button>
+    )}
+    {perms.permissions.canManageReminders && (
+      <button class="nav-btn" data-view="reminders">
+        <span>🚗</span> TÜV & Service
+        {remindersDue > 0 && <span class="nav-badge danger">{remindersDue}</span>}
+      </button>
+    )}
+  </nav>
+
+  <main class="container">
+
+    <!-- 1. DASHBOARD VIEW (KACHELN) -->
+    <section class="admin-view is-active" id="view-dashboard">
+      <div class="dash-header">
+        <h1 class="dash-title">Hallo! Was möchten Sie heute tun?</h1>
+        <p class="dash-sub">Wählen Sie einen Bereich aus, um Texte, Fotos oder Einträge in unter 60 Sekunden zu bearbeiten.</p>
+      </div>
+
+      <div class="tile-grid">
+        {perms.permissions.canEditTeam && (
+          <div class="tile" data-goto="team">
+            <div>
+              <div class="tile-top">
+                <span class="tile-icon">👥</span>
+                <span class="tile-tag">{teamCount} aktiv</span>
+              </div>
+              <h2 class="tile-name">Team & Mitarbeitende</h2>
+              <p class="tile-desc">
+                Mitarbeiter hinzufügen, Porträts tauschen oder löschen. Das Layout passt sich vollautomatisch an.
+              </p>
+            </div>
+            <div class="tile-action">Team verwalten <span>→</span></div>
+          </div>
+        )}
+
+        {perms.permissions.canEditGallery && (
+          <div class="tile" data-goto="gallery">
+            <div>
+              <div class="tile-top">
+                <span class="tile-icon">🖼️</span>
+                <span class="tile-tag">{galleryCount} Bilder</span>
+              </div>
+              <h2 class="tile-name">Fotos & Galerie</h2>
+              <p class="tile-desc">
+                Neue Arbeitsbeispiele hochladen. Bilder werden automatisch optimiert und barrierefrei dargestellt.
+              </p>
+            </div>
+            <div class="tile-action">Fotos verwalten <span>→</span></div>
+          </div>
+        )}
+
+        {perms.permissions.canManageReviews && (
+          <div class="tile" data-goto="reviews">
+            <div>
+              <div class="tile-top">
+                <span class="tile-icon">⭐</span>
+                <span class={`tile-tag ${pendingReviews > 0 ? 'alert' : ''}`}>
+                  {pendingReviews > 0 ? `${pendingReviews} warten auf Prüfung` : `${approvedReviews} freigegeben`}
+                </span>
+              </div>
+              <h2 class="tile-name">Kundenbewertungen</h2>
+              <p class="tile-desc">
+                Rechnungs-QR-Codes drucken und eingegangene Bewertungen von echten Käufern mit 1 Klick freischalten.
+              </p>
+            </div>
+            <div class="tile-action">Bewertungen prüfen & QR erstellen <span>→</span></div>
+          </div>
+        )}
+
+        {perms.permissions.canEditSocial && (
+          <div class="tile" data-goto="social">
+            <div>
+              <div class="tile-top">
+                <span class="tile-icon">🔗</span>
+                <span class="tile-tag">{activeSocial} Profile</span>
+              </div>
+              <h2 class="tile-name">Social Media Links</h2>
+              <p class="tile-desc">
+                LinkedIn, Instagram, YouTube oder TikTok-Profile aktivieren und verknüpfen.
+              </p>
+            </div>
+            <div class="tile-action">Profile anpassen <span>→</span></div>
+          </div>
+        )}
+
+        {perms.permissions.canManageNewsletter && (
+          <div class="tile" data-goto="newsletter">
+            <div>
+              <div class="tile-top">
+                <span class="tile-icon">📬</span>
+                <span class="tile-tag">{newsletterCount} Abonnenten</span>
+              </div>
+              <h2 class="tile-name">Newsletter-Verteiler</h2>
+              <p class="tile-desc">
+                DSGVO-konforme Anmeldungen einsehen und jederzeit als Excel-fähige CSV-Datei exportieren.
+              </p>
+            </div>
+            <div class="tile-action">Liste & Export öffnen <span>→</span></div>
+          </div>
+        )}
+
+        {perms.permissions.canManageReminders && (
+          <div class="tile" data-goto="reminders">
+            <div>
+              <div class="tile-top">
+                <span class="tile-icon">🚗</span>
+                <span class={`tile-tag ${remindersDue > 0 ? 'alert' : ''}`}>
+                  {remindersDue > 0 ? `${remindersDue} diesen Monat fällig` : 'Alle aktuell'}
+                </span>
+              </div>
+              <h2 class="tile-name">HU/TÜV- & Service-Erinnerung</h2>
+              <p class="tile-desc">
+                Nur per E-Mail · Läuft automatisiert alle 24 Monate weiter, bis der Kunde sich zum Termin anmeldet.
+              </p>
+            </div>
+            <div class="tile-action">Termin-Cockpit öffnen <span>→</span></div>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- 2. TEAM VIEW -->
+    <section class="admin-view" id="view-team">
+      <div class="view-card">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title">Neues Teammitglied anlegen</h2>
+            <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">
+              Laden Sie ein Foto hoch — das System schneidet es automatisch perfekt auf das 4:5 Porträtverhältnis zu.
+            </p>
+          </div>
+        </div>
+
+        <form id="form-add-team">
+          <div class="form-grid">
+            <div>
+              <label class="form-label" for="tm-name">Name *</label>
+              <input type="text" id="tm-name" name="name" class="form-input" placeholder="z. B. Julia Hoffmann" required />
+            </div>
+            <div>
+              <label class="form-label" for="tm-role">Position / Funktion *</label>
+              <input type="text" id="tm-role" name="role" class="form-input" placeholder="z. B. Senior UX Designerin" required />
+            </div>
+            <div>
+              <label class="form-label" for="tm-photo">Porträtfoto (Smartphone oder Datei)</label>
+              <input type="file" id="tm-photo" name="photo" accept="image/*" class="form-input" />
+            </div>
+          </div>
+          <div style="margin-bottom: 1.25rem;">
+            <label class="form-label" for="tm-bio">Kurzbeschreibung</label>
+            <textarea id="tm-bio" name="bio" class="form-textarea" placeholder="Aufgabenbereich, Schwerpunkte oder Expertise..." rows="2"></textarea>
+          </div>
+          <button type="submit" class="btn-primary" id="btn-save-team">
+            <span>💾</span> Teammitglied speichern
+          </button>
+        </form>
+      </div>
+
+      <div class="view-card">
+        <div class="view-header">
+          <h2 class="view-title">Aktuelle Teammitglieder ({teamCount})</h2>
+          <span style="font-size: 0.875rem; color: var(--accent-light);">
+            {teamCount === 1 ? 'Hero-Einzelkarte aktiv' : teamCount === 2 ? 'Symmetrisches Duo-Grid' : teamCount === 3 ? 'Klassisches 3er-Grid' : `${teamCount} Personen Grid`}
+          </span>
+        </div>
+
+        <div class="item-list" id="team-list">
+          <div style="color: var(--text-muted); font-size: 0.875rem;">Lade Teammitglieder...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. GALERIE VIEW -->
+    <section class="admin-view" id="view-gallery">
+      <div class="view-card">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title">Neue Fotos hochladen</h2>
+            <p style="font-size: 0.875rem; color: var(--text-muted);">
+              Bilder werden automatisch von EXIF/GPS-Daten bereinigt, für schnelle Ladezeiten optimiert und in WebP konvertiert.
+            </p>
+          </div>
+        </div>
+
+        <form id="form-upload-gallery">
+          <div class="form-grid">
+            <div>
+              <label class="form-label" for="gal-file">Bild auswählen *</label>
+              <input type="file" id="gal-file" name="file" accept="image/*" class="form-input" required />
+            </div>
+            <div>
+              <label class="form-label" for="gal-title">Titel / Bildunterschrift</label>
+              <input type="text" id="gal-title" name="title" class="form-input" placeholder="z. B. Kfz-Meisterwerkstatt Innenansicht" />
+            </div>
+            <div>
+              <label class="form-label" for="gal-alt">Alternativtext (Barrierefreiheit)</label>
+              <input type="text" id="gal-alt" name="altText" class="form-input" placeholder="Was ist auf dem Foto zu sehen?" />
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="btn-save-gallery">
+            <span>📤</span> Bild hochladen & veröffentlichen
+          </button>
+        </form>
+      </div>
+
+      <div class="view-card">
+        <h2 class="view-title" style="margin-bottom: 1.5rem;">Galerie-Bilder ({galleryCount})</h2>
+        <div class="item-list" id="gallery-list">
+          <div style="color: var(--text-muted); font-size: 0.875rem;">Lade Galerie...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. BEWERTUNGEN & QR-CODE VIEW -->
+    <section class="admin-view" id="view-reviews">
+      <div class="view-card">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title">QR-Code für Rechnung erstellen</h2>
+            <p style="font-size: 0.875rem; color: var(--text-muted);">
+              Geben Sie die Rechnungsnummer ein. Der QR-Code verifiziert automatisch, dass nur echte Kunden bewerten können.
+            </p>
+          </div>
+        </div>
+
+        <form id="form-create-qr">
+          <div style="display: flex; gap: 1rem; max-width: 500px; flex-wrap: wrap;">
+            <input type="text" id="invoice-ref-input" class="form-input" placeholder="z. B. RE-2026-0412" required style="flex: 1;" />
+            <button type="submit" class="btn-primary" id="btn-gen-qr">
+              <span>⚡</span> QR-Code erstellen
+            </button>
+          </div>
+        </form>
+
+        <div id="qr-output" style="display: none;">
+          <div class="qr-result-box">
+            <div class="qr-svg-holder" id="qr-svg-container"></div>
+            <div>
+              <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.35rem;" id="qr-ref-display">RE-2026-XXXX</h3>
+              <p style="font-size: 0.875rem; color: #475569; margin-bottom: 0.75rem;">
+                Auf Rechnung ausdrucken oder als PDF-Element einfügen.
+              </p>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <a href="#" id="qr-download-btn" download="rechnung-qr.png" class="btn-primary btn-sm">
+                  <span>📥</span> PNG herunterladen
+                </a>
+                <a href="#" id="qr-test-link" target="_blank" class="btn-outline btn-sm" style="color: #0f172a; border-color: #cbd5e1;">
+                  <span>🔗</span> Bewertungsseite testen
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="view-card">
+        <div class="view-header">
+          <h2 class="view-title">Eingegangene Bewertungen</h2>
+          <span style="font-size: 0.875rem; color: var(--accent-light);" id="reviews-count-display">
+            {pendingReviews} zur Freigabe
+          </span>
+        </div>
+
+        <div class="item-list" id="reviews-list">
+          <div style="color: var(--text-muted); font-size: 0.875rem;">Lade Bewertungen...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SOCIAL MEDIA VIEW -->
+    <section class="admin-view" id="view-social">
+      <div class="view-card">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title">Social-Media-Kanäle verknüpfen</h2>
+            <p style="font-size: 0.875rem; color: var(--text-muted);">
+              Aktivieren Sie die gewünschten Plattformen. Alle Icons sind 100% datenschutzkonform als lokale SVGs eingebunden.
+            </p>
+          </div>
+          <button type="button" class="btn-primary" id="btn-save-social">
+            <span>💾</span> Kanäle speichern
+          </button>
+        </div>
+
+        <div class="item-list" id="social-list">
+          <div style="color: var(--text-muted); font-size: 0.875rem;">Lade Social-Kanäle...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. NEWSLETTER VIEW -->
+    <section class="admin-view" id="view-newsletter">
+      <div class="view-card">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title">Newsletter-Abonnenten</h2>
+            <p style="font-size: 0.875rem; color: var(--text-muted);">
+              Alle Anmeldungen sind DSGVO-konform per Double-Opt-In bestätigt.
+            </p>
+          </div>
+          <a href="/api/admin/newsletter/export.csv" class="btn-primary">
+            <span>📥</span> Als CSV für Excel exportieren
+          </a>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>E-Mail</th>
+                <th>Vorname</th>
+                <th>Status</th>
+                <th>Bestätigt am</th>
+              </tr>
+            </thead>
+            <tbody id="newsletter-tbody">
+              <tr><td colspan="4" style="color: var(--text-muted);">Lade Abonnenten...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. TÜV / SERVICE ERINNERUNG VIEW -->
+    <section class="admin-view" id="view-reminders">
+      <div class="view-card">
+        <div class="view-header">
+          <div>
+            <h2 class="view-title">TÜV- & Service-Erinnerungen</h2>
+            <p style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">
+              Erinnerungen werden ausschließlich per E-Mail versendet und laufen automatisiert alle 24 Monate weiter, bis der Kunde sich zum Termin anmeldet.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.5rem;" id="reminder-filters">
+            <button type="button" class="btn-outline is-active" data-filter="all">Alle</button>
+            <button type="button" class="btn-outline" data-filter="due">Diesen Monat fällig</button>
+            <button type="button" class="btn-outline" data-filter="active_cycle">24M-Zyklus aktiv</button>
+          </div>
+        </div>
+
+        <div class="item-list" id="reminders-list">
+          <div style="color: var(--text-muted); font-size: 0.875rem;">Lade Erinnerungen...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. AGENTUR-RECHTE (MASTER VIEW FÜR NICK) -->
+    <section class="admin-view" id="view-agency">
+      <div class="view-card" style="border-color: rgba(245, 158, 11, 0.4);">
+        <div class="view-header">
+          <div>
+            <div style="display: inline-block; padding: 0.25rem 0.5rem; background: rgba(245, 158, 11, 0.15); color: #fde68a; border-radius: 0.35rem; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.5rem;">
+              MASTER-EDITOR (AGENTUR)
+            </div>
+            <h2 class="view-title">Kunden-Rechtematrix & Sektions-Sichtbarkeit</h2>
+            <p style="font-size: 0.875rem; color: var(--text-muted);">
+              Hier bestimmst du als Agentur für diesen Kunden, welche Sektionen auf der Website aktiv sind und welche Kacheln der Kunde bearbeiten darf.
+            </p>
+          </div>
+          <button type="button" class="btn-primary" id="btn-save-agency" style="background: #d97706;">
+            <span>💾</span> Rechte-Matrix speichern
+          </button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+          <!-- Rechte -->
+          <div style="background: rgba(255, 255, 255, 0.02); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border);">
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; color: #fde68a;">
+              Kunden-Bearbeitungsrechte
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+              <label class="switch-label">
+                <input type="checkbox" id="perm-team" class="switch-input" checked={perms.permissions.canEditTeam} />
+                <span>Team & Mitarbeitende bearbeiten</span>
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="perm-gallery" class="switch-input" checked={perms.permissions.canEditGallery} />
+                <span>Galerie & Fotos verwalten</span>
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="perm-reviews" class="switch-input" checked={perms.permissions.canManageReviews} />
+                <span>Bewertungs-Freigabe & Rechnungs-QR</span>
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="perm-social" class="switch-input" checked={perms.permissions.canEditSocial} />
+                <span>Social-Media-Links anpassen</span>
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="perm-newsletter" class="switch-input" checked={perms.permissions.canManageNewsletter} />
+                <span>Newsletter-Verteiler & Export</span>
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="perm-reminders" class="switch-input" checked={perms.permissions.canManageReminders} />
+                <span>TÜV- & Service-Erinnerungs-Cockpit</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Sichtbarkeit auf Website -->
+          <div style="background: rgba(255, 255, 255, 0.02); padding: 1.25rem; border-radius: 0.75rem; border: 1px solid var(--border);">
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; color: #a5b4fc;">
+              Sektionen auf der Website
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+              <label class="switch-label">
+                <input type="checkbox" id="sec-team" class="switch-input" checked={perms.sections.team.enabled} />
+                <span>Team-Bereich anzeigen</span>
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="sec-gallery" class="switch-input" checked={perms.sections.gallery.enabled} />
+                <span>Galerie-Bereich anzeigen</span>
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="sec-reviews" class="switch-input" checked={perms.sections.reviews.enabled} />
+                <span>Bewertungs-Widget anzeigen</span>
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="sec-social" class="switch-input" checked={perms.sections.social.enabled} />
+                <span>Social-Media-Icons anzeigen</span>
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="sec-newsletter" class="switch-input" checked={perms.sections.newsletter.enabled} />
+                <span>Newsletter-Anmeldeformular anzeigen</span>
+              </label>
+              <label class="switch-label">
+                <input type="checkbox" id="sec-reminders" class="switch-input" checked={perms.sections.reminders.enabled} />
+                <span>HU/TÜV-Erinnerungsformular anzeigen</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script is:inline>
+    // Tab Navigation
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const views = document.querySelectorAll('.admin-view');
+    const tileGoButtons = document.querySelectorAll('[data-goto]');
+    const agencyBtn = document.getElementById('btn-open-agency');
+    const logoutBtn = document.getElementById('btn-logout');
+
+    function switchView(viewId) {
+      views.forEach((v) => v.classList.toggle('is-active', v.id === `view-${viewId}`));
+      navButtons.forEach((b) => b.classList.toggle('is-active', b.getAttribute('data-view') === viewId));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Daten nachladen
+      if (viewId === 'team') loadTeam();
+      if (viewId === 'gallery') loadGallery();
+      if (viewId === 'reviews') loadReviews();
+      if (viewId === 'social') loadSocial();
+      if (viewId === 'newsletter') loadNewsletter();
+      if (viewId === 'reminders') loadReminders();
+    }
+
+    navButtons.forEach((btn) => {
+      btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
+    });
+
+    tileGoButtons.forEach((tile) => {
+      tile.addEventListener('click', () => switchView(tile.getAttribute('data-goto')));
+    });
+
+    if (agencyBtn) {
+      agencyBtn.addEventListener('click', () => switchView('agency'));
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        window.location.href = '/admin/login';
+      });
+    }
+
+    // --- 1. TEAM MANAGER ---
+    async function loadTeam() {
+      const container = document.getElementById('team-list');
+      try {
+        const res = await fetch('/api/admin/team');
+        const data = await res.json();
+        if (!data.members || data.members.length === 0) {
+          container.innerHTML = '<div style="color: var(--text-muted);">Noch keine Teammitglieder vorhanden.</div>';
+          return;
+        }
+
+        container.innerHTML = data.members.map((m) => `
+          <div class="list-item">
+            <div class="list-item-main">
+              ${m.photo_url
+                ? `<img src="${m.photo_url}" alt="${m.name}" class="list-thumb" />`
+                : `<div class="list-thumb" style="display:flex;align-items:center;justify-content:center;font-weight:700;color:#a5b4fc;background:#1e1b4b;">${m.name.slice(0,2)}</div>`
+              }
+              <div>
+                <div style="font-weight: 700; font-size: 1.05rem;">${m.name}</div>
+                <div style="font-size: 0.8125rem; color: var(--accent-light);">${m.role}</div>
+                ${m.bio ? `<div style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.25rem;">${m.bio}</div>` : ''}
+              </div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn-outline btn-sm" onclick="deleteTeam('${m.id}')" style="color: #f87171;">Löschen</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        container.innerHTML = '<div style="color: #f87171;">Fehler beim Laden des Teams</div>';
+      }
+    }
+
+    window.deleteTeam = async function(id) {
+      if (!confirm('Teammitglied wirklich löschen?')) return;
+      await fetch(`/api/admin/team?id=${id}`, { method: 'DELETE' });
+      loadTeam();
+    };
+
+    const teamForm = document.getElementById('form-add-team');
+    if (teamForm) {
+      teamForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btn-save-team');
+        btn.disabled = true;
+        btn.textContent = 'Speichert...';
+
+        const formData = new FormData(teamForm);
+        try {
+          const res = await fetch('/api/admin/team', { method: 'POST', body: formData });
+          if (res.ok) {
+            teamForm.reset();
+            loadTeam();
+          } else {
+            const d = await res.json();
+            alert(d.error || 'Fehler beim Speichern');
+          }
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Teammitglied speichern';
+        }
+      });
+    }
+
+    // --- 2. GALERIE MANAGER ---
+    async function loadGallery() {
+      const container = document.getElementById('gallery-list');
+      try {
+        const res = await fetch('/api/admin/gallery');
+        const data = await res.json();
+        if (!data.items || data.items.length === 0) {
+          container.innerHTML = '<div style="color: var(--text-muted);">Noch keine Bilder vorhanden.</div>';
+          return;
+        }
+
+        container.innerHTML = data.items.map((img) => `
+          <div class="list-item">
+            <div class="list-item-main">
+              <img src="${img.image_url}" alt="${img.alt_text}" class="list-thumb" style="width: 70px; height: 50px;" />
+              <div>
+                <div style="font-weight: 600; font-size: 0.9375rem;">${img.title || 'Ohne Titel'}</div>
+                <div style="font-size: 0.8125rem; color: var(--text-muted);">${img.alt_text || 'Kein Alt-Text'}</div>
+              </div>
+            </div>
+            <div class="list-item-actions">
+              <button class="btn-outline btn-sm" onclick="deleteGallery('${img.id}')" style="color: #f87171;">Löschen</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        container.innerHTML = '<div style="color: #f87171;">Fehler beim Laden der Galerie</div>';
+      }
+    }
+
+    window.deleteGallery = async function(id) {
+      if (!confirm('Bild wirklich löschen?')) return;
+      await fetch(`/api/admin/gallery?id=${id}`, { method: 'DELETE' });
+      loadGallery();
+    };
+
+    const galForm = document.getElementById('form-upload-gallery');
+    if (galForm) {
+      galForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btn-save-gallery');
+        btn.disabled = true;
+        btn.textContent = 'Lädt hoch...';
+
+        const formData = new FormData(galForm);
+        try {
+          const res = await fetch('/api/admin/gallery', { method: 'POST', body: formData });
+          if (res.ok) {
+            galForm.reset();
+            loadGallery();
+          } else {
+            const d = await res.json();
+            alert(d.error || 'Fehler beim Upload');
+          }
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Bild hochladen & veröffentlichen';
+        }
+      });
+    }
+
+    // --- 3. REVIEWS & QR CODES ---
+    const qrForm = document.getElementById('form-create-qr');
+    if (qrForm) {
+      qrForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const ref = document.getElementById('invoice-ref-input').value;
+        const btn = document.getElementById('btn-gen-qr');
+        btn.disabled = true;
+
+        try {
+          const res = await fetch('/api/admin/reviews/qr', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ invoiceRef: ref }),
+          });
+          const d = await res.json();
+          if (res.ok) {
+            document.getElementById('qr-ref-display').textContent = `Rechnung ${d.invoiceRef}`;
+            document.getElementById('qr-svg-container').innerHTML = d.qrSvg;
+            document.getElementById('qr-download-btn').href = d.qrDataUrl;
+            document.getElementById('qr-download-btn').download = `qr-rechnung-${d.invoiceRef}.png`;
+            document.getElementById('qr-test-link').href = d.targetUrl;
+            document.getElementById('qr-output').style.display = 'block';
+          } else {
+            alert(d.error || 'Fehler beim Erstellen');
+          }
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    }
+
+    async function loadReviews() {
+      const container = document.getElementById('reviews-list');
+      try {
+        const res = await fetch('/api/admin/reviews');
+        const data = await res.json();
+        if (!data.reviews || data.reviews.length === 0) {
+          container.innerHTML = '<div style="color: var(--text-muted);">Noch keine Bewertungen vorhanden.</div>';
+          return;
+        }
+
+        container.innerHTML = data.reviews.map((r) => `
+          <div class="list-item" style="${r.status === 'pending' ? 'border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.02);' : ''}">
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                <span style="font-weight: 700;">${r.author_name}</span>
+                <span style="font-size: 0.75rem; color: #a5b4fc; background: rgba(99,102,241,0.15); padding: 0.15rem 0.45rem; border-radius: 9999px;">
+                  Rechnung ${r.invoice_ref}
+                </span>
+                <span style="color: #fbbf24; font-size: 0.875rem;">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                <span style="font-size: 0.75rem; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-weight: 600; ${r.status === 'approved' ? 'background:#065f46;color:#6ee7b7;' : r.status === 'pending' ? 'background:#78350f;color:#fde68a;' : 'background:#334155;color:#94a3b8;'}">
+                  ${r.status === 'approved' ? 'Veröffentlicht' : r.status === 'pending' ? 'Prüfung offen' : 'Archiviert'}
+                </span>
+              </div>
+              <p style="font-size: 0.9375rem; color: var(--text); line-height: 1.45; margin-bottom: 0.35rem;">
+                „${r.comment}“
+              </p>
+              ${r.photo_url ? `
+                <div style="margin-top: 0.5rem;">
+                  <img src="${r.photo_url}" alt="Kundenfoto" style="height: 60px; border-radius: 0.35rem; object-fit: cover;" />
+                </div>
+              ` : ''}
+            </div>
+            <div class="list-item-actions">
+              ${r.status !== 'approved' ? `
+                <button class="btn-primary btn-sm" onclick="reviewAction('${r.id}', 'approve')">Veröffentlichen</button>
+                ${r.photo_url ? `<button class="btn-outline btn-sm" onclick="reviewAction('${r.id}', 'approve_without_photo')">Ohne Foto veröffentlichen</button>` : ''}
+              ` : ''}
+              ${r.status !== 'archived' ? `
+                <button class="btn-outline btn-sm" onclick="reviewAction('${r.id}', 'archive')">Archivieren</button>
+              ` : ''}
+              <button class="btn-outline btn-sm" onclick="deleteReview('${r.id}')" style="color: #f87171;">Löschen</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        container.innerHTML = '<div style="color: #f87171;">Fehler beim Laden</div>';
+      }
+    }
+
+    window.reviewAction = async function(id, action) {
+      await fetch('/api/admin/reviews', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action }),
+      });
+      loadReviews();
+    };
+
+    window.deleteReview = async function(id) {
+      if (!confirm('Bewertung endgültig löschen?')) return;
+      await fetch(`/api/admin/reviews?id=${id}`, { method: 'DELETE' });
+      loadReviews();
+    };
+
+    // --- 4. SOCIAL MEDIA ---
+    async function loadSocial() {
+      const container = document.getElementById('social-list');
+      try {
+        const res = await fetch('/api/admin/social');
+        const data = await res.json();
+        container.innerHTML = data.links.map((s) => `
+          <div class="list-item">
+            <div style="display: flex; align-items: center; gap: 1rem; width: 220px;">
+              <label class="switch-label">
+                <input type="checkbox" class="switch-input social-toggle" data-platform="${s.platform}" ${s.is_enabled ? 'checked' : ''} />
+                <span style="font-weight: 600;">${s.label}</span>
+              </label>
+            </div>
+            <div style="flex: 1;">
+              <input type="url" class="form-input social-url" data-platform="${s.platform}" value="${s.url}" placeholder="https://${s.platform}.com/ihr-profil" />
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        container.innerHTML = '<div style="color: #f87171;">Fehler beim Laden der Social Links</div>';
+      }
+    }
+
+    const saveSocialBtn = document.getElementById('btn-save-social');
+    if (saveSocialBtn) {
+      saveSocialBtn.addEventListener('click', async () => {
+        saveSocialBtn.disabled = true;
+        saveSocialBtn.textContent = 'Speichert...';
+        const toggles = document.querySelectorAll('.social-toggle');
+        const urls = document.querySelectorAll('.social-url');
+        const links = [];
+
+        toggles.forEach((t) => {
+          const platform = t.getAttribute('data-platform');
+          const urlInput = Array.from(urls).find((u) => u.getAttribute('data-platform') === platform);
+          links.push({
+            platform,
+            is_enabled: t.checked ? 1 : 0,
+            url: urlInput ? urlInput.value.trim() : '',
+          });
+        });
+
+        try {
+          await fetch('/api/admin/social', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ links }),
+          });
+          alert('Social Media Kanäle erfolgreich gespeichert!');
+        } finally {
+          saveSocialBtn.disabled = false;
+          saveSocialBtn.textContent = 'Kanäle speichern';
+        }
+      });
+    }
+
+    // --- 5. NEWSLETTER ---
+    async function loadNewsletter() {
+      const tbody = document.getElementById('newsletter-tbody');
+      try {
+        const res = await fetch('/api/admin/newsletter/export.csv');
+        // Liste für Tabelle laden
+        // Da wir direkt den CSV Export haben, zeigen wir die Liste an
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" style="color: var(--accent-light);">
+              Abonnenten sind über den oberen Button direkt als Excel-CSV herunterladbar.
+            </td>
+          </tr>
+        `;
+      } catch (e) {}
+    }
+
+    // --- 6. REMINDERS (TÜV / SERVICE) ---
+    async function loadReminders(filter = 'all') {
+      const container = document.getElementById('reminders-list');
+      try {
+        const res = await fetch('/api/admin/reminders');
+        const data = await res.json();
+        if (!data.reminders || data.reminders.length === 0) {
+          container.innerHTML = '<div style="color: var(--text-muted);">Keine Erinnerungen vorhanden.</div>';
+          return;
+        }
+
+        let list = data.reminders;
+        if (filter === 'due') {
+          const currentY = new Date().getFullYear();
+          const currentM = new Date().getMonth() + 1;
+          list = list.filter((r) => r.status !== 'completed' && ((r.due_year === currentY && r.due_month === currentM) || (r.due_year < currentY)));
+        } else if (filter === 'active_cycle') {
+          list = list.filter((r) => r.auto_cycle_24m === 1 && r.customer_signed_up === 0);
+        }
+
+        container.innerHTML = list.map((r) => {
+          const monthFormatted = String(r.due_month).padStart(2, '0');
+          const isSignedUp = r.customer_signed_up === 1;
+          const isCycleActive = r.auto_cycle_24m === 1 && !isSignedUp;
+
+          return `
+            <div class="list-item" style="${isSignedUp ? 'border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.02);' : ''}">
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+                  <span style="font-weight: 700; font-size: 1.05rem;">${r.vehicle_or_object}</span>
+                  <span style="font-size: 0.75rem; background: rgba(99,102,241,0.15); color: #a5b4fc; padding: 0.2rem 0.5rem; border-radius: 9999px;">
+                    ${r.service_type}
+                  </span>
+                  <span style="font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 0.25rem; background: #1e1b4b; color: #fbbf24;">
+                    Fällig: ${monthFormatted}/${r.due_year}
+                  </span>
+                  ${isSignedUp ? `
+                    <span style="font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 0.25rem; background: #065f46; color: #6ee7b7;">
+                      ✓ Kunde angemeldet
+                    </span>
+                  ` : isCycleActive ? `
+                    <span style="font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 0.25rem; background: rgba(99,102,241,0.2); color: #c7d2fe;">
+                      🔄 Automatischer 24M-Zyklus aktiv (Zyklus #${r.cycle_count || 1})
+                    </span>
+                  ` : ''}
+                </div>
+                <div style="font-size: 0.875rem; color: var(--text-muted);">
+                  Kunde: <strong>${r.customer_name}</strong> · E-Mail: <strong>${r.contact_value}</strong>
+                </div>
+                ${r.notes ? `<div style="font-size: 0.8125rem; color: #a5b4fc; margin-top: 0.25rem;">${r.notes}</div>` : ''}
+              </div>
+              <div class="list-item-actions">
+                ${!isSignedUp ? `
+                  <button class="btn-primary btn-sm" onclick="markCustomerSignedUp('${r.id}')" style="background: #10b981;">
+                    <span>✓</span> Kunde hat sich angemeldet
+                  </button>
+                ` : `
+                  <button class="btn-outline btn-sm" onclick="extendReminder('${r.id}')" style="color: #a5b4fc;">
+                    <span>↻</span> Neuer 24M-Zyklus
+                  </button>
+                `}
+                <button class="btn-outline btn-sm" onclick="extendReminder('${r.id}')" title="Termin direkt um 24 Monate vorverlegen">
+                  <span>+24M</span>
+                </button>
+                <button class="btn-outline btn-sm" onclick="deleteReminder('${r.id}')" style="color: #f87171;">Löschen</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        container.innerHTML = '<div style="color: #f87171;">Fehler beim Laden der Erinnerungen</div>';
+      }
+    }
+
+    window.markCustomerSignedUp = async function(id) {
+      const res = await fetch('/api/admin/reminders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action: 'customer_signed_up' }),
+      });
+      const d = await res.json();
+      alert(d.message || 'Kunde als angemeldet markiert!');
+      loadReminders();
+    };
+
+    window.extendReminder = async function(id) {
+      const res = await fetch('/api/admin/reminders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action: 'extend_cycle', years: 2 }),
+      });
+      const d = await res.json();
+      alert(d.message || 'Verlängert!');
+      loadReminders();
+    };
+
+    window.deleteReminder = async function(id) {
+      if (!confirm('Erinnerung löschen?')) return;
+      await fetch(`/api/admin/reminders?id=${id}`, { method: 'DELETE' });
+      loadReminders();
+    };
+
+    // Filter Buttons
+    document.querySelectorAll('#reminder-filters button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#reminder-filters button').forEach((b) => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        loadReminders(btn.getAttribute('data-filter'));
+      });
+    });
+
+    // --- 7. MASTER RECHTE-MATRIX SPEICHERN ---
+    const saveAgencyBtn = document.getElementById('btn-save-agency');
+    if (saveAgencyBtn) {
+      saveAgencyBtn.addEventListener('click', async () => {
+        saveAgencyBtn.disabled = true;
+        saveAgencyBtn.textContent = 'Speichert...';
+
+        const config = {
+          schemaVersion: 1,
+          sections: {
+            team: { enabled: document.getElementById('sec-team').checked },
+            gallery: { enabled: document.getElementById('sec-gallery').checked },
+            reviews: { enabled: document.getElementById('sec-reviews').checked },
+            social: { enabled: document.getElementById('sec-social').checked },
+            newsletter: { enabled: document.getElementById('sec-newsletter').checked },
+            reminders: { enabled: document.getElementById('sec-reminders').checked },
+          },
+          permissions: {
+            canEditTeam: document.getElementById('perm-team').checked,
+            canEditGallery: document.getElementById('perm-gallery').checked,
+            canManageReviews: document.getElementById('perm-reviews').checked,
+            canEditSocial: document.getElementById('perm-social').checked,
+            canManageNewsletter: document.getElementById('perm-newsletter').checked,
+            canManageReminders: document.getElementById('perm-reminders').checked,
+          },
+        };
+
+        try {
+          const res = await fetch('/api/admin/permissions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ config }),
+          });
+          if (res.ok) {
+            alert('Rechte-Matrix erfolgreich gespeichert! Die Seite lädt neu.');
+            window.location.reload();
+          } else {
+            alert('Fehler beim Speichern der Rechte.');
+          }
+        } finally {
+          saveAgencyBtn.disabled = false;
+          saveAgencyBtn.textContent = 'Rechte-Matrix speichern';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

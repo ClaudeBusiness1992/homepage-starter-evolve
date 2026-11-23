@@ -1,10 +1,16 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import node from '@astrojs/node';
 
 export default defineConfig({
   output: 'static',
-  // Pro Kunde anpassen — wird für Sitemap, Canonical-URLs und OG-Tags benötigt
+  adapter: node({
+    mode: 'standalone',
+  }),
+  security: {
+    checkOrigin: false,
+  },
   site: 'https://ihre-domain.de',
   trailingSlash: 'never',
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !page.endsWith('/test') })],
 });

@@ -1,0 +1,43 @@
+---
+import SectionHeader from '../components/SectionHeader.astro';
+interface Member {
+  name: string;
+  role: string;
+  bio: string;
+  photo: string;
+}
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  intro?: string;
+  tags?: string[];
+  members: Member[];
+}
+const { label, headline, subline, intro, tags = [], members } = Astro.props;
+---
+
+<section class="section" id="about">
+  <div class="wrap">
+    <SectionHeader {label} {headline} {subline} center />
+    {intro && <p class="about-intro r">{intro}</p>}
+    {tags.length > 0 && <ul class="about-tags r">{tags.map(t => <li>{t}</li>)}</ul>}
+    <div class="about-grid">
+      {members.map((m, i) => (
+        <div class={`acard r d${i + 1}`}>
+          <div class="aphoto" {...(m.photo ? {'data-lightbox': m.photo, 'data-alt': m.name, 'data-caption': m.name, 'data-category': m.role, 'data-description': m.bio, 'tabindex': '0', 'role': 'button', 'aria-label': `Foto von ${m.name} vergrößern`} : {})}>
+            {m.photo
+              ? <img src={m.photo} alt={m.name} width="600" height="800" loading="lazy" />
+              : <div class="aphoto-placeholder">Foto hier einfügen<br />600 × 800 px empfohlen</div>
+            }
+          </div>
+          <div class="abody">
+            <h3 class="aname">{m.name}</h3>
+            <span class="arole">{m.role}</span>
+            {m.bio.split(/\n\n+/).map(par => <p class="atext">{par}</p>)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

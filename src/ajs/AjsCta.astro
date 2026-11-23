@@ -1,0 +1,26 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  buttonLabel: string;
+  buttonHref: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  image: string;
+}
+const { label, headline, subline, buttonLabel, buttonHref, secondaryLabel, secondaryHref, image } = Astro.props;
+const parts = headline.split('. ').map(p => p.replace(/\.$/, ''));
+---
+
+<section id="cta" class="cta-section" style={`--cta-img: url(${image})`}>
+  <div class="wrap cta-wrap">
+    <span class="lbl r">{label}</span>
+    <h2 class="cta-h r">{parts[0]}.{parts[1] && <><br /><i>{parts[1]}.</i></>}</h2>
+    <p class="cta-sub r">{subline}</p>
+    <div class="cta-btns r">
+      <a href={buttonHref} class="btn btn-fill">{buttonLabel} <span aria-hidden="true">→</span></a>
+      {secondaryLabel && <a href={secondaryHref} class="btn btn-ghost">{secondaryLabel}</a>}
+    </div>
+  </div>
+</section>

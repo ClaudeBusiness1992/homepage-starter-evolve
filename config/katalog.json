@@ -1,0 +1,462 @@
+{
+  "intro": "Bestellen können nur freigeschaltete Mitglieder. Registriere dich kostenlos, wir prüfen deine Aufnahme persönlich.",
+  "registerLabel": "Registrieren",
+  "registerHref": "https://ajs-inner-circle.de/registrierung/",
+  "loginLabel": "Anmelden",
+  "loginHref": "https://ajs-inner-circle.de/login/",
+  "categories": [
+    {
+      "id": "rind",
+      "title": "Rind",
+      "products": [
+        {
+          "name": "Brühenbaron – Frischer Rindertafelspitz von der deutschen Färse",
+          "text": "Sanft in Brühe gegart und dünn aufgeschnitten – köstlich mit Meerrettich, Kartoffeln und Wurzelgemüse.",
+          "note": "Premium-Rindfleisch aus Schleswig-Holstein",
+          "price": "19,80 €/kg inkl. MwSt.",
+          "weight": "ca. 1100–1300 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/rind-01.webp"
+        },
+        {
+          "name": "Der Alleskönner – 1/4 Roastbeef aus Paraguay, tiefgekühlt",
+          "text": "Ein Kilo voller Möglichkeiten: Dieses Roastbeef aus Paraguay macht als Braten im Ganzen ebenso Freude wie in selbst geschnittenen Steaks. Ca. 1 kg pro Stück, schockgefrostet.",
+          "note": "Ware ist Schockgefrostet",
+          "price": "23,00 €/kg inkl. MwSt.",
+          "weight": "ca. 900–1300 g pro Stück",
+          "ribbon": "Bestseller",
+          "image": "/images/katalog/rind-02.webp"
+        },
+        {
+          "name": "Der Gipfelstürmer – Rinderfilet zum Spitzenpreis!",
+          "text": "35 € das Kilo! Da kannste nicht meckern! Hier kommt das dicke Ende vom Filet! Rinderfiletkopf von der Färse aus der polnischen Tatra-Region. Und die Qualität? Unsere bisherigen Kunden sind begeistert! Zart, geschmackvoll und ein richtig guter Fang für Feinschmecker und Sparfüchse.",
+          "note": "Perfekt für Chateaubriand oder Tournedos",
+          "price": "35,00 €/kg inkl. MwSt.",
+          "weight": "ca. 900–1500 g pro Stück",
+          "ribbon": "Bestseller",
+          "image": "/images/katalog/rind-03.webp"
+        },
+        {
+          "name": "Der Vorstandsvorsitzende vom Grill – XXL-Clubsteak von der deutschen Färse, ca. 2 kg",
+          "text": "Willkommen im Zwei-Kilo-Club! Dieses Steak bringt seine eigene Gewichtsklasse mit ! Hier liegt das Abendessen für die Runde auf einem einzigen Brett.",
+          "note": "Premium-Rindfleisch aus Schleswig-Holstein",
+          "price": "40,60 €/kg inkl. MwSt.",
+          "weight": "ca. 1800–2100 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/rind-04.webp"
+        },
+        {
+          "name": "Frische Kalbsbeinscheiben, rosé, ideal für Ossobuco 4 Stück",
+          "text": "Klassisch als Ossobuco mit Tomaten, Wurzelgemüse und Kräutern zubereiten und mit einer frischen Gremolata aus Petersilie, Knoblauch und Zitronenschale vollenden.",
+          "note": "",
+          "price": "25,70 €/kg inkl. MwSt.",
+          "weight": "ca. 900–1100 g pro Paket",
+          "ribbon": "",
+          "image": "/images/katalog/rind-05.webp"
+        },
+        {
+          "name": "Frische Semerrolle vom Kalb",
+          "text": "Perfekt für Vitello tonnato – dünn aufgeschnittenes Kalbfleisch mit einer cremigen Thunfisch-Kapern-Sauce. Die Semerrolle vom Kalb eignet sich dafür sehr gut",
+          "note": "",
+          "price": "22,70 €/kg inkl. MwSt.",
+          "weight": "ca. 900–1100 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/rind-06.webp"
+        },
+        {
+          "name": "Hack, fertig, lecker! – Bio-Rinderhack, 250 g, tiefgekühlt",
+          "text": "Kleines Paket, viele Lieblingsgerichte: Bio-Rinderhack in der praktischen 250-g-Portion. Ideal für einen großen Burger, kleine Frikadellen oder eine herzhafte Bolognese für den gemütlichen Pasta-Abend.",
+          "note": "",
+          "price": "4,90 € / Stück inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/rind-07.webp"
+        },
+        {
+          "name": "Hüftgold – Frisches Hüftfilet von der deutschen Färse, ca. 500 g",
+          "text": "Feiner Genuss aus der Hüfte: Dieses küchenfertige Hüftfilet macht als kleine Steaks, Medaillons oder im Ganzen eine köstliche Figur. Für ein besonderes Essen zu zweit.",
+          "note": "",
+          "price": "23,20 €/kg inkl. MwSt.",
+          "weight": "ca. 450–650 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/rind-08.webp"
+        },
+        {
+          "name": "Kalbsoberschale, rosé, mit Deckel",
+          "text": "Feinfaseriges Kalbfleisch mit mildem Geschmack – vielseitig für deine Küche. Die Kalbsoberschale mit aufliegendem Fleischdeckel eignet sich nach dem fachgerechten Zuschneiden für zarte Schnitzel, feine Rouladen oder saftige Braten.",
+          "note": "",
+          "price": "16,80 €/kg inkl. MwSt.",
+          "weight": "ca. 4200–4800 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/rind-09.webp"
+        },
+        {
+          "name": "Omas Chefsache – Frisches Bürgermeisterstück aus Schleswig-Holstein",
+          "text": "Das Bürgermeisterstück macht als Braten aus dem Ofen oder im Ganzen vom Grill richtig Eindruck. Kräftig anrösten, behutsam garen und in dünnen Scheiben genießen.",
+          "note": "Premium-Rindfleisch aus Schleswig-Holstein",
+          "price": "21,80 €/kg inkl. MwSt.",
+          "weight": "ca. 1200–1500 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/rind-10.webp"
+        },
+        {
+          "name": "Saftprotz – Frisches Entrecôte von der deutschen Färse",
+          "text": "Kräftiger Steakgenuss aus Schleswig-Holstein: Dieses frische Entrecôte von der deutschen Färse gehört auf den heißen Grill oder in die Pfanne.",
+          "note": "Premium-Rindfleisch aus Schleswig-Holstein",
+          "price": "36,20 €/kg inkl. MwSt.",
+          "weight": "ca. 1000–1300 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/rind-11.webp"
+        },
+        {
+          "name": "Zwei Asse am Knochen – T-Bone-Steak von der deutschen Färse",
+          "text": "Deine Lieblingsstücke, ein Steak: Beim T-Bone treffen Roastbeef und feines Filet am markanten Knochen aufeinander.",
+          "note": "Premium-Rindfleisch aus Schleswig-Holstein",
+          "price": "40,60 €/kg inkl. MwSt.",
+          "weight": "ca. 900–1100 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/rind-12.webp"
+        }
+      ]
+    },
+    {
+      "id": "lamm",
+      "title": "Lamm",
+      "products": [
+        {
+          "name": "Lammhüfte aus Neuseeland",
+          "text": "Zartes Lammfleisch mit charakteristischem, feinwürzigem Geschmack. Die Lammhüfte aus Neuseeland eignet sich hervorragend zum Kurzbraten, Grillen oder schonenden Garen im Ofen.",
+          "note": "",
+          "price": "23,70 €/kg inkl. MwSt.",
+          "weight": "ca. 750–850 g pro ca. 4 Stück",
+          "ribbon": "",
+          "image": "/images/katalog/lamm-01.webp"
+        },
+        {
+          "name": "Lammlachse aus Neuseeland",
+          "text": "Lammlachse sind ausgelöste Rückenstücke ohne Knochen und zeichnen sich durch ihr zartes, mageres Fleisch aus. Ideal zum Kurzbraten oder Grillen",
+          "note": "",
+          "price": "39,50 €/kg inkl. MwSt.",
+          "weight": "ca. 700–800 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/lamm-02.webp"
+        },
+        {
+          "name": "TK Lammfilet aus Neuseeland",
+          "text": "ca. 500g Packung",
+          "note": "",
+          "price": "33,00 €/kg inkl. MwSt.",
+          "weight": "ca. 450–550 g pro Packung",
+          "ribbon": "",
+          "image": "/images/katalog/lamm-03.webp"
+        }
+      ]
+    },
+    {
+      "id": "schwein",
+      "title": "Schwein",
+      "products": [
+        {
+          "name": "Frischer Deutscher Schweinenacken im Stück",
+          "text": "",
+          "note": "",
+          "price": "6,00 €/kg inkl. MwSt.",
+          "weight": "ca. 2500–3100 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/schwein-01.webp"
+        },
+        {
+          "name": "Frischer DUROC Schweinenacken o.Kn.",
+          "text": "Aus Thüringen",
+          "note": "regional erzeugt, fein marmoriertes Fleisch, geringer Bratverlust, edler Geschmack",
+          "price": "16,90 €/kg inkl. MwSt.",
+          "weight": "ca. 1200–1400 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/schwein-02.webp"
+        },
+        {
+          "name": "Frischer DUROC Schweinerücken o.Kn.",
+          "text": "Aus Thüringen, geviertelt und frisch",
+          "note": "regional erzeugt, fein marmoriertes Fleisch, geringer Bratverlust, edler Geschmack",
+          "price": "15,20 €/kg inkl. MwSt.",
+          "weight": "ca. 750–900 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/schwein-03.webp"
+        },
+        {
+          "name": "Frisches DUROC Schweine-Karree mit Knochen",
+          "text": "Aus Thüringen",
+          "note": "regional erzeugt, fein marmoriertes Fleisch, geringer Bratverlust, edler Geschmack",
+          "price": "16,90 €/kg inkl. MwSt.",
+          "weight": "ca. 1400–1600 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/schwein-04.webp"
+        },
+        {
+          "name": "Susländer .Nacken o.Knochen im Stück",
+          "text": "Natürlich gewachsen in Schleswig Holstein, ohne Antibiotika und chemische Zusätze",
+          "note": "Traditionelle und stressfreie auf Bauernaufzucht in Nordisch ausgewählten Familienbetrieben",
+          "price": "15,80 €/kg inkl. MwSt.",
+          "weight": "ca. 900–1100 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/schwein-05.webp"
+        }
+      ]
+    },
+    {
+      "id": "wild",
+      "title": "Wild",
+      "note": "Saisonal, bald verfügbar. Sobald Wildschwein und Reh Saison haben, findest du die Auswahl hier.",
+      "products": []
+    },
+    {
+      "id": "gefluegel",
+      "title": "Geflügel",
+      "products": [
+        {
+          "name": "Butterhähnchen Chicken Wings TK",
+          "text": "Natürlich gewachsen in Schleswig Holstein, ohne Antibiotika und ohne chemische Zusätze",
+          "note": "Traditionelle und stressfreie Bauernaufzucht vom Hof Hachmann in Bevern.\nDas Original mit Butter im Futter.",
+          "price": "9,20 €/kg inkl. MwSt.",
+          "weight": "ca. 900–1100 g pro Packung",
+          "ribbon": "",
+          "image": "/images/katalog/gefluegel-01.webp"
+        },
+        {
+          "name": "Butterhähnchen im ganzen TK",
+          "text": "Natürlich gewachsen in Schleswig Holstein, ohne Antibiotika und ohne chemische Zusätze",
+          "note": "Traditionelle und stressfreie Bauernaufzucht vom Hof Hachmann in Bevern.\nDas Original mit Butter im Futter.",
+          "price": "10,90 €/kg inkl. MwSt.",
+          "weight": "ca. 1800–2100 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/gefluegel-02.webp"
+        },
+        {
+          "name": "Butterhähnchenkeulen 2 Stück TK",
+          "text": "Natürlich gewachsen in Schleswig Holstein, ohne Antibiotika und ohne chemische Zusätze",
+          "note": "Traditionelle und stressfreie Bauernaufzucht vom Hof Hachmann in Bevern.\nDas Original mit Butter im Futter.",
+          "price": "11,20 €/kg inkl. MwSt.",
+          "weight": "ca. 700–900 g pro Packung",
+          "ribbon": "",
+          "image": "/images/katalog/gefluegel-03.webp"
+        },
+        {
+          "name": "Frische Hähnchen-Oberkeulen Rolle Baronesse",
+          "text": "4 Stück ohne Knochen. Gewürzt und gefüllt mit Putenhackfleisch",
+          "note": "",
+          "price": "13,50 €/kg inkl. MwSt.",
+          "weight": "ca. 600–800 g pro Paket",
+          "ribbon": "",
+          "image": "/images/katalog/gefluegel-04.webp"
+        },
+        {
+          "name": "Frische Kikok Hähnchen 2 Stück",
+          "text": "Aufzucht ohne Antibiotika und 50 % Mais im Futter",
+          "note": "Kikok verspricht ein ausgeprägtes Hähnchenaroma. Die maisreiche Fütterung und langsamere Aufzucht sind die konkreten Argumente. Ideal auch zum Teilen mit Freunden oder Familie.",
+          "price": "8,10 €/kg inkl. MwSt.",
+          "weight": "ca. 2500–2600 g pro Paket",
+          "ribbon": "",
+          "image": "/images/katalog/gefluegel-05.webp"
+        },
+        {
+          "name": "Frische Kikok Hähnchen Schenkel Vorratspackung",
+          "text": "Aufzucht ohne Antibiotika und 50 % Mais im Futter",
+          "note": "Kikok verspricht ein ausgeprägtes Hähnchenaroma. Die maisreiche Fütterung und langsamere Aufzucht sind die konkreten Argumente. Ideal auch zum Teilen mit Freunden oder Familie.",
+          "price": "8,50 €/kg inkl. MwSt.",
+          "weight": "ca. 3200–3400 g pro Paket",
+          "ribbon": "",
+          "image": "/images/katalog/gefluegel-06.webp"
+        }
+      ]
+    },
+    {
+      "id": "ente",
+      "title": "Ente",
+      "products": [
+        {
+          "name": "Bäuerliche Freilandente",
+          "text": "Schon beim Duft aus dem Ofen steigt die Vorfreude: Unsere junge Markeruper Barbarie-Ente der Handelsklasse A verspricht knusprige Haut und zartes, aromatisches Fleisch. Ohne zugesetztes Fremdwasser",
+          "note": "",
+          "price": "16,80 €/kg inkl. MwSt.",
+          "weight": "ca. 2500–3000 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/ente-gans-01.webp"
+        },
+        {
+          "name": "Entenbrust aus Schleswig-Holstein",
+          "text": "Knusprige Haut, saftiges Fleisch – da freut sich die Gabel. Unsere Markeruper Entenbrust der Handelsklasse A kommt ohne zugesetztes Fremdwasser zu dir. Auf der Hautseite kross gebraten, dazu eine fruchtige Orangensauce oder klassisch Rotkohl und Klöße – fertig ist dein kleines Festmahl.",
+          "note": "",
+          "price": "28,90 €/kg inkl. MwSt.",
+          "weight": "ca. 750–950 g pro Stück",
+          "ribbon": "",
+          "image": "/images/katalog/ente-gans-02.webp"
+        },
+        {
+          "name": "Französische Enten-Rillettes 1 Kg Schale",
+          "text": "Ein Stück französische Genusskultur für deine Brotzeit: Diese Rillettes vereinen Entenbrustfilet und Entenfett mit Schweinefleisch und Schweinefett zu einem herzhaften Fleischaufstrich.",
+          "note": "Glutenfrei und ohne Konservierungsmittel.",
+          "price": "24,00 € / Schale inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/ente-gans-03.webp"
+        },
+        {
+          "name": "Frische Barbarie Entbrust",
+          "text": "Kräftiger Geschmack und eine Haut, die beim Braten herrlich knusprig wird: Barbarie-Entenbrust bringt besonderen Genuss auf deinen Teller. Ideal für Pfanne und Ofen",
+          "note": "",
+          "price": "18,90 €/kg inkl. MwSt.",
+          "weight": "ca. 360–420 g pro Paket",
+          "ribbon": "",
+          "image": "/images/katalog/ente-gans-06.webp"
+        },
+        {
+          "name": "Frische Barbarie Entenkeule 2 Stück",
+          "text": "Barbarie-Entenkeulen werden bei schonender Zubereitung wunderbar zart und saftig. Im Ofen lässt sich die Haut goldbraun und knusprig braten.",
+          "note": "",
+          "price": "11,50 €/kg inkl. MwSt.",
+          "weight": "ca. 800–950 g pro Paket",
+          "ribbon": "",
+          "image": "/images/katalog/ente-gans-07.webp"
+        }
+      ]
+    },
+    {
+      "id": "gans",
+      "title": "Gans",
+      "products": [
+        {
+          "name": "Französische Gänse-Rillettes 1 Kg Schale",
+          "text": "Herzhaft, streichzart und voller Genuss: Französische Gänse-Rillettes mit Schweinefleisch und Schweinefett, verfeinert mit Weißwein. Perfekt auf knusprigem Baguette oder kräftigem Bauernbrot.",
+          "note": "Glutenfrei und ohne Konservierungsmittel.",
+          "price": "25,00 € / Schale inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/ente-gans-04.webp"
+        },
+        {
+          "name": "Freiland Gans aus Schleswig-Holstein",
+          "text": "Unsere junge Markeruper Gans aus bäuerlicher Freilandhaltung kommt tiefgekühlt zu dir. Schonend auftauen, nach deinem Lieblingsrezept zubereiten und einen herrlich duftenden Gänsebraten genießen. Ohne zugesetztes Fremdwasser.",
+          "note": "",
+          "price": "21,90 €/kg inkl. MwSt.",
+          "weight": "ca. 5000–5500 g pro Stück",
+          "ribbon": "Bestseller",
+          "image": "/images/katalog/ente-gans-05.webp"
+        }
+      ]
+    },
+    {
+      "id": "meeresfruechte",
+      "title": "Meeresfrüchte",
+      "products": [
+        {
+          "name": "\"AJ`s Garnelen\" Tabelle",
+          "text": "",
+          "note": "",
+          "price": "0,00 € / Beutel inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-01.webp"
+        },
+        {
+          "name": "\"AJ´s Classic Garnelen\" geschält 3,5cm 31/40",
+          "text": "Ca. 3,5 cm und groß genug, um auf der Gabel etwas herzumachen, handlich genug für deine Pastagerichte",
+          "note": "1-kg-Gebinde inklusive 20 % Glasur. Diese schützt die Garnelen während der Tiefkühllagerung und hält die Qualität. 800g Nettogewicht",
+          "price": "15,00 € / Beutel inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-02.webp"
+        },
+        {
+          "name": "\"AJ´s Edelkleine\" Garnelen 4 cm 21/25",
+          "text": "Mit reichlich Olivenöl in der Pfanne gebraten, werden diese geschälten Garnelen zur feinen Vorspeise oder – mit gutem Brot zum Dippen – zum Hauptgericht für den großen Appetit.",
+          "note": "1-kg-Gebinde inklusive 20 % Glasur. Diese schützt die Garnelen während der Tiefkühllagerung und hält die Qualität. 800 g Nettogewicht. Aus Aquakultur",
+          "price": "18,00 € / Beutel inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-03.webp"
+        },
+        {
+          "name": "\"AJ´s Imperial\" Rotgarnelen geschält 5 cm 16/20",
+          "text": "Wildfang und kein Pulen: Diese mittelgroßen, geschälten Rotgarnelen aus dem Argentinischem Meer glänzen auf Spießen und sind ideal für Surf & Turf.“",
+          "note": "16- 20 Stück auf 1-kg-Gebinde inklusive 20 % Glasur. Diese schützt die Garnelen während der Tiefkühllagerung und hält die Qualität. 800g Nettogewicht",
+          "price": "24,00 € / Beutel inkl. MwSt.",
+          "weight": "",
+          "ribbon": "Bestseller",
+          "image": "/images/katalog/meeresfruechte-04.webp"
+        },
+        {
+          "name": "\"AJ´s King\" Garnelen geschält 6 cm 13/15",
+          "text": "Diese ca. 6 cm großen, rohen und bereits geschälten Black-Tiger-Garnelen aus Aquakultur machen Appetit auf Meer – mit etwa 28–33 Stück pro Kilo.",
+          "note": "28–33 Stück pro 1-kg-Gebinde inklusive 20 % schützender Eisglasur. Diese bewahrt die Garnelen während der Tiefkühllagerung vor dem Austrocknen. 800g Nettogewicht",
+          "price": "21,00 € / Packung inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-05.webp"
+        },
+        {
+          "name": "\"AJ´s Royal\" Garnelen geschält 8 cm 8/12",
+          "text": "Diese extra großen ca. 8 cm, rohen und bereits geschälten Black-Tiger-Garnelen übernehmen auf deinem Teller die Hauptrolle",
+          "note": "8-12 Stück auf 1-kg-Gebinde inklusive 20 % Glasur. Diese schützt die Garnelen während der Tiefkühllagerung und hält die Qualität. Aus Aquakultur",
+          "price": "22,00 € / Beutel inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-06.webp"
+        },
+        {
+          "name": "\"AJ´s Titan\" Garnelen geschält 12 cm 4/6",
+          "text": "„Hier braucht es keine volle Platte, um Eindruck zu machen: Diese rohen ca. 12 cm XXL-Black-Tiger-Garnelen bekommen ihren großen Auftritt“",
+          "note": "4 - 6 Stück auf 1-kg-Gebinde inklusive 20 % Glasur zu dir nach Hause. Die Glasur schützt Garnelen während der Tiefkühllagerung und hält die Qualität. Aus Aquakultur. 800g Nettogewicht",
+          "price": "29,00 € / Beutel inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-07.webp"
+        },
+        {
+          "name": "Große Black-Tiger-Garnelen, Easy Peel, ohne Kopf, 8/12",
+          "text": "Die Easy-Peel-Schale ist bereits eingeschnitten und lässt sich leichter entfernen. Du kannst die Garnelen in der Schale zubereiten und anschließend pulen oder vor der Zubereitung schälen.",
+          "note": "8 -12 Stück auf 1-kg-Gebinde inklusive 20 % Glasur. Die Glasur schützt die Garnelen während der Tiefkühllagerung und hält die Qualität",
+          "price": "21,00 € / Packung inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-08.webp"
+        },
+        {
+          "name": "Große Garnelen ohne Kopf, mit Schale, Easy Peel 8/12",
+          "text": "Große rohe Garnelen für Grill und Pfanne: Mit 8–12 Stück pro Beutel machen diese Dicken Dinger ordentlich was her.",
+          "note": "1-kg-Gebinde inklusive 20 % Glasur. Die Glasur schützt die Garnelen während der Tiefkühllagerung und hält die Qualität. Aus Aquakultur",
+          "price": "17,00 € / Beutel inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-09.webp"
+        },
+        {
+          "name": "Stripstars Easy Peel 8/12",
+          "text": "Diese großen argentinischen Rotgarnelen aus Wildfang bringen ordentlich Genuss auf den Teller – dank eingeschnittener Easy-Peel-Schale kommst du nach dem Garen ganz leicht ans leckere Fleisch.",
+          "note": "8-12 Stück pro 1-kg-Gebinde inklusive 20 % Glasur. Die Glasur schützt die Garnelen während der Tiefkühllagerung und hält die Qualität",
+          "price": "24,00 € / Beutel inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-10.webp"
+        },
+        {
+          "name": "XXL Black-Tiger-Garnelen aus Wildfang – mit Kopf und Schale 6/8",
+          "text": "6-8 Große Garnelen für besondere Genussmomente: Durch ihre stattliche Größe lassen sich diese Black Tiger einzeln auf dem Grill oder längs halbiert in der Pfanne zubereiten.",
+          "note": "Du erhältst ein 1-kg-Gebinde inklusive 20 % schützender Eisglasur. Diese bewahrt die Garnelen während der Tiefkühllagerung vor dem Austrocknen.",
+          "price": "26,00 € / Packung inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-11.webp"
+        },
+        {
+          "name": "XXXL Black-Tiger-Garnelen roh, mit Kopf und Schale, 2/4",
+          "text": "Hier wird aus einer Garnele ein Auftritt ! Längs halbieren, die Schnittflächen mit Knoblauch-Kräuterbutter bestreichen und auf dem Grill oder im Ofen zubereiten",
+          "note": "2 - 4 Stück auf 1-kg-Gebinde inklusive 20 % Glasur zu dir nach Hause. Die Glasur schützt Garnelen während der Tiefkühllagerung und hält die Qualität.",
+          "price": "32,00 € / Packung inkl. MwSt.",
+          "weight": "",
+          "ribbon": "",
+          "image": "/images/katalog/meeresfruechte-12.webp"
+        }
+      ]
+    }
+  ]
+}

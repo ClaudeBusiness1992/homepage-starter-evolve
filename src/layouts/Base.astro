@@ -19,10 +19,9 @@ interface Props {
     sage: string;
   };
   noindex?: boolean;
-  robots?: string;
 }
 
-const { meta, theme, noindex = false, robots } = Astro.props;
+const { meta, theme, noindex = false } = Astro.props;
 const canonicalUrl = Astro.url.href;
 const ogImage = meta.image ?? '/og-image.jpg';
 const faviconHref = 'data:image/svg+xml,' + encodeURIComponent(
@@ -45,12 +44,13 @@ const themeStyle = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{meta.siteName}{meta.tagline ? ` — ${meta.tagline}` : ''}</title>
     <meta name="description" content={meta.description} />
-    {robots
-      ? <meta name="robots" content={robots} />
-      : noindex && <meta name="robots" content="noindex, follow" />}
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="icon" type="image/svg+xml" href={faviconHref} />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/dm-serif-display-normal-400-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/fonts/outfit-normal-400-latin.woff2" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..700&family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Space+Grotesk:wght@300..700&family=Syne:wght@400..800&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph -->

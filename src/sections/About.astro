@@ -1,5 +1,8 @@
 ---
 import SectionHeader from '../components/SectionHeader.astro';
+import { getDb } from '../lib/db';
+import { isSectionEnabled } from '../lib/permissions';
+import '../styles/team-adaptive.css';
 
 interface Member {
   name: string;
@@ -18,6 +21,31 @@ interface Props {
 }
 
 const { label, headline, subline, intro, members = [] } = Astro.props;
+
+let dbMembers: any[] = [];
+try {
+  const db = getDb();
+  dbMembers = db.prepare('SELECT * FROM team_members WHERE is_published = 1 ORDER BY sort_order ASC').all();
+} catch (e) {}
+
+const dynamicMembers: Member[] = dbMembers.length > 0 ? dbMembers.map((m: any) => ({
+  name: m.name,
+  role: m.role,
+  bio: m.bio,
+  photo: m.photo_url,
+  department: 'Team'
+})) : members;
+
+const memberCount = dynamicMembers.length;
+const layoutClass = memberCount === 1 ? 'team-layout-single'
+  : memberCount === 2 ? 'team-layout-duo'
+  : memberCount === 3 ? 'team-layout-trio'
+  : memberCount === 4 ? 'team-layout-quad'
+  : memberCount === 5 ? 'team-layout-5'
+  : memberCount === 6 ? 'team-layout-6'
+  : memberCount === 7 ? 'team-layout-7'
+  : 'team-layout-multi';
+
 
 // Beispiel-Erweiterung für Team / Abteilungen:
 // Abteilungen mit jeweils unterschiedlicher Anzahl an Personen:
@@ -182,20 +210,20 @@ const departments = departmentOrder.filter(d => availableDepts.includes(d));
       ))}
     </div>
 
-    <!-- 1. Duo & Solo Grid (Standard-Container) -->
-    <div class="about-grid" id="about-default-grid">
-      {members.map((m, i) => (
-        <div class={`acard r d${i + 1}`}>
-          <div class="aphoto" {...(m.photo ? {'data-lightbox': m.photo, 'data-alt': m.name, 'data-caption': m.name, 'data-category': m.role, 'data-description': m.bio, 'tabindex': '0', 'role': 'button', 'aria-label': `Foto von ${m.name} vergrößern`} : {})}>
+    <!-- 1. Deterministisches Team Grid (passt sich automatisch jedem N an) -->
+    <div class={`about-grid team-adaptive-container ${layoutClass}`} id="about-default-grid">
+      {dynamicMembers.map((m, i) => (
+        <div class={`acard team-card r d${i + 1}`}>
+          <div class="aphoto team-card-photo" {...(m.photo ? {'data-lightbox': m.photo, 'data-alt': m.name, 'data-caption': m.name, 'data-category': m.role, 'data-description': m.bio, 'tabindex': '0', 'role': 'button', 'aria-label': `Foto von ${m.name} vergrößern`} : {})}>
             {m.photo
-              ? <img src={m.photo} alt={m.name} width="600" height="800" loading="lazy" />
-              : <div class="aphoto-placeholder">Foto hier einfügen<br />600 × 800 px empfohlen</div>
+              ? <img src={m.photo} alt={m.name} width="800" height="1000" loading="lazy" />
+              : <div class="team-card-avatar">{m.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</div>
             }
           </div>
-          <div class="abody">
-            <h3 class="aname">{m.name}</h3>
-            <span class="arole">{m.role}</span>
-            <p class="atext">{m.bio}</p>
+          <div class="abody team-card-body">
+            <h3 class="aname team-card-name">{m.name}</h3>
+            <span class="arole team-card-role">{m.role}</span>
+            <p class="atext team-card-bio">{m.bio}</p>
           </div>
         </div>
       ))}

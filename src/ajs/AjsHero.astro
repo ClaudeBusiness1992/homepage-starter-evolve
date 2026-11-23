@@ -1,0 +1,105 @@
+---
+interface Props {
+  label: string;
+  headline: string;
+  subline: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+  mockupUrl?: string;
+  ctaPrimaryHref?: string;
+  ctaSecondaryHref?: string;
+  images?: { src: string; alt: string }[];
+  badge?: string;
+  highlights?: { num: string; title: string; text: string }[];
+}
+const { label, headline, subline, ctaPrimary, ctaSecondary, mockupUrl = 'ihre-neue-website.de', ctaPrimaryHref = '#contact', ctaSecondaryHref = '#services', images = [], highlights = [], badge = '' } = Astro.props;
+// Robust split: 1, 2, or 3 sentences supported. Trailing dots optional.
+const parts = headline.split('. ').map(p => p.replace(/\.$/, ''));
+const [h1, h2, h3] = [parts[0] ?? '', parts[1] ?? '', parts[2] ?? ''];
+---
+
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="lbl hero-lbl">{label}</span>
+        <h1 class="hero-h1">
+          {h1}{h1 ? '.' : ''}
+          {h2 && (<><br /><i>{h2}.</i></>)}
+          {h3 && (<><br />{h3}.</>)}
+        </h1>
+        <p class="hero-sub">{subline}</p>
+        <div class="hero-btns">
+          <a href={ctaPrimaryHref} class="btn btn-fill">{ctaPrimary} <span aria-hidden="true">→</span></a>
+          <a href={ctaSecondaryHref} class="btn btn-ghost">{ctaSecondary}</a>
+        </div>
+      </div>
+      {images.length > 0 ? (
+        <div class="hero-photos">
+          <div class="hero-photo-wrap">
+          <div class="hero-photo-stack" data-hero-photos>
+            {images.map((im, i) => (
+              <img src={im.src} alt={im.alt} class={i === 0 ? 'on' : ''} width="1200" height="800" loading={i === 0 ? 'eager' : 'lazy'} />
+            ))}
+          </div>
+          {badge && <img src={badge} alt="" class="hero-badge" width="132" height="132" />}
+          </div>
+          {highlights.length > 0 && (
+            <ul class="hero-hl">
+              {highlights.map(h => (
+                <li><span class="hero-hl-num">{h.num}</span><div><strong>{h.title}</strong><span>{h.text}</span></div></li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ) : (
+      <div class="hero-mockup" aria-hidden="true">
+        <div class="browser">
+          <div class="bbar">
+            <div class="bdots"><span></span><span></span><span></span></div>
+            <div class="burl">{mockupUrl}</div>
+          </div>
+          <div class="bcontent">
+            <div class="ms">
+              <div class="ms-nav">
+                <div class="ms-logo"></div>
+                <div class="ms-links"><span></span><span></span><span></span></div>
+              </div>
+              <div class="ms-hero">
+                <div class="ms-txt">
+                  <div class="ms-h"></div>
+                  <div class="ms-h s"></div>
+                  <div class="ms-p"></div>
+                  <div class="ms-p short"></div>
+                  <div class="ms-cta"></div>
+                </div>
+                <div class="ms-img"></div>
+              </div>
+              <div class="ms-cards">
+                <div class="ms-card"><div class="ms-icon"></div><div class="ms-line"></div><div class="ms-line s"></div></div>
+                <div class="ms-card"><div class="ms-icon"></div><div class="ms-line"></div><div class="ms-line s"></div></div>
+                <div class="ms-card"><div class="ms-icon"></div><div class="ms-line"></div><div class="ms-line s"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const st = document.querySelector('[data-hero-photos]');
+    if (!st) return;
+    const imgs = [...st.querySelectorAll('img')];
+    if (imgs.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let i = 0;
+    setInterval(() => {
+      imgs[i].classList.remove('on');
+      i = (i + 1) % imgs.length;
+      imgs[i].classList.add('on');
+    }, 5000);
+  })();
+</script>

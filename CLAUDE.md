@@ -4,7 +4,14 @@ Kontextdatei für Claude Code. Enthält Projektbeschreibung, Architektur-Entsche
 
 ## Orga & Aufgaben
 
-Aufgaben, Bugs und Ideen für dieses Projekt liegen in der To-do-App (`C:\ClaudeBusiness\todo-app\`) unter dem Projekt **„pixel&code"** (Unterkategorien: Bugs & Fixes, Roadmap & Features, Gründung & Legal, Geschäftsmodell, Externe Dienste, Qualitätssicherung).
+Zum Projekt gehört ein Obsidian-Vault im Orga-Repo. Dort sind alle offenen Tasks, Bugs und Regeln dokumentiert — **immer zuerst pullen und reinschauen**.
+
+**Obsidian-Vault:** `C:\ClaudeBusiness\Orga-und-Allgemeines\pixel&code Obsidian\`
+
+```powershell
+cd "C:\ClaudeBusiness\Orga-und-Allgemeines"
+git pull
+```
 
 ---
 
@@ -351,7 +358,7 @@ Wenn nur ein Aspekt geprüft werden soll, einzelnen Sub-Agent direkt via `Agent`
 - **Paketmanager:** immer `pnpm`, nie `npm install`
 - **Commits:** `feat:`, `fix:`, `chore:`, `style:`
 - **Config:** Kunden-Werte nur in `config/` — nie direkt im Code
-- **CSS:** Standard ist Custom Properties ohne Framework (kein Tailwind, kein Bootstrap standardmäßig). Das ist der Default, kein Verbot: wenn ein einzelnes Basisformat nachweislich von einem Framework oder einer zusätzlichen Library profitiert (siehe `docs/UI-UX-PRO-MAX-INTEGRATION.md` → Packages), wird es dort eingesetzt, geprüft gegen `docs/WEBSITE_TECHNICAL_GUARDRAILS.md`. Endprodukt-Qualität geht vor Stack-Konservatismus.
+- **CSS:** Custom Properties, keine externen UI-Libraries (kein Tailwind, kein Bootstrap)
 - **Keine Inline-Styles** für Design-Entscheidungen — alles in CSS-Dateien
 - **WCAG AA:** alle Text-Kontraste müssen 4.5:1 erfüllen (normal), 3:1 (groß/bold)
 - **TS-light:** `.astro`-Frontmatter darf TypeScript-Annotationen nutzen (`interface`, `as`-Casts), Vanilla-JS bleibt für Browser-Scripts. Keine separaten `.ts`-Files.

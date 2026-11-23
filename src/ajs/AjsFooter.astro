@@ -1,0 +1,47 @@
+---
+interface FooterLink {
+  label: string;
+  href: string;
+}
+interface Props {
+  siteName: string;
+  siteNameAccent?: string;
+  logo?: string;
+  copyright: string;
+  links: FooterLink[];
+}
+const { siteName, siteNameAccent, logo, copyright, links } = Astro.props;
+const accentIdx = siteNameAccent ? siteName.indexOf(siteNameAccent) : -1;
+const logoBefore = accentIdx > -1 ? siteName.slice(0, accentIdx) : siteName;
+const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.length ?? 0)) : '';
+---
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <span class="foot-logo">{logo && <img src={logo} alt="" class="foot-logo-img" width="40" height="40" />}{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</span>
+      <nav aria-label="Footer-Navigation">
+        <ul class="foot-links">
+          {links.map(l => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+      <span class="foot-copy">{copyright}</span>
+    </div>
+  </div>
+</footer>
+
+<script is:inline>
+  // Footer-Höhe messen und als --footer-h exposen, damit Contact + Footer
+  // sich exakt 100dvh teilen können (Footer am unteren Rand sichtbar, sobald
+  // die letzte Section angesnappt ist).
+  (() => {
+    const f = document.querySelector('footer');
+    if (!f) return;
+    const setH = () => {
+      document.documentElement.style.setProperty('--footer-h', f.offsetHeight + 'px');
+    };
+    setH();
+    if ('ResizeObserver' in window) new ResizeObserver(setH).observe(f);
+    else { window.addEventListener('resize', setH); window.addEventListener('orientationchange', setH); }
+  })();
+</script>

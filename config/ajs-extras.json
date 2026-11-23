@@ -1,0 +1,234 @@
+{
+  "extras": {
+    "active": {
+      "countdown": true,
+      "reviews": true,
+      "gallery": true,
+      "booking": true,
+      "sponsors": true,
+      "sidebarAds": false
+    },
+    "countdown": {
+      "variant": "hero",
+      "label": "Nächste Tour",
+      "headline": "Hamburg-Tour: Nächster Liefertermin",
+      "subline": "Bestellannahme für die anstehende Tour schließt in Kürze.",
+      "targetDate": "2026-11-28T18:00:00",
+      "ctaLabel": "Jetzt vorbestellen",
+      "ctaHref": "#contact",
+      "expiredText": "Die aktuelle Tour ist unterwegs"
+    },
+    "reviews": {
+      "label": "Kundenstimmen",
+      "headline": "Das sagen Mitglieder des Inner Circle",
+      "subline": "Echte Rückmeldungen von Feinschmeckern und Stammkunden aus Hamburg.",
+      "items": [
+        {
+          "name": "Marcus V.",
+          "company": "Hamburg-Winterhude",
+          "rating": 5,
+          "verified": true,
+          "date": "November 2026",
+          "text": "Das Tomahawk und das Ribeye waren absolute Spitzenklasse. Die Lieferung pünktlich vor die Haustür, gewogen und mit Karte gezahlt – bequemer geht es nicht."
+        },
+        {
+          "name": "Sarah & Jan",
+          "company": "Hamburg-Eppendorf",
+          "rating": 5,
+          "verified": true,
+          "date": "Oktober 2026",
+          "text": "Endlich verlässliche Spitzenqualität für unsere Wochenend-Grillabende ohne langes Suchen. AJ weiß genau, wovon er spricht!"
+        },
+        {
+          "name": "Christian B.",
+          "company": "Hamburg-Altona",
+          "rating": 5,
+          "verified": true,
+          "date": "Oktober 2026",
+          "text": "Die Garnelen und die Wild-Spezialitäten haben Restaurant-Niveau. Ein riesiger Gewinn für alle, die gutes Essen schätzen."
+        }
+      ]
+    },
+    "gallery": {
+      "label": "Unser Sortiment",
+      "headline": "Für jeden Anlass die richtige Wahl",
+      "subline": "Ausgewählte Ware in acht Kategorien. Klick auf eine Kategorie zeigt das Sortiment mit Preisen, bestellen können nur freigeschaltete Mitglieder.",
+      "items": [
+        {
+          "src": "/images/sortiment/rind.webp",
+          "alt": "Rind: Filet, Ribeye, Entrecôte, T-Bone u. v. m.",
+          "caption": "Rind",
+          "category": "Filet, Ribeye, Entrecôte, T-Bone u. v. m.",
+          "slug": "rind"
+        },
+        {
+          "src": "/images/sortiment/lamm.webp",
+          "alt": "Lamm: Zart und aromatisch aus kontrollierter Aufzucht.",
+          "caption": "Lamm",
+          "category": "Zart und aromatisch aus kontrollierter Aufzucht.",
+          "slug": "lamm"
+        },
+        {
+          "src": "/images/sortiment/schwein.webp",
+          "alt": "Schwein: Klassiker in bester Metzgerqualität.",
+          "caption": "Schwein",
+          "category": "Klassiker in bester Metzgerqualität.",
+          "slug": "schwein"
+        },
+        {
+          "src": "/images/sortiment/wild.webp",
+          "alt": "Wild: Saisonal, wenn Wildschwein & Reh Saison haben.",
+          "caption": "Wild",
+          "category": "Saisonal, wenn Wildschwein & Reh Saison haben.",
+          "slug": "wild"
+        },
+        {
+          "src": "/images/sortiment/gefluegel.webp",
+          "alt": "Geflügel: Von der Poularde bis zur Wachtel.",
+          "caption": "Geflügel",
+          "category": "Von der Poularde bis zur Wachtel.",
+          "slug": "gefluegel"
+        },
+        {
+          "src": "/images/sortiment/ente.webp",
+          "alt": "Ente: Klassiker für die festliche Tafel.",
+          "caption": "Ente",
+          "category": "Klassiker für die festliche Tafel.",
+          "slug": "ente"
+        },
+        {
+          "src": "/images/sortiment/gans.webp",
+          "alt": "Gans: Festtagsbraten aus guter Haltung.",
+          "caption": "Gans",
+          "category": "Festtagsbraten aus guter Haltung.",
+          "slug": "gans"
+        },
+        {
+          "src": "/images/sortiment/meeresfruechte.webp",
+          "alt": "Meeresfrüchte: Garnelen, Muscheln und mehr.",
+          "caption": "Meeresfrüchte",
+          "category": "Garnelen, Muscheln und mehr.",
+          "slug": "meeresfruechte"
+        }
+      ]
+    },
+    "booking": {
+      "label": "Tour-Termin & Beratung",
+      "headline": "Persönliche Kostprobe oder Tour-Besprechung",
+      "subline": "Wähle einen Termin für ein persönliches Kennenlernen oder deine Tour-Absprache.",
+      "ctaLabel": "Termin anfragen",
+      "liveSync": false,
+      "leadDays": 1,
+      "emailTo": "aj@ajs-inner-circle.de",
+      "successMessage": "Vielen Dank! AJ wird sich in Kürze persönlich bei dir melden.",
+      "staff": [
+        {
+          "name": "AJ (Gründer)"
+        }
+      ],
+      "services": [
+        {
+          "name": "Erstberatung & Tour-Abstimmung (20 min)",
+          "duration": 20
+        },
+        {
+          "name": "Feinkost-Auswahl für Event / Feier (45 min)",
+          "duration": 45
+        }
+      ],
+      "availability": {
+        "monday": [
+          "10:00",
+          "14:00",
+          "16:00"
+        ],
+        "tuesday": [
+          "10:00",
+          "14:00",
+          "16:00"
+        ],
+        "wednesday": [
+          "10:00",
+          "14:00",
+          "16:00"
+        ],
+        "thursday": [
+          "10:00",
+          "14:00",
+          "16:00"
+        ],
+        "friday": [
+          "10:00",
+          "14:00",
+          "16:00"
+        ],
+        "saturday": [
+          "10:00",
+          "12:00"
+        ],
+        "sunday": []
+      }
+    },
+    "sponsors": {
+      "label": "Erzeuger & Partner",
+      "headline": "Partner unseres Vertrauens",
+      "subline": "Gemeinsam mit ausgewählten Züchtern, Höfen und Partnern garantieren wir beste Qualität.",
+      "items": [
+        {
+          "tier": "top",
+          "name": "Weiderind Nord Manufaktur",
+          "logo": "/images/partner/partner-1.webp",
+          "url": "#",
+          "description": "Familienbetrieb für Weiderinder & Dry Aged Spezialitäten"
+        },
+        {
+          "tier": "top",
+          "name": "Nordsee Fischerei & Seafood",
+          "logo": "/images/partner/partner-2.webp",
+          "url": "#",
+          "description": "Tagesfangfrische Wildgarnelen und Krustentiere"
+        },
+        {
+          "tier": "middle",
+          "name": "Bio Geflügelhof Freiland",
+          "logo": "/images/partner/partner-3.webp",
+          "url": "#"
+        },
+        {
+          "tier": "middle",
+          "name": "Bio-Höfe Allianz Nord",
+          "logo": "/images/partner/partner-4.webp",
+          "url": "#"
+        },
+        {
+          "tier": "middle",
+          "name": "Alpen-Käserei Manufaktur",
+          "logo": "/images/partner/partner-5.webp",
+          "url": "#"
+        },
+        {
+          "tier": "middle",
+          "name": "Gourmet-Logistik Frische-Express",
+          "logo": "/images/partner/partner-6.webp",
+          "url": "#"
+        }
+      ]
+    },
+    "sidebarAds": {
+      "left": {
+        "enabled": true,
+        "image": "",
+        "url": "",
+        "alt": "Werbung links",
+        "label": "Anzeige"
+      },
+      "right": {
+        "enabled": true,
+        "image": "",
+        "url": "",
+        "alt": "Werbung rechts",
+        "label": "Anzeige"
+      }
+    }
+  }
+}
