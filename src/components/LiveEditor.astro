@@ -11,7 +11,7 @@ const safeTheme = {
   ink: theme.ink || '#1c1c1c',
   cream: theme.cream || '#f5f0e8',
   sage: theme.sage || '#4a7c6f',
-  accentLight: theme.accentLight || '#d96520',
+  accentLight: theme.accentLight || '#e2a63b',
   inkMuted: theme.inkMuted || '#5c5c5c'
 };
 ---
@@ -332,8 +332,8 @@ const safeTheme = {
                   <span id="hpse-val-sage" style="font-family: monospace; color: #9ca3af;">#4a7c6f</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="display: flex; align-items: center; gap: 6px;"><span id="hpse-dot-accentLight" style="width: 10px; height: 10px; border-radius: 50%; background: #d96520; display: inline-block;"></span> 5. Hell-Orange (Hover/Aktiv)</span>
-                  <span id="hpse-val-accentLight" style="font-family: monospace; color: #9ca3af;">#d96520</span>
+                  <span style="display: flex; align-items: center; gap: 6px;"><span id="hpse-dot-accentLight" style="width: 10px; height: 10px; border-radius: 50%; background: #e2a63b; display: inline-block;"></span> 5. Gold (Highlights)</span>
+                  <span id="hpse-val-accentLight" style="font-family: monospace; color: #9ca3af;">#e2a63b</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                   <span style="display: flex; align-items: center; gap: 6px;"><span id="hpse-dot-inkMuted" style="width: 10px; height: 10px; border-radius: 50%; background: #5c5c5c; display: inline-block;"></span> 6. Schiefer-Grau (Dezent)</span>
@@ -361,8 +361,8 @@ const safeTheme = {
                   <input type="color" id="hpse-col-sage" value="#4a7c6f" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
                 </label>
                 <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
-                  <span>Hell-Orange</span>
-                  <input type="color" id="hpse-col-accentLight" value="#d96520" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                  <span>Highlight-Gold</span>
+                  <input type="color" id="hpse-col-accentLight" value="#e2a63b" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
                 </label>
                 <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
                   <span>Schiefer-Grau</span>
@@ -598,7 +598,7 @@ const safeTheme = {
     border-radius: 999px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   }
-  .hpse-audit-fab-icon { font-size: var(--fs-lg); line-height: 1; color: var(--accent-light, #ea580c); }
+  .hpse-audit-fab-icon { font-size: var(--fs-lg); line-height: 1; color: var(--accent-light, #e2a63b); }
   .hpse-audit-fab-lbl { font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
 
   /* Rechter Drawer - Exakt wie linker Drawer */
@@ -700,7 +700,7 @@ const safeTheme = {
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, padding 0.2s ease;
   }
   .hpse-fab:hover { background: #1f2937; padding-left: 18px; }
-  .hpse-fab-icon { font-size: var(--fs-lg); line-height: 1; color: var(--accent-light, #ea580c); }
+  .hpse-fab-icon { font-size: var(--fs-lg); line-height: 1; color: var(--accent-light, #e2a63b); }
   .hpse-fab-lbl { font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
 
   /* Drawer */
@@ -1791,7 +1791,7 @@ const safeTheme = {
     ink: serverTheme.ink || '#1c1c1c',
     cream: serverTheme.cream || '#f5f0e8',
     sage: serverTheme.sage || '#4a7c6f',
-    accentLight: serverTheme.accentLight || '#d96520',
+    accentLight: serverTheme.accentLight || '#e2a63b',
     inkMuted: serverTheme.inkMuted || '#5c5c5c'
   };
 
@@ -1960,7 +1960,7 @@ const safeTheme = {
     const ink = cols.ink || '#1c1c1c';
     const cream = cols.cream || '#f5f0e8';
     const sage = cols.sage || '#4a7c6f';
-    const accL = cols.accentLight || '#d96520';
+    const accL = cols.accentLight || '#e2a63b';
     const muted = cols.inkMuted || '#5c5c5c';
 
     document.documentElement.style.setProperty('--accent', acc);
