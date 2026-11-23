@@ -212,7 +212,10 @@ main > section:not(#hero) > .wrap {
   margin-top: .65rem;
   display: block;
 }
-.section-hd .lbl { text-transform: none; }
+.section-hd .lbl,
+.section-hd > .lbl {
+  display: none !important;
+}
 .h2 {
   font-family: var(--serif);
   font-size: var(--fs-xl);
