@@ -47,10 +47,10 @@ const safeTheme = {
         <p class="hpse-help" style="margin-bottom: 12px;">Klicke auf einen Bereich, um Details und Optionen aufzuklappen.</p>
 
         <!-- Countdown als modularer Anhang -->
-        <div class="hpse-addon-box">
-          <div class="hpse-addon-header">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <label class="hpse-toggle-label">
+        <div class="hpse-addon-box" id="hpse-addon-box">
+          <div class="hpse-addon-header" id="hpse-addon-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" id="hpse-toggle-countdown" data-section="countdown" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -59,9 +59,12 @@ const safeTheme = {
                 <div class="hpse-addon-subtitle">Modularer Anhang für einen beliebigen Bereich</div>
               </div>
             </div>
-            <span class="hpse-addon-badge">Anhang</span>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="hpse-addon-badge">Anhang</span>
+              <span class="hpse-addon-arrow" id="hpse-addon-arrow" aria-hidden="true">›</span>
+            </div>
           </div>
-          <div class="hpse-addon-body" id="hpse-cd-options">
+          <div class="hpse-addon-body" id="hpse-cd-options" hidden>
             <div class="hpse-fields-grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
               <div class="hpse-field">
                 <label class="hpse-field-label">Anhang an Bereich:</label>
@@ -74,6 +77,9 @@ const safeTheme = {
                   <option value="reviews">Bewertungen</option>
                   <option value="booking">Buchung / Termin</option>
                   <option value="sponsors">Sponsoren / Partner</option>
+                  <option value="hamburg-tour">Hamburg Touren</option>
+                  <option value="service-erinnerung">Erinnerungs-Service</option>
+                  <option value="newsletter">Newsletter</option>
                   <option value="contact">Kontakt</option>
                 </select>
               </div>
@@ -90,9 +96,10 @@ const safeTheme = {
         
         <div class="hpse-accordion" id="hpse-accordion">
           <!-- Hero -->
-          <div class="hpse-acc-item" data-acc-id="hero">
+          <div class="hpse-acc-item" data-acc-id="hero" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="hero" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -101,8 +108,9 @@ const safeTheme = {
           </div>
 
           <!-- Über uns -->
-          <div class="hpse-acc-item" data-acc-id="about">
+          <div class="hpse-acc-item" data-acc-id="about" draggable="true">
             <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
               <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="about" checked />
                 <span class="hpse-switch"></span>
@@ -125,8 +133,9 @@ const safeTheme = {
           </div>
 
           <!-- Leistungen -->
-          <div class="hpse-acc-item" data-acc-id="services">
+          <div class="hpse-acc-item" data-acc-id="services" draggable="true">
             <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
               <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="services" checked />
                 <span class="hpse-switch"></span>
@@ -159,8 +168,9 @@ const safeTheme = {
           </div>
 
 <!-- Galerie / Sortiment -->
-          <div class="hpse-acc-item" data-acc-id="gallery">
+          <div class="hpse-acc-item" data-acc-id="gallery" draggable="true">
             <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
               <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="gallery" checked />
                 <span class="hpse-switch"></span>
@@ -201,9 +211,10 @@ const safeTheme = {
           </div>
 
           <!-- Preise -->
-          <div class="hpse-acc-item" data-acc-id="pricing">
+          <div class="hpse-acc-item" data-acc-id="pricing" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="pricing" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -212,8 +223,9 @@ const safeTheme = {
           </div>
 
 <!-- Bewertungen -->
-          <div class="hpse-acc-item" data-acc-id="reviews">
+          <div class="hpse-acc-item" data-acc-id="reviews" draggable="true">
             <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
               <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="reviews" checked />
                 <span class="hpse-switch"></span>
@@ -253,9 +265,10 @@ const safeTheme = {
           </div>
 
           <!-- Buchung -->
-          <div class="hpse-acc-item" data-acc-id="booking">
+          <div class="hpse-acc-item" data-acc-id="booking" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="booking" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -264,9 +277,10 @@ const safeTheme = {
           </div>
 
           <!-- Sponsoren -->
-          <div class="hpse-acc-item" data-acc-id="sponsors">
+          <div class="hpse-acc-item" data-acc-id="sponsors" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="sponsors" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -274,10 +288,47 @@ const safeTheme = {
             </div>
           </div>
 
-          <!-- Kontakt -->
-          <div class="hpse-acc-item" data-acc-id="contact">
+          <!-- Hamburg Touren -->
+          <div class="hpse-acc-item" data-acc-id="hamburg-tour" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" data-section="hamburg-tour" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Hamburg Touren</span>
+            </div>
+          </div>
+
+          <!-- Erinnerungs-Service -->
+          <div class="hpse-acc-item" data-acc-id="service-erinnerung" draggable="true">
+            <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" data-section="service-erinnerung" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Erinnerungs-Service</span>
+            </div>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="hpse-acc-item" data-acc-id="newsletter" draggable="true">
+            <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" data-section="newsletter" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Newsletter</span>
+            </div>
+          </div>
+
+          <!-- Kontakt -->
+          <div class="hpse-acc-item" data-acc-id="contact" draggable="true">
+            <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="contact" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -286,9 +337,10 @@ const safeTheme = {
           </div>
 
           <!-- Footer -->
-          <div class="hpse-acc-item" data-acc-id="footer">
+          <div class="hpse-acc-item" data-acc-id="footer" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="footer" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -721,6 +773,8 @@ const safeTheme = {
     transform: translateX(-100%);
     transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
     color: #f3f4f6;
+    overscroll-behavior: contain;
+    overscroll-behavior-y: contain;
   }
   .hpse-drawer.is-open { transform: translateX(0); }
   .hpse-drawer-head {
@@ -738,6 +792,8 @@ const safeTheme = {
   .hpse-drawer-body {
     padding: 18px;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    overscroll-behavior-y: contain;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -787,24 +843,32 @@ const safeTheme = {
     background: rgba(200, 82, 14, 0.05);
     border: 1px solid color-mix(in srgb, var(--accent, #c8520e) 30%, transparent);
     border-radius: 8px;
-    padding: 12px 14px;
+    padding: 8px 12px;
     margin-bottom: 8px;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  }
+  .hpse-addon-box.is-expanded {
+    background: rgba(200, 82, 14, 0.08);
+    border-color: color-mix(in srgb, var(--accent, #c8520e) 45%, transparent);
   }
   .hpse-addon-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
   }
   .hpse-addon-title {
-    font-size: 0.86rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     color: #f3f4f6;
+    line-height: 1.2;
   }
   .hpse-addon-subtitle {
-    font-size: 0.71rem;
+    font-size: 0.6875rem;
     color: #9ca3af;
-    margin-top: 2px;
+    margin-top: 1px;
   }
   .hpse-addon-badge {
     font-size: 0.65rem;
@@ -817,9 +881,23 @@ const safeTheme = {
     color: var(--accent-light, #ea580c);
     border: 1px solid color-mix(in srgb, var(--accent, #c8520e) 40%, transparent);
   }
+  .hpse-addon-arrow {
+    font-size: 1.1rem;
+    color: #9ca3af;
+    transition: transform 0.2s ease;
+    line-height: 1;
+    display: inline-block;
+  }
+  .hpse-addon-box.is-expanded .hpse-addon-arrow {
+    transform: rotate(90deg);
+    color: var(--accent-light, #ea580c);
+  }
+  .hpse-addon-body[hidden] {
+    display: none !important;
+  }
 
   /* Accordion */
-  .hpse-accordion { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .hpse-accordion { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
   .hpse-acc-item {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -829,14 +907,48 @@ const safeTheme = {
   }
   .hpse-acc-item:hover { background: rgba(255, 255, 255, 0.05); }
   .hpse-acc-item.is-expanded { border-color: rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); }
+  .hpse-acc-item.is-dragging {
+    opacity: 0.35;
+    background: rgba(200, 82, 14, 0.1);
+    border: 1px dashed var(--accent, #c8520e);
+  }
   
   .hpse-acc-header {
     display: flex;
     align-items: center;
-    padding: 10px 14px;
-    gap: 12px;
-    min-height: 44px;
+    padding: 6px 10px;
+    gap: 8px;
+    min-height: 34px;
     box-sizing: border-box;
+  }
+
+  .hpse-acc-drag-handle {
+    font-size: 1rem;
+    color: #6b7280;
+    cursor: grab;
+    line-height: 1;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    transition: color 0.15s ease;
+  }
+  .hpse-acc-drag-handle:hover {
+    color: #d1d5db;
+  }
+  .hpse-acc-drag-handle:active {
+    cursor: grabbing;
+  }
+
+  #hpse-accordion .hpse-drop-placeholder {
+    padding: 6px 10px;
+    min-height: 34px;
+    box-sizing: border-box;
+    font-size: 0.75rem;
   }
 
   /* Sortier-Menü Modal / Overlay */
@@ -997,12 +1109,13 @@ const safeTheme = {
     display: flex;
     align-items: center;
     cursor: pointer;
+    flex-shrink: 0;
   }
   .hpse-toggle-label input { position: absolute; opacity: 0; pointer-events: none; }
   .hpse-switch {
     position: relative;
-    width: 32px;
-    height: 18px;
+    width: 28px;
+    height: 16px;
     background: #374151;
     border-radius: 999px;
     flex-shrink: 0;
@@ -1013,21 +1126,21 @@ const safeTheme = {
     position: absolute;
     top: 2px;
     left: 2px;
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     background: #fff;
     border-radius: 50%;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .hpse-toggle-label input:checked + .hpse-switch { background: var(--accent, #ea580c); }
-  .hpse-toggle-label input:checked + .hpse-switch::after { transform: translateX(14px); }
+  .hpse-toggle-label input:checked + .hpse-switch::after { transform: translateX(12px); }
 
   .hpse-acc-trigger {
     background: transparent;
     border: none;
     color: #e5e7eb;
     font-family: inherit;
-    font-size: 0.85rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -1040,7 +1153,7 @@ const safeTheme = {
   }
   .hpse-acc-title {
     font-family: inherit;
-    font-size: 0.85rem !important;
+    font-size: 0.8125rem !important;
     font-weight: 600;
     color: #e5e7eb;
     line-height: 1.2;
@@ -1049,7 +1162,7 @@ const safeTheme = {
     flex: 1;
   }
   .hpse-acc-arrow {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #9ca3af;
     transition: transform 0.2s ease;
     line-height: 1;
@@ -1804,6 +1917,9 @@ const safeTheme = {
     'reviews',
     'booking',
     'sponsors',
+    'hamburg-tour',
+    'service-erinnerung',
+    'newsletter',
     'contact',
     'footer'
   ];
@@ -1826,6 +1942,9 @@ const safeTheme = {
       reviews: true,
       booking: true,
       sponsors: true,
+      'hamburg-tour': true,
+      'service-erinnerung': true,
+      newsletter: true,
       contact: true,
       footer: true,
     },
@@ -1874,6 +1993,7 @@ const safeTheme = {
   function setOpen(open) {
     drawer.hidden = !open;
     fab.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('hpse-drawer-open', open);
     if (open) {
       requestAnimationFrame(() => drawer.classList.add('is-open'));
     } else {
@@ -1881,6 +2001,14 @@ const safeTheme = {
       setTimeout(() => { if (!drawer.classList.contains('is-open')) drawer.hidden = true; }, 320);
     }
   }
+
+  // Verhindert Scroll-Chaining & Durchscrollen auf die Homepage beim Scrollen im Drawer
+  drawer.addEventListener('wheel', (e) => {
+    e.stopPropagation();
+  }, true);
+  drawer.addEventListener('touchmove', (e) => {
+    e.stopPropagation();
+  }, { passive: true });
 
   fab.addEventListener('click', () => setOpen(!drawer.classList.contains('is-open')));
   closeBtn?.addEventListener('click', () => setOpen(false));
@@ -1999,9 +2127,9 @@ const safeTheme = {
     const enabled = state.sections.countdown !== false;
     cd.setAttribute('data-hpse-hidden', String(!enabled));
 
-    const cdOptions = document.getElementById('hpse-cd-options');
-    if (cdOptions) {
-      cdOptions.style.display = enabled ? 'block' : 'none';
+    const cdBox = document.getElementById('hpse-addon-box');
+    if (cdBox) {
+      cdBox.style.opacity = enabled ? '1' : '0.6';
     }
 
     if (!enabled) {
@@ -2052,6 +2180,9 @@ const safeTheme = {
     reviews: { title: 'Bewertungen', icon: '⭐' },
     booking: { title: 'Buchung / Termin', icon: '📅' },
     sponsors: { title: 'Sponsoren / Partner', icon: '🤝' },
+    'hamburg-tour': { title: 'Hamburg Touren', icon: '⚓' },
+    'service-erinnerung': { title: 'Erinnerungs-Service', icon: '⏰' },
+    newsletter: { title: 'Newsletter', icon: '📧' },
     contact: { title: 'Kontakt', icon: '✉️' },
     footer: { title: 'Footer', icon: '📄' }
   };
@@ -2265,6 +2396,168 @@ const safeTheme = {
         removePlaceholder();
         touchCard = null;
         draggedSortId = null;
+      });
+    });
+  }
+
+  // Accordion Drag & Drop in der Hauptliste
+  let draggedAccId = null;
+  let accPlaceholderEl = null;
+
+  function removeAccPlaceholder() {
+    if (accPlaceholderEl && accPlaceholderEl.parentElement) {
+      accPlaceholderEl.remove();
+    }
+    accPlaceholderEl = null;
+  }
+
+  function initAccordionDragAndDrop() {
+    if (!accordion) return;
+
+    // Desktop Drag & Drop
+    accordion.querySelectorAll('.hpse-acc-item').forEach(item => {
+      item.addEventListener('dragstart', (e) => {
+        if (e.target.closest('input, select, .hpse-acc-content')) {
+          e.preventDefault();
+          return;
+        }
+        draggedAccId = item.getAttribute('data-acc-id');
+        item.classList.add('is-dragging');
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', draggedAccId);
+        }
+      });
+
+      item.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (!draggedAccId) return;
+        const targetId = item.getAttribute('data-acc-id');
+        if (targetId === draggedAccId) return;
+
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+
+        const rect = item.getBoundingClientRect();
+        const isBefore = e.clientY < rect.top + rect.height / 2;
+
+        if (!accPlaceholderEl) {
+          accPlaceholderEl = document.createElement('div');
+          accPlaceholderEl.className = 'hpse-drop-placeholder';
+        }
+
+        const draggedMeta = sectionMeta[draggedAccId] || { title: draggedAccId };
+        accPlaceholderEl.innerHTML = `<span>↓ "${draggedMeta.title}" hier einfügen ↓</span>`;
+
+        if (isBefore) {
+          if (item.previousElementSibling !== accPlaceholderEl) {
+            item.parentElement.insertBefore(accPlaceholderEl, item);
+          }
+        } else {
+          if (item.nextElementSibling !== accPlaceholderEl) {
+            item.parentElement.insertBefore(accPlaceholderEl, item.nextSibling);
+          }
+        }
+      });
+
+      item.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (!draggedAccId) return;
+
+        const newOrder = [];
+        [...accordion.children].forEach(child => {
+          if (child === accPlaceholderEl) {
+            newOrder.push(draggedAccId);
+          } else if (child.classList.contains('hpse-acc-item')) {
+            const id = child.getAttribute('data-acc-id');
+            if (id && id !== draggedAccId) {
+              newOrder.push(id);
+            }
+          }
+        });
+
+        removeAccPlaceholder();
+        draggedAccId = null;
+
+        if (newOrder.length > 0) {
+          state.order = newOrder;
+          saveState();
+          applyOrder();
+        }
+      });
+
+      item.addEventListener('dragend', () => {
+        item.classList.remove('is-dragging');
+        removeAccPlaceholder();
+        draggedAccId = null;
+      });
+    });
+
+    // Touch Drag & Drop auf Handle
+    let touchAccItem = null;
+    accordion.querySelectorAll('.hpse-acc-drag-handle').forEach(handle => {
+      handle.addEventListener('touchstart', (e) => {
+        const item = handle.closest('.hpse-acc-item');
+        if (!item) return;
+        touchAccItem = item;
+        draggedAccId = item.getAttribute('data-acc-id');
+        touchAccItem.classList.add('is-dragging');
+      }, { passive: true });
+
+      handle.addEventListener('touchmove', (e) => {
+        if (!touchAccItem || !draggedAccId) return;
+        const touch = e.touches[0];
+        const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+        const hoverItem = targetEl ? targetEl.closest('.hpse-acc-item') : null;
+        if (hoverItem && hoverItem !== touchAccItem && accordion.contains(hoverItem)) {
+          const rect = hoverItem.getBoundingClientRect();
+          const isBefore = touch.clientY < rect.top + rect.height / 2;
+          if (!accPlaceholderEl) {
+            accPlaceholderEl = document.createElement('div');
+            accPlaceholderEl.className = 'hpse-drop-placeholder';
+          }
+          const draggedMeta = sectionMeta[draggedAccId] || { title: draggedAccId };
+          accPlaceholderEl.innerHTML = `<span>↓ "${draggedMeta.title}" hier einfügen ↓</span>`;
+
+          if (isBefore) {
+            hoverItem.parentElement.insertBefore(accPlaceholderEl, hoverItem);
+          } else {
+            hoverItem.parentElement.insertBefore(accPlaceholderEl, hoverItem.nextSibling);
+          }
+        }
+      }, { passive: true });
+
+      handle.addEventListener('touchend', () => {
+        if (!touchAccItem || !draggedAccId) return;
+        if (accPlaceholderEl && accPlaceholderEl.parentElement) {
+          const newOrder = [];
+          [...accordion.children].forEach(child => {
+            if (child === accPlaceholderEl) {
+              newOrder.push(draggedAccId);
+            } else if (child.classList.contains('hpse-acc-item')) {
+              const id = child.getAttribute('data-acc-id');
+              if (id && id !== draggedAccId) {
+                newOrder.push(id);
+              }
+            }
+          });
+          removeAccPlaceholder();
+          if (newOrder.length > 0) {
+            state.order = newOrder;
+            saveState();
+            applyOrder();
+          }
+        }
+        touchAccItem.classList.remove('is-dragging');
+        removeAccPlaceholder();
+        touchAccItem = null;
+        draggedAccId = null;
+      });
+
+      handle.addEventListener('touchcancel', () => {
+        if (touchAccItem) touchAccItem.classList.remove('is-dragging');
+        removeAccPlaceholder();
+        touchAccItem = null;
+        draggedAccId = null;
       });
     });
   }
@@ -2544,9 +2837,22 @@ const safeTheme = {
   });
 
   // Countdown Anhang Steuerung
+  const cdAddonBox = document.getElementById('hpse-addon-box');
+  const cdAddonHeader = document.getElementById('hpse-addon-header');
+  const cdOptions = document.getElementById('hpse-cd-options');
   const cdToggleInp = document.getElementById('hpse-toggle-countdown');
   const cdTargetSelect = document.getElementById('hpse-cd-target');
   const cdPosSelect = document.getElementById('hpse-cd-pos');
+
+  cdAddonHeader?.addEventListener('click', (e) => {
+    if (e.target.closest('.hpse-toggle-label')) return;
+    const isExpanded = cdAddonBox?.classList.contains('is-expanded');
+    const willExpand = !isExpanded;
+    cdAddonBox?.classList.toggle('is-expanded', willExpand);
+    if (cdOptions) {
+      cdOptions.hidden = !willExpand;
+    }
+  });
 
   cdToggleInp?.addEventListener('change', (e) => {
     state.sections.countdown = e.target.checked;
@@ -2864,6 +3170,7 @@ const safeTheme = {
 
   applyState();
   renderSortList();
+  initAccordionDragAndDrop();
   setTimeout(runAudit, 800);
 })();
 </script>
