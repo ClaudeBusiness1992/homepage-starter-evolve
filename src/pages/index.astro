@@ -13,6 +13,7 @@ import Gallery  from '../sections/Gallery.astro';
 import Reviews  from '../sections/Reviews.astro';
 import Booking   from '../sections/Booking.astro';
 import Sponsors  from '../sections/Sponsors.astro';
+import HamburgTourSection from '../components/HamburgTourSection.astro';
 import Contact   from '../sections/Contact.astro';
 import Footer    from '../sections/Footer.astro';
 import SidebarAds from '../components/SidebarAds.astro';
@@ -41,6 +42,7 @@ const orderedSections = [
   { id: 'reviews',  label: 'Bewertungen' },
   { id: 'booking',  label: 'Buchung' },
   { id: 'sponsors', label: 'Sponsoren' },
+  { id: 'hamburg-tour', label: 'Touren' },
 ];
 
 const navLinks = [
@@ -67,6 +69,7 @@ const navLinks = [
     <VerifiedReviews />
     {x.active?.booking   && x.booking   && <Booking   {...x.booking} />}
     {x.active?.sponsors  && x.sponsors  && <Sponsors  {...x.sponsors} />}
+    <HamburgTourSection />
     <ServiceReminderSection />
     <NewsletterSection />
     {(s.contact?.enabled || s.footer?.enabled) && (
