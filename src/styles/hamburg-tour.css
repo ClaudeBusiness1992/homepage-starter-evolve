@@ -1,0 +1,361 @@
+/* Hamburg Liefertouren & Zonen — Pixel & Code Markenstil.
+   Helle Section (Cream) mit dunkler Info-Karte (Ink). Alle Texte:
+   Ink auf Cream bzw. Cream auf Ink; Akzent nur als Flaeche/Markierung. */
+
+#hamburg-tour {
+  background: var(--cream);
+  color: var(--ink);
+}
+
+#hamburg-tour > .wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+#hamburg-tour .section-hd {
+  margin-bottom: 1.25rem;
+}
+
+#hamburg-tour .h2 {
+  color: var(--ink);
+}
+
+#hamburg-tour .sub {
+  color: var(--ink);
+  opacity: 0.82;
+}
+
+#hamburg-tour .lbl {
+  color: var(--accent-text);
+}
+
+.ht-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+/* ── Karte ── */
+.ht-map {
+  min-height: 0;
+  display: flex;
+}
+
+.ht-map-frame {
+  flex: 1;
+  min-height: 0;
+  background: #fffdf8;
+  border: 1px solid rgba(28, 28, 28, 0.16);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  padding: 0.75rem;
+  display: flex;
+}
+
+.ht-map-frame svg {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: block;
+}
+
+.ht-zone {
+  cursor: pointer;
+  outline: none;
+}
+
+.ht-zone .ht-zone-shape {
+  stroke: var(--cream);
+  stroke-width: 3;
+  transition: fill 0.2s ease, stroke 0.2s ease;
+}
+
+.ht-zone[data-zone="nord"] .ht-zone-shape { fill: #e7d9bd; }
+.ht-zone[data-zone="west"] .ht-zone-shape { fill: #ccd6c6; }
+.ht-zone[data-zone="mitte-ost"] .ht-zone-shape { fill: #eccfae; }
+.ht-zone[data-zone="sued"] .ht-zone-shape { fill: #d9c6a8; }
+
+.ht-zone:hover .ht-zone-shape,
+.ht-zone:focus-visible .ht-zone-shape {
+  stroke: var(--accent);
+  stroke-width: 4;
+}
+
+.ht-zone.is-active .ht-zone-shape {
+  fill: var(--accent);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+.ht-zone-label {
+  font-family: var(--sans);
+  font-weight: 700;
+  fill: var(--ink);
+  pointer-events: none;
+}
+
+.ht-zone.is-active .ht-zone-label {
+  fill: #ffffff;
+}
+
+.ht-water {
+  fill: #8fb6c4;
+  pointer-events: none;
+}
+
+.ht-river {
+  fill: none;
+  stroke: #8fb6c4;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.ht-map-border {
+  fill: none;
+  stroke: rgba(28, 28, 28, 0.35);
+  stroke-width: 2;
+  pointer-events: none;
+}
+
+/* ── Seitenpanel ── */
+.ht-panel {
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-right: 0.25rem;
+}
+
+.ht-info {
+  background: var(--ink);
+  color: var(--cream);
+  border-radius: var(--r-lg);
+  padding: 1.25rem 1.35rem;
+  box-shadow: var(--shadow);
+}
+
+.ht-info-kicker {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 0.35rem;
+}
+
+.ht-info h3 {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  line-height: 1.15;
+  margin: 0 0 0.5rem;
+  color: var(--cream);
+}
+
+.ht-info-days {
+  margin: 0 0 0.6rem;
+  font-weight: 600;
+  color: var(--cream);
+}
+
+.ht-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+
+.ht-chips li {
+  background: rgba(245, 240, 232, 0.14);
+  border: 1px solid rgba(245, 240, 232, 0.35);
+  color: var(--cream);
+  border-radius: var(--r-pill);
+  padding: 0.2rem 0.7rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.ht-next {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.92rem;
+}
+
+.ht-next strong {
+  color: var(--cream);
+}
+
+.ht-tools {
+  background: #fffdf8;
+  border: 1px solid rgba(28, 28, 28, 0.16);
+  border-radius: var(--r-lg);
+  padding: 1.1rem 1.2rem;
+  display: grid;
+  gap: 0.9rem;
+  box-shadow: var(--shadow);
+}
+
+.ht-field label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  color: var(--ink);
+}
+
+.ht-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ht-input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  color: var(--ink);
+  background: var(--cream);
+  border: 2px solid rgba(28, 28, 28, 0.3);
+  border-radius: var(--r);
+  padding: 0.55rem 0.75rem;
+}
+
+.ht-input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--ink);
+}
+
+.ht-btn {
+  font: inherit;
+  font-weight: 700;
+  border-radius: var(--r);
+  padding: 0.55rem 1rem;
+  cursor: pointer;
+  border: 2px solid var(--ink);
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.ht-btn:active {
+  transform: translateY(1px);
+}
+
+.ht-btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ht-btn--primary {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.ht-btn--primary:hover {
+  background: #000000;
+}
+
+.ht-btn--geo {
+  width: 100%;
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.ht-btn--geo:hover {
+  background: #ffffff;
+}
+
+.ht-btn[disabled] {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.ht-msg {
+  margin: 0.45rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.ht-msg--ok {
+  font-weight: 700;
+}
+
+.ht-msg--error {
+  font-weight: 700;
+  color: #8f2f0a;
+}
+
+.ht-legend {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem 0.75rem;
+  margin: 0;
+  padding: 0;
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.ht-legend button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 6px;
+  padding: 0.1rem 0.2rem;
+}
+
+.ht-legend button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ht-dot {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+  border: 1px solid var(--ink);
+  flex-shrink: 0;
+}
+
+.ht-dot[data-zone="nord"] { background: #e7d9bd; }
+.ht-dot[data-zone="west"] { background: #ccd6c6; }
+.ht-dot[data-zone="mitte-ost"] { background: #eccfae; }
+.ht-dot[data-zone="sued"] { background: #d9c6a8; }
+
+/* ── Responsive: unter 900px stapeln, Section darf wachsen ── */
+@media (max-width: 900px) {
+  main > section#hamburg-tour {
+    height: auto;
+    min-height: calc(100dvh - var(--nav-h));
+    overflow: visible;
+  }
+
+  .ht-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ht-map-frame svg {
+    aspect-ratio: 8 / 7;
+    height: auto;
+  }
+
+  .ht-panel {
+    overflow: visible;
+  }
+
+  .ht-legend {
+    grid-template-columns: 1fr 1fr;
+  }
+}

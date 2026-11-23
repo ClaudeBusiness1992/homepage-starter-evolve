@@ -1,0 +1,280 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import '../styles/hamburg-tour.css';
+---
+
+<section class="section" id="hamburg-tour" aria-label="Hamburg Liefertouren und Zonen">
+  <div class="wrap">
+    <SectionHeader
+      label="Hamburg · Liefertouren"
+      headline="Hamburg Liefertouren &amp; Zonen"
+      subline="Vier Zonen, feste Liefertage: Wähle eine Zone auf der Karte, prüfe deine PLZ oder deinen Standort."
+      center
+    />
+    <div class="ht-grid">
+      <div class="ht-map">
+        <div class="ht-map-frame">
+          <svg viewBox="0 0 480 420" role="group" aria-label="Stilisierte Karte von Hamburg mit vier Lieferzonen" preserveAspectRatio="xMidYMid meet">
+            <g class="ht-zone" data-zone="nord" tabindex="0" role="button" aria-pressed="false" aria-label="Zone Nord auswählen">
+              <path class="ht-zone-shape" d="M40,36 H440 V138 C360,150 300,146 252,146 C180,146 100,150 40,138 Z" />
+              <text class="ht-zone-label" x="252" y="62" text-anchor="middle" font-size="17" letter-spacing="2">NORD</text>
+            </g>
+            <g class="ht-zone" data-zone="west" tabindex="0" role="button" aria-pressed="false" aria-label="Zone West auswählen">
+              <path class="ht-zone-shape" d="M40,146 C110,154 170,152 236,154 L236,272 C170,278 100,280 40,272 Z" />
+              <text class="ht-zone-label" x="132" y="212" text-anchor="middle" font-size="17" letter-spacing="2">WEST</text>
+            </g>
+            <g class="ht-zone" data-zone="mitte-ost" tabindex="0" role="button" aria-pressed="false" aria-label="Zone Mitte und Ost auswählen">
+              <path class="ht-zone-shape" d="M244,154 C310,152 370,154 440,146 L440,262 C370,270 310,274 244,272 Z" />
+              <text class="ht-zone-label" x="343" y="204" text-anchor="middle" font-size="16" letter-spacing="2">MITTE</text>
+              <text class="ht-zone-label" x="343" y="226" text-anchor="middle" font-size="16" letter-spacing="2">&amp; OST</text>
+            </g>
+            <g class="ht-zone" data-zone="sued" tabindex="0" role="button" aria-pressed="false" aria-label="Zone Süd auswählen">
+              <path class="ht-zone-shape" d="M40,280 C150,292 300,292 440,270 L440,384 H40 Z" />
+              <text class="ht-zone-label" x="252" y="346" text-anchor="middle" font-size="17" letter-spacing="2">SÜD</text>
+            </g>
+            <path class="ht-river" d="M16,296 C120,282 190,302 280,290 C360,279 420,264 466,260" stroke-width="22" />
+            <ellipse class="ht-water" cx="252" cy="92" rx="24" ry="38" />
+            <rect class="ht-water" x="246" y="126" width="12" height="18" />
+            <ellipse class="ht-water" cx="252" cy="156" rx="16" ry="10" />
+            <rect class="ht-map-border" x="20" y="20" width="440" height="380" rx="18" />
+          </svg>
+        </div>
+      </div>
+      <div class="ht-panel">
+        <div class="ht-info" aria-live="polite" aria-atomic="true">
+          <span class="ht-info-kicker">Ausgewählte Zone</span>
+          <h3 data-ht="name">Zone Mitte &amp; Ost</h3>
+          <p class="ht-info-days" data-ht="days">Liefertouren: Mo &amp; Do</p>
+          <ul class="ht-chips" data-ht="districts"></ul>
+          <ul class="ht-next" data-ht="next"></ul>
+        </div>
+        <div class="ht-tools">
+          <form class="ht-field" id="ht-plz-form" novalidate>
+            <label for="ht-plz">PLZ-Schnellprüfung</label>
+            <div class="ht-row">
+              <input
+                class="ht-input"
+                id="ht-plz"
+                name="plz"
+                type="text"
+                inputmode="numeric"
+                autocomplete="postal-code"
+                placeholder="z. B. 20354"
+                maxlength="5"
+                pattern="[0-9]{5}"
+                aria-describedby="ht-plz-msg"
+              />
+              <button class="ht-btn ht-btn--primary" type="submit">Zone prüfen</button>
+            </div>
+            <p class="ht-msg" id="ht-plz-msg" aria-live="polite"></p>
+          </form>
+          <div class="ht-field">
+            <button class="ht-btn ht-btn--geo" id="ht-geo" type="button">📍 Meinen Standort automatisch prüfen</button>
+            <p class="ht-msg" id="ht-geo-msg" aria-live="polite"></p>
+          </div>
+          <ul class="ht-legend" aria-label="Zonenübersicht">
+            <li><button type="button" data-zone-link="nord"><span class="ht-dot" data-zone="nord"></span>Zone Nord · Di &amp; Do</button></li>
+            <li><button type="button" data-zone-link="west"><span class="ht-dot" data-zone="west"></span>Zone West · Mi &amp; Fr</button></li>
+            <li><button type="button" data-zone-link="mitte-ost"><span class="ht-dot" data-zone="mitte-ost"></span>Mitte &amp; Ost · Mo &amp; Do</button></li>
+            <li><button type="button" data-zone-link="sued"><span class="ht-dot" data-zone="sued"></span>Zone Süd · Di &amp; Sa</button></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+(function () {
+  var root = document.getElementById('hamburg-tour');
+  if (!root) return;
+
+  var ZONES = {
+    'nord': {
+      name: 'Zone Nord',
+      districts: ['Eppendorf', 'Winterhude', 'Barmbek', 'Alsterdorf'],
+      days: [{ label: 'Dienstag', short: 'Di', num: 2 }, { label: 'Donnerstag', short: 'Do', num: 4 }],
+      center: [53.592, 9.982]
+    },
+    'west': {
+      name: 'Zone West',
+      districts: ['Altona', 'Ottensen', 'Eimsbüttel', 'St. Pauli', 'Elbvororte'],
+      days: [{ label: 'Mittwoch', short: 'Mi', num: 3 }, { label: 'Freitag', short: 'Fr', num: 5 }],
+      center: [53.555, 9.934]
+    },
+    'mitte-ost': {
+      name: 'Zone Mitte & Ost',
+      districts: ['City', 'HafenCity', 'Uhlenhorst', 'Wandsbek'],
+      days: [{ label: 'Montag', short: 'Mo', num: 1 }, { label: 'Donnerstag', short: 'Do', num: 4 }],
+      center: [53.543, 10.002]
+    },
+    'sued': {
+      name: 'Zone Süd',
+      districts: ['Wilhelmsburg', 'Harburg', 'Veddel', 'Finkenwerder'],
+      days: [{ label: 'Dienstag', short: 'Di', num: 2 }, { label: 'Samstag', short: 'Sa', num: 6 }],
+      center: [53.459, 9.982]
+    }
+  };
+
+  var FALLBACK = 'mitte-ost';
+  var fmt = new Intl.DateTimeFormat('de-DE', { weekday: 'long', day: '2-digit', month: '2-digit' });
+
+  function nextDateFor(weekdayNum) {
+    var now = new Date();
+    var diff = (weekdayNum - now.getDay() + 7) % 7;
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + diff);
+    return { date: d, isToday: diff === 0 };
+  }
+
+  function el(sel) { return root.querySelector(sel); }
+
+  function render(zoneId) {
+    var z = ZONES[zoneId];
+    if (!z) return;
+    el('[data-ht="name"]').textContent = z.name;
+    el('[data-ht="days"]').textContent = 'Liefertouren: ' + z.days.map(function (d) { return d.short; }).join(' & ');
+    var chips = el('[data-ht="districts"]');
+    chips.innerHTML = '';
+    z.districts.forEach(function (name) {
+      var li = document.createElement('li');
+      li.textContent = name;
+      chips.appendChild(li);
+    });
+    var next = el('[data-ht="next"]');
+    next.innerHTML = '';
+    var seen = {};
+    z.days.forEach(function (d) {
+      var r = nextDateFor(d.num);
+      var key = r.date.getTime();
+      if (seen[key]) return;
+      seen[key] = true;
+      var li = document.createElement('li');
+      var strong = document.createElement('strong');
+      strong.textContent = r.isToday ? 'Heute' : d.label;
+      li.appendChild(strong);
+      li.appendChild(document.createTextNode(' · ' + fmt.format(r.date)));
+      next.appendChild(li);
+    });
+  }
+
+  function selectZone(zoneId) {
+    if (!ZONES[zoneId]) return;
+    root.querySelectorAll('.ht-zone').forEach(function (g) {
+      var active = g.getAttribute('data-zone') === zoneId;
+      g.classList.toggle('is-active', active);
+      g.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    render(zoneId);
+  }
+
+  root.querySelectorAll('.ht-zone').forEach(function (g) {
+    g.addEventListener('click', function () { selectZone(g.getAttribute('data-zone')); });
+    g.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        ev.preventDefault();
+        selectZone(g.getAttribute('data-zone'));
+      }
+    });
+  });
+
+  root.querySelectorAll('[data-zone-link]').forEach(function (btn) {
+    btn.addEventListener('click', function () { selectZone(btn.getAttribute('data-zone-link')); });
+  });
+
+  function plzToZone(plz) {
+    if (!/^[0-9]{5}$/.test(plz)) return { error: 'Bitte eine 5-stellige PLZ eingeben (nur Ziffern).' };
+    if (!/^(20[0-9]|21[0-2]|22[0-7])\d{2}$/.test(plz)) return { error: 'Die PLZ ' + plz + ' liegt außerhalb Hamburgs.' };
+    if (plz === '20539') return { zone: 'sued' };
+    var p3 = plz.slice(0, 3);
+    var sued = ['208', '210', '211', '212'];
+    var nord = ['222', '223', '224'];
+    var west = ['201', '202', '203', '206', '225', '226', '227'];
+    var mitteOst = ['200', '204', '205', '220', '221'];
+    if (sued.indexOf(p3) !== -1) return { zone: 'sued' };
+    if (nord.indexOf(p3) !== -1) return { zone: 'nord' };
+    if (west.indexOf(p3) !== -1) return { zone: 'west' };
+    if (mitteOst.indexOf(p3) !== -1) return { zone: 'mitte-ost' };
+    return { zone: 'mitte-ost' };
+  }
+
+  var plzForm = el('#ht-plz-form');
+  var plzInput = el('#ht-plz');
+  var plzMsg = el('#ht-plz-msg');
+  plzForm.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var value = plzInput.value.trim();
+    var res = plzToZone(value);
+    plzMsg.classList.remove('ht-msg--ok', 'ht-msg--error');
+    if (res.error) {
+      plzMsg.textContent = res.error;
+      plzMsg.classList.add('ht-msg--error');
+      return;
+    }
+    selectZone(res.zone);
+    plzMsg.textContent = 'PLZ ' + value + ' gehört zur ' + ZONES[res.zone].name + ' (' + ZONES[res.zone].days.map(function (d) { return d.short; }).join(' & ') + ').';
+    plzMsg.classList.add('ht-msg--ok');
+  });
+
+  function haversineKm(aLat, aLon, bLat, bLon) {
+    var R = 6371;
+    var toRad = function (v) { return (v * Math.PI) / 180; };
+    var dLat = toRad(bLat - aLat);
+    var dLon = toRad(bLon - aLon);
+    var s = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(aLat)) * Math.cos(toRad(bLat)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.sqrt(s));
+  }
+
+  function nearestZone(lat, lon) {
+    var best = FALLBACK;
+    var bestDist = Infinity;
+    Object.keys(ZONES).forEach(function (id) {
+      var d = haversineKm(lat, lon, ZONES[id].center[0], ZONES[id].center[1]);
+      if (d < bestDist) { bestDist = d; best = id; }
+    });
+    return { zone: best, distKm: bestDist };
+  }
+
+  var geoBtn = el('#ht-geo');
+  var geoMsg = el('#ht-geo-msg');
+  geoBtn.addEventListener('click', function () {
+    geoMsg.classList.remove('ht-msg--ok', 'ht-msg--error');
+    if (!('geolocation' in navigator)) {
+      selectZone(FALLBACK);
+      geoMsg.textContent = 'Dein Browser unterstützt keine Standortabfrage. Wir zeigen dir die Zone Mitte & Ost (Hamburg-Mitte) als Ausgangspunkt.';
+      geoMsg.classList.add('ht-msg--error');
+      return;
+    }
+    geoBtn.disabled = true;
+    geoMsg.textContent = 'Standort wird ermittelt …';
+    navigator.geolocation.getCurrentPosition(
+      function (pos) {
+        geoBtn.disabled = false;
+        var res = nearestZone(pos.coords.latitude, pos.coords.longitude);
+        if (res.distKm > 60) {
+          selectZone(FALLBACK);
+          geoMsg.textContent = 'Dein Standort liegt außerhalb Hamburgs. Wir zeigen dir die Zone Mitte & Ost (Hamburg-Mitte) als Ausgangspunkt.';
+        } else {
+          selectZone(res.zone);
+          geoMsg.textContent = 'Dein Standort liegt am nächsten zur ' + ZONES[res.zone].name + '.';
+        }
+        geoMsg.classList.add('ht-msg--ok');
+      },
+      function (err) {
+        geoBtn.disabled = false;
+        if (err && err.code === 1) {
+          geoMsg.textContent = 'Standortzugriff abgelehnt. Prüfe stattdessen deine PLZ oben – oder wähle eine Zone auf der Karte.';
+        } else {
+          selectZone(FALLBACK);
+          geoMsg.textContent = 'Standort konnte nicht ermittelt werden. Wir zeigen dir die Zone Mitte & Ost (Hamburg-Mitte) als Ausgangspunkt.';
+        }
+        geoMsg.classList.add('ht-msg--error');
+      },
+      { timeout: 8000, maximumAge: 600000 }
+    );
+  });
+
+  selectZone(FALLBACK);
+})();
+</script>
