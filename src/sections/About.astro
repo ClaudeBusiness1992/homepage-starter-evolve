@@ -210,7 +210,9 @@ const departments = departmentOrder.filter(d => availableDepts.includes(d));
       ))}
     </div>
 
-    <!-- 1. Deterministisches Team Grid (passt sich automatisch jedem N an) -->
+    <!-- 1. Deterministisches Team Grid (passt sich automatisch jedem N an).
+         Reihenfolge-Garantie Duo/Solo: Foto (.aphoto) immer oben,
+         Name/Rolle/Bio (.abody) immer darunter — nie daneben. -->
     <div class={`about-grid team-adaptive-container ${layoutClass}`} id="about-default-grid">
       {dynamicMembers.map((m, i) => (
         <div class={`acard team-card r d${i + 1}`}>
@@ -297,16 +299,32 @@ const departments = departmentOrder.filter(d => availableDepts.includes(d));
     }
   };
 
+  const currentDeptIdx = () => Array.from(deptButtons).findIndex(b => b.classList.contains('is-active'));
+
+  const goToDept = (idx) => {
+    if (idx >= 0 && idx < deptButtons.length) applyFilterByIndex(idx);
+  };
+  const goToPrevDept = () => {
+    const i = currentDeptIdx();
+    if (i > 0) goToDept(i - 1);
+  };
+  const goToNextDept = () => {
+    const i = currentDeptIdx();
+    if (i >= 0 && i < deptButtons.length - 1) goToDept(i + 1);
+  };
+  const atLeftEdge = () => !track || track.scrollLeft <= 4;
+  const atRightEdge = () => {
+    if (!track) return true;
+    return track.scrollLeft >= track.scrollWidth - track.clientWidth - 4;
+  };
+
   if (prev && next && track) {
     prev.addEventListener('click', () => {
       const canScrollLeft = track.scrollLeft > 2;
       if (canScrollLeft) {
         track.scrollBy({ left: -track.clientWidth * 0.8, behavior: 'smooth' });
       } else {
-        const currentIdx = Array.from(deptButtons).findIndex(b => b.classList.contains('is-active'));
-        if (currentIdx > 0) {
-          applyFilterByIndex(currentIdx - 1);
-        }
+        goToPrevDept();
       }
     });
 
@@ -316,15 +334,98 @@ const departments = departmentOrder.filter(d => availableDepts.includes(d));
       if (canScrollRight) {
         track.scrollBy({ left: track.clientWidth * 0.8, behavior: 'smooth' });
       } else {
-        const currentIdx = Array.from(deptButtons).findIndex(b => b.classList.contains('is-active'));
-        if (currentIdx < deptButtons.length - 1) {
-          applyFilterByIndex(currentIdx + 1);
-        }
+        goToNextDept();
       }
     });
 
     track.addEventListener('scroll', updateNav, { passive: true });
     window.addEventListener('resize', updateNav);
+
+    // Horizontales Swipen: Touch-Geste …
+    const SWIPE_MIN = 50;
+    const SWIPE_EDGE_TOL = 40;
+    let touchStartX = null;
+    let touchStartY = null;
+    track.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+    }, { passive: true });
+    track.addEventListener('touchend', (e) => {
+      if (touchStartX === null) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+      touchStartX = null;
+      touchStartY = null;
+      if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) <= Math.abs(dy)) return;
+      if (dx < 0) {
+        if (track.scrollLeft >= track.scrollWidth - track.clientWidth - SWIPE_EDGE_TOL) goToNextDept();
+      } else {
+        if (track.scrollLeft <= SWIPE_EDGE_TOL) goToPrevDept();
+      }
+    }, { passive: true });
+
+    // … Maus-Drag mit Drag-Scroll …
+    let dragStartX = null;
+    let dragStartScroll = 0;
+    let dragged = false;
+    let suppressClick = false;
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      dragStartX = e.clientX;
+      dragStartScroll = track.scrollLeft;
+      dragged = false;
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (dragStartX === null) return;
+      const dx = e.clientX - dragStartX;
+      if (Math.abs(dx) > 12) dragged = true;
+      if (dragged) track.scrollLeft = dragStartScroll - dx;
+    });
+    window.addEventListener('pointerup', (e) => {
+      if (dragStartX === null) return;
+      const dx = e.clientX - dragStartX;
+      const wasDragged = dragged;
+      dragStartX = null;
+      dragged = false;
+      if (!wasDragged) return;
+      if (Math.abs(dx) >= 60) {
+        suppressClick = true;
+        if (dx < 0) {
+          if (atRightEdge()) goToNextDept();
+        } else {
+          if (atLeftEdge()) goToPrevDept();
+        }
+      }
+    });
+    track.addEventListener('click', (e) => {
+      if (suppressClick) {
+        suppressClick = false;
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    }, true);
+
+    // … und Trackpad (horizontales Scrollen am Anschlag wechselt die Abteilung)
+    let wheelAcc = 0;
+    let wheelCoolUntil = 0;
+    let wheelResetT = null;
+    track.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      const outward = (e.deltaX > 0 && atRightEdge()) || (e.deltaX < 0 && atLeftEdge());
+      if (!outward) { wheelAcc = 0; return; }
+      if (Date.now() < wheelCoolUntil) return;
+      wheelAcc += e.deltaX;
+      clearTimeout(wheelResetT);
+      wheelResetT = setTimeout(() => { wheelAcc = 0; }, 250);
+      if (Math.abs(wheelAcc) > 80) {
+        wheelAcc = 0;
+        wheelCoolUntil = Date.now() + 1200;
+        if (e.deltaX > 0) goToNextDept();
+        else goToPrevDept();
+      }
+    }, { passive: true });
   }
 
   deptButtons.forEach((btn, idx) => {
