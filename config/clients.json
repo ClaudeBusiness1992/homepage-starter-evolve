@@ -8,6 +8,13 @@
       "noindex": true
     },
     {
+      "id": "ajs2",
+      "label": "AJS",
+      "route": "ajs2",
+      "passHashSha256": "d00fe23d6bfdb4efb074ebc664a7b3b02196062737760e8e6db9f75606160b6a",
+      "noindex": true
+    },
+    {
       "id": "glowgiver",
       "label": "Glowgiver",
       "route": "glowgiver",

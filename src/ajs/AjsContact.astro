@@ -95,6 +95,26 @@ if (groupStart) {
 
       <!-- Formular -->
       <div class="contact-form-wrap r d2">
+        <!-- Hinweis zu Login & Mitgliedschaft -->
+        <div style="background: rgba(65,76,9,0.06); border: 1px solid rgba(65,76,9,0.18); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1.4rem;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem; flex-wrap: wrap;">
+            <div>
+              <strong style="display: block; font-size: 0.95rem; color: var(--cream); margin-bottom: 0.2rem;">Mitgliedschaft & Kundenkonto</strong>
+              <p style="margin: 0; font-size: 0.84rem; color: var(--text-soft); line-height: 1.4;">
+                Einloggen oder ein neues Kundenkonto anlegen kannst du direkt über die jeweiligen Zugangsfenster:
+              </p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <a href="#login" class="btn btn-ghost" style="padding: 0.45rem 0.9rem; font-size: 0.82rem; border-color: rgba(65,76,9,0.3);">Einloggen</a>
+              <a href="#register" class="btn btn-fill" style="padding: 0.45rem 0.9rem; font-size: 0.82rem;">Mitglied werden</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-head" style="margin-bottom: 1.25rem;">
+          <h3 style="margin: 0 0 0.4rem; font-family: var(--serif); font-size: 1.45rem; color: var(--cream);">Nachricht an AJ senden</h3>
+          <p style="margin: 0; font-size: 0.88rem; color: var(--text-soft); line-height: 1.45;">Für allgemeine Rückfragen, Feedback oder Tour-Auskünfte nutze einfach dieses Kontaktformular.</p>
+        </div>
         <form id="contactForm" data-email={email} novalidate>
           <input type="text" name="hp" tabindex="-1" autocomplete="off"
                  class="visually-hidden" aria-hidden="true" />

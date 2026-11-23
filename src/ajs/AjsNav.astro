@@ -22,7 +22,7 @@ const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href :
 <nav id="nav" aria-label="Hauptnavigation">
   <div class="wrap">
     <div class="nav-row">
-      <a href="/ajs" class="logo">{logo && <img src={logo} alt="" class="logo-img" width="44" height="44" />}<span>{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</span></a>
+      <a href="#top" class="logo">{logo && <img src={logo} alt="" class="logo-img" width="44" height="44" />}<span>{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</span></a>
       {links.length > 0 && (
         <ul class="nav-ul" id="navLinks">
           {links.map(l => (

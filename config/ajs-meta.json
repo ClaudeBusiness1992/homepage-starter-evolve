@@ -18,12 +18,12 @@
       },
       {
         "label": "Kontakt",
-        "href": "#contact",
+        "href": "#register",
         "section": "contact"
       },
       {
         "label": "Einloggen",
-        "href": "#contact",
+        "href": "#register",
         "section": "login",
         "extra": true
       },
@@ -35,7 +35,7 @@
       },
       {
         "label": "Mitglied werden",
-        "href": "#contact",
+        "href": "#register",
         "section": "register",
         "cta": true
       }

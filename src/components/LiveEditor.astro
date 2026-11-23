@@ -107,14 +107,45 @@
             </div>
           </div>
 
-          <!-- Galerie -->
+<!-- Galerie / Sortiment -->
           <div class="hpse-acc-item" data-acc-id="gallery">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="gallery" checked />
                 <span class="hpse-switch"></span>
               </label>
-              <span class="hpse-acc-title">Galerie / Sortiment</span>
+              <button type="button" class="hpse-acc-trigger" aria-expanded="false">
+                <span class="hpse-acc-title">Galerie / Sortiment</span>
+                <span class="hpse-acc-arrow">›</span>
+              </button>
+            </div>
+            <div class="hpse-acc-content" hidden>
+              <div class="hpse-field" style="margin-bottom: 8px;">
+                <label class="hpse-field-label">Darstellung</label>
+                <select id="hpse-var-gallery-mode" class="hpse-select">
+                  <option value="carousel" selected>Karussell (Swipe)</option>
+                  <option value="grid">Raster (Grid)</option>
+                </select>
+              </div>
+              <div class="hpse-fields-grid" id="hpse-gal-grid-options">
+                <div class="hpse-field">
+                  <label class="hpse-field-label">Spalten</label>
+                  <select id="hpse-var-gallery-cols" class="hpse-select">
+                    <option value="2">2 Spalten</option>
+                    <option value="3" selected>3 Spalten</option>
+                    <option value="4">4 Spalten</option>
+                  </select>
+                </div>
+                <div class="hpse-field">
+                  <label class="hpse-field-label">Zeilen</label>
+                  <select id="hpse-var-gallery-rows" class="hpse-select">
+                    <option value="1">1 Zeile</option>
+                    <option value="2" selected>2 Zeilen</option>
+                    <option value="3">3 Zeilen</option>
+                    <option value="all">Alle</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -129,14 +160,44 @@
             </div>
           </div>
 
-          <!-- Bewertungen -->
+<!-- Bewertungen -->
           <div class="hpse-acc-item" data-acc-id="reviews">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="reviews" checked />
                 <span class="hpse-switch"></span>
               </label>
-              <span class="hpse-acc-title">Bewertungen</span>
+              <button type="button" class="hpse-acc-trigger" aria-expanded="false">
+                <span class="hpse-acc-title">Bewertungen</span>
+                <span class="hpse-acc-arrow">›</span>
+              </button>
+            </div>
+            <div class="hpse-acc-content" hidden>
+              <div class="hpse-field" style="margin-bottom: 8px;">
+                <label class="hpse-field-label">Darstellung</label>
+                <select id="hpse-var-reviews-mode" class="hpse-select">
+                  <option value="carousel" selected>Karussell (Swipe)</option>
+                  <option value="grid">Raster (Grid)</option>
+                </select>
+              </div>
+              <div class="hpse-fields-grid" id="hpse-rev-grid-options">
+                <div class="hpse-field">
+                  <label class="hpse-field-label">Spalten</label>
+                  <select id="hpse-var-reviews-cols" class="hpse-select">
+                    <option value="2">2 Spalten</option>
+                    <option value="3" selected>3 Spalten</option>
+                    <option value="4">4 Spalten</option>
+                  </select>
+                </div>
+                <div class="hpse-field">
+                  <label class="hpse-field-label">Zeilen</label>
+                  <select id="hpse-var-reviews-rows" class="hpse-select">
+                    <option value="1" selected>1 Zeile</option>
+                    <option value="2">2 Zeilen</option>
+                    <option value="all">Alle</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -187,6 +248,130 @@
       </div>
 
       <!-- Export & Reset -->
+      <!-- Gestaltungs-Optionen: Farbpalette & Typografie (eingeklappt) -->
+      <div class="hpse-group">
+        <label class="hpse-group-title">Design & Typografie</label>
+        <div class="hpse-accordion">
+          <!-- Farbpalette eingeklappt -->
+          <details class="hpse-acc-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden;">
+            <summary style="padding: 10px 14px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; list-style: none; user-select: none;">
+              <span style="display: flex; align-items: center; gap: 6px;">
+                <span>🎨 Marken-Farbpalette</span>
+                <span style="font-size: 0.68rem; color: #9ca3af; font-weight: 400;">(6 Farben)</span>
+              </span>
+              <span style="font-size: 0.75rem; color: #9ca3af;">▼</span>
+            </summary>
+            <div style="padding: 10px 14px 14px; border-top: 1px solid rgba(255,255,255,0.06);">
+              <!-- Übersicht der aktiven Farbwerte -->
+              <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; background: rgba(0,0,0,0.25); border-radius: 6px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.06); font-size: 0.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #414C09; display: inline-block;"></span> 1. Olive</span>
+                  <span style="font-family: monospace; color: #9ca3af;">#414C09</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #FBFAF3; border: 1px solid rgba(255,255,255,0.3); display: inline-block;"></span> 2. Paper-Creme</span>
+                  <span style="font-family: monospace; color: #9ca3af;">#FBFAF3</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #97572A; display: inline-block;"></span> 3. Terracotta</span>
+                  <span style="font-family: monospace; color: #9ca3af;">#97572A</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #A83A68; display: inline-block;"></span> 4. Radieschen-Pink</span>
+                  <span style="font-family: monospace; color: #9ca3af;">#A83A68</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #ECC86C; display: inline-block;"></span> 5. Feinkost-Gold</span>
+                  <span style="font-family: monospace; color: #9ca3af;">#ECC86C</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #221D15; display: inline-block;"></span> 6. Tief-Espresso</span>
+                  <span style="font-family: monospace; color: #9ca3af;">#221D15</span>
+                </div>
+              </div>
+
+              <!-- Interaktive Color-Picker -->
+              <label style="display: block; font-size: 0.72rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 6px;">Farbtöne anpassen</label>
+              <div class="hpse-color-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
+                  <span>Terracotta</span>
+                  <input type="color" id="hpse-col-terracotta" value="#97572A" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                </label>
+                <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
+                  <span>Olive</span>
+                  <input type="color" id="hpse-col-olive" value="#414C09" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                </label>
+                <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
+                  <span>Paper-Creme</span>
+                  <input type="color" id="hpse-col-paper" value="#FBFAF3" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                </label>
+                <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
+                  <span>Radieschen-Pink</span>
+                  <input type="color" id="hpse-col-berry" value="#A83A68" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                </label>
+                <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
+                  <span>Feinkost-Gold</span>
+                  <input type="color" id="hpse-col-gold" value="#ECC86C" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                </label>
+                <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
+                  <span>Tief-Espresso</span>
+                  <input type="color" id="hpse-col-espresso" value="#221D15" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                </label>
+              </div>
+            </div>
+          </details>
+
+          <!-- Schriftart & Schriftgröße zusammen eingeklappt -->
+          <details class="hpse-acc-item" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; overflow: hidden; margin-top: 6px;">
+            <summary style="padding: 10px 14px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; list-style: none; user-select: none;">
+              <span>🔤 Schriftart & Schriftgrößen</span>
+              <span style="font-size: 0.75rem; color: #9ca3af;">▼</span>
+            </summary>
+            <div style="padding: 10px 14px 14px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #9ca3af; margin-bottom: 4px;" for="hpse-font-pair">Schrift-Kombination</label>
+                <select id="hpse-font-pair" style="width: 100%; padding: 6px 8px; border-radius: 6px; background: #1f2937; color: #fff; border: 1px solid rgba(255,255,255,0.15); font-size: 0.8rem;">
+                  <option value="dm-outfit">DM Serif Display + Outfit (Standard AJS)</option>
+                  <option value="playfair-inter">Playfair Display + Inter (Klassisch Elegant)</option>
+                  <option value="cinzel-plus">Cinzel + Plus Jakarta Sans (Premium Luxus)</option>
+                  <option value="syne-space">Syne + Space Grotesk (Modern Bold)</option>
+                  <option value="fraunces-urban">Fraunces + Urbanist (Handwerk & Gourmet)</option>
+                  <option value="sans-only">Outfit / Inter rein (Klar & Modern)</option>
+                </select>
+              </div>
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                  <label style="font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Verwendete Schriftgrößen (Max. 5)</label>
+                  <span style="font-size: 0.68rem; color: #10b981; font-weight: 700;">5 / 5 aktiv</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px; background: rgba(0,0,0,0.25); border-radius: 6px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.06); font-size: 0.76rem;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #e5e7eb; font-weight: 600;">1. XL (56px / 3.5rem)</span>
+                    <span style="color: #9ca3af; font-size: 0.7rem;">Hero H1, Sektions-H2</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #e5e7eb; font-weight: 600;">2. LG (24px / 1.5rem)</span>
+                    <span style="color: #9ca3af; font-size: 0.7rem;">H3, Kacheltitel, Logo</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #e5e7eb; font-weight: 600;">3. MD (18px / 1.125rem)</span>
+                    <span style="color: #9ca3af; font-size: 0.7rem;">Sublines, Einleitungen</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #e5e7eb; font-weight: 600;">4. Base (15px / 0.94rem)</span>
+                    <span style="color: #9ca3af; font-size: 0.7rem;">Fließtext, Buttons, Menü</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #e5e7eb; font-weight: 600;">5. SM (12px / 0.75rem)</span>
+                    <span style="color: #9ca3af; font-size: 0.7rem;">Badges, Labels, Footer</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
       <div class="hpse-group">
         <label class="hpse-group-title">Konfiguration</label>
         <div class="hpse-action-row">
@@ -197,11 +382,229 @@
       </div>
     </div>
   </div>
+
+  <!-- Rechte Spalte: Live A11y & Kontrast-Audit (Bugliste) -->
+  <button id="hpse-audit-toggle" class="hpse-audit-fab" type="button" aria-expanded="false" aria-controls="hpse-audit-drawer" title="Bugliste & Prüfung öffnen">
+    <span class="hpse-audit-fab-badge" id="hpse-audit-badge">0</span>
+    <span class="hpse-audit-fab-icon" aria-hidden="true">🛡</span>
+    <span class="hpse-audit-fab-lbl">Audit</span>
+  </button>
+
+  <div id="hpse-audit-drawer" class="hpse-audit-drawer" role="dialog" aria-modal="true" aria-labelledby="hpse-audit-title" hidden>
+    <div class="hpse-drawer-head">
+      <div class="hpse-head-info">
+        <h2 id="hpse-audit-title" class="hpse-title">Bugliste</h2>
+        <span class="hpse-badge" id="hpse-audit-status-badge">Prüfung</span>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button id="hpse-audit-refresh" type="button" class="hpse-text-btn">Prüfen</button>
+        <button id="hpse-audit-close" class="hpse-close" type="button" aria-label="Audit schließen">×</button>
+      </div>
+    </div>
+
+    <div class="hpse-drawer-body">
+      <!-- Übersicht / Quick Stats -->
+      <div class="hpse-group">
+        <div class="hpse-group-head">
+          <label class="hpse-group-title">Status-Übersicht</label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px; text-align: center;">
+            <div id="hpse-audit-err-count" style="font-size: 1.3rem; font-weight: 700; color: #fff;">0</div>
+            <div style="font-size: 0.7rem; color: #9ca3af; text-transform: uppercase;">Kontrastfehler</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px; text-align: center;">
+            <div id="hpse-audit-warn-count" style="font-size: 1.3rem; font-weight: 700; color: #fff;">0</div>
+            <div style="font-size: 0.7rem; color: #9ca3af; text-transform: uppercase;">A11y / Warnungen</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kategorisierte, eingeklappte Bugliste -->
+      <div class="hpse-group">
+        <div class="hpse-group-head">
+          <label class="hpse-group-title">Kategorien & Prüfungen</label>
+        </div>
+        <p class="hpse-help">Klicke auf eine Kategorie, um die Details aufzuklappen.</p>
+
+        <div class="hpse-accordion" id="hpse-audit-categories">
+          <!-- Kategorie 1: Text-Kontraste (WCAG AA/AAA) -->
+          <details class="hpse-acc-item">
+            <summary class="hpse-acc-summary">
+              <span class="hpse-acc-summary-left">
+                <span class="hpse-cat-icon">🎨</span>
+                <span class="hpse-acc-title">Kontrast (Text & Icons)</span>
+              </span>
+              <span class="hpse-cat-badge" id="hpse-count-contrast">0</span>
+            </summary>
+            <div class="hpse-cat-body" id="hpse-list-contrast">
+              <div class="hpse-audit-empty">Keine Kontrastprobleme erkannt.</div>
+            </div>
+          </details>
+
+          <!-- Kategorie 2: Barrierefreiheit & Media (Alt-Texte etc.) -->
+          <details class="hpse-acc-item">
+            <summary class="hpse-acc-summary">
+              <span class="hpse-acc-summary-left">
+                <span class="hpse-cat-icon">🖼</span>
+                <span class="hpse-acc-title">Bilder & Barrierefreiheit</span>
+              </span>
+              <span class="hpse-cat-badge" id="hpse-count-a11y">0</span>
+            </summary>
+            <div class="hpse-cat-body" id="hpse-list-a11y">
+              <div class="hpse-audit-empty">Alle Medien barrierefrei.</div>
+            </div>
+          </details>
+
+          <!-- Kategorie 3: Links, Buttons & Klickflächen -->
+          <details class="hpse-acc-item">
+            <summary class="hpse-acc-summary">
+              <span class="hpse-acc-summary-left">
+                <span class="hpse-cat-icon">🔗</span>
+                <span class="hpse-acc-title">Interaktive Elemente & Links</span>
+              </span>
+              <span class="hpse-cat-badge" id="hpse-count-interactive">0</span>
+            </summary>
+            <div class="hpse-cat-body" id="hpse-list-interactive">
+              <div class="hpse-audit-empty">Alle Links und Buttons intakt.</div>
+            </div>
+          </details>
+
+          <!-- Kategorie 4: Layout & Struktur -->
+          <details class="hpse-acc-item">
+            <summary class="hpse-acc-summary">
+              <span class="hpse-acc-summary-left">
+                <span class="hpse-cat-icon">📐</span>
+                <span class="hpse-acc-title">Layout & Überschriften</span>
+              </span>
+              <span class="hpse-cat-badge" id="hpse-count-layout">0</span>
+            </summary>
+            <div class="hpse-cat-body" id="hpse-list-layout">
+              <div class="hpse-audit-empty">Hierarchie und Struktur sauber.</div>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
 </aside>
 
 <style>
   /* FAB */
-  .hpse-editor {
+  
+  
+  /* Rechte FAB - Exakt wie linke FAB gestylt */
+  .hpse-audit-fab {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background: #111827;
+    color: #f9fafb;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-right: none;
+    border-radius: 16px 0 0 16px;
+    padding: 14px 14px 14px 18px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    z-index: 9999;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, padding 0.2s ease;
+  }
+  .hpse-audit-fab:hover { background: #1f2937; padding-right: 18px; }
+  .hpse-audit-fab-badge {
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    background: var(--accent, #ea580c);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+  .hpse-audit-fab-icon { font-size: var(--fs-lg); line-height: 1; color: var(--accent-light, #ea580c); }
+  .hpse-audit-fab-lbl { font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* Rechter Drawer - Exakt wie linker Drawer */
+  .hpse-audit-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 330px;
+    max-width: 90vw;
+    background: rgba(17, 24, 39, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: -16px 0 36px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #f3f4f6;
+    z-index: 9999;
+  }
+  .hpse-audit-drawer.is-open { transform: translateX(0); }
+
+  /* Kategorien-Akkordeon & Items */
+  .hpse-acc-summary {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    user-select: none;
+  }
+  .hpse-acc-summary::-webkit-details-marker { display: none; }
+  .hpse-acc-summary-left { display: flex; align-items: center; gap: 8px; }
+  .hpse-cat-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #9ca3af;
+  }
+  .hpse-cat-badge.has-items { background: rgba(255, 255, 255, 0.2); color: #fff; }
+  .hpse-cat-body {
+    padding: 8px 12px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .hpse-audit-empty {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: center;
+    padding: 8px 0;
+  }
+
+  .hpse-audit-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.78rem;
+  }
+  .hpse-audit-item-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .hpse-audit-item-badge { font-size: 0.65rem; font-weight: 700; padding: 2px 5px; border-radius: 4px; text-transform: uppercase; background: rgba(255,255,255,0.08); color: #d1d5db; }
+  .hpse-audit-item-target { font-family: monospace; font-size: 0.72rem; color: #9ca3af; }
+  .hpse-audit-item-detail { color: #d1d5db; line-height: 1.35; margin: 0; font-size: 0.75rem; }
+  .hpse-audit-item-ratio { font-weight: 700; font-size: 0.75rem; color: #fff; }
+.hpse-editor {
     position: relative;
     z-index: 9999;
     font-family: var(--sans, system-ui, -apple-system, sans-serif);
@@ -1067,7 +1470,39 @@
 
   if (!fab || !drawer) return;
 
+  const fontPairs = {
+    'dm-outfit': { serif: "'DM Serif Display', Georgia, serif", sans: "'Outfit', system-ui, sans-serif" },
+    'playfair-inter': { serif: "'Playfair Display', Georgia, serif", sans: "'Inter', system-ui, sans-serif" },
+    'cinzel-plus': { serif: "'Cinzel', Georgia, serif", sans: "'Plus Jakarta Sans', system-ui, sans-serif" },
+    'syne-space': { serif: "'Syne', Georgia, serif", sans: "'Space Grotesk', system-ui, sans-serif" },
+    'fraunces-urban': { serif: "'Fraunces', Georgia, serif", sans: "'Urbanist', system-ui, sans-serif" },
+    'sans-only': { serif: "'Outfit', system-ui, sans-serif", sans: "'Outfit', system-ui, sans-serif" }
+  };
+
+  const fontScales = {
+    compact: { xl: '3.1rem', lg: '1.35rem', md: '1rem', base: '0.85rem', sm: '0.7rem' },
+    normal:  { xl: '3.5rem', lg: '1.5rem',  md: '1.125rem', base: '0.9375rem', sm: '0.75rem' },
+    large:   { xl: '4.0rem', lg: '1.7rem',  md: '1.25rem', base: '1.05rem', sm: '0.82rem' },
+    xlarge:  { xl: '4.5rem', lg: '1.9rem',  md: '1.35rem', base: '1.15rem', sm: '0.9rem' }
+  };
+
+  const defaultTypography = {
+    fontPair: 'dm-outfit',
+    scale: 'normal'
+  };
+
+  const defaultColors = {
+    terracotta: '#97572A',
+    olive: '#414C09',
+    paper: '#FBFAF3',
+    berry: '#A83A68',
+    gold: '#ECC86C',
+    espresso: '#221D15'
+  };
+
   const defaultState = {
+    colors: { ...defaultColors },
+    typography: { ...defaultTypography },
     sections: {
       countdown: true,
       hero: true,
@@ -1170,7 +1605,51 @@
     });
   });
 
+  function applyTypography() {
+    const typo = state.typography || defaultTypography;
+    const pair = fontPairs[typo.fontPair] || fontPairs['dm-outfit'];
+    const scale = fontScales[typo.scale] || fontScales['normal'];
+
+    document.documentElement.style.setProperty('--serif', pair.serif);
+    document.documentElement.style.setProperty('--sans', pair.sans);
+
+    document.documentElement.style.setProperty('--fs-xl', scale.xl);
+    document.documentElement.style.setProperty('--fs-lg', scale.lg);
+    document.documentElement.style.setProperty('--fs-md', scale.md);
+    document.documentElement.style.setProperty('--fs-base', scale.base);
+    document.documentElement.style.setProperty('--fs-sm', scale.sm);
+
+    const selPair = document.getElementById('hpse-font-pair');
+    if (selPair && typo.fontPair) selPair.value = typo.fontPair;
+    const selScale = document.getElementById('hpse-font-scale');
+    if (selScale && typo.scale) selScale.value = typo.scale;
+  }
+
+  function applyColors() {
+    const cols = state.colors || defaultColors;
+    document.documentElement.style.setProperty('--ajs-terracotta', cols.terracotta || '#97572A');
+    document.documentElement.style.setProperty('--accent', cols.terracotta || '#97572A');
+    document.documentElement.style.setProperty('--accent-light', cols.terracotta || '#97572A');
+    document.documentElement.style.setProperty('--ajs-olive', cols.olive || '#414C09');
+    document.documentElement.style.setProperty('--footer-bg', cols.olive || '#414C09');
+    document.documentElement.style.setProperty('--ajs-paper', cols.paper || '#FBFAF3');
+    document.documentElement.style.setProperty('--nav-bg', cols.paper || '#FBFAF3');
+    document.documentElement.style.setProperty('--ajs-berry', cols.berry || '#A83A68');
+    document.documentElement.style.setProperty('--berry', cols.berry || '#A83A68');
+
+    const inpT = document.getElementById('hpse-col-terracotta');
+    if (inpT && cols.terracotta) inpT.value = cols.terracotta;
+    const inpO = document.getElementById('hpse-col-olive');
+    if (inpO && cols.olive) inpO.value = cols.olive;
+    const inpP = document.getElementById('hpse-col-paper');
+    if (inpP && cols.paper) inpP.value = cols.paper;
+    const inpB = document.getElementById('hpse-col-berry');
+    if (inpB && cols.berry) inpB.value = cols.berry;
+  }
+
   function applyState() {
+    applyColors();
+    applyTypography();
     // 1. Toggles anwenden
     Object.entries(state.sections).forEach(([id, enabled]) => {
       if (id === 'countdown') {
@@ -1191,13 +1670,20 @@
         if (el) el.setAttribute('data-hpse-hidden', String(!enabled));
       }
 
-      const navLink = document.querySelector(`.nav-ul a[href="#${id}"]`);
-      if (navLink) {
+      // Nav-Link für diesen Bereich dynamisch ein-/ausblenden
+      const navLinks = document.querySelectorAll(`.nav-ul a[href*="#${id}"]`);
+      navLinks.forEach(navLink => {
         navLink.setAttribute('data-hpse-nav-hidden', String(!enabled));
-        if (navLink.parentElement) {
-          navLink.parentElement.style.display = enabled ? '' : 'none';
+        const li = navLink.closest('li') || navLink.parentElement;
+        if (li) {
+          li.setAttribute('data-hpse-nav-hidden', String(!enabled));
+          if (!enabled) {
+            li.style.setProperty('display', 'none', 'important');
+          } else {
+            li.style.removeProperty('display');
+          }
         }
-      }
+      });
 
       const cb = accordion?.querySelector(`input[data-section="${id}"]`);
       if (cb) cb.checked = !!enabled;
@@ -1291,6 +1777,35 @@
     applyState();
   });
 
+  const selPair = document.getElementById('hpse-font-pair');
+  selPair?.addEventListener('change', (e) => {
+    if (!state.typography) state.typography = { ...defaultTypography };
+    state.typography.fontPair = e.target.value;
+    applyTypography();
+    saveState();
+  });
+
+  const selScale = document.getElementById('hpse-font-scale');
+  selScale?.addEventListener('change', (e) => {
+    if (!state.typography) state.typography = { ...defaultTypography };
+    state.typography.scale = e.target.value;
+    applyTypography();
+    saveState();
+  });
+
+  ['terracotta', 'olive', 'paper', 'berry', 'gold', 'espresso'].forEach(colKey => {
+    const el = document.getElementById('hpse-col-' + colKey);
+    el?.addEventListener('input', (e) => {
+      if (!state.colors) state.colors = { ...defaultColors };
+      state.colors[colKey] = e.target.value;
+      applyColors();
+    applyTypography();
+    });
+    el?.addEventListener('change', () => {
+      saveState();
+    });
+  });
+
   accordion?.addEventListener('change', (e) => {
     const target = e.target;
     if (target && target.matches('input[data-section]')) {
@@ -1335,6 +1850,241 @@
     }
   });
 
+
+  // ── Kontrast & Audit Engine (Kategorisiert & Eingeklappt) ──────────────────
+  function getLuminance(r, g, b) {
+    var a = [r, g, b].map(function (v) {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+  }
+
+  function parseRGB(str) {
+    if (!str || str === 'transparent' || str === 'inherit') return null;
+    var m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+    if (!m) return null;
+    var alpha = m[4] !== undefined ? parseFloat(m[4]) : 1;
+    if (alpha < 0.1) return null;
+    return { r: parseInt(m[1]), g: parseInt(m[2]), b: parseInt(m[3]), a: alpha };
+  }
+
+  function getEffectiveBg(el) {
+    // 1. Spezifische Buttons, Badges und gefärbte Container (höchste Priorität)
+    if (el.closest('.btn-fill, a.cta-link, .pbadge, .btn-email, .btn-submit, .bk-submit, .btn-primary')) {
+      return { r: 151, g: 87, b: 42, a: 1 }; // Terracotta #97572A
+    }
+    if (el.closest('.review-verified')) {
+      return { r: 65, g: 76, b: 9, a: 1 }; // Olive #414C09
+    }
+    if (el.closest('.gallery-img, .kat-head')) {
+      return { r: 65, g: 76, b: 9, a: 1 }; // Olive #414C09
+    }
+    if (el.closest('.btn-ghost')) {
+      if (el.closest('#services, #about, #contact, #pricing, #booking, #nav')) {
+        return { r: 251, g: 250, b: 243, a: 1 }; // Paper
+      }
+      return { r: 65, g: 76, b: 9, a: 1 }; // Olive
+    }
+    if (el.closest('.btn-outline')) {
+      return { r: 251, g: 250, b: 243, a: 1 }; // Paper
+    }
+
+    // 2. Kacheln (Cards) & Formularkästen
+    if (el.closest('.review-card, .sponsor-card, .pcard, .scard, .acard, .gallery-item-body, .booking-form, .contact-form-wrap, .reviews-note')) {
+      return { r: 251, g: 250, b: 243, a: 1 }; // Paper #FBFAF3
+    }
+    
+    // 3. DOM Parent Background Walk
+    var cur = el;
+    while (cur && cur !== document.documentElement) {
+      var bgStr = window.getComputedStyle(cur).backgroundColor;
+      var rgb = parseRGB(bgStr);
+      if (rgb && rgb.a > 0.7) return rgb;
+      cur = cur.parentElement;
+    }
+
+    // 4. Sektions-Ebene
+    var sec = el.closest('#services, #about, #contact, #pricing, #booking, #nav');
+    if (sec) {
+      return { r: 251, g: 250, b: 243, a: 1 }; // #FBFAF3 Paper
+    }
+    return { r: 65, g: 76, b: 9, a: 1 }; // #414C09 Olive
+  }
+
+  function runAudit() {
+    var cats = {
+      contrast: [],
+      a11y: [],
+      interactive: [],
+      layout: []
+    };
+
+    // 1. Kontrast-Prüfung
+    var textElements = document.querySelectorAll('h1, h2, h3, h4, p, a, span, button, strong, em, label, li');
+    textElements.forEach(function (el) {
+      if (el.closest('#hpse-editor') || el.closest('[hidden]') || el.closest('[data-hpse-hidden="true"]')) return;
+      var text = (el.textContent || '').trim();
+      if (!text || text.length < 2) return;
+      if (el.children.length > 2 && text.length > 80) return;
+
+      var style = window.getComputedStyle(el);
+      if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return;
+
+      var fg = parseRGB(style.color);
+      var bg = getEffectiveBg(el);
+      if (!fg || !bg) return;
+
+      var l1 = getLuminance(fg.r, fg.g, fg.b);
+      var l2 = getLuminance(bg.r, bg.g, bg.b);
+      var ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+
+      var fs = parseFloat(style.fontSize);
+      var isLarge = fs >= 24 || (fs >= 18 && (style.fontWeight === '700' || style.fontWeight === 'bold'));
+      var minRatio = isLarge ? 3.0 : 4.5;
+
+      if (ratio < minRatio) {
+        var tag = el.tagName.toLowerCase();
+        var snippet = text.length > 28 ? text.slice(0, 28) + '…' : text;
+        var selector = el.id ? '#' + el.id : (el.className ? '.' + el.className.split(' ')[0] : tag);
+
+        var existing = cats.contrast.find(function (i) { return i.selector === selector && i.text === snippet; });
+        if (!existing) {
+          cats.contrast.push({
+            type: ratio < (minRatio - 1) ? 'err' : 'warn',
+            tag: tag + selector,
+            text: snippet,
+            ratio: ratio.toFixed(2),
+            needed: minRatio.toFixed(1),
+            msg: 'Kontrast: ' + ratio.toFixed(2) + ':1 (Soll: min. ' + minRatio.toFixed(1) + ':1)'
+          });
+        }
+      }
+    });
+
+    // 2. Medien & Barrierefreiheit (Alt-Texte)
+    document.querySelectorAll('img').forEach(function (img) {
+      if (img.closest('#hpse-editor') || img.closest('[hidden]')) return;
+      if (!img.hasAttribute('alt')) {
+        cats.a11y.push({
+          type: 'warn',
+          tag: 'img',
+          text: img.getAttribute('src') || 'Bild',
+          ratio: '-',
+          msg: 'Fehlendes alt-Attribut (Screenreader-Barriere)'
+        });
+      }
+    });
+
+    // 3. Interaktive Elemente (Klickflächen & leere Links)
+    document.querySelectorAll('a, button').forEach(function (btn) {
+      if (btn.closest('#hpse-editor') || btn.closest('[hidden]')) return;
+      var text = (btn.textContent || '').trim();
+      var ariaLabel = btn.getAttribute('aria-label');
+      if (!text && !ariaLabel && !btn.querySelector('img[alt]')) {
+        cats.interactive.push({
+          type: 'warn',
+          tag: btn.tagName.toLowerCase(),
+          text: btn.getAttribute('href') || 'Button',
+          ratio: '-',
+          msg: 'Schaltfläche ohne sichtbaren Text oder aria-label'
+        });
+      }
+    });
+
+    // 4. Layout & Überschriften-Hierarchie
+    var h1s = document.querySelectorAll('h1');
+    if (h1s.length > 1) {
+      cats.layout.push({
+        type: 'warn',
+        tag: 'h1',
+        text: h1s.length + ' H1-Tags',
+        ratio: '-',
+        msg: 'Mehrere <h1> auf einer Seite (eine einzige H1 pro Seite empfohlen)'
+      });
+    }
+
+    renderAuditCategories(cats);
+  }
+
+  function renderAuditCategories(cats) {
+    var totalIssues = cats.contrast.length + cats.a11y.length + cats.interactive.length + cats.layout.length;
+    var badge = document.getElementById('hpse-audit-badge');
+    var errCountEl = document.getElementById('hpse-audit-err-count');
+    var warnCountEl = document.getElementById('hpse-audit-warn-count');
+    var statusBadge = document.getElementById('hpse-audit-status-badge');
+
+    if (badge) badge.textContent = String(totalIssues);
+    if (errCountEl) errCountEl.textContent = String(cats.contrast.length);
+    if (warnCountEl) warnCountEl.textContent = String(cats.a11y.length + cats.interactive.length + cats.layout.length);
+    if (statusBadge) {
+      if (totalIssues === 0) {
+        statusBadge.textContent = 'Sauber';
+      } else {
+        statusBadge.textContent = totalIssues + ' Funde';
+      }
+    }
+
+    function renderCategory(catKey, listId, countId) {
+      var listEl = document.getElementById(listId);
+      var countEl = document.getElementById(countId);
+      var items = cats[catKey] || [];
+
+      if (countEl) {
+        countEl.textContent = String(items.length);
+        countEl.classList.toggle('has-items', items.length > 0);
+      }
+
+      if (!listEl) return;
+      if (items.length === 0) {
+        listEl.innerHTML = '<div class="hpse-audit-empty">Keine Probleme in dieser Kategorie.</div>';
+        return;
+      }
+
+      listEl.innerHTML = items.slice(0, 8).map(function (i) {
+        return '<div class="hpse-audit-item">' +
+          '<div class="hpse-audit-item-head">' +
+            '<span class="hpse-audit-item-badge">' + (i.type === 'err' ? 'Fehler' : 'Warnung') + '</span>' +
+            '<span class="hpse-audit-item-target">' + i.tag + '</span>' +
+          '</div>' +
+          '<p class="hpse-audit-item-detail">' + i.msg + '</p>' +
+          '<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px; font-size: 0.7rem; color: #9ca3af;">' +
+            '<span>"' + i.text + '"</span>' +
+            (i.ratio !== '-' ? '<span class="hpse-audit-item-ratio">' + i.ratio + ':1</span>' : '') +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    renderCategory('contrast', 'hpse-list-contrast', 'hpse-count-contrast');
+    renderCategory('a11y', 'hpse-list-a11y', 'hpse-count-a11y');
+    renderCategory('interactive', 'hpse-list-interactive', 'hpse-count-interactive');
+    renderCategory('layout', 'hpse-list-layout', 'hpse-count-layout');
+  }
+
+  var auditToggle = document.getElementById('hpse-audit-toggle');
+  var auditDrawer = document.getElementById('hpse-audit-drawer');
+  var auditClose = document.getElementById('hpse-audit-close');
+  var auditRefresh = document.getElementById('hpse-audit-refresh');
+
+  auditToggle?.addEventListener('click', function () {
+    var isOpen = auditDrawer.classList.toggle('is-open');
+    auditDrawer.hidden = !isOpen;
+    auditToggle.setAttribute('aria-expanded', String(isOpen));
+    if (isOpen) runAudit();
+  });
+
+  auditClose?.addEventListener('click', function () {
+    auditDrawer.classList.remove('is-open');
+    auditDrawer.hidden = true;
+    auditToggle.setAttribute('aria-expanded', 'false');
+  });
+
+  auditRefresh?.addEventListener('click', function () {
+    runAudit();
+  });
+
+  setTimeout(runAudit, 800);
   applyState();
 })();
 </script>

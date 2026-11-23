@@ -6,9 +6,9 @@
       "headline": "Guter Geschmack. Persönlich vorbeigebracht.",
       "subline": "Feines Fleisch, Garnelen, Geflügel und mehr. Mit Bedacht ausgewählt, fair kalkuliert und morgens frisch für dich eingekauft. Nachmittags schon an deiner Tür. Nur für Mitglieder von AJ's Inner Circle.",
       "ctaPrimary": "Mitglied werden",
-      "ctaPrimaryHref": "#contact",
+      "ctaPrimaryHref": "#register",
       "ctaSecondary": "Einloggen",
-      "ctaSecondaryHref": "#contact",
+      "ctaSecondaryHref": "#login",
       "images": [
         {
           "src": "/images/hero-1.webp",
@@ -106,11 +106,41 @@
       "items": []
     },
     "pricing": {
-      "enabled": false,
-      "label": "",
-      "headline": "",
-      "subline": "",
-      "packages": []
+      "enabled": true,
+      "label": "Mitgliedschaften & Touren",
+      "headline": "Transparente Konditionen für Mitglieder",
+      "subline": "Keine versteckten Gebühren. Exklusiver Zugang zu unseren Hamburger Feinkost-Touren.",
+      "packages": [
+        {
+          "name": "Inner Circle Regular",
+          "price": "0 €",
+          "period": "Kostenfreie Aufnahme",
+          "highlight": false,
+          "features": [
+            "Persönlicher Account & Freischaltung",
+            "Einsicht in alle Wochenangebote & Preise",
+            "Lieferung auf fester Stadtteil-Tour",
+            "Abrechnung nach exaktem Gewicht vor Ort"
+          ],
+          "ctaLabel": "Jetzt registrieren",
+          "ctaHref": "#register"
+        },
+        {
+          "name": "Gourmet Club Premium",
+          "price": "Priorität",
+          "period": "Für Vielbesteller & Gastro",
+          "highlight": true,
+          "badge": "Beliebt",
+          "features": [
+            "Alle Vorteile des Inner Circle",
+            "Exklusive Vorab-Reservierung seltener Cuts (Dry Aged)",
+            "Wunsch-Zeitfenster bei der Tour-Anfahrt",
+            "Direkter WhatsApp-Draht zu AJ"
+          ],
+          "ctaLabel": "Prioritäts-Zugang anfragen",
+          "ctaHref": "#register"
+        }
+      ]
     },
     "contact": {
       "enabled": true,
@@ -149,9 +179,9 @@
       "headline": "Nicht für jeden. Für den Inner Circle.",
       "subline": "Premium Fleisch & Feinkost, persönlich geliefert in Hamburg. Der Zugang ist begrenzt: Melde dich an, und ich prüfe deine Aufnahme persönlich.",
       "buttonLabel": "Registrierung starten",
-      "buttonHref": "#contact",
+      "buttonHref": "#register",
       "secondaryLabel": "Einloggen",
-      "secondaryHref": "#contact",
+      "secondaryHref": "#login",
       "image": "/images/banner.webp"
     }
   }

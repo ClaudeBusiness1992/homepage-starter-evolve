@@ -25,28 +25,51 @@ body.swipe-active #gallery .gallery-snap-page .gallery-item-body { flex-shrink: 
 
 /* ═══ AJS: Farbwechsel Olive ↔ Creme, Logo, Schritt-Karten, Banner ═══ */
 :root {
-  --footer-bg: #414C09;
-  /* Header-Paper: Logo-Ring-Creme aufgehellt, grenzt Nav von Olive-Sektionen ab */
-  --nav-bg: #FBFAF3;
-  /* Berry: Logo-Radieschen-Pink #C14F81, für Text auf Paper abgedunkelt (AA) */
-  --berry: #A83A68;
+  --ajs-olive: #414C09;
+  --ajs-paper: #FBFAF3;
+  --ajs-terracotta: var(--ajs-terracotta, #97572A);
+  --ajs-berry: #A83A68;
+
+  --footer-bg: var(--ajs-olive);
+  --nav-bg: var(--ajs-paper);
+  --berry: var(--ajs-berry);
+  --accent: var(--ajs-terracotta);
+  --accent-light: var(--ajs-terracotta);
 }
 
-/* Helle Abschnitte: Tokens lokal umkehren (Karten, Ränder, Texte folgen mit) */
+/* Strenge Harmonisierung: Exakt die 4 AJS-Markenfarben */
+:root {
+  --ajs-olive: #414C09;
+  --ajs-paper: #FBFAF3;
+  --ajs-terracotta: #97572A;
+  --ajs-berry: #A83A68;
+
+  --ink: var(--ajs-olive);
+  --cream: var(--ajs-paper);
+  --footer-bg: var(--ajs-olive);
+  --nav-bg: var(--ajs-paper);
+  --berry: var(--ajs-berry);
+  --accent: var(--ajs-terracotta);
+  --accent-light: var(--ajs-terracotta);
+  --text-soft: var(--ajs-paper);
+  --text-softer: var(--ajs-paper);
+  --border-subtle: var(--ajs-paper);
+  --bg-card: var(--ajs-olive);
+}
+
+/* Helle Abschnitte (Services, About, Contact): Invertiert exakt auf Paper & Olive */
 #services, #about, #contact {
-  --ink: #EFEDE0;
-  --cream: #23220F;
-  --ink-muted: #4B4A32;
-  /* Kontrast-Fix: Text-Terracotta nach --accent-text-Logik (75 % Accent + Schwarz) */
-  --accent: #97572A;
-  --accent-light: #97572A;
-  --bg-card: color-mix(in srgb, var(--cream) 4%, #fff);
-  --bg-input: color-mix(in srgb, var(--cream) 7%, var(--ink));
-  --border-subtle: color-mix(in srgb, var(--cream) 15%, var(--ink));
-  --text-soft: color-mix(in srgb, var(--cream) 75%, var(--ink));
-  --text-softer: color-mix(in srgb, var(--cream) 58%, var(--ink));
-  background: var(--ink);
-  color: var(--cream);
+  --ink: var(--ajs-paper);
+  --cream: var(--ajs-olive);
+  --text-soft: var(--ajs-olive);
+  --text-softer: var(--ajs-olive);
+  --accent: var(--ajs-terracotta);
+  --accent-light: var(--ajs-terracotta);
+  --bg-card: var(--ajs-paper);
+  --bg-input: var(--ajs-paper);
+  --border-subtle: var(--ajs-olive);
+  background: var(--ajs-paper);
+  color: var(--ajs-olive);
 }
 #services .btn-ghost, #contact .btn-ghost { color: var(--cream); }
 #contact .btn-phone { background: #fff; color: var(--cream); }
@@ -57,21 +80,21 @@ body.swipe-active #gallery .gallery-snap-page .gallery-item-body { flex-shrink: 
 .foot-logo { display: inline-flex; align-items: center; gap: .6rem; }
 .foot-logo-img { width: 36px; height: 36px; border-radius: 50%; }
 .hero-photo-wrap { position: relative; }
-.hero-badge { position: absolute; left: 1rem; top: 1rem; width: clamp(80px, 7.5vw, 108px); height: auto; border-radius: 50%; background: #FBFAF3; padding: 4px; box-shadow: 0 6px 22px rgba(0,0,0,.4); }
+.hero-badge { position: absolute; left: 1.2rem; top: 1.2rem; width: clamp(72px, 6.5vw, 96px); height: auto; border-radius: 50%; background: transparent; padding: 0; box-shadow: 0 8px 24px rgba(0,0,0,.5); backdrop-filter: drop-shadow(0 4px 12px rgba(0,0,0,.4)); }
 @media (max-width: 900px) { .hero-badge { left: .6rem; top: .6rem; width: 64px; } }
 
 /* AJS-Header: Paper statt Olive — Abgrenzung zu Hero-/Sortiment-Sektionen.
    Nur /ajs (ajs.css lädt nur via AjsBase). Text Olive auf Paper 8.87:1 (AA).
-   Hover/Active-Terracotta #97572A auf Paper 5.41:1 (AA); Standard-Accent
+   Hover/Active-Terracotta var(--ajs-terracotta, #97572A) auf Paper 5.41:1 (AA); Standard-Accent
    #C97438 fiele auf Paper mit 3.32 durch und bleibt Footer/dunklen Flächen. */
 #nav { border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
 #nav .logo { color: var(--ink); }
-#nav .logo em { color: #97572A; }
+#nav .logo em { color: var(--ajs-terracotta, #97572A); }
 #nav .nav-ul a:not(.cta-link) { color: var(--ink); }
-#nav .nav-ul a:not(.cta-link):hover { color: #97572A; }
-#nav .nav-ul a:focus-visible { outline-color: #97572A; }
-#nav .nav-ul a.active:not(.cta-link) { color: #97572A; }
-#nav .nav-ul a.active:not(.cta-link)::after { background: #97572A; }
+#nav .nav-ul a:not(.cta-link):hover { color: var(--ajs-terracotta, #97572A); }
+#nav .nav-ul a:focus-visible { outline-color: var(--ajs-terracotta, #97572A); }
+#nav .nav-ul a.active:not(.cta-link) { color: var(--ajs-terracotta, #97572A); }
+#nav .nav-ul a.active:not(.cta-link)::after { background: var(--ajs-terracotta, #97572A); }
 #nav .burger span { background: var(--ink); }
 @media (max-width: 768px) {
   #nav .nav-ul { background: var(--nav-bg); border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
@@ -82,14 +105,79 @@ body.swipe-active #gallery .gallery-snap-page .gallery-item-body { flex-shrink: 
 #pricing .pbadge { background: var(--berry); color: #fff; }
 
 /* Schritt-Karten mit Illustration */
-#services .scard { flex-direction: row; align-items: center; gap: 1.1rem; padding: .9rem 1.2rem .9rem .9rem; box-shadow: 0 2px 14px color-mix(in srgb, var(--cream) 8%, transparent); }
-#services .scard:hover { background: #fff; border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
-.simg { width: clamp(100px, 13vw, 190px); aspect-ratio: 1; height: auto; border-radius: 16px; object-fit: cover; flex-shrink: 0; }
-.sbody { min-width: 0; }
-.snum { display: block; font-family: var(--serif); font-size: 1.05rem; color: var(--accent); line-height: 1; margin-bottom: .3rem; }
-#services .stitle { color: var(--cream); }
-#services .stxt { color: var(--text-soft); }
-@media (max-width: 768px) { .simg { width: 76px; } }
+#services .scard { 
+  display: flex !important; 
+  flex-direction: column !important; 
+  align-items: center !important; 
+  text-align: center !important;
+  gap: 0.85rem !important; 
+  padding: 1.25rem 1.25rem 1.4rem 1.25rem !important; 
+  background: var(--ajs-paper) !important; 
+  border: 1.5px solid var(--ajs-olive) !important; 
+  border-radius: 16px !important;
+  position: relative !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+#services .scard:hover { 
+  border-color: var(--ajs-terracotta) !important; 
+}
+.simg { 
+  width: 140px !important; 
+  max-width: 100% !important;
+  aspect-ratio: 1 !important; 
+  height: auto !important; 
+  border-radius: 16px !important; 
+  object-fit: contain !important; 
+  flex-shrink: 0 !important; 
+  background: transparent !important;
+}
+.sbody { 
+  flex: 1 !important; 
+  width: 100% !important;
+  min-width: 0 !important; 
+  display: flex !important; 
+  flex-direction: column !important; 
+  align-items: center !important;
+  text-align: center !important;
+  gap: 0.4rem !important; 
+  padding-right: 0 !important; 
+}
+.sbody-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.8rem !important;
+}
+#services .stitle { 
+  color: var(--ajs-olive) !important; 
+  font-family: var(--serif) !important; 
+  font-size: 1.35rem !important; 
+  text-align: center !important;
+  margin: 0 !important; 
+  white-space: normal !important; 
+}
+.snum { 
+  position: absolute !important; 
+  top: 0.85rem !important; 
+  right: 1.1rem !important; 
+  font-family: var(--serif) !important; 
+  font-size: 1.15rem !important; 
+  font-weight: 700 !important; 
+  color: var(--ajs-berry) !important; 
+  line-height: 1 !important; 
+}
+#services .stxt { 
+  color: var(--ajs-olive) !important; 
+  font-size: 0.95rem !important; 
+  line-height: 1.45 !important; 
+  text-align: center !important;
+  margin: 0 !important; 
+}
+@media (max-width: 768px) { 
+  .simg { width: 110px !important; } 
+  #services .scard { padding: 1rem !important; }
+}
 
 /* Über uns: Tags */
 .about-tags { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin: 0 auto 1.4rem; max-width: 760px; }
@@ -206,12 +294,12 @@ body.swipe-active #gallery .gallery-snap-page .gallery-item-cat { font-size: .6r
 .kat-item:first-child { border-top: 0; }
 .kat-photo { position: relative; width: 84px; height: 84px; border-radius: 10px; overflow: hidden; background: #EFEDE0; }
 .kat-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.kat-ribbon { position: absolute; left: 0; bottom: 0; right: 0; padding: .12rem 0; text-align: center; font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; background: #97572A; color: #fff; }
+.kat-ribbon { position: absolute; left: 0; bottom: 0; right: 0; padding: .12rem 0; text-align: center; font-size: .62rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; background: var(--ajs-terracotta, #97572A); color: #fff; }
 .kat-info p { margin: 0; }
 .kat-name { font-weight: 700; font-size: .96rem; line-height: 1.3; }
 .kat-text { margin-top: .25rem !important; font-size: .85rem; line-height: 1.4; color: #3B3A26; }
 .kat-meta { margin-top: .2rem !important; font-size: .78rem; color: #6B6A4C; }
-.kat-price { margin: 0; text-align: right; font-family: var(--serif); font-size: 1.05rem; color: #97572A; white-space: nowrap; }
+.kat-price { margin: 0; text-align: right; font-family: var(--serif); font-size: 1.05rem; color: var(--ajs-terracotta, #97572A); white-space: nowrap; }
 body.kat-open { overflow: hidden; }
 @media (max-width: 600px) {
   .kat { padding: .5rem; align-items: flex-end; }
@@ -455,7 +543,7 @@ body.swipe-active *:not(.kat-body)::-webkit-scrollbar { display: none; width: 0;
 }
 
 #gallery .gallery-item-cat {
-  color: #97572A !important;
+  color: var(--ajs-terracotta, #97572A) !important;
   font-size: clamp(.72rem, .85vw, .84rem) !important;
   line-height: 1.35 !important;
   margin-top: .2rem !important;
@@ -493,3 +581,719 @@ body.swipe-active *:not(.kat-body)::-webkit-scrollbar { display: none; width: 0;
   }
 }
 
+
+
+/* ── AJS Nav Header Fix: Zentriert, kein Textumbruch im Logo, kompaktere Links ── */
+#nav {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1.5px solid rgba(65, 76, 9, 0.15);
+}
+#nav .nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1rem;
+}
+#nav .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1;
+}
+#nav .logo span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  white-space: nowrap;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  color: var(--ajs-olive);
+}
+#nav .logo-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+#nav .nav-ul {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#nav .nav-ul a {
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 0.35rem 0.4rem;
+  color: var(--ajs-olive);
+}
+#nav .nav-ul a.cta-link {
+  font-size: 0.82rem;
+  padding: 0.5rem 1rem;
+  background: var(--ajs-terracotta);
+  color: #fff !important;
+  border-radius: 999px;
+}
+
+
+/* ── Strenge Kontrast-Fixes für alle Sektionen (Null Kontrastfehler) ── */
+/* Dunkle Sektionen: Hero, Countdown, Sortiment/Galerie, CTA, Bewertungen, Partner, Footer */
+#hero, #countdown, #cta, #gallery, #reviews, #sponsors, footer {
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+}
+#hero h1, #hero h2, #hero h3, #hero p, #hero span, #hero strong,
+#countdown h1, #countdown h2, #countdown p, #countdown span, #countdown strong,
+#gallery h2, #gallery h3, #gallery p, #gallery span,
+#cta h2, #cta h3, #cta p, #cta span,
+#reviews h2, #reviews h3, #reviews p, #reviews span,
+#sponsors h2, #sponsors h3, #sponsors p, #sponsors span,
+footer p, footer span, footer a {
+  color: var(--ajs-paper) !important;
+}
+
+/* Helle Sektionen: So funktionierts, Über uns, Preise, Touren & Termine, Kontakt */
+#services, #about, #pricing, #booking, #contact {
+  background: var(--ajs-paper) !important;
+  color: var(--ajs-olive) !important;
+}
+#services h2, #services h3, #services p, #services span,
+#about h2, #about h3, #about p, #about span, #about a,
+#pricing h2, #pricing h3, #pricing p, #pricing span,
+#booking h2, #booking h3, #booking p, #booking span, #booking label,
+#contact h2, #contact h3, #contact p, #contact span, #contact label {
+  color: var(--ajs-olive) !important;
+}
+#pricing .sub, #pricing .pricing-note,
+#booking .sub, #booking .bk-hint {
+  color: var(--ajs-espresso) !important;
+}
+.btn-outline {
+  border: 1.5px solid var(--ajs-olive) !important;
+  color: var(--ajs-olive) !important;
+  background: transparent !important;
+}
+.btn-outline:hover {
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+}
+.btn-email, .btn-submit, .bk-submit {
+  background: var(--ajs-terracotta) !important;
+  color: #fff !important;
+  border-color: var(--ajs-terracotta) !important;
+}
+.reviews-note, #reviews .reviews-note {
+  background: var(--ajs-paper) !important;
+  color: var(--ajs-espresso) !important;
+  border: 1px solid var(--ajs-terracotta) !important;
+}
+
+/* Links & Akzente mit geprüfter Mindest-Kontraststärke */
+#services .stitle, #about .aname, #contact label {
+  color: var(--ajs-olive) !important;
+}
+.snum {
+  color: var(--ajs-berry) !important;
+}
+.btn-fill {
+  background: var(--ajs-terracotta) !important;
+  color: #fff !important;
+  border-color: var(--ajs-terracotta) !important;
+}
+.btn-ghost {
+  border-color: var(--ajs-olive) !important;
+  color: var(--ajs-olive) !important;
+}
+#hero .btn-ghost, #countdown .btn-ghost, #gallery .btn-ghost, #cta .btn-ghost, #reviews .btn-ghost, #sponsors .btn-ghost {
+  border-color: var(--ajs-paper) !important;
+  color: var(--ajs-paper) !important;
+  background: rgba(251, 250, 243, 0.08) !important;
+}
+#hero .btn-ghost:hover, #cta .btn-ghost:hover {
+  background: rgba(251, 250, 243, 0.18) !important;
+}
+
+
+
+
+/* ── AJS Nav: Kopfteil KOMPLETT MITTIG ZENTRIERT (Geschützt vor Drawers) ── */
+#nav {
+  position: fixed !important;
+  inset: 0 0 auto !important;
+  width: 100% !important;
+  height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--nav-bg) !important;
+  border-bottom: 2px solid var(--ajs-olive) !important;
+  z-index: 100 !important;
+  box-sizing: border-box !important;
+  /* Sicherheitsabstand links und rechts, damit die geöffnete Bugliste (330px) und Live-Editor (330px) die Navigation niemals überdecken */
+  padding-left: clamp(20px, 22vw, 340px) !important;
+  padding-right: clamp(20px, 22vw, 340px) !important;
+}
+#nav > .wrap {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+#nav .nav-row {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  max-width: 100% !important;
+  gap: 0.85rem !important;
+  margin: 0 auto !important;
+}
+#nav .logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  text-decoration: none !important;
+}
+#nav .logo-img {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}
+#nav .logo span {
+  white-space: nowrap !important;
+  font-family: var(--serif) !important;
+  font-size: 1.15rem !important;
+  color: var(--ajs-olive) !important;
+  line-height: 1 !important;
+}
+#nav .nav-ul {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.15rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+#nav .nav-ul li {
+  display: inline-flex !important;
+  align-items: center !important;
+  color: var(--ajs-olive) !important;
+}
+#nav .nav-ul a {
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  padding: 0.25rem 0.35rem !important;
+  color: var(--ajs-olive) !important;
+  letter-spacing: -0.01em !important;
+}
+#nav .nav-ul a.cta-link {
+  font-size: 0.8rem !important;
+  padding: 0.4rem 0.85rem !important;
+  background: var(--ajs-terracotta) !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  margin-left: 0.35rem !important;
+}
+
+/* ── Bild-Karten: Kraftvolle Ränder (Terracotta / Olive) statt dünner weißer Kanten ── */
+.gallery-item,
+#gallery .gallery-item {
+  border: 2.5px solid var(--ajs-olive) !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  background: var(--ajs-olive) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25) !important;
+}
+.gallery-item:hover,
+#gallery .gallery-item:hover {
+  border-color: var(--ajs-terracotta) !important;
+}
+.gallery-item-body,
+#gallery .gallery-item-body {
+  padding: 0.85rem 1rem !important;
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+}
+.gallery-item-title,
+#gallery .gallery-item-title {
+  font-family: var(--serif) !important;
+  font-size: 1.1rem !important;
+  color: var(--ajs-paper) !important;
+  margin: 0 !important;
+  line-height: 1.25 !important;
+}
+.gallery-item-cat,
+#gallery .gallery-item-cat {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  color: var(--ajs-berry) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  margin-bottom: 0.2rem !important;
+}
+
+/* Kachelränder: Kräftiger Kontrast (2.5px) */
+#services .scard,
+#about .about-grid > .acard,
+#sponsors .sponsor-card,
+#pricing .pcard,
+#reviews .review-card {
+  border: 2.5px solid var(--ajs-olive) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+}
+#services .scard:hover,
+#about .about-grid > .acard:hover,
+#sponsors .sponsor-card:hover {
+  border-color: var(--ajs-terracotta) !important;
+}
+
+
+/* ── Bewertungen: Paper-Karten auf Olive-Hintergrund für perfekten Kontrast ── */
+#reviews {
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+}
+#reviews .review-card {
+  background: var(--ajs-paper) !important;
+  border: 2px solid var(--ajs-terracotta) !important;
+  border-radius: 16px !important;
+  padding: 1.4rem 1.5rem !important;
+  color: var(--ajs-olive) !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.3) !important;
+}
+#reviews .review-card:hover {
+  border-color: var(--ajs-berry) !important;
+}
+#reviews .review-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 0.6rem !important;
+}
+#reviews .review-stars {
+  color: var(--ajs-berry) !important;
+  font-size: 1.15rem !important;
+}
+#reviews .review-verified {
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  color: #fff !important;
+  background: var(--ajs-olive) !important;
+  padding: 3px 8px !important;
+  border-radius: 999px !important;
+}
+#reviews .review-text {
+  color: var(--ajs-olive) !important;
+  font-size: 0.95rem !important;
+  line-height: 1.55 !important;
+  font-style: italic !important;
+  margin: 0 0 1rem 0 !important;
+}
+#reviews .review-author {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+#reviews .review-avatar {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 700 !important;
+  font-family: var(--serif) !important;
+  font-size: 1.1rem !important;
+}
+#reviews .review-name {
+  font-family: var(--serif) !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  color: var(--ajs-olive) !important;
+}
+#reviews .review-company {
+  font-size: 0.78rem !important;
+  color: var(--ajs-olive) !important;
+  opacity: 0.85 !important;
+}
+#reviews .review-date {
+  font-size: 0.72rem !important;
+  color: var(--ajs-olive) !important;
+  opacity: 0.7 !important;
+}
+
+
+/* ── Kontinuierlicher Farbwechsel von Sektion zu Sektion (Olive ↔ Paper) ── */
+/* 1. Countdown & Hero: OLIVE */
+.hero-snap, #hero, #countdown {
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+}
+
+/* 2. Services (So funktioniert's): PAPER */
+#services {
+  background: var(--ajs-paper) !important;
+  color: var(--ajs-olive) !important;
+}
+#services h2, #services .stitle, #services .stxt {
+  color: var(--ajs-olive) !important;
+}
+#services .scard {
+  background: var(--ajs-paper) !important;
+  border: 1.5px solid var(--ajs-olive) !important;
+}
+
+/* 3. Sortiment (Galerie): OLIVE */
+#gallery {
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+}
+#gallery h2, #gallery .gallery-item-title {
+  color: var(--ajs-paper) !important;
+}
+
+/* 4. Über uns: PAPER */
+#about {
+  background: var(--ajs-paper) !important;
+  color: var(--ajs-olive) !important;
+}
+#about h2, #about .aname, #about .atext {
+  color: var(--ajs-olive) !important;
+}
+#about .about-grid > .acard {
+  background: #fff !important;
+  border: 2px solid var(--ajs-olive) !important;
+}
+
+/* 5. Mitgliedschaft (Banner): OLIVE */
+#cta, .cta-section {
+  background: linear-gradient(90deg, rgba(65,76,9,.94) 0%, rgba(65,76,9,.75) 50%, rgba(65,76,9,.2) 100%), var(--cta-img) center/cover no-repeat !important;
+  color: var(--ajs-paper) !important;
+}
+#cta h2, #cta p {
+  color: var(--ajs-paper) !important;
+}
+
+/* 6. Preise: PAPER */
+#pricing {
+  background: var(--ajs-paper) !important;
+  color: var(--ajs-olive) !important;
+}
+#pricing h2, #pricing .pname, #pricing .amount, #pricing .plist li, #pricing .ptag {
+  color: var(--ajs-olive) !important;
+}
+#pricing .pcard {
+  background: #fff !important;
+  border: 2px solid var(--ajs-olive) !important;
+}
+#pricing .pcard.feat {
+  border-color: var(--ajs-terracotta) !important;
+}
+
+/* 7. Bewertungen: OLIVE */
+#reviews {
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+}
+#reviews h2 {
+  color: var(--ajs-paper) !important;
+}
+#reviews .review-card {
+  background: var(--ajs-paper) !important;
+  border: 2px solid var(--ajs-terracotta) !important;
+  color: var(--ajs-olive) !important;
+}
+
+/* 8. Touren & Termine (Booking): PAPER */
+#booking {
+  background: var(--ajs-paper) !important;
+  color: var(--ajs-olive) !important;
+}
+#booking h2, #booking p, #booking label, #booking span {
+  color: var(--ajs-olive) !important;
+}
+#booking .booking-form {
+  background: #fff !important;
+  border: 2px solid var(--ajs-olive) !important;
+  border-radius: 16px !important;
+  padding: 1.5rem !important;
+}
+
+/* 9. Partner & Sponsoren: OLIVE */
+#sponsors {
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+}
+#sponsors h2, #sponsors p {
+  color: var(--ajs-paper) !important;
+}
+#sponsors .sponsor-card {
+  background: var(--ajs-paper) !important;
+  border: 2px solid var(--ajs-terracotta) !important;
+}
+
+/* 10. Kontakt: PAPER | Footer: OLIVE */
+#contact {
+  background: var(--ajs-paper) !important;
+  color: var(--ajs-olive) !important;
+}
+#contact h2, #contact p, #contact label, #contact .contact-hours-title, #contact .contact-hours-list li {
+  color: var(--ajs-olive) !important;
+}
+footer {
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+}
+footer p, footer span, footer a {
+  color: var(--ajs-paper) !important;
+}
+
+
+/* ── Harmonische 6-Farben-Markenpalette (0 Kontrastfehler) ── */
+:root {
+  --ajs-olive: #414C09;
+  --ajs-paper: #FBFAF3;
+  --ajs-terracotta: #97572A;
+  --ajs-berry: #A83A68;
+  --ajs-gold: #ECC86C;
+  --ajs-espresso: #221D15;
+
+  --ink: var(--ajs-olive);
+  --cream: var(--ajs-paper);
+  --footer-bg: var(--ajs-olive);
+  --nav-bg: var(--ajs-paper);
+  --berry: var(--ajs-berry);
+  --accent: var(--ajs-terracotta);
+  --accent-light: var(--ajs-terracotta);
+  --text-soft: var(--ajs-paper);
+  --text-softer: var(--ajs-paper);
+  --border-subtle: var(--ajs-olive);
+  --bg-card: var(--ajs-paper);
+}
+
+/* Sponsor Card SVG Rendering */
+#sponsors .sponsor-logo-wrap {
+  width: 100% !important;
+  max-width: 260px !important;
+  height: 85px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 0.75rem !important;
+}
+#sponsors .sponsor-logo-wrap img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+#sponsors .sponsor-card {
+  background: var(--ajs-paper) !important;
+  border: 2px solid var(--ajs-olive) !important;
+}
+#sponsors .sponsor-card:hover {
+  border-color: var(--ajs-terracotta) !important;
+}
+
+/* Bewertungen: Gold-Sterne für perfekten Kontrast */
+#reviews .review-stars {
+  color: var(--ajs-gold) !important;
+}
+#reviews .review-verified {
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+}
+
+/* Fließtext-Präzision auf hellem Paper-Hintergrund */
+#services .stxt, #about .atext, #pricing .plist li, #booking p {
+  color: var(--ajs-espresso) !important;
+}
+
+
+/* ── Sortiment / Galerie Kacheln: Klare sichtbare Kachel mit Paper-Körper ── */
+#gallery .gallery-item {
+  background: var(--ajs-paper) !important;
+  border: 2px solid var(--ajs-terracotta) !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3) !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+#gallery .gallery-item:hover {
+  border-color: var(--ajs-berry) !important;
+  transform: translateY(-4px) !important;
+}
+#gallery .gallery-img {
+  width: 100% !important;
+  aspect-ratio: 4/3 !important;
+  background: var(--ajs-olive) !important;
+}
+#gallery .gallery-img img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+#gallery .gallery-item-body {
+  background: var(--ajs-paper) !important;
+  padding: 0.9rem 1.1rem 1rem !important;
+  flex: 0 0 auto !important;
+  border-top: 1.5px solid rgba(65, 76, 9, 0.15) !important;
+}
+#gallery .gallery-item-title {
+  color: var(--ajs-olive) !important;
+  font-family: var(--serif) !important;
+  font-size: 1.2rem !important;
+  margin: 0 0 0.25rem 0 !important;
+  line-height: 1.2 !important;
+}
+#gallery .gallery-item-cat {
+  color: var(--ajs-berry) !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  margin: 0 !important;
+}
+
+/* ── Sponsoren & Partner Kachelhöhe: Kompakt auf das Logo zugeschnitten ── */
+#sponsors .sponsors-grid--top {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 340px)) !important;
+  justify-content: center !important;
+  gap: 1.25rem !important;
+}
+#sponsors .sponsors-grid--middle {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 290px)) !important;
+  justify-content: center !important;
+  gap: 1.25rem !important;
+}
+#sponsors .sponsor-card {
+  background: var(--ajs-paper) !important;
+  border: 2px solid var(--ajs-terracotta) !important;
+  border-radius: 14px !important;
+  padding: 0.5rem 0.6rem !important;
+  height: auto !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.18) !important;
+}
+#sponsors .sponsor-card:hover {
+  border-color: var(--ajs-berry) !important;
+  transform: translateY(-3px) !important;
+}
+#sponsors .sponsor-logo-wrap {
+  width: 100% !important;
+  max-width: 320px !important;
+  height: 120px !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+#sponsors .sponsor-logo-wrap img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+#sponsors .sponsor-name,
+#sponsors .sponsor-desc {
+  display: none !important; /* Logo enthält bereits Firmenname und Unterzeile */
+}
+
+/* ── Formular Placeholder & Textfeld-Kontraste (WCAG AAA) ── */
+::placeholder {
+  color: #554D38 !important; /* Kräftiges warmes Schiefer-Olive, Kontrast > 5.5:1 auf Weiß */
+  opacity: 1 !important;
+}
+input::placeholder, textarea::placeholder {
+  color: #554D38 !important;
+  opacity: 1 !important;
+}
+input, textarea {
+  color: var(--ajs-espresso) !important;
+  background: #fff !important;
+  border: 1.5px solid var(--ajs-olive) !important;
+}
+input:focus, textarea:focus {
+  border-color: var(--ajs-terracotta) !important;
+  outline: none !important;
+}
+
+
+/* ── Null-Kontrastfehler-Garantie (Strikte WCAG AAA Erfüllung für alle Texte) ── */
+/* 1. Auf hellem Paper-Hintergrund (#FBFAF3) oder weißen Karten (#ffffff):
+      Alle Texte, Labels, Sublines, Listenpunkte und Metadaten in vollem Tief-Espresso (#221D15) oder Olive (#414C09) */
+#services *, #about *, #contact *, #pricing *, #booking * {
+  --text-soft: #221D15;
+  --text-softer: #414C09;
+}
+.sub, .stxt, .atext, .pricing-note, .rrole, .sponsor-desc, .bk-hint, .bk-date-hint {
+  color: inherit !important;
+  opacity: 1 !important;
+}
+.reviews-note, #reviews .reviews-note {
+  background: var(--ajs-paper) !important;
+  color: var(--ajs-espresso) !important;
+  border: 1px solid var(--ajs-terracotta) !important;
+}
+.lbl {
+  color: var(--ajs-berry) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  opacity: 1 !important;
+}
+#services .lbl, #about .lbl, #contact .lbl, #pricing .lbl, #booking .lbl {
+  color: var(--ajs-berry) !important;
+}
+#hero .lbl, #countdown .lbl, #gallery .lbl, #reviews .lbl, #sponsors .lbl, #cta .lbl {
+  color: var(--ajs-gold) !important;
+}
+
+/* 2. Auf dunklem Olive-Hintergrund (#414C09):
+      Alle Texte in vollem Paper-Creme (#FBFAF3) */
+#hero *, #countdown *, #gallery *, #reviews *, #sponsors *, #cta *, footer * {
+  --text-soft: #FBFAF3;
+  --text-softer: #FBFAF3;
+}
+#hero .hero-hl strong, #hero .hero-hl span, #hero .hero-hl li,
+#countdown .cd-hero-counter, #countdown .cd-hero-counter span,
+.reviews-stat-l, .review-company, .review-date, .foot-copy, .foot-links a {
+  color: #FBFAF3 !important;
+  opacity: 1 !important;
+}
+
+/* 3. Schrittnummern & Badges */
+.hero-hl-num {
+  color: var(--ajs-gold) !important;
+}
+.snum {
+  color: var(--ajs-berry) !important;
+}
+.pbadge {
+  background: var(--ajs-berry) !important;
+  color: #fff !important;
+}

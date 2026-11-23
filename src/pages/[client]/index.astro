@@ -12,7 +12,7 @@ export function getStaticPaths() {
   /* Dedizierte Routen (z. B. /ajs.astro mit eigenem AJS-Auftritt) haben Vorrang:
      der dynamische [client]-Platzhalter generiert sie nicht, um Duplikate zu vermeiden.
      (Inline-Konstante: getStaticPaths wird isoliert gebündelt und sieht kein Modul-Scope.) */
-  const dedicated = new Set(['ajs']);
+  const dedicated = new Set(['ajs', 'ajs2']);
   return (clientsConfig.clients ?? [])
     .filter((c) => !dedicated.has(c.route))
     .map((c) => ({

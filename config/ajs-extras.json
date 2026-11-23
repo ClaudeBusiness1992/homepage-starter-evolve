@@ -1,91 +1,51 @@
 {
   "extras": {
     "active": {
-      "countdown": false,
-      "reviews": false,
+      "countdown": true,
+      "reviews": true,
       "gallery": true,
-      "booking": false,
-      "sponsors": false,
+      "booking": true,
+      "sponsors": true,
       "sidebarAds": false
     },
     "countdown": {
       "variant": "hero",
-      "label": "Save the Date",
-      "headline": "Workshop am 15. Mai 2026",
-      "subline": "Plätze sind begrenzt – sichern Sie sich Ihren rechtzeitig.",
-      "targetDate": "2026-05-15T19:00:00",
-      "ctaLabel": "Jetzt anmelden",
+      "label": "Nächste Tour",
+      "headline": "Hamburg-Tour: Nächster Liefertermin",
+      "subline": "Bestellannahme für die anstehende Tour schließt in Kürze.",
+      "targetDate": "2026-11-28T18:00:00",
+      "ctaLabel": "Jetzt vorbestellen",
       "ctaHref": "#contact",
-      "expiredText": "Das Event hat begonnen"
+      "expiredText": "Die aktuelle Tour ist unterwegs"
     },
     "reviews": {
-      "label": "Kundenbewertungen",
-      "headline": "Was unsere Kunden sagen",
-      "subline": "Echte Projekte, echte Menschen, echte Ergebnisse.",
+      "label": "Kundenstimmen",
+      "headline": "Das sagen Mitglieder des Inner Circle",
+      "subline": "Echte Rückmeldungen von Feinschmeckern und Stammkunden aus Hamburg.",
       "items": [
         {
-          "name": "Sandra Weber",
-          "company": "Schreinerei Weber",
+          "name": "Marcus V.",
+          "company": "Hamburg-Winterhude",
           "rating": 5,
           "verified": true,
-          "date": "März 2026",
-          "text": "Innerhalb von zwei Wochen hatten wir eine Website, die unsere Arbeit endlich richtig zeigt. Anfragen über die Seite kommen seitdem regelmäßig rein."
+          "date": "November 2026",
+          "text": "Das Tomahawk und das Ribeye waren absolute Spitzenklasse. Die Lieferung pünktlich vor die Haustür, gewogen und mit Karte gezahlt – bequemer geht es nicht."
         },
         {
-          "name": "Dr. Thomas Müller",
-          "company": "Allgemeinarzt",
+          "name": "Sarah & Jan",
+          "company": "Hamburg-Eppendorf",
           "rating": 5,
           "verified": true,
-          "date": "Februar 2026",
-          "text": "Professionelle Abwicklung von Anfang bis Ende. Die Seite ist übersichtlich, schnell und kommt bei meinen Patienten sehr gut an."
+          "date": "Oktober 2026",
+          "text": "Endlich verlässliche Spitzenqualität für unsere Wochenend-Grillabende ohne langes Suchen. AJ weiß genau, wovon er spricht!"
         },
         {
-          "name": "Lisa Sonnenschein",
-          "company": "Café Sonnenschein",
+          "name": "Christian B.",
+          "company": "Hamburg-Altona",
           "rating": 5,
           "verified": true,
-          "date": "Januar 2026",
-          "text": "Wir hatten genaue Vorstellungen und die wurden perfekt umgesetzt. Besonders die Bildergalerie und das Kontaktformular funktionieren einwandfrei."
-        },
-        {
-          "name": "Katharina Brandt",
-          "company": "Studio Brandt – Kosmetik",
-          "rating": 5,
-          "verified": true,
-          "date": "Dezember 2025",
-          "text": "Die neue Website passt perfekt zu unserem Stil. Kunden sprechen mich regelmäßig darauf an und die Online-Buchungen haben deutlich zugenommen."
-        },
-        {
-          "name": "Martin Gruber",
-          "company": "Gruber Architektur",
-          "rating": 5,
-          "verified": true,
-          "date": "November 2025",
-          "text": "Sehr saubere Arbeit – schnell, unkompliziert und das Ergebnis übertrifft unsere Erwartungen. Die Seite lädt blitzschnell und sieht auf dem Handy fantastisch aus."
-        },
-        {
-          "name": "Julia Hartmann",
-          "company": "Physio Praxis Hartmann",
-          "rating": 5,
-          "verified": true,
-          "date": "Oktober 2025",
-          "text": "Endlich eine Website, die unsere Praxis würdig repräsentiert. Patienten finden uns jetzt viel leichter und das Kontaktformular wird täglich genutzt."
-        },
-        {
-          "name": "Stefan Mayer",
-          "company": "Blumenhaus Mayer",
-          "rating": 5,
-          "verified": true,
-          "date": "September 2025",
-          "text": "Wir sind begeistert! Die Galerie zeigt unsere Arrangements wunderschön und der Aufwand war minimal. Klare Empfehlung für jeden kleinen Betrieb."
-        },
-        {
-          "name": "Renate Zimmer",
-          "company": "Versicherungsbüro Zimmer",
-          "rating": 5,
-          "verified": true,
-          "date": "August 2025",
-          "text": "Professionell, zuverlässig und fair im Preis. Die Seite macht genau das, was sie soll – Vertrauen aufbauen und neue Kontakte generieren."
+          "date": "Oktober 2026",
+          "text": "Die Garnelen und die Wild-Spezialitäten haben Restaurant-Niveau. Ein riesiger Gewinn für alle, die gutes Essen schätzen."
         }
       ]
     },
@@ -153,109 +113,104 @@
       ]
     },
     "booking": {
-      "staff": [
-        {
-          "name": "Anna Müller"
-        },
-        {
-          "name": "Tom Berger"
-        },
-        {
-          "name": "Egal – wer Zeit hat"
-        }
-      ],
-      "successMessage": "Buchungsanfrage wurde übermittelt. Wir melden uns innerhalb von 24 Stunden zur Bestätigung.",
+      "label": "Tour-Termin & Beratung",
+      "headline": "Persönliche Kostprobe oder Tour-Besprechung",
+      "subline": "Wähle einen Termin für ein persönliches Kennenlernen oder deine Tour-Absprache.",
       "ctaLabel": "Termin anfragen",
       "liveSync": false,
       "leadDays": 1,
-      "headline": "Wann darf's losgehen?",
-      "subline": "Service, Mitarbeiter:in und Wunschtermin wählen – Bestätigung innerhalb von 24 Stunden.",
-      "label": "Termin buchen",
-      "emailTo": "termine@beispiel.de",
-      "calendarId": "",
-      "availability": {
-        "monday": [],
-        "tuesday": [],
-        "wednesday": [],
-        "thursday": [],
-        "friday": [],
-        "saturday": [],
-        "sunday": []
-      },
+      "emailTo": "aj@ajs-inner-circle.de",
+      "successMessage": "Vielen Dank! AJ wird sich in Kürze persönlich bei dir melden.",
+      "staff": [
+        {
+          "name": "AJ (Gründer)"
+        }
+      ],
       "services": [
         {
-          "name": "Erstberatung (30 min)",
-          "duration": 30
+          "name": "Erstberatung & Tour-Abstimmung (20 min)",
+          "duration": 20
         },
         {
-          "name": "Strategie-Workshop (60 min)",
-          "duration": 60
-        },
-        {
-          "name": "Premium-Beratung (90 min)",
-          "duration": 90
+          "name": "Feinkost-Auswahl für Event / Feier (45 min)",
+          "duration": 45
         }
-      ]
+      ],
+      "availability": {
+        "monday": [
+          "10:00",
+          "14:00",
+          "16:00"
+        ],
+        "tuesday": [
+          "10:00",
+          "14:00",
+          "16:00"
+        ],
+        "wednesday": [
+          "10:00",
+          "14:00",
+          "16:00"
+        ],
+        "thursday": [
+          "10:00",
+          "14:00",
+          "16:00"
+        ],
+        "friday": [
+          "10:00",
+          "14:00",
+          "16:00"
+        ],
+        "saturday": [
+          "10:00",
+          "12:00"
+        ],
+        "sunday": []
+      }
     },
     "sponsors": {
-      "label": "Unsere Partner",
-      "headline": "Sponsoren & Förderer",
-      "subline": "Herzlichen Dank an alle, die dieses Event ermöglichen.",
+      "label": "Erzeuger & Partner",
+      "headline": "Partner unseres Vertrauens",
+      "subline": "Gemeinsam mit ausgewählten Züchtern, Höfen und Partnern garantieren wir beste Qualität.",
       "items": [
         {
           "tier": "top",
-          "name": "Hauptsponsor GmbH",
-          "logo": "https://placehold.co/220x80/C9A84C/fff?text=TOP+SPONSOR",
-          "url": "https://example.com",
-          "description": "Platin-Partner"
+          "name": "Weiderind Nord Manufaktur",
+          "logo": "/images/partner/partner-1.webp",
+          "url": "#",
+          "description": "Familienbetrieb für Weiderinder & Dry Aged Spezialitäten"
+        },
+        {
+          "tier": "top",
+          "name": "Nordsee Fischerei & Seafood",
+          "logo": "/images/partner/partner-2.webp",
+          "url": "#",
+          "description": "Tagesfangfrische Wildgarnelen und Krustentiere"
         },
         {
           "tier": "middle",
-          "name": "Förderer AG",
-          "logo": "https://placehold.co/140x56/888/fff?text=SPONSOR",
-          "url": "https://example.com"
+          "name": "Bio Geflügelhof Freiland",
+          "logo": "/images/partner/partner-3.webp",
+          "url": "#"
         },
         {
           "tier": "middle",
-          "name": "Partner GmbH",
-          "logo": "https://placehold.co/140x56/888/fff?text=SPONSOR",
-          "url": "https://example.com"
+          "name": "Bio-Höfe Allianz Nord",
+          "logo": "/images/partner/partner-4.webp",
+          "url": "#"
         },
         {
           "tier": "middle",
-          "name": "Unterstützer KG",
-          "logo": "https://placehold.co/140x56/888/fff?text=SPONSOR",
-          "url": "https://example.com"
+          "name": "Alpen-Käserei Manufaktur",
+          "logo": "/images/partner/partner-5.webp",
+          "url": "#"
         },
         {
-          "tier": "little",
-          "name": "Klein 1",
-          "logo": "https://placehold.co/80x40/ccc/333?text=S1",
-          "url": ""
-        },
-        {
-          "tier": "little",
-          "name": "Klein 2",
-          "logo": "https://placehold.co/80x40/ccc/333?text=S2",
-          "url": ""
-        },
-        {
-          "tier": "little",
-          "name": "Klein 3",
-          "logo": "https://placehold.co/80x40/ccc/333?text=S3",
-          "url": ""
-        },
-        {
-          "tier": "little",
-          "name": "Klein 4",
-          "logo": "https://placehold.co/80x40/ccc/333?text=S4",
-          "url": ""
-        },
-        {
-          "tier": "little",
-          "name": "Klein 5",
-          "logo": "https://placehold.co/80x40/ccc/333?text=S5",
-          "url": ""
+          "tier": "middle",
+          "name": "Gourmet-Logistik Frische-Express",
+          "logo": "/images/partner/partner-6.webp",
+          "url": "#"
         }
       ]
     },
