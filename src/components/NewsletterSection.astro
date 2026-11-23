@@ -61,32 +61,32 @@ const isEnabled = isSectionEnabled('newsletter');
 <style>
   .newsletter-box {
     background: color-mix(in srgb, var(--cream) 6%, var(--ink));
-    border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
-    border-top: 3px solid var(--accent);
-    border-radius: 1.5rem;
-    padding: 3rem 2.5rem;
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+    border-radius: var(--r-lg, 0.75rem);
+    padding: 1.25rem 1.75rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+    gap: 1.75rem;
     align-items: center;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
+    box-shadow: var(--shadow);
   }
   .newsletter-fields {
     display: flex;
-    gap: 0.75rem;
-    margin-bottom: 0.85rem;
+    gap: 0.65rem;
+    margin-bottom: 0.65rem;
     flex-wrap: wrap;
   }
   .nl-input {
     flex: 1;
-    min-width: 180px;
-    padding: 0.875rem 1.15rem;
+    min-width: 160px;
+    padding: 0.55rem 0.85rem;
     background: rgba(0, 0, 0, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 0.75rem;
+    border-radius: var(--r, 0.5rem);
     color: #ffffff;
-    font-size: 0.9375rem;
+    font-size: 0.88rem;
     outline: none;
     transition: border-color 0.2s;
   }
@@ -94,13 +94,13 @@ const isEnabled = isSectionEnabled('newsletter');
     border-color: var(--accent);
   }
   .nl-btn {
-    padding: 0.875rem 1.5rem;
+    padding: 0.55rem 1.25rem;
     background: var(--accent);
     color: #ffffff;
-    border: none;
-    border-radius: 0.75rem;
+    border: 1px solid var(--ink);
+    border-radius: var(--r, 0.5rem);
     font-weight: 700;
-    font-size: 0.9375rem;
+    font-size: 0.88rem;
     cursor: pointer;
     box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 40%, transparent);
     transition: background 0.2s, transform 0.15s;
