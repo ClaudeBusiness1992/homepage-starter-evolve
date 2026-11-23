@@ -1592,7 +1592,7 @@ const safeTheme = {
     width: 145px !important;
   }
   :global(.about-team-track::-webkit-scrollbar) { display: none; }
-  :global(.team-card) {
+  :global(.about-team-track .team-card) {
     scroll-snap-align: start;
     min-width: 0;
     display: flex;
@@ -1604,7 +1604,7 @@ const safeTheme = {
     -webkit-mask-image: -webkit-radial-gradient(white, black);
     border: 1px solid var(--border-subtle);
   }
-  :global(#about .team-card .aphoto) {
+  :global(#about .about-team-track .team-card .aphoto) {
     flex: 0 0 42% !important;
     width: 42% !important;
     height: 100% !important;
@@ -1614,6 +1614,24 @@ const safeTheme = {
     border-top-left-radius: inherit;
     border-bottom-left-radius: inherit;
     overflow: hidden;
+  }
+  :global(#about .about-grid .team-card) {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  :global(#about .about-grid .team-card .aphoto) {
+    flex: unset !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    border-top-left-radius: inherit !important;
+    border-top-right-radius: inherit !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  :global(#about .about-grid .team-card .abody) {
+    padding: 1.25rem 1.4rem 1.5rem !important;
   }
   :global(#about .about-team-track[data-visible-count="4"] .team-card .aphoto) {
     flex: 0 0 185px !important;
@@ -2609,6 +2627,12 @@ const safeTheme = {
           const sec = document.getElementById(id);
           if (sec && sec.parentElement === mainContainer) {
             mainContainer.appendChild(sec);
+          }
+          if (id === 'reviews') {
+            const vrev = document.getElementById('verified-reviews');
+            if (vrev && vrev.parentElement === mainContainer) {
+              mainContainer.appendChild(vrev);
+            }
           }
         }
       });
