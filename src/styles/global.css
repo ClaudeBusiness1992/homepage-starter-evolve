@@ -1640,7 +1640,6 @@ footer {
 .sponsor-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 .sponsor-logo-wrap { display: flex; align-items: center; justify-content: center; }
 .sponsor-card img { object-fit: contain; display: block; }
-.sponsor-name { font-size: var(--fs-sm); font-weight: 600; color: var(--cream); text-align: center; }
 .sponsor-desc { font-size: var(--fs-sm); color: var(--text-soft); text-align: center; }
 
 /* Top tier — gold border, large logos */

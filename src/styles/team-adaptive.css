@@ -5,14 +5,14 @@
   margin: 0 auto;
 }
 
-/* N = 1: Hero-Einzelkarte */
+/* N = 1: Einzelkarte, strikt vertikal (Foto oben, Name/Rolle/Bio darunter) */
 .team-layout-single {
   display: grid;
-  grid-template-columns: minmax(280px, 380px) 1fr;
-  gap: 2.5rem;
-  max-width: 880px;
+  grid-template-columns: 1fr;
+  gap: 0;
+  max-width: 440px;
   margin: 0 auto;
-  align-items: center;
+  align-items: stretch;
   background: var(--card-bg, rgba(255, 255, 255, 0.03));
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
   border-radius: 1.25rem;
@@ -27,13 +27,44 @@
   overflow: hidden;
 }
 
-/* N = 2: Symmetrisches Duo-Grid */
+/* N = 2: Symmetrisches Duo-Grid (Karten strikt vertikal: Foto oben, Bio unten) */
 .team-layout-duo {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
   max-width: 860px;
   margin: 0 auto;
+}
+
+/* Vertikal-Garantie Solo/Duo: Bio zwingend unterhalb des Fotos —
+   schlägt globale .team-card-row-Overrides (z. B. Editor-Styles) anhand
+   höherer Spezifität, gilt auf allen Bildschirmgrößen. */
+#about .about-grid.team-layout-single > .team-card,
+#about .about-grid.team-layout-duo > .team-card {
+  flex-direction: column;
+}
+#about .about-grid.team-layout-single > .team-card .team-card-photo,
+#about .about-grid.team-layout-duo > .team-card .team-card-photo {
+  order: 0;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/5;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+#about .about-grid.team-layout-single > .team-card .team-card-body,
+#about .about-grid.team-layout-duo > .team-card .team-card-body {
+  order: 1;
+}
+/* Solo: Container stellt die Kartenoptik, innere Karte bleibt chromlos */
+.team-layout-single > .team-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
 }
 
 /* N = 3: Klassisches 3er-Grid */
