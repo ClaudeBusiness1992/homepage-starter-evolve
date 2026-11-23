@@ -13,30 +13,54 @@ import '../styles/hamburg-tour.css';
     <div class="ht-grid">
       <div class="ht-map">
         <div class="ht-map-frame">
-          <svg viewBox="0 0 480 420" role="group" aria-label="Stilisierte Karte von Hamburg mit vier Lieferzonen" preserveAspectRatio="xMidYMid meet">
-            <g class="ht-zone" data-zone="nord" tabindex="0" role="button" aria-pressed="false" aria-label="Zone Nord auswählen">
-              <path class="ht-zone-shape" d="M40,36 H440 V138 C360,150 300,146 252,146 C180,146 100,150 40,138 Z" />
-              <text class="ht-zone-label" x="252" y="62" text-anchor="middle" font-size="17" letter-spacing="2">NORD</text>
-            </g>
-            <g class="ht-zone" data-zone="west" tabindex="0" role="button" aria-pressed="false" aria-label="Zone West auswählen">
-              <path class="ht-zone-shape" d="M40,146 C110,154 170,152 236,154 L236,272 C170,278 100,280 40,272 Z" />
-              <text class="ht-zone-label" x="132" y="212" text-anchor="middle" font-size="17" letter-spacing="2">WEST</text>
-            </g>
-            <g class="ht-zone" data-zone="mitte-ost" tabindex="0" role="button" aria-pressed="false" aria-label="Zone Mitte und Ost auswählen">
-              <path class="ht-zone-shape" d="M244,154 C310,152 370,154 440,146 L440,262 C370,270 310,274 244,272 Z" />
-              <text class="ht-zone-label" x="343" y="204" text-anchor="middle" font-size="16" letter-spacing="2">MITTE</text>
-              <text class="ht-zone-label" x="343" y="226" text-anchor="middle" font-size="16" letter-spacing="2">&amp; OST</text>
-            </g>
-            <g class="ht-zone" data-zone="sued" tabindex="0" role="button" aria-pressed="false" aria-label="Zone Süd auswählen">
-              <path class="ht-zone-shape" d="M40,280 C150,292 300,292 440,270 L440,384 H40 Z" />
-              <text class="ht-zone-label" x="252" y="346" text-anchor="middle" font-size="17" letter-spacing="2">SÜD</text>
-            </g>
-            <path class="ht-river" d="M16,296 C120,282 190,302 280,290 C360,279 420,264 466,260" stroke-width="22" />
-            <ellipse class="ht-water" cx="252" cy="92" rx="24" ry="38" />
-            <rect class="ht-water" x="246" y="126" width="12" height="18" />
-            <ellipse class="ht-water" cx="252" cy="156" rx="16" ry="10" />
-            <rect class="ht-map-border" x="20" y="20" width="440" height="380" rx="18" />
-          </svg>
+          <div class="ht-map-container">
+            <img
+              src="/images/hamburg-lieferzonen.jpg"
+              alt="Hamburg Lieferzonen: Zone 1 Nord, Zone 2 West, Zone 3 Mitte & Ost, Zone 4 Süd"
+              class="ht-map-img"
+              width="1672"
+              height="941"
+              loading="lazy"
+            />
+            <svg class="ht-map-overlay" viewBox="0 0 1672 941" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Interaktive Hamburger Lieferzonen">
+              <polygon
+                class="ht-zone"
+                data-zone="nord"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
+                aria-label="Zone 1 Nord auswählen"
+                points="1279,286 1105,310 1085,329 1050,334 1021,332 1012,341 1001,346 988,348 997,467 966,476 930,484 883,512 859,471 909,353 802,423 741,415 739,368 684,335 545,286 583,218 626,162 697,131 735,92 834,128 866,113 908,127 940,143 966,81 1010,30 1049,56 1112,33 1190,18 1171,113 1174,165 1319,157 1315,224"
+              />
+              <polygon
+                class="ht-zone"
+                data-zone="west"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
+                aria-label="Zone 2 West auswählen"
+                points="698,434 703,468 686,498 646,514 632,538 649,602 609,608 572,612 536,597 508,585 482,579 458,570 432,564 401,561 355,561 314,545 239,531 288,472 267,434 362,408 256,342 390,366 394,338 418,327 406,259 436,238 470,220 508,280 532,294 597,187 591,290 635,281 671,296 680,334 709,360 733,394"
+              />
+              <polygon
+                class="ht-zone"
+                data-zone="mitte-ost"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
+                aria-label="Zone 3 Mitte und Ost auswählen"
+                points="1369,499 1361,545 1431,620 1410,679 1367,725 1285,722 1208,689 1162,677 1130,683 1098,671 1071,647 1046,640 1006,658 954,669 782,763 834,651 761,621 621,583 692,499 709,430 837,404 876,371 901,334 952,325 1011,350 1038,334 1070,341 1098,321 1130,311 1184,261 1227,274 1272,291 1294,334 1418,313 1462,366 1388,447"
+              />
+              <polygon
+                class="ht-zone"
+                data-zone="sued"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
+                aria-label="Zone 4 Süd auswählen"
+                points="1191,766 1083,823 1040,868 1031,924 924,905 887,920 823,878 800,882 778,882 758,884 736,888 721,865 703,860 687,849 667,841 570,874 582,829 423,825 277,766 387,700 410,639 619,686 605,638 641,627 674,622 707,626 740,667 758,651 776,658 794,666 811,674 824,687 855,684 888,690 936,701 1086,708"
+              />
+            </svg>
+          </div>
         </div>
       </div>
       <div class="ht-panel">
@@ -162,6 +186,10 @@ import '../styles/hamburg-tour.css';
       var active = g.getAttribute('data-zone') === zoneId;
       g.classList.toggle('is-active', active);
       g.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    root.querySelectorAll('[data-zone-link]').forEach(function (btn) {
+      var active = btn.getAttribute('data-zone-link') === zoneId;
+      btn.classList.toggle('is-active', active);
     });
     render(zoneId);
   }
