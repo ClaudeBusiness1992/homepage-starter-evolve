@@ -20,6 +20,13 @@
       "route": "glowgiver",
       "passHashSha256": "481f6cc0511143ccdd7e2d1b1b94faf0a700a8b49cd13922a70b5ae28acaa8c5",
       "noindex": true
+    },
+    {
+      "id": "glowgiver2",
+      "label": "Glowgiver",
+      "route": "glowgiver2",
+      "passHashSha256": "d00fe23d6bfdb4efb074ebc664a7b3b02196062737760e8e6db9f75606160b6a",
+      "noindex": true
     }
   ]
 }
