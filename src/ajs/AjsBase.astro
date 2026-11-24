@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import '../styles/ajs.css';
 import Lightbox from '../components/Lightbox.astro';
+import AjsBackground from '../components/AjsBackground.astro';
 
 
 interface Props {
@@ -71,6 +72,7 @@ const themeStyle = `
   <body>
     <a href="#main" class="skip-link">Zum Inhalt springen</a>
     <slot />
+    <AjsBackground />
     <Lightbox />
 
     <script is:inline>

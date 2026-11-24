@@ -1,0 +1,46 @@
+<!-- AjsBackground.astro — Read-only Hintergrund-Anwender für AJS-Seiten (kein Editor).
+  Liest die vom LiveEditor (/ajs2) unter 'hpse_editor_accordion_v3' gespeicherte
+  Einstellung (background: { mode: 'wechsel' | 'einfarbig', color }) und wendet
+  dieselbe Modus-/Farblogik an wie der LiveEditor (6 AJS-Palettenfarben,
+  Standard 'wechsel' ohne Eingriff). Kein Editor-UI, keine Speicherung hier. -->
+<style is:global>
+  body.hpse-bg-solid #main .hero-snap,
+  body.hpse-bg-solid #main .contact-footer-snap,
+  body.hpse-bg-solid #main section,
+  body.hpse-bg-solid #main #hero,
+  body.hpse-bg-solid #main #countdown,
+  body.hpse-bg-solid #main #contact,
+  body.hpse-bg-solid footer {
+    background: var(--hpse-bg-solid) !important;
+    color: var(--hpse-bg-ink) !important;
+  }
+  body.hpse-bg-solid #main h1,
+  body.hpse-bg-solid #main h2,
+  body.hpse-bg-solid #main h3,
+  body.hpse-bg-solid #main p,
+  body.hpse-bg-solid #main span,
+  body.hpse-bg-solid #main label {
+    color: var(--hpse-bg-ink) !important;
+  }
+</style>
+<script is:inline>
+(function () {
+  try {
+    var KEY = 'hpse_editor_accordion_v3';
+    var PALETTE = ['#414C09', '#FBFAF3', '#97572A', '#A83A68', '#ECC86C', '#221D15'];
+    var raw = null;
+    try { raw = localStorage.getItem(KEY); } catch (e) { return; }
+    if (!raw) return;
+    var parsed = null;
+    try { parsed = JSON.parse(raw); } catch (e) { return; }
+    var bg = parsed && parsed.background;
+    if (!bg || (bg.mode !== 'wechsel' && bg.mode !== 'einfarbig')) return;
+    var col = String(bg.color || '').toUpperCase();
+    if (bg.mode !== 'einfarbig' || PALETTE.indexOf(col) < 0) return;
+    var ink = (col === '#FBFAF3' || col === '#ECC86C') ? '#221D15' : '#FBFAF3';
+    document.body.classList.add('hpse-bg-solid');
+    document.documentElement.style.setProperty('--hpse-bg-solid', col);
+    document.documentElement.style.setProperty('--hpse-bg-ink', ink);
+  } catch (e) {}
+}());
+</script>
