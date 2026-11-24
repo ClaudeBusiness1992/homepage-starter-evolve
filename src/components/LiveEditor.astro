@@ -363,6 +363,31 @@ const safeTheme = {
         </div>
       </div>
 
+      <!-- Hintergrund-Steuerung: Wechsel vs. Einfarbig (6 AJS-Palettenfarben) -->
+      <div class="hpse-group" id="hpse-bg-group">
+        <label class="hpse-group-title">Hintergrund</label>
+        <div class="hpse-field" style="margin-bottom: 8px;">
+          <label class="hpse-field-label" for="hpse-bg-mode">Modus</label>
+          <select id="hpse-bg-mode" class="hpse-select">
+            <option value="wechsel" selected>Wechsel Hell/Dunkel</option>
+            <option value="einfarbig">Einfarbig</option>
+          </select>
+        </div>
+        <div id="hpse-bg-colors" hidden>
+          <label class="hpse-field-label" style="margin-bottom: 6px;">Einfarbiger Hintergrund (genau 6 Palettenfarben)</label>
+          <div class="hpse-bg-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+            <button type="button" class="hpse-bg-swatch" data-bg-color="#414C09" title="Olive #414C09" aria-label="Olive wählen"><span class="hpse-bg-dot" style="background: #414C09;"></span><span>Olive</span></button>
+            <button type="button" class="hpse-bg-swatch" data-bg-color="#FBFAF3" title="Paper #FBFAF3" aria-label="Paper wählen"><span class="hpse-bg-dot" style="background: #FBFAF3;"></span><span>Paper</span></button>
+            <button type="button" class="hpse-bg-swatch" data-bg-color="#97572A" title="Terracotta #97572A" aria-label="Terracotta wählen"><span class="hpse-bg-dot" style="background: #97572A;"></span><span>Terracotta</span></button>
+            <button type="button" class="hpse-bg-swatch" data-bg-color="#A83A68" title="Berry #A83A68" aria-label="Berry wählen"><span class="hpse-bg-dot" style="background: #A83A68;"></span><span>Berry</span></button>
+            <button type="button" class="hpse-bg-swatch" data-bg-color="#ECC86C" title="Gold #ECC86C" aria-label="Gold wählen"><span class="hpse-bg-dot" style="background: #ECC86C;"></span><span>Gold</span></button>
+            <button type="button" class="hpse-bg-swatch" data-bg-color="#221D15" title="Espresso #221D15" aria-label="Espresso wählen"><span class="hpse-bg-dot" style="background: #221D15;"></span><span>Espresso</span></button>
+          </div>
+          <p class="hpse-help" id="hpse-bg-active-label" style="margin-top: 8px;">Aktiv: Wechsel Hell/Dunkel</p>
+        </div>
+        <p class="hpse-help">Wechsel ist Standard (abwechselnd hell/dunkel). Einfarbig färbt alle Sektionen einheitlich in eine der 6 Palettenfarben.</p>
+      </div>
+
       <!-- Export & Reset -->
       <!-- Gestaltungs-Optionen: Farbpalette & Typografie (eingeklappt) -->
       <div class="hpse-group">
@@ -1240,6 +1265,37 @@ const safeTheme = {
   :global([data-hpse-hidden="true"]) { display: none !important; }
   :global(.nav-ul a[data-hpse-nav-hidden="true"]) { display: none !important; }
 
+  /* Hintergrund-Swatches (genau 6 Palettenfarben) */
+  .hpse-bg-swatch {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.04); color: #e5e7eb;
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 8px;
+    padding: 7px 9px; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+  }
+  .hpse-bg-swatch:hover { border-color: var(--accent, #ea580c); }
+  .hpse-bg-swatch.is-active { border-color: var(--accent, #ea580c); background: rgba(200,82,14,0.15); color: #fff; }
+  .hpse-bg-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.35); flex-shrink: 0; }
+
+  /* Einfarbiger Modus: alle Sektionen einheitlich (überschreibt Wechsel) */
+  :global(body.hpse-bg-solid #main .hero-snap),
+  :global(body.hpse-bg-solid #main .contact-footer-snap),
+  :global(body.hpse-bg-solid #main section),
+  :global(body.hpse-bg-solid #main #hero),
+  :global(body.hpse-bg-solid #main #countdown),
+  :global(body.hpse-bg-solid #main #contact),
+  :global(body.hpse-bg-solid footer) {
+    background: var(--hpse-bg-solid) !important;
+    color: var(--hpse-bg-ink) !important;
+  }
+  :global(body.hpse-bg-solid #main h1),
+  :global(body.hpse-bg-solid #main h2),
+  :global(body.hpse-bg-solid #main h3),
+  :global(body.hpse-bg-solid #main p),
+  :global(body.hpse-bg-solid #main span),
+  :global(body.hpse-bg-solid #main label) {
+    color: var(--hpse-bg-ink) !important;
+  }
+
   /* Wenn eine Sektion zur obersten sichtbaren Sektion wird (z. B. wenn Hero & Countdown aus sind):
      bündig unter der fixierten Navigation platzieren und Inhalt vertikal mittig zentrieren */
   :global(#main > section.hpse-first-visible) {
@@ -1961,9 +2017,15 @@ const safeTheme = {
     'footer'
   ];
 
+  // Hintergrund-Steuerung: exakt die 6 AJS-Palettenfarben aus src/styles/ajs.css
+  // (Olive #414C09, Paper #FBFAF3, Terracotta #97572A, Berry #A83A68, Gold #ECC86C, Espresso #221D15).
+  const BG_PALETTE = ['#414C09', '#FBFAF3', '#97572A', '#A83A68', '#ECC86C', '#221D15'];
+  const defaultBackground = { mode: 'wechsel', color: '#FBFAF3' };
+
   const defaultState = {
     colors: { ...defaultColors },
     typography: { ...defaultTypography },
+    background: { ...defaultBackground },
     order: [ ...defaultOrder ],
     countdown: {
       target: 'hero',
@@ -2009,6 +2071,13 @@ const safeTheme = {
         state.countdown = {
           target: parsed.countdown.target || 'hero',
           position: parsed.countdown.position || 'before'
+        };
+      }
+      if (parsed.background && (parsed.background.mode === 'wechsel' || parsed.background.mode === 'einfarbig')) {
+        const col = String(parsed.background.color || '').toUpperCase();
+        state.background = {
+          mode: parsed.background.mode,
+          color: BG_PALETTE.includes(col) ? col : defaultBackground.color
         };
       }
       if (Array.isArray(parsed.order) && parsed.order.length > 0) {
@@ -2155,6 +2224,39 @@ const safeTheme = {
       const lbl = document.getElementById('hpse-val-' + key);
       if (lbl) lbl.textContent = val;
     });
+  }
+
+  function bgInkFor(hex) {
+    const h = String(hex || '').toUpperCase();
+    // Helle Palettenfarben bekommen Espresso-Text, dunkle Paper-Text (Kontrast).
+    if (h === '#FBFAF3' || h === '#ECC86C') return '#221D15';
+    return '#FBFAF3';
+  }
+
+  function applyBackground() {
+    const bg = state.background || { ...defaultBackground };
+    const solid = bg.mode === 'einfarbig' && BG_PALETTE.includes(String(bg.color || '').toUpperCase());
+    document.body.classList.toggle('hpse-bg-solid', solid);
+    if (solid) {
+      const col = String(bg.color).toUpperCase();
+      document.documentElement.style.setProperty('--hpse-bg-solid', col);
+      document.documentElement.style.setProperty('--hpse-bg-ink', bgInkFor(col));
+    } else {
+      document.documentElement.style.removeProperty('--hpse-bg-solid');
+      document.documentElement.style.removeProperty('--hpse-bg-ink');
+    }
+    const modeSel = document.getElementById('hpse-bg-mode');
+    if (modeSel) modeSel.value = solid ? 'einfarbig' : 'wechsel';
+    const colorWrap = document.getElementById('hpse-bg-colors');
+    // Sichtbarkeit: Farbauswahl nur im Einfarbig-Modus zeigen
+    if (colorWrap) colorWrap.hidden = !(modeSel ? modeSel.value === 'einfarbig' : solid);
+    document.querySelectorAll('.hpse-bg-swatch').forEach(btn => {
+      const c = String(btn.getAttribute('data-bg-color') || '').toUpperCase();
+      btn.classList.toggle('is-active', solid && c === String(bg.color || '').toUpperCase());
+      btn.setAttribute('aria-pressed', String(solid && c === String(bg.color || '').toUpperCase()));
+    });
+    const lbl = document.getElementById('hpse-bg-active-label');
+    if (lbl) lbl.textContent = solid ? ('Aktiv: Einfarbig ' + String(bg.color).toUpperCase()) : 'Aktiv: Wechsel Hell/Dunkel';
   }
 
   function applyCountdown() {
@@ -2712,6 +2814,7 @@ const safeTheme = {
     applyOrder();
     applyColors();
     applyTypography();
+    applyBackground();
     // 1. Toggles anwenden
     Object.entries(state.sections).forEach(([id, enabled]) => {
       if (id === 'countdown') {
@@ -2875,6 +2978,30 @@ const safeTheme = {
     });
     el?.addEventListener('change', () => {
       saveState();
+    });
+  });
+
+  // Hintergrund-Steuerung: Modus + genau 6 Palettenfarben
+  const bgModeSel = document.getElementById('hpse-bg-mode');
+  bgModeSel?.addEventListener('change', (e) => {
+    if (!state.background) state.background = { ...defaultBackground };
+    state.background.mode = e.target.value === 'einfarbig' ? 'einfarbig' : 'wechsel';
+    if (state.background.mode === 'einfarbig') {
+      const col = String(state.background.color || '').toUpperCase();
+      if (!BG_PALETTE.includes(col)) state.background.color = defaultBackground.color;
+    }
+    saveState();
+    applyBackground();
+  });
+  document.querySelectorAll('.hpse-bg-swatch').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const col = String(btn.getAttribute('data-bg-color') || '').toUpperCase();
+      if (!BG_PALETTE.includes(col)) return;
+      if (!state.background) state.background = { ...defaultBackground };
+      state.background.mode = 'einfarbig';
+      state.background.color = col;
+      saveState();
+      applyBackground();
     });
   });
 
