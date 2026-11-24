@@ -92,34 +92,34 @@ const navLinks = [
       <button type="button" class="kat-close" data-register-close aria-label="Schließen">×</button>
     </div>
     <div class="kat-body" style="padding: 1.5rem 1.8rem;">
-      <p style="font-size: 0.9rem; line-height: 1.5; color: #3B3A26; margin-bottom: 1.2rem;">
+      <p style="font-size: 0.9rem; line-height: 1.5; color: var(--ajs-espresso, #221D15); margin-bottom: 1.2rem;">
         Der Zugang zu unseren Liefertouren ist exklusiv und begrenzt. Fülle das Formular aus – AJ prüft deine Registrierung persönlich und schaltet dein Mitgliedskonto frei.
       </p>
       <form id="ajsRegisterForm" onsubmit="event.preventDefault(); document.getElementById('regMsg').hidden = false; this.querySelector('button[type=submit]').disabled = true;">
         <div style="display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.2rem;">
           <div>
-            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="regName">Vollständiger Name *</label>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="regName">Vollständiger Name *</label>
             <input type="text" id="regName" required placeholder="Vor- und Nachname" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
             <div>
-              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="regEmail">E-Mail-Adresse *</label>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="regEmail">E-Mail-Adresse *</label>
               <input type="email" id="regEmail" required placeholder="du@beispiel.de" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
             </div>
             <div>
-              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="regPhone">Telefon *</label>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="regPhone">Telefon *</label>
               <input type="tel" id="regPhone" required placeholder="+49 170..." style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
             </div>
           </div>
           <div>
-            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="regDistrict">Stadtteil in Hamburg *</label>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="regDistrict">Stadtteil in Hamburg *</label>
             <input type="text" id="regDistrict" required placeholder="z. B. Winterhude, Eppendorf, Altona..." style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
           </div>
           <div>
-            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="regNote">Gewünschte Feinkost-Kategorien (optional)</label>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="regNote">Gewünschte Feinkost-Kategorien (optional)</label>
             <input type="text" id="regNote" placeholder="z. B. Dry Aged Rind, Garnelen, Wild" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
           </div>
-          <label style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.78rem; color: #4B4A32; cursor: pointer;">
+          <label style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.78rem; color: var(--ajs-espresso, #221D15); cursor: pointer;">
             <input type="checkbox" required style="margin-top: 2px;" />
             <span>Ich stimme der Datenverarbeitung zur Aufnahme in AJ's Liefer-Touren zu.</span>
           </label>
@@ -132,7 +132,7 @@ const navLinks = [
         </button>
       </form>
       <div style="margin-top: 1.2rem; text-align: center; border-top: 1px solid rgba(65,76,9,0.15); padding-top: 1rem;">
-        <span style="font-size: 0.82rem; color: #6B6A4C;">Bereits registriert? </span>
+        <span style="font-size: 0.82rem; color: var(--ajs-olive, #414C09);">Bereits registriert? </span>
         <a href="#login" data-register-close data-open-login style="font-size: 0.82rem; font-weight: 700; color: var(--ajs-terracotta, #97572A); text-decoration: underline;">Hier einloggen</a>
       </div>
     </div>
@@ -148,17 +148,17 @@ const navLinks = [
       <button type="button" class="kat-close" data-login-close aria-label="Schließen">×</button>
     </div>
     <div class="kat-body" style="padding: 1.5rem 1.8rem;">
-      <p style="font-size: 0.9rem; line-height: 1.5; color: #3B3A26; margin-bottom: 1.4rem;">
+      <p style="font-size: 0.9rem; line-height: 1.5; color: var(--ajs-espresso, #221D15); margin-bottom: 1.4rem;">
         Willkommen im Inner Circle. Bitte melde dich mit deiner hinterlegten E-Mail-Adresse und deinem Passwort an, um auf das Sortiment und deine Touren zuzugreifen.
       </p>
       <form id="ajsLoginForm" onsubmit="event.preventDefault(); document.getElementById('loginMsg').hidden = false;">
         <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.2rem;">
           <div>
-            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="loginEmail">E-Mail-Adresse</label>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="loginEmail">E-Mail-Adresse</label>
             <input type="email" id="loginEmail" required placeholder="deine@adresse.de" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
           </div>
           <div>
-            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="loginPassword">Passwort</label>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="loginPassword">Passwort</label>
             <input type="password" id="loginPassword" required placeholder="••••••••" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
           </div>
         </div>
@@ -170,7 +170,7 @@ const navLinks = [
         </button>
       </form>
       <div style="margin-top: 1.2rem; text-align: center; border-top: 1px solid rgba(65,76,9,0.15); padding-top: 1rem;">
-        <span style="font-size: 0.82rem; color: #6B6A4C;">Noch kein Mitglied? </span>
+        <span style="font-size: 0.82rem; color: var(--ajs-olive, #414C09);">Noch kein Mitglied? </span>
         <a href="#contact" data-login-close style="font-size: 0.82rem; font-weight: 700; color: var(--ajs-terracotta, #97572A); text-decoration: underline;">Hier registrieren</a>
       </div>
     </div>
