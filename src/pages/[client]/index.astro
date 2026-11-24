@@ -9,10 +9,16 @@ import Base from '../../layouts/Base.astro';
 import ClientGate from '../../components/ClientGate.astro';
 
 export function getStaticPaths() {
-  return (clientsConfig.clients ?? []).map((c) => ({
-    params: { client: c.route },
-    props: { profile: c },
-  }));
+  /* Dedizierte Routen (z. B. /ajs mit eigenem AJS-Auftritt) haben Vorrang:
+     der dynamische [client]-Platzhalter generiert sie nicht, um Duplikate zu vermeiden.
+     (Inline-Konstante: getStaticPaths wird isoliert gebündelt und sieht kein Modul-Scope.) */
+  const dedicated = new Set(['ajs', 'ajs2']);
+  return (clientsConfig.clients ?? [])
+    .filter((c) => !dedicated.has(c.route))
+    .map((c) => ({
+      params: { client: c.route },
+      props: { profile: c },
+    }));
 }
 
 const { profile } = Astro.props;

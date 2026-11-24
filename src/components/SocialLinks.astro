@@ -8,7 +8,7 @@ let links: Array<{ platform: string; label: string; url: string }> = [];
 if (isEnabled) {
   try {
     const db = getDb();
-    links = db.prepare('SELECT platform, label, url FROM social_links WHERE is_enabled = 1 AND url != "" ORDER BY sort_order ASC').all() as any[];
+    links = db.prepare("SELECT platform, label, url FROM social_links WHERE is_enabled = 1 AND url != '' ORDER BY sort_order ASC").all() as any[];
   } catch (e) {
     console.error('[SocialLinks]', e);
   }

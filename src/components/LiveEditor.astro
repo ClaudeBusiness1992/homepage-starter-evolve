@@ -71,8 +71,9 @@ const safeTheme = {
                 <select id="hpse-cd-target" class="hpse-select">
                   <option value="hero" selected>Hero (Startbereich)</option>
                   <option value="about">Über uns</option>
-                  <option value="services">Leistungen</option>
+                  <option value="services">Leistungen / So funktioniert's</option>
                   <option value="gallery">Galerie / Sortiment</option>
+                  <option value="cta">Mitgliedschaft (Banner)</option>
                   <option value="pricing">Preise</option>
                   <option value="reviews">Bewertungen</option>
                   <option value="booking">Buchung / Termin</option>
@@ -207,6 +208,18 @@ const safeTheme = {
                   </select>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Mitgliedschaft (Banner) -->
+          <div class="hpse-acc-item" data-acc-id="cta" draggable="true">
+            <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" data-section="cta" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Mitgliedschaft (Banner)</span>
             </div>
           </div>
 
