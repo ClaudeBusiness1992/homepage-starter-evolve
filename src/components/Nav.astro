@@ -56,6 +56,22 @@ const actionLinks = links.filter(l => isAction(l));
   </div>
 </nav>
 
+<script is:inline>
+/* Navi-Umbruch (HPSE-AJS-NAVWRAP): --nav-h der echten Leistenhöhe nachführen,
+   damit Hero-Padding, Scroll-Padding und Anker-Offsets bei zweizeiliger Navi stimmen. */
+(function () {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  function sync() {
+    var h = nav.offsetHeight;
+    if (h > 0) document.documentElement.style.setProperty('--nav-h', h + 'px');
+  }
+  sync();
+  window.addEventListener('resize', sync, { passive: true });
+  if ('ResizeObserver' in window) new ResizeObserver(sync).observe(nav);
+})();
+</script>
+
 <style>
   /* Outline-Button (Einloggen): schlicht, passend zum Startseiten-Theme */
   #nav .nav-btn-outline {
@@ -107,6 +123,32 @@ const actionLinks = links.filter(l => isAction(l));
     #nav .nav-ul.open a.cta-link {
       display: block;
       text-align: center;
+    }
+  }
+  /* Navi-Umbruch (HPSE-AJS-NAVWRAP): Bei Platzmangel bricht die Linkliste auf
+     Desktop kontrolliert in eine zweite Zeile um (zentriert), die Leiste wächst
+     mit (height auto + min-height). Keine abgeschnittenen/überlappenden Punkte,
+     kein horizontaler Überlauf. Mobile-Burger (<=768px) unberührt. */
+  @media (min-width: 769px) {
+    #nav {
+      height: auto;
+      min-height: var(--nav-h);
+      padding-block: 0.45rem;
+    }
+    #nav .nav-row {
+      flex-wrap: wrap;
+      justify-content: center;
+      row-gap: 0.3rem;
+    }
+    #nav .nav-ul {
+      flex: 1 1 auto;
+      flex-wrap: wrap;
+      justify-content: center;
+      row-gap: 0.3rem;
+    }
+    #nav .nav-actions-desktop {
+      flex-wrap: wrap;
+      justify-content: center;
     }
   }
 </style>

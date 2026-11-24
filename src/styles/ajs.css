@@ -1345,6 +1345,45 @@ input:focus, textarea:focus {
     align-items: center !important;
   }
 }
+/* ── Navi-Umbruch (HPSE-AJS-NAVWRAP): Übergangszone 1121–1279px ──
+   Hier passt die absolut zentrierte Liste nicht zwischen Logo und Aktionen
+   (Überlappung). Sie liegt kontrolliert als zweite, mittig zentrierte Zeile,
+   die Leiste wächst mit (height auto + min-height). Desktop-Reihenfolge
+   (Logo, Aktionen, Liste) und Button-Stile bleiben erhalten; Tor,
+   Editor-Bereich und Nomenklatur unberührt (reines CSS + Höhen-Sync). */
+@media (min-width: 1121px) and (max-width: 1279px) {
+  #nav {
+    height: auto !important;
+    min-height: 80px !important;
+    padding-block: 0.45rem !important;
+  }
+  #nav .nav-row {
+    flex-wrap: wrap !important;
+    row-gap: 0.3rem !important;
+  }
+  #nav .nav-center {
+    position: static !important;
+    transform: none !important;
+    flex: 1 1 100% !important;
+    order: 3 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    row-gap: 0.3rem !important;
+  }
+  #nav .nav-actions-desktop {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    flex: 0 0 auto !important;
+  }
+  #nav .burger {
+    display: none !important;
+  }
+  #nav .nav-ul li.nav-action-mobile {
+    display: none !important;
+  }
+}
 /* Mobil (Burger-Menü): Buttons als volle Breite unter den Inhalts-Links stapeln */
 @media (max-width: 768px) {
   #nav .nav-ul li.nav-action,
@@ -1369,7 +1408,7 @@ input:focus, textarea:focus {
   padding-inline: 1.5rem !important;
   box-sizing: border-box !important;
 }
-@media (min-width: 1121px) {
+@media (min-width: 1280px) {
   #nav .nav-row {
     display: flex !important;
     align-items: center !important;

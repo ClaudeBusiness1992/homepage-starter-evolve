@@ -57,3 +57,20 @@ const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href :
     </div>
   </div>
 </nav>
+
+<script is:inline>
+/* Navi-Umbruch (HPSE-AJS-NAVWRAP): --nav-h der echten Leistenhöhe nachführen,
+   damit Hero-Padding, Scroll-Padding und Anker-Offsets bei zweizeiliger Navi stimmen.
+   Guard h > 0: läuft auch hinter dem ClientGate (dort display:none bis Unlock). */
+(function () {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  function sync() {
+    var h = nav.offsetHeight;
+    if (h > 0) document.documentElement.style.setProperty('--nav-h', h + 'px');
+  }
+  sync();
+  window.addEventListener('resize', sync, { passive: true });
+  if ('ResizeObserver' in window) new ResizeObserver(sync).observe(nav);
+})();
+</script>
