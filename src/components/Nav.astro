@@ -36,15 +36,17 @@ const actionLinks = links.filter(l => isAction(l));
               <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : ''}>{l.label}</a>
             </li>
           ))}
-          {actionLinks.map(l => (
-            <li class="nav-action-mobile">
-              <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
+          {actionLinks.length > 0 && (
+            <li class="nav-action-mobile nav-action-group-mobile">
+              {actionLinks.map(l => (
+                <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
+              ))}
             </li>
-          ))}
+          )}
         </ul>
       )}
       {actionLinks.length > 0 && (
-        <div class="nav-actions-desktop">
+        <div class="nav-actions-desktop nav-action-group">
           {actionLinks.map(l => (
             <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
           ))}
@@ -149,6 +151,19 @@ const actionLinks = links.filter(l => isAction(l));
       justify-self: end;
     }
   }
+  /* HPSE-AJS-KITSYNC-20261124: Aktionsgruppe (Einloggen/Registrieren) bleibt
+     als Einheit untrennbar in einer Zeile — auch beim zweizeiligen Umbruch
+     der übrigen Punkte (funktionales Muster nach AJS-Vorbild; Sortierung und
+     KITFULL(3)-Filter unberührt: reine CTA-Links bleiben Inhalts-Links). */
+  #nav .nav-actions-desktop.nav-action-group {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  #nav .nav-actions-desktop.nav-action-group a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
   /* HPSE-AJS-KITFULL (3): Aktions-Buttons oben rechts (Baukasten-Theme,
      keine kundenspezifischen Farben). */
   #nav .nav-btn-outline {
@@ -202,6 +217,36 @@ const actionLinks = links.filter(l => isAction(l));
     #nav .nav-ul.open a.cta-link {
       display: block;
       text-align: center;
+    }
+    /* HPSE-AJS-KITSYNC-20261124: Aktionsgruppe im Burger-Menü als eine
+       untrennbare Zeile (gleiche Mechanik wie Desktop). */
+    #nav .nav-ul.open li.nav-action-group-mobile {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      width: 100%;
+    }
+    #nav .nav-ul.open li.nav-action-group-mobile a {
+      flex: 0 1 auto;
+      min-width: 0;
+      white-space: nowrap;
+    }
+    #nav .nav-ul.open li.nav-action-group-mobile a.nav-btn-outline,
+    #nav .nav-ul.open li.nav-action-group-mobile a.cta-link {
+      display: inline-block;
+    }
+  }
+  @media (max-width: 480px) {
+    #nav .nav-ul.open li.nav-action-group-mobile {
+      gap: 0.4rem;
+    }
+    #nav .nav-ul.open li.nav-action-group-mobile a.cta-link,
+    #nav .nav-ul.open li.nav-action-group-mobile a.nav-btn-outline {
+      font-size: 0.72rem;
+      padding: 0.35rem 0.6rem;
     }
   }
 </style>

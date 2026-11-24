@@ -1,0 +1,451 @@
+---
+// LegalModal.astro — generische Rechtstexte-Fenster (HPSE-AJS-KITSYNC-20261124,
+// Fenster-Muster nach AJS-Vorbild: AjsLegalModal).
+// Impressum & Datenschutz als Fenster öffnen (Footer-, Kontakt-, Swipe-Links
+// auf allen Seiten); Inhalte aus config/legal.json — dieselbe Quelle wie die
+// Routen /impressum & /datenschutz. Die Routen selbst bleiben bestehen und
+// direkte Ziele (neuer Tab, Rechtsklick, direkte URL-Eingabe).
+// Bedienung wie Newsletter-/Kunden-Fenster: Öffnen, Schließen per Knopf &
+// Hintergrund, Escape, Fokus kehrt zurück. Nur generische Baukasten-Texte,
+// -Farben und -Ziele; keine kunden- oder projektspezifischen Inhalte.
+import legalConfig from '../../config/legal.json';
+
+const { legal: l } = legalConfig as any;
+const fullCompanyName = `${l.company.name}${l.company.legalForm ? ' ' + l.company.legalForm : ''}`;
+const hasRegister = l.register?.number && !l.register.number.startsWith('[');
+const hasVatId = l.vatId && !l.vatId.startsWith('[');
+const hasAuthority = l.supervisoryAuthority && !l.supervisoryAuthority.startsWith('[');
+const hasProfession = l.professionalRegulations && !l.professionalRegulations.startsWith('[');
+const hasDPO = l.dataProtectionOfficer && !l.dataProtectionOfficer.startsWith('[');
+const analyticsEnabled = l.analytics?.enabled === true;
+---
+
+<div id="hpse-impressum-modal" class="hpse-modal" role="dialog" aria-modal="true" aria-labelledby="hpse-impressum-title" aria-hidden="true" hidden>
+  <div class="hpse-modal-bg" data-legal-close></div>
+  <div class="hpse-modal-box legal" style="max-width: 680px;" tabindex="-1">
+    <div class="hpse-modal-head">
+      <h3 id="hpse-impressum-title" class="hpse-modal-title">Impressum</h3>
+      <button type="button" class="hpse-modal-close" data-legal-close aria-label="Fenster schließen">&times;</button>
+    </div>
+    <div class="hpse-modal-body legal-modal-body">
+      <section class="legal-section">
+        <h2>Angaben gemäß § 5 DDG</h2>
+        <p>
+          {fullCompanyName}<br />
+          {l.address.street}<br />
+          {l.address.zip} {l.address.city}<br />
+          {l.address.country}
+        </p>
+      </section>
+      <section class="legal-section">
+        <h2>Vertreten durch</h2>
+        <p>{l.company.representedBy}</p>
+      </section>
+      <section class="legal-section">
+        <h2>Kontakt</h2>
+        <p>
+          Telefon: {l.contact.phone}<br />
+          E-Mail: <a href={`mailto:${l.contact.email}`}>{l.contact.email}</a>
+        </p>
+      </section>
+      {hasRegister && (
+        <section class="legal-section">
+          <h2>Registereintrag</h2>
+          <p>
+            Eintragung im Handelsregister.<br />
+            Registergericht: {l.register.court}<br />
+            Registernummer: {l.register.type} {l.register.number}
+          </p>
+        </section>
+      )}
+      {hasVatId && (
+        <section class="legal-section">
+          <h2>Umsatzsteuer-ID</h2>
+          <p>
+            Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
+            {l.vatId}
+          </p>
+        </section>
+      )}
+      <section class="legal-section">
+        <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+        <p>
+          {l.responsibleForContent}<br />
+          {l.address.street}<br />
+          {l.address.zip} {l.address.city}
+        </p>
+      </section>
+      {hasProfession && (
+        <section class="legal-section">
+          <h2>Berufsrechtliche Angaben</h2>
+          <p>{l.professionalRegulations}</p>
+        </section>
+      )}
+      {hasAuthority && (
+        <section class="legal-section">
+          <h2>Aufsichtsbehörde</h2>
+          <p>{l.supervisoryAuthority}</p>
+        </section>
+      )}
+      <section class="legal-section">
+        <h2>EU-Streitschlichtung</h2>
+        <p>
+          Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
+          {' '}<a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr/</a>.<br />
+          Unsere E-Mail-Adresse finden Sie oben im Impressum.
+        </p>
+      </section>
+      <section class="legal-section">
+        <h2>Verbraucherstreitbeilegung / Universalschlichtungsstelle</h2>
+        <p>
+          Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+          Verbraucherschlichtungsstelle teilzunehmen.
+        </p>
+      </section>
+      <section class="legal-section">
+        <h2>Haftung für Inhalte</h2>
+        <p>
+          Als Diensteanbieter sind wir gemäß § 7 Abs.1 DDG für eigene Inhalte auf diesen Seiten
+          nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als
+          Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde
+          Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige
+          Tätigkeit hinweisen.
+        </p>
+      </section>
+      <section class="legal-section">
+        <h2>Haftung für Links</h2>
+        <p>
+          Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen
+          Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.
+          Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber
+          der Seiten verantwortlich.
+        </p>
+      </section>
+      <section class="legal-section">
+        <h2>Urheberrecht</h2>
+        <p>
+          Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen
+          dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art
+          der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen
+          Zustimmung des jeweiligen Autors bzw. Erstellers.
+        </p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div id="hpse-datenschutz-modal" class="hpse-modal" role="dialog" aria-modal="true" aria-labelledby="hpse-datenschutz-title" aria-hidden="true" hidden>
+  <div class="hpse-modal-bg" data-legal-close></div>
+  <div class="hpse-modal-box legal" style="max-width: 680px;" tabindex="-1">
+    <div class="hpse-modal-head">
+      <h3 id="hpse-datenschutz-title" class="hpse-modal-title">Datenschutzerklärung</h3>
+      <button type="button" class="hpse-modal-close" data-legal-close aria-label="Fenster schließen">&times;</button>
+    </div>
+    <div class="hpse-modal-body legal-modal-body">
+      <section class="legal-section">
+        <h2>1. Datenschutz auf einen Blick</h2>
+        <h3>Allgemeine Hinweise</h3>
+        <p>
+          Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren
+          personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene
+          Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.
+        </p>
+        <h3>Datenerfassung auf dieser Website</h3>
+        <p>
+          <strong>Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong><br />
+          Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen
+          Kontaktdaten finden Sie im Abschnitt „Hinweis zur verantwortlichen Stelle" in dieser
+          Datenschutzerklärung.
+        </p>
+        <p>
+          <strong>Wie erfassen wir Ihre Daten?</strong><br />
+          Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen — etwa Daten,
+          die Sie in ein Kontaktformular eingeben oder uns per E-Mail senden. Andere Daten werden
+          automatisch oder nach Ihrer Einwilligung beim Besuch der Website durch unsere
+          IT-Systeme erfasst (vor allem technische Daten wie Browser, Betriebssystem oder Uhrzeit
+          des Seitenaufrufs).
+        </p>
+      </section>
+      <section class="legal-section">
+        <h2>2. Hosting</h2>
+        <p>Wir hosten die Inhalte unserer Website beim folgenden Anbieter:</p>
+        <p>
+          <strong>{l.hosting.provider}</strong><br />
+          {l.hosting.address}
+        </p>
+        <p>
+          Die personenbezogenen Daten, die auf dieser Website erfasst werden, werden auf den
+          Servern des Anbieters gespeichert. Hierbei kann es sich v. a. um IP-Adressen,
+          Kontaktanfragen, Meta- und Kommunikationsdaten, Vertragsdaten, Kontaktdaten,
+          Namen sowie Webseitenzugriffe handeln.
+        </p>
+        <p>
+          Weitere Informationen entnehmen Sie der Datenschutzerklärung des Anbieters:
+          {' '}<a href={l.hosting.privacyUrl} target="_blank" rel="noopener noreferrer">{l.hosting.privacyUrl}</a>.
+        </p>
+      </section>
+      <section class="legal-section">
+        <h2>3. Allgemeine Hinweise und Pflichtinformationen</h2>
+        <h3>Hinweis zur verantwortlichen Stelle</h3>
+        <p>Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
+        <p>
+          {fullCompanyName}<br />
+          {l.address.street}<br />
+          {l.address.zip} {l.address.city}<br /><br />
+          Telefon: {l.contact.phone}<br />
+          E-Mail: <a href={`mailto:${l.contact.email}`}>{l.contact.email}</a>
+        </p>
+        {hasDPO && (
+          <>
+            <h3>Datenschutzbeauftragter</h3>
+            <p>{l.dataProtectionOfficer}</p>
+          </>
+        )}
+        <h3>Speicherdauer</h3>
+        <p>
+          Soweit innerhalb dieser Datenschutzerklärung keine speziellere Speicherdauer genannt
+          wurde, verbleiben Ihre personenbezogenen Daten bei uns, bis der Zweck für die
+          Datenverarbeitung entfällt. Wenn Sie ein berechtigtes Löschersuchen geltend machen
+          oder eine Einwilligung zur Datenverarbeitung widerrufen, werden Ihre Daten gelöscht,
+          sofern wir keine anderen rechtlich zulässigen Gründe für die Speicherung Ihrer
+          personenbezogenen Daten haben (z. B. steuer- oder handelsrechtliche
+          Aufbewahrungsfristen); im letzteren Fall erfolgt die Löschung nach Fortfall dieser Gründe.
+        </p>
+        <h3>Widerruf Ihrer Einwilligung zur Datenverarbeitung</h3>
+        <p>
+          Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung
+          möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Die
+          Rechtmäßigkeit der bis zum Widerruf erfolgten Datenverarbeitung bleibt vom Widerruf
+          unberührt.
+        </p>
+        <h3>Auskunft, Berichtigung und Löschung</h3>
+        <p>
+          Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht auf
+          unentgeltliche Auskunft über Ihre gespeicherten personenbezogenen Daten, deren
+          Herkunft und Empfänger und den Zweck der Datenverarbeitung und ggf. ein Recht auf
+          Berichtigung oder Löschung dieser Daten.
+        </p>
+        <h3>SSL- bzw. TLS-Verschlüsselung</h3>
+        <p>
+          Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher
+          Inhalte eine SSL- bzw. TLS-Verschlüsselung.
+        </p>
+      </section>
+      <section class="legal-section">
+        <h2>4. Datenerfassung auf dieser Website</h2>
+        <h3>Cookies</h3>
+        <p>
+          Unsere Internetseiten verwenden so genannte „Cookies". Soweit eine Einwilligung zur
+          Speicherung von Cookies abgefragt wurde, erfolgt die Verarbeitung ausschließlich
+          auf Grundlage dieser Einwilligung (Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TTDSG);
+          die Einwilligung ist jederzeit widerrufbar.
+        </p>
+        <h3>Server-Log-Dateien</h3>
+        <p>
+          Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten
+          Server-Log-Dateien (Browsertyp, Betriebssystem, Referrer URL, Hostname, Uhrzeit,
+          IP-Adresse). Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht
+          vorgenommen (Art. 6 Abs. 1 lit. f DSGVO).
+        </p>
+        <h3>Anfrage per E-Mail oder Telefon</h3>
+        <p>
+          Wenn Sie uns per E-Mail oder Telefon kontaktieren, wird Ihre Anfrage inklusive aller
+          daraus hervorgehenden personenbezogenen Daten zum Zwecke der Bearbeitung Ihres
+          Anliegens bei uns gespeichert und verarbeitet (Art. 6 Abs. 1 lit. b/f DSGVO).
+        </p>
+      </section>
+      {analyticsEnabled && (
+        <section class="legal-section">
+          <h2>5. Analyse-Tools</h2>
+          <p>
+            Wir setzen <strong>{l.analytics.tool}</strong> zur Analyse des Nutzerverhaltens ein.
+            Die Verarbeitung erfolgt nur nach Ihrer Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO
+            und § 25 Abs. 1 TTDSG. Die Einwilligung kann jederzeit widerrufen werden.
+          </p>
+        </section>
+      )}
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  'use strict';
+  var IMPRESSUM_ID = 'hpse-impressum-modal';
+  var DATENSCHUTZ_ID = 'hpse-datenschutz-modal';
+  var lastFocus = null;
+
+  function getModal(id) { return document.getElementById(id); }
+
+  function open(id) {
+    var modal = getModal(id);
+    if (!modal || !modal.hidden) return;
+    lastFocus = document.activeElement;
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(function () { modal.classList.add('is-open'); });
+    document.body.classList.add('hpse-modal-open');
+    document.body.classList.add('kat-open');
+    var box = modal.querySelector('.hpse-modal-box');
+    var closeBtn = modal.querySelector('[data-legal-close].hpse-modal-close');
+    setTimeout(function () {
+      try {
+        if (closeBtn) closeBtn.focus({ preventScroll: true });
+        else if (box) box.focus({ preventScroll: true });
+      } catch (e) {
+        if (closeBtn) closeBtn.focus();
+        else if (box) box.focus();
+      }
+    }, 60);
+  }
+
+  function close(modal) {
+    if (!modal || modal.hidden) return;
+    modal.classList.remove('is-open');
+    var othersOpen = Array.prototype.slice.call(document.querySelectorAll('.hpse-modal:not([hidden])'))
+      .some(function (m) { return m !== modal; });
+    if (!othersOpen) {
+      document.body.classList.remove('hpse-modal-open');
+      document.body.classList.remove('kat-open');
+    }
+    setTimeout(function () {
+      modal.hidden = true;
+      modal.setAttribute('aria-hidden', 'true');
+      if (lastFocus && lastFocus.focus) {
+        try { lastFocus.focus({ preventScroll: true }); } catch (e) { lastFocus.focus(); }
+      }
+      lastFocus = null;
+    }, 220);
+  }
+
+  function targetIdForAnchor(a) {
+    if (!a) return null;
+    var href = a.getAttribute('href') || '';
+    if (href === '/impressum') return IMPRESSUM_ID;
+    if (href === '/datenschutz') return DATENSCHUTZ_ID;
+    return null;
+  }
+
+  document.querySelectorAll('#' + IMPRESSUM_ID + ' [data-legal-close], #' + DATENSCHUTZ_ID + ' [data-legal-close]')
+    .forEach(function (el) {
+      el.addEventListener('click', function () {
+        var modal = el.closest('.hpse-modal');
+        if (modal) close(modal);
+      });
+    });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var openModals = [getModal(IMPRESSUM_ID), getModal(DATENSCHUTZ_ID)].filter(function (m) { return m && !m.hidden; });
+    if (openModals.length) {
+      e.stopPropagation();
+      openModals.forEach(close);
+    }
+  });
+
+  // Links auf /impressum & /datenschutz abfangen (auch dynamisch erzeugte
+  // .swipe-legal-Links): Fenster öffnen statt Seitennavigation.
+  // Die Routen selbst bleiben als direkte Ziele erhalten (neuer Tab,
+  // Rechtsklick, direkte URL-Eingabe).
+  document.addEventListener('click', function (e) {
+    if (e.defaultPrevented) return;
+    if (e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var t = e.target && e.target.closest ? e.target.closest('a[href="/impressum"], a[href="/datenschutz"]') : null;
+    if (!t) return;
+    // Links aus Newsletter-/Kontakt-Einwilligungen (target=_blank) bleiben
+    // direkte Navigation — dort erwartet der Nutzer ein neues Fenster.
+    if (t.getAttribute('target') === '_blank') return;
+    var id = targetIdForAnchor(t);
+    if (!id) return;
+    e.preventDefault();
+    open(id);
+  });
+})());
+</script>
+
+<style>
+  .hpse-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .hpse-modal[hidden] { display: none; }
+  .hpse-modal.is-open { opacity: 1; }
+  .hpse-modal-bg {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--ink) 78%, transparent);
+    backdrop-filter: blur(3px);
+  }
+  .hpse-modal-box {
+    position: relative;
+    width: min(860px, 100%);
+    max-height: min(88dvh, 820px);
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+    color: var(--ink);
+    border-radius: 18px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    outline: none;
+    transform: translateY(10px) scale(0.985);
+    transition: transform 0.22s ease;
+  }
+  .hpse-modal.is-open .hpse-modal-box { transform: none; }
+  .hpse-modal-head {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.25rem;
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .hpse-modal-title {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--cream);
+  }
+  .hpse-modal-close {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--cream) 35%, transparent);
+    background: transparent;
+    color: var(--cream);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .hpse-modal-close:hover { background: color-mix(in srgb, var(--cream) 14%, transparent); }
+  .hpse-modal-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .hpse-modal-body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 1.5rem 1.8rem;
+  }
+  /* Rechtstexte-Fenster: dunkler Körper, damit die globalen .legal-*-Stile
+     (für dunkle Legal-Seiten) unverändert gelten. */
+  .hpse-modal-box.legal .hpse-modal-body { background: var(--ink); }
+  body.hpse-modal-open { overflow: hidden; }
+  @media (max-width: 768px) {
+    .hpse-modal { padding: 0.5rem; align-items: flex-end; }
+    .hpse-modal-box { max-height: 92dvh; border-radius: 16px 16px 12px 12px; }
+    .hpse-modal-body { padding: 0.8rem 0.9rem 1.2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hpse-modal, .hpse-modal-box { transition: none; }
+  }
+</style>

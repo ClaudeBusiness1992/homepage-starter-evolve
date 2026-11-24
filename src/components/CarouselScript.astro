@@ -11,6 +11,13 @@
     const itemSel = track.dataset.carouselItem || ':scope > *';
 
     const EDGE_TOL = 8;
+    // Eine feste Fahrtdauer in beide Richtungen: gleichmäßige Animation,
+    // keine richtungs- oder distanzabhängigen Sprünge.
+    const DURATION = 480;
+    const SETTLE_DURATION = 260;
+    const SNAP_IDLE_MS = 180;
+    const reduceMotion =
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Blockweises Paging: vermisst Kartenbreite + Lücke, leitet daraus die
     // sichtbare Kartenzahl ab (3 auf Laptop/Desktop, 1-2 auf kleinen Screens)
@@ -28,40 +35,115 @@
       const perView = Math.max(1, Math.round(visibleWidth / step));
       const pages = [];
       for (let i = 0; i < items.length; i += perView) {
-        pages.push(items[i].offsetLeft - first);
+        pages.push(Math.max(0, items[i].offsetLeft - first));
       }
       return pages;
     };
 
     const maxScroll = () => track.scrollWidth - track.clientWidth;
 
-    // Sperrfenster nach programmatischer Fahrt: Snap-Korrektur aussetzen,
-    // bis die Smooth-Animation sicher beendet ist.
-    let navigatingUntil = 0;
+    const easeInOutCubic = (t) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    let animId = 0;
+    let animating = false;
+    // Ziel der laufenden Fahrt: Mehrfachklicks ketten sich daran
+    // (nächste Seite ab Ziel), statt die laufende Fahrt zu zerreißen.
+    let queuedTarget = null;
+
+    const restoreSnap = () => { track.style.scrollSnapType = ''; };
+
+    const finishAnim = (target) => {
+      if (animId) cancelAnimationFrame(animId);
+      animId = 0;
+      animating = false;
+      queuedTarget = null;
+      track.scrollLeft = target;
+      restoreSnap();
+      update();
+    };
+
+    const cancelAnim = () => {
+      if (!animating) return;
+      if (animId) cancelAnimationFrame(animId);
+      animId = 0;
+      animating = false;
+      queuedTarget = null;
+      restoreSnap();
+      update();
+    };
+
+    // Nutzer-Geste bricht die Button-Fahrt ab: Touch/Swipe und
+    // Mausrad behalten jederzeit die Kontrolle, kein Gegeneinander.
+    track.addEventListener('pointerdown', cancelAnim, { passive: true });
+    track.addEventListener('touchstart', cancelAnim, { passive: true });
+    track.addEventListener('wheel', cancelAnim, { passive: true });
+
+    const animateTo = (target, duration) => {
+      const max = maxScroll();
+      target = Math.max(0, Math.min(max, target));
+      if (reduceMotion || duration <= 0) {
+        animating = false;
+        queuedTarget = null;
+        track.scrollLeft = target;
+        restoreSnap();
+        update();
+        return;
+      }
+      if (animId) cancelAnimationFrame(animId);
+      const start = track.scrollLeft;
+      const dist = target - start;
+      if (Math.abs(dist) < 1) {
+        animating = false;
+        queuedTarget = null;
+        track.scrollLeft = target;
+        restoreSnap();
+        update();
+        return;
+      }
+      animating = true;
+      queuedTarget = target;
+      // Harter CSS-Snap würde die weiche Fahrt mid-animation einrasten
+      // lassen (Ruckelursache) — während der Fahrt aussetzen, danach greift
+      // wieder das weiche proximity-Einrasten aus dem CSS.
+      track.style.scrollSnapType = 'none';
+      const t0 = performance.now();
+      const step = (now) => {
+        const t = Math.min(1, (now - t0) / duration);
+        track.scrollLeft = start + dist * easeInOutCubic(t);
+        if (t < 1) {
+          animId = requestAnimationFrame(step);
+        } else {
+          finishAnim(target);
+        }
+      };
+      animId = requestAnimationFrame(step);
+    };
 
     const navigate = (forward) => {
       const pages = getPages();
-      const current = track.scrollLeft;
       const max = maxScroll();
+      if (max <= 1) return;
+      const base = animating && queuedTarget !== null ? queuedTarget : track.scrollLeft;
       let target;
       if (forward) {
         // Nächster Block: erster Seitenstart rechts der aktuellen Position
-        const nextPage = pages.find(p => p > current + EDGE_TOL);
+        const nextPage = pages.find(p => p > base + EDGE_TOL);
         target = nextPage !== undefined ? Math.min(max, nextPage) : max;
       } else {
         // Vorheriger Block: letzter Seitenstart links der aktuellen Position
-        const prevPages = pages.filter(p => p < current - EDGE_TOL);
+        const prevPages = pages.filter(p => p < base - EDGE_TOL);
         target = prevPages.length ? Math.max(0, prevPages[prevPages.length - 1]) : 0;
       }
-
-      navigatingUntil = Date.now() + 600;
-      track.scrollTo({ left: target, behavior: 'smooth' });
+      animateTo(target, DURATION);
     };
 
-    // Freies Swipen/Scrollen rastet auf den nächsten Block ein,
+    // Freies Swipen/Scrollen rastet weich auf den nächsten Block ein,
     // damit keine Karte halb angeschnitten mitten im Viewport stehen bleibt.
+    // Läuft nur im Leerlauf (nicht während einer Button-Fahrt), damit es
+    // keine zweite konkurrierende Fahrt gibt.
     const snapToPage = () => {
-      if (Date.now() < navigatingUntil) return;
+      if (animating || reduceMotion) return;
       const max = maxScroll();
       if (max <= 1) return;
       const pages = getPages();
@@ -74,20 +156,20 @@
         if (d < best) { best = d; nearest = p; }
       }
       if (best > EDGE_TOL) {
-        navigatingUntil = Date.now() + 600;
-        track.scrollTo({ left: nearest, behavior: 'smooth' });
+        animateTo(nearest, SETTLE_DURATION);
       }
     };
 
     let snapTimer = null;
     if ('onscrollend' in window) {
-      track.addEventListener('scrollend', snapToPage);
-    } else {
-      track.addEventListener('scroll', () => {
-        clearTimeout(snapTimer);
-        snapTimer = setTimeout(snapToPage, 180);
-      }, { passive: true });
+      track.addEventListener('scrollend', () => { update(); snapToPage(); });
     }
+    track.addEventListener('scroll', () => {
+      update();
+      if (animating) return;
+      clearTimeout(snapTimer);
+      snapTimer = setTimeout(snapToPage, SNAP_IDLE_MS);
+    }, { passive: true });
 
     const update = () => {
       const padLeft = parseFloat(getComputedStyle(track).paddingLeft) || 0;
@@ -99,8 +181,21 @@
 
     prev?.addEventListener('click', () => navigate(false));
     next?.addEventListener('click', () => navigate(true));
-    track.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+
+    // Tastatur: Track fokussierbar machen, Pfeile/Home/Ende fahren Blöcke.
+    // Buttons bleiben nativ tastaturbedienbar; Touch läuft unverändert nativ.
+    if (!track.hasAttribute('tabindex')) track.setAttribute('tabindex', '0');
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); navigate(true); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(false); }
+      else if (e.key === 'Home') { e.preventDefault(); animateTo(0, DURATION); }
+      else if (e.key === 'End') { e.preventDefault(); animateTo(maxScroll(), DURATION); }
+    });
+
+    window.addEventListener('resize', () => { cancelAnim(); update(); });
+    // Größenwechsel (Gate-Unlock, Fonts, Bildlast) aktualisieren die
+    // Pfeilsichtbarkeit — auch wenn nie gescrollt/resized wurde.
+    if ('ResizeObserver' in window) new ResizeObserver(update).observe(track);
     update();
   });
 </script>

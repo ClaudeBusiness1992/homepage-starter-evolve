@@ -1,0 +1,52 @@
+---
+// BackgroundApplier.astro — read-only Hintergrund-Anwender für editorlose
+// Baukasten-Seiten (HPSE-AJS-KITSYNC-20261124, Muster nach AJS-Vorbild).
+// Liest die vom LiveEditor unter 'hpse_editor_accordion_v3' gespeicherte
+// Einstellung (background: { mode: 'wechsel' | 'einfarbig', color }) und wendet
+// dieselbe Modus-/Farblogik wie der LiveEditor an — exakt die 6
+// Baukasten-Themenfarben, Standard 'wechsel' ohne Eingriff. Kein Editor-UI,
+// keine Speicherung hier. Seiten MIT LiveEditor brauchen die Komponente
+// nicht (der Editor wendet den Modus selbst an); sie schadet dort aber auch
+// nicht (idempotent: gleiche Klasse, gleiche Variablen).
+---
+<style is:global>
+  body.hpse-bg-solid #main .hero-snap,
+  body.hpse-bg-solid #main .contact-footer-snap,
+  body.hpse-bg-solid #main section,
+  body.hpse-bg-solid #main #hero,
+  body.hpse-bg-solid #main #countdown,
+  body.hpse-bg-solid #main #contact,
+  body.hpse-bg-solid footer {
+    background: var(--hpse-bg-solid) !important;
+    color: var(--hpse-bg-ink) !important;
+  }
+  body.hpse-bg-solid #main h1,
+  body.hpse-bg-solid #main h2,
+  body.hpse-bg-solid #main h3,
+  body.hpse-bg-solid #main p,
+  body.hpse-bg-solid #main span,
+  body.hpse-bg-solid #main label {
+    color: var(--hpse-bg-ink) !important;
+  }
+</style>
+<script is:inline>
+(function () {
+  try {
+    var KEY = 'hpse_editor_accordion_v3';
+    var PALETTE = ['#C8520E', '#1C1C1C', '#F5F0E8', '#4A7C6F', '#E2A63B', '#5C5C5C'];
+    var raw = null;
+    try { raw = localStorage.getItem(KEY); } catch (e) { return; }
+    if (!raw) return;
+    var parsed = null;
+    try { parsed = JSON.parse(raw); } catch (e) { return; }
+    var bg = parsed && parsed.background;
+    if (!bg || (bg.mode !== 'wechsel' && bg.mode !== 'einfarbig')) return;
+    var col = String(bg.color || '').toUpperCase();
+    if (bg.mode !== 'einfarbig' || PALETTE.indexOf(col) < 0) return;
+    var ink = (col === '#F5F0E8' || col === '#E2A63B') ? '#1C1C1C' : '#F5F0E8';
+    document.body.classList.add('hpse-bg-solid');
+    document.documentElement.style.setProperty('--hpse-bg-solid', col);
+    document.documentElement.style.setProperty('--hpse-bg-ink', ink);
+  } catch (e) {}
+}());
+</script>
