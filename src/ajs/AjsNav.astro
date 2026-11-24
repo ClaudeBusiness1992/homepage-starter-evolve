@@ -29,20 +29,27 @@ const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href :
 <nav id="nav" aria-label="Hauptnavigation">
   <div class="wrap">
     <div class="nav-row">
-      <a href="#top" class="logo">{logo && <img src={logo} alt="" class="logo-img" width="44" height="44" />}<span>{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</span></a>
+      <a href="#top" class="logo nav-brand">{logo && <img src={logo} alt="" class="logo-img" width="44" height="44" />}<span>{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</span></a>
       {links.length > 0 && (
-        <ul class="nav-ul" id="navLinks">
+        <ul class="nav-ul nav-center" id="navLinks">
           {contentLinks.map(l => (
             <li>
               <a href={resolveHref(l.href)}>{l.label}</a>
             </li>
           ))}
-          {actionLinks.map((l, i) => (
-            <li class={i === 0 ? 'nav-action nav-action-first' : 'nav-action'}>
+          {actionLinks.map(l => (
+            <li class="nav-action-mobile">
               <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
             </li>
           ))}
         </ul>
+      )}
+      {actionLinks.length > 0 && (
+        <div class="nav-actions-desktop">
+          {actionLinks.map(l => (
+            <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
+          ))}
+        </div>
       )}
       <button class="burger" id="burger" aria-label="Menü" aria-expanded="false" aria-controls="navLinks">
         <span></span><span></span><span></span>
