@@ -46,12 +46,12 @@ const orderedSections = [
 
 const navLinks = [
   ...orderedSections.filter(o => o.enabled).map(o => ({ label: o.label, href: "#" + o.id, section: o.id })),
-  { label: 'Einloggen', href: '#login', section: 'login' },
+  { label: 'Einloggen', href: '#login', section: 'login', outline: true },
   { label: 'Mitglied werden', href: '#register', section: 'register', cta: true },
 ];
 ---
 
-<Base meta={meta} theme={theme} robots="noindex, nofollow">
+<Base meta={meta} theme={theme} noindex>
   <ClientGate clientId="ajs2" passHashSha256={passHashSha256}>
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} logo={meta.logo} links={navLinks} />
 
@@ -73,7 +73,7 @@ const navLinks = [
     {(s.contact?.enabled || s.footer?.enabled) && (
       <div class="contact-footer-snap">
         {s.contact?.enabled  && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} availability={x.booking?.availability} />}
-        {s.footer?.enabled   && <Footer    siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} logo={meta.logo} copyright={meta.copyright} links={s.footer.links} />}
+        {s.footer?.enabled   && <Footer    siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} logo={meta.logo} copyright={meta.copyright} links={s.footer.links} showAdminLink />}
       </div>
     )}
   </main>

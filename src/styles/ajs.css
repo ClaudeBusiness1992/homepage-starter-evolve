@@ -193,7 +193,7 @@ body.swipe-active #gallery .gallery-snap-page .gallery-item-body { flex-shrink: 
 .cta-wrap { max-width: var(--max-w); }
 .cta-wrap > * { max-width: 680px; }
 .cta-section .lbl { color: var(--accent-light); text-transform: uppercase; }
-.cta-h { font-family: var(--serif); font-size: clamp(2.4rem, 5vw, 4.2rem); line-height: 1.08; color: var(--cream); margin: .5rem 0 1.1rem; }
+.cta-h { font-family: var(--serif); font-size: clamp(2rem, 3.5vw, 2.5rem) !important; line-height: 1.15 !important; color: var(--cream); margin: .5rem 0 1.1rem; }
 .cta-h i { color: var(--accent-light); }
 .cta-sub { font-size: 1.08rem; line-height: 1.7; color: color-mix(in srgb, var(--cream) 88%, var(--ink)); margin-bottom: 1.8rem; }
 .cta-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -737,9 +737,8 @@ footer p, footer span, footer a {
   border-bottom: 2px solid var(--ajs-olive) !important;
   z-index: 100 !important;
   box-sizing: border-box !important;
-  /* Sicherheitsabstand links und rechts, damit die geöffnete Bugliste (330px) und Live-Editor (330px) die Navigation niemals überdecken */
-  padding-left: clamp(20px, 22vw, 340px) !important;
-  padding-right: clamp(20px, 22vw, 340px) !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
 }
 #nav > .wrap {
   width: 100% !important;
@@ -1296,4 +1295,68 @@ input:focus, textarea:focus {
 .pbadge {
   background: var(--ajs-berry) !important;
   color: #fff !important;
+}
+
+/* ── Nav-Aktions-Buttons: Einloggen (Outline) + Mitglied werden (gefüllt), ganz rechts hinter Kontakt ── */
+#nav .nav-ul a.nav-btn-outline {
+  display: inline-block !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  padding: 0.4rem 0.95rem !important;
+  color: var(--ajs-olive) !important;
+  background: transparent !important;
+  border: 1.5px solid var(--ajs-olive) !important;
+  border-radius: 999px !important;
+  text-decoration: none !important;
+  transition: background .2s ease, color .2s ease, transform .2s ease !important;
+}
+#nav .nav-ul a.nav-btn-outline:hover {
+  background: var(--ajs-olive) !important;
+  color: var(--ajs-paper) !important;
+  transform: translateY(-1px) !important;
+}
+#nav .nav-ul a.nav-btn-outline:focus-visible {
+  outline: 2px solid var(--ajs-terracotta, #97572A) !important;
+  outline-offset: 2px !important;
+}
+/* Desktop: Nav-Reihe über volle Breite (Logo links), Links + Buttons rechtsbündig, Buttons ganz rechts */
+@media (min-width: 769px) {
+  #nav .wrap {
+    max-width: 1400px !important;
+    width: min(100% - 2rem, 1400px) !important;
+  }
+  #nav .nav-row {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  #nav .nav-ul {
+    flex: 1 1 auto !important;
+    justify-content: flex-end !important;
+    gap: 0.15rem !important;
+  }
+  #nav .nav-ul li.nav-action-first {
+    margin-left: 0.5rem !important;
+    padding-left: 0.5rem !important;
+    border-left: 1px solid color-mix(in srgb, var(--ajs-olive) 22%, transparent) !important;
+  }
+  #nav .nav-ul li.nav-action {
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+}
+/* Mobil (Burger-Menü): Buttons als volle Breite unter den Inhalts-Links stapeln */
+@media (max-width: 768px) {
+  #nav .nav-ul li.nav-action,
+  #nav .nav-ul li.nav-action-first {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    border-left: 0 !important;
+    width: 100% !important;
+  }
+  #nav .nav-ul.open a.nav-btn-outline,
+  #nav .nav-ul.open a.cta-link {
+    display: block !important;
+    text-align: center !important;
+  }
 }

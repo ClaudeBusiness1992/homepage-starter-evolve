@@ -1,0 +1,201 @@
+---
+export const prerender = false;
+
+import { validateSession } from '../../lib/auth';
+
+const sessionCookie = Astro.cookies.get('hps_admin_session')?.value || Astro.request.headers.get('cookie');
+if (validateSession(sessionCookie)) {
+  return Astro.redirect('/admin');
+}
+---
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Anmeldung · Kundenbereich</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #090a0f;
+      --card-bg: #12131a;
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 2.25rem 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #a5b4fc;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      margin-bottom: 1.75rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      color: #ffffff;
+      font-size: 1.25rem;
+      text-align: center;
+      letter-spacing: 0.2em;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.05);
+    }
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+      transition: background 0.2s, transform 0.15s;
+    }
+    button:hover { background: var(--accent-hover); }
+    button:active { transform: scale(0.98); }
+    .hint {
+      margin-top: 1.25rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+    .error-msg {
+      margin-top: 1rem;
+      color: #f87171;
+      font-size: 0.875rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <span class="badge">Kunden-Portal</span>
+    <h1>Willkommen zurück</h1>
+    <p>Geben Sie Ihre PIN ein, um Ihre Website-Inhalte sicher zu verwalten.</p>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="pin">Ihre 6-stellige PIN</label>
+        <input
+          type="password"
+          id="pin"
+          name="pin"
+          maxlength="8"
+          placeholder="••••••"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          required
+          autofocus
+        />
+      </div>
+
+      <button type="submit" id="btn-submit">Anmelden</button>
+      <div class="error-msg" id="error-box"></div>
+    </form>
+
+    <div class="hint">
+      Tipp für die Vorschau: Standard-PIN ist <code>123456</code>.
+    </div>
+  </div>
+
+  <script is:inline>
+    const form = document.getElementById('login-form');
+    const pinInput = document.getElementById('pin');
+    const submitBtn = document.getElementById('btn-submit');
+    const errorBox = document.getElementById('error-box');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Wird geprüft...';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin: pinInput.value }),
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          window.location.href = '/admin';
+        } else {
+          errorBox.textContent = data.error || 'Ungültige PIN';
+          errorBox.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Anmelden';
+          pinInput.focus();
+        }
+      } catch (err) {
+        errorBox.textContent = 'Verbindungsfehler';
+        errorBox.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Anmelden';
+      }
+    });
+  </script>
+</body>
+</html>

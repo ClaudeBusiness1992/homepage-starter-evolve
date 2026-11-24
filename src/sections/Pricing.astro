@@ -2,12 +2,16 @@
 import SectionHeader from '../components/SectionHeader.astro';
 interface Package {
   name: string;
-  tagline: string;
+  tagline?: string;
+  period?: string;
   price: string;
-  priceNote: string;
-  featured: boolean;
-  badge: string;
+  priceNote?: string;
+  featured?: boolean;
+  highlight?: boolean;
+  badge?: string;
   features: string[];
+  ctaLabel?: string;
+  ctaHref?: string;
 }
 interface Props {
   label: string;
@@ -23,28 +27,34 @@ const delays = ['d1','d2','d3'];
   <div class="wrap">
     <SectionHeader {label} {headline} {subline} center />
     <div class="pricing-grid">
-      {packages.map((pkg, i) => (
-        <article
-          class={`pcard r ${delays[i % delays.length]} ${pkg.featured ? 'feat' : ''}`}
-          aria-label={pkg.name}
-        >
-          {pkg.badge && <div class="pbadge">{pkg.badge}</div>}
-          <h3 class="pname">{pkg.name}</h3>
-          <span class="ptag">{pkg.tagline}</span>
-          <div class="pprice">
-            <div class="amount">{pkg.price}</div>
-            <div class="note">{pkg.priceNote}</div>
-          </div>
-          <div class="pdiv"></div>
-          <ul class="plist">
-            {pkg.features.map(f => <li>{f}</li>)}
-          </ul>
-          <a href="#contact" class={`btn btn-w ${pkg.featured ? 'btn-fill' : 'btn-outline'}`}
-            aria-label={`${pkg.featured ? 'Jetzt anfragen' : 'Anfragen'} — Paket ${pkg.name}`}>
-            {pkg.featured ? 'Jetzt anfragen' : 'Anfragen'}
-          </a>
-        </article>
-      ))}
+      {packages.map((pkg, i) => {
+        const isFeat = pkg.featured || pkg.highlight;
+        const subTag = pkg.tagline || pkg.period || '';
+        const ctaTxt = pkg.ctaLabel || (isFeat ? 'Jetzt anfragen' : 'Anfragen');
+        const ctaUrl = pkg.ctaHref || '#contact';
+        return (
+          <article
+            class={`pcard r ${delays[i % delays.length]} ${isFeat ? 'feat' : ''}`}
+            aria-label={pkg.name}
+          >
+            {pkg.badge && <div class="pbadge">{pkg.badge}</div>}
+            <h3 class="pname">{pkg.name}</h3>
+            {subTag && <span class="ptag">{subTag}</span>}
+            <div class="pprice">
+              <div class="amount">{pkg.price}</div>
+              {pkg.priceNote && <div class="note">{pkg.priceNote}</div>}
+            </div>
+            <div class="pdiv"></div>
+            <ul class="plist">
+              {pkg.features.map(f => <li>{f}</li>)}
+            </ul>
+            <a href={ctaUrl} class={`btn btn-w ${isFeat ? 'btn-fill' : 'btn-outline'}`}
+              aria-label={`${ctaTxt} — Paket ${pkg.name}`}>
+              {ctaTxt}
+            </a>
+          </article>
+        );
+      })}
     </div>
     <p class="pricing-note r">
       Alle Pakete individuell anpassbar.

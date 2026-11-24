@@ -1,4 +1,6 @@
 ---
+import SocialLinks from '../components/SocialLinks.astro';
+
 interface FooterLink {
   label: string;
   href: string;
@@ -9,8 +11,9 @@ interface Props {
   logo?: string;
   copyright: string;
   links: FooterLink[];
+  showAdminLink?: boolean;
 }
-const { siteName, siteNameAccent, logo, copyright, links } = Astro.props;
+const { siteName, siteNameAccent, logo, copyright, links, showAdminLink = false } = Astro.props;
 const accentIdx = siteNameAccent ? siteName.indexOf(siteNameAccent) : -1;
 const logoBefore = accentIdx > -1 ? siteName.slice(0, accentIdx) : siteName;
 const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.length ?? 0)) : '';
@@ -18,11 +21,13 @@ const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.
 
 <footer>
   <div class="wrap">
-    <div class="foot-row">
+    <div class="foot-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
       <span class="foot-logo">{logo && <img src={logo} alt="" class="foot-logo-img" width="40" height="40" />}{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</span>
+      <SocialLinks />
       <nav aria-label="Footer-Navigation">
         <ul class="foot-links">
           {links.map(l => <li><a href={l.href}>{l.label}</a></li>)}
+          {showAdminLink && <li><a href="/admin" style="color: var(--accent-light, #EDAA72); font-weight: 600;">Kunden-Admin</a></li>}
         </ul>
       </nav>
       <span class="foot-copy">{copyright}</span>

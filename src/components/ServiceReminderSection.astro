@@ -1,0 +1,234 @@
+---
+import { isSectionEnabled } from '../lib/permissions';
+
+const isEnabled = isSectionEnabled('reminders');
+const currentYear = new Date().getFullYear();
+const years = [currentYear, currentYear + 1, currentYear + 2, currentYear + 3];
+const months = [
+  { val: 1, label: '01 · Januar' },
+  { val: 2, label: '02 · Februar' },
+  { val: 3, label: '03 · März' },
+  { val: 4, label: '04 · April' },
+  { val: 5, label: '05 · Mai' },
+  { val: 6, label: '06 · Juni' },
+  { val: 7, label: '07 · Juli' },
+  { val: 8, label: '08 · August' },
+  { val: 9, label: '09 · September' },
+  { val: 10, label: '10 · Oktober' },
+  { val: 11, label: '11 · November' },
+  { val: 12, label: '12 · Dezember' },
+];
+---
+
+{isEnabled && (
+  <section class="section" id="service-erinnerung">
+    <div class="wrap">
+      <div class="section-hd r section-hd--center">
+        <h2 class="h2">Erinnerungs-Service</h2>
+        <p class="sub">
+          Nie wieder den HU/TÜV- oder Wartungstermin verpassen: Tragen Sie einfach Ihre Fälligkeit ein. Wir erinnern Sie rechtzeitig 4 Wochen im Voraus verlässlich per E-Mail.
+        </p>
+      </div>
+
+      <div class="reminder-card">
+        <form id="public-reminder-form">
+          <!-- Honeypot -->
+          <div style="position: absolute; left: -9999px;">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="rem-grid">
+            <div class="rem-field">
+              <label class="rem-label" for="rem-service">Leistungsart</label>
+              <select id="rem-service" name="serviceType" class="rem-select">
+                <option value="Hauptuntersuchung (HU / TÜV)">Hauptuntersuchung (HU / TÜV)</option>
+                <option value="Inspektion & Wartung">Inspektion & Wartung</option>
+                <option value="Klima- & Reifen-Service">Klima- & Reifen-Service</option>
+                <option value="Ölwechsel">Ölwechsel & Durchsicht</option>
+              </select>
+            </div>
+
+            <div class="rem-field">
+              <label class="rem-label">Nächste Fälligkeit (Monat / Jahr) *</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <select name="dueMonth" class="rem-select" style="flex: 2;" required>
+                  {months.map((m) => (
+                    <option value={m.val}>{m.label}</option>
+                  ))}
+                </select>
+                <select name="dueYear" class="rem-select" style="flex: 1;" required>
+                  {years.map((y) => (
+                    <option value={y}>{y}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div class="rem-field">
+              <label class="rem-label" for="rem-vehicle">Fahrzeug / Kennzeichen *</label>
+              <input
+                type="text"
+                id="rem-vehicle"
+                name="vehicleOrObject"
+                placeholder="z. B. HH-PC 2026 (Golf VII)"
+                required
+                class="rem-input"
+              />
+            </div>
+
+            <div class="rem-field">
+              <label class="rem-label" for="rem-name">Ihr Name *</label>
+              <input
+                type="text"
+                id="rem-name"
+                name="customerName"
+                placeholder="Vor- und Nachname"
+                required
+                class="rem-input"
+              />
+            </div>
+
+            <div class="rem-field" style="grid-column: 1 / -1;">
+              <label class="rem-label" for="rem-contact">Ihre E-Mail-Adresse für die Terminerinnerung *</label>
+              <input
+                type="email"
+                id="rem-contact"
+                name="contactValue"
+                placeholder="ihre.adresse@beispiel.de"
+                required
+                class="rem-input"
+              />
+            </div>
+          </div>
+
+          <div style="margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <p style="font-size: 0.8125rem; color: var(--text-muted); max-width: 520px; margin: 0; line-height: 1.5;">
+              <strong style="color: #a5b4fc;">Automatische 24-Monate-Erinnerung:</strong> Sie erhalten alle 2 Jahre rechtzeitig vor dem Fälligkeitsmonat eine E-Mail-Erinnerung, bis Sie sich zum Termin anmelden. Jederzeit mit 1 Klick widerrufbar.
+            </p>
+            <button type="submit" class="rem-btn" id="rem-submit-btn">
+              E-Mail-Erinnerung aktivieren
+            </button>
+          </div>
+
+          <div id="rem-status" style="margin-top: 1rem; font-size: 0.9375rem; display: none;"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .reminder-card {
+    background: var(--card-bg, rgba(255, 255, 255, 0.03));
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+    border-radius: var(--r-lg, 0.75rem);
+    padding: 1.25rem 1.75rem;
+    max-width: 880px;
+    margin: 0 auto;
+    box-shadow: var(--shadow);
+  }
+  .rem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.85rem 1.25rem;
+  }
+  .rem-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: var(--text, #f8fafc);
+  }
+  .rem-input, .rem-select {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--r, 0.5rem);
+    color: #ffffff;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .rem-input:focus, .rem-select:focus {
+    border-color: var(--accent);
+  }
+  .rem-btn {
+    padding: 0.65rem 1.5rem;
+    background: var(--accent);
+    color: #ffffff;
+    border: 1px solid var(--ink);
+    border-radius: var(--r, 0.5rem);
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .rem-btn:hover { background: color-mix(in srgb, var(--accent) 85%, #000); }
+  .rem-btn:active { transform: scale(0.98); }
+</style>
+
+<script is:inline>
+  const remForm = document.getElementById('public-reminder-form');
+  const remBtn = document.getElementById('rem-submit-btn');
+  const remStatus = document.getElementById('rem-status');
+
+  if (remForm) {
+    remForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (remBtn) {
+        remBtn.disabled = true;
+        remBtn.textContent = 'Wird aktiviert...';
+      }
+      if (remStatus) remStatus.style.display = 'none';
+
+      const formData = new FormData(remForm);
+      const payload = {
+        serviceType: formData.get('serviceType'),
+        dueMonth: formData.get('dueMonth'),
+        dueYear: formData.get('dueYear'),
+        vehicleOrObject: formData.get('vehicleOrObject'),
+        customerName: formData.get('customerName'),
+        channel: 'email', // Streng nur noch per E-Mail
+        contactValue: formData.get('contactValue'),
+        website: formData.get('website'),
+      };
+
+      try {
+        const res = await fetch('/api/public/reminders/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const d = await res.json();
+
+        if (res.ok) {
+          remForm.reset();
+          if (remStatus) {
+            remStatus.style.color = '#34d399';
+            remStatus.textContent = d.message || 'E-Mail-Erinnerung erfolgreich aktiviert!';
+            remStatus.style.display = 'block';
+          }
+        } else {
+          if (remStatus) {
+            remStatus.style.color = '#f87171';
+            remStatus.textContent = d.error || 'Fehler beim Speichern.';
+            remStatus.style.display = 'block';
+          }
+        }
+      } catch (err) {
+        if (remStatus) {
+          remStatus.style.color = '#f87171';
+          remStatus.textContent = 'Netzwerkfehler beim Aktivieren der Erinnerung.';
+          remStatus.style.display = 'block';
+        }
+      } finally {
+        if (remBtn) {
+          remBtn.disabled = false;
+          remBtn.textContent = 'E-Mail-Erinnerung aktivieren';
+        }
+      }
+    });
+  }
+</script>

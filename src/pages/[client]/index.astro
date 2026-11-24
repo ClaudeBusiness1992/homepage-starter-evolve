@@ -9,7 +9,7 @@ import Base from '../../layouts/Base.astro';
 import ClientGate from '../../components/ClientGate.astro';
 
 export function getStaticPaths() {
-  /* Dedizierte Routen (z. B. /ajs.astro mit eigenem AJS-Auftritt) haben Vorrang:
+  /* Dedizierte Routen (z. B. /ajs mit eigenem AJS-Auftritt) haben Vorrang:
      der dynamische [client]-Platzhalter generiert sie nicht, um Duplikate zu vermeiden.
      (Inline-Konstante: getStaticPaths wird isoliert gebündelt und sieht kein Modul-Scope.) */
   const dedicated = new Set(['ajs', 'ajs2']);

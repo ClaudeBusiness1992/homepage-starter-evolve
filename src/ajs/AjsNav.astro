@@ -2,7 +2,9 @@
 interface NavLink {
   label: string;
   href: string;
+  section?: string;
   cta?: boolean;
+  outline?: boolean;
 }
 interface Props {
   siteName: string;
@@ -11,12 +13,17 @@ interface Props {
   links?: NavLink[];
 }
 const { siteName, siteNameAccent, logo, links = [] } = Astro.props;
+// Inhalts-Links zuerst, Aktions-Buttons (Einloggen / Mitglied werden) immer ganz rechts dahinter.
+const isAction = (l: NavLink) => !!(l.cta || l.outline || l.section === 'login' || l.section === 'register');
+const contentLinks = links.filter(l => !isAction(l));
+const actionLinks = links.filter(l => isAction(l));
 const accentIdx = siteNameAccent ? siteName.indexOf(siteNameAccent) : -1;
 const logoBefore = accentIdx > -1 ? siteName.slice(0, accentIdx) : siteName;
 const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.length ?? 0)) : '';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-const isHome = path === '/ajs';
-const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href : `/ajs${href}`;
+const isHome = path === '/ajs' || path === '/ajs2' || path === '/';
+const base = path.startsWith('/ajs2') ? '/ajs2' : path.startsWith('/ajs') ? '/ajs' : '/ajs';
+const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href : `${base}${href}`;
 ---
 
 <nav id="nav" aria-label="Hauptnavigation">
@@ -25,9 +32,14 @@ const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href :
       <a href="#top" class="logo">{logo && <img src={logo} alt="" class="logo-img" width="44" height="44" />}<span>{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</span></a>
       {links.length > 0 && (
         <ul class="nav-ul" id="navLinks">
-          {links.map(l => (
+          {contentLinks.map(l => (
             <li>
-              <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : ''}>{l.label}</a>
+              <a href={resolveHref(l.href)}>{l.label}</a>
+            </li>
+          ))}
+          {actionLinks.map((l, i) => (
+            <li class={i === 0 ? 'nav-action nav-action-first' : 'nav-action'}>
+              <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
             </li>
           ))}
         </ul>

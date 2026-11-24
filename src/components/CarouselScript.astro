@@ -10,43 +10,84 @@
     const next = carousel.querySelector('[data-carousel-next]');
     const itemSel = track.dataset.carouselItem || ':scope > *';
 
-    const getCols = () => {
+    const EDGE_TOL = 8;
+
+    // Blockweises Paging: vermisst Kartenbreite + Lücke, leitet daraus die
+    // sichtbare Kartenzahl ab (3 auf Laptop/Desktop, 1-2 auf kleinen Screens)
+    // und bildet Seitenstarts auf echte Kartenanfänge ab.
+    const getPages = () => {
       const items = Array.from(track.querySelectorAll(itemSel));
-      const colSet = new Set();
-      items.forEach(it => colSet.add(Math.round(it.offsetLeft)));
-      return Array.from(colSet).sort((a, b) => a - b);
+      if (!items.length) return [0];
+      const first = items[0].offsetLeft;
+      const cardW = items[0].offsetWidth || 1;
+      const gap = items.length > 1
+        ? Math.max(0, items[1].offsetLeft - first - cardW)
+        : 0;
+      const step = cardW + gap;
+      const visibleWidth = track.clientWidth || 1;
+      const perView = Math.max(1, Math.round(visibleWidth / step));
+      const pages = [];
+      for (let i = 0; i < items.length; i += perView) {
+        pages.push(items[i].offsetLeft - first);
+      }
+      return pages;
     };
+
+    const maxScroll = () => track.scrollWidth - track.clientWidth;
+
+    // Sperrfenster nach programmatischer Fahrt: Snap-Korrektur aussetzen,
+    // bis die Smooth-Animation sicher beendet ist.
+    let navigatingUntil = 0;
 
     const navigate = (forward) => {
-      const cols = getCols();
-      const currentScroll = track.scrollLeft;
-      const visibleWidth = track.clientWidth;
-      const maxScroll = track.scrollWidth - track.clientWidth;
-      const padLeft = cols[0] || 0;
-
-      let targetScroll;
+      const pages = getPages();
+      const current = track.scrollLeft;
+      const max = maxScroll();
+      let target;
       if (forward) {
-        // Nächster Spalten-Block: Die erste Spalte anspringen, die aktuell rechts außerhalb liegt
-        const rightEdge = currentScroll + visibleWidth;
-        const nextCol = cols.find(c => (c - padLeft) >= (rightEdge - padLeft - 15));
-        if (nextCol !== undefined) {
-          targetScroll = Math.min(maxScroll, nextCol - padLeft);
-        } else {
-          // Wenn weniger als ein ganzer Block übrig ist, bis zum Anschlag gehen
-          targetScroll = maxScroll;
-        }
+        // Nächster Block: erster Seitenstart rechts der aktuellen Position
+        const nextPage = pages.find(p => p > current + EDGE_TOL);
+        target = nextPage !== undefined ? Math.min(max, nextPage) : max;
       } else {
-        // Vorheriger Spalten-Block
-        const prevCol = [...cols].reverse().find(c => (c - padLeft) <= (currentScroll - visibleWidth + 15));
-        if (prevCol !== undefined) {
-          targetScroll = Math.max(0, prevCol - padLeft);
-        } else {
-          targetScroll = 0;
-        }
+        // Vorheriger Block: letzter Seitenstart links der aktuellen Position
+        const prevPages = pages.filter(p => p < current - EDGE_TOL);
+        target = prevPages.length ? Math.max(0, prevPages[prevPages.length - 1]) : 0;
       }
 
-      track.scrollTo({ left: targetScroll, behavior: 'smooth' });
+      navigatingUntil = Date.now() + 600;
+      track.scrollTo({ left: target, behavior: 'smooth' });
     };
+
+    // Freies Swipen/Scrollen rastet auf den nächsten Block ein,
+    // damit keine Karte halb angeschnitten mitten im Viewport stehen bleibt.
+    const snapToPage = () => {
+      if (Date.now() < navigatingUntil) return;
+      const max = maxScroll();
+      if (max <= 1) return;
+      const pages = getPages();
+      const current = track.scrollLeft;
+      const candidates = pages.concat([max]);
+      let nearest = candidates[0];
+      let best = Math.abs(current - nearest);
+      for (const p of candidates) {
+        const d = Math.abs(current - p);
+        if (d < best) { best = d; nearest = p; }
+      }
+      if (best > EDGE_TOL) {
+        navigatingUntil = Date.now() + 600;
+        track.scrollTo({ left: nearest, behavior: 'smooth' });
+      }
+    };
+
+    let snapTimer = null;
+    if ('onscrollend' in window) {
+      track.addEventListener('scrollend', snapToPage);
+    } else {
+      track.addEventListener('scroll', () => {
+        clearTimeout(snapTimer);
+        snapTimer = setTimeout(snapToPage, 180);
+      }, { passive: true });
+    }
 
     const update = () => {
       const padLeft = parseFloat(getComputedStyle(track).paddingLeft) || 0;

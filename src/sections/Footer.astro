@@ -1,4 +1,6 @@
 ---
+import SocialLinks from '../components/SocialLinks.astro';
+
 interface FooterLink {
   label: string;
   href: string;
@@ -17,11 +19,13 @@ const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.
 
 <footer>
   <div class="wrap">
-    <div class="foot-row">
+    <div class="foot-row" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
       <span class="foot-logo">{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</span>
+      <SocialLinks />
       <nav aria-label="Footer-Navigation">
         <ul class="foot-links">
           {links.map(l => <li><a href={l.href}>{l.label}</a></li>)}
+          <li><a href="/admin" style="color: var(--accent-light, #e2a63b); font-weight: 600;">Kunden-Admin</a></li>
           <li><button type="button" class="foot-cookie-btn" data-cookie-settings>Cookie-Einstellungen</button></li>
         </ul>
       </nav>

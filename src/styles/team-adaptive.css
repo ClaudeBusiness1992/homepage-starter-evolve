@@ -1,0 +1,297 @@
+/* Deterministischer Team-Layout-Algorithmus (Ästhetik-Garantie für jedes N) */
+
+.team-adaptive-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* N = 1: Einzelkarte, strikt vertikal (Foto oben, Name/Rolle/Bio darunter) */
+.team-layout-single {
+  display: block;
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.team-layout-single > .team-card {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
+  background: var(--card-bg, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  max-height: min(440px, calc(100dvh - var(--nav-h) - 180px));
+}
+
+#about .about-grid.team-layout-single > .team-card {
+  flex-direction: row !important;
+}
+
+#about .about-grid.team-layout-single > .team-card .team-card-photo {
+  flex: 0 0 45% !important;
+  width: 45% !important;
+  height: 100% !important;
+  min-height: 280px !important;
+  max-height: none !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 0 !important;
+}
+
+#about .about-grid.team-layout-single > .team-card .team-card-body {
+  flex: 1 1 auto !important;
+  padding: 2.5rem 2rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+#about .about-grid.team-layout-single > .team-card .team-card-name {
+  font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+  margin-bottom: 0.35rem;
+}
+
+#about .about-grid.team-layout-single > .team-card .team-card-role {
+  font-size: var(--fs-md);
+  margin-bottom: 1.25rem;
+}
+
+#about .about-grid.team-layout-single > .team-card .team-card-bio {
+  font-size: var(--fs-base);
+  line-height: 1.65;
+}
+
+/* N = 2: Symmetrisches Duo-Grid (Karten strikt vertikal: Foto oben, Bio unten) */
+.team-layout-duo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* Vertikal-Garantie Solo/Duo: Bio zwingend unterhalb des Fotos —
+   schlägt globale .team-card-row-Overrides (z. B. Editor-Styles) anhand
+   höherer Spezifität, gilt auf allen Bildschirmgrößen. */
+#about .about-grid.team-layout-duo > .team-card {
+  flex-direction: column;
+}
+#about .about-grid.team-layout-duo > .team-card .team-card-photo {
+  order: 0;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/5;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+#about .about-grid.team-layout-duo > .team-card .team-card-body {
+  order: 1;
+}
+/* Solo: Container stellt die Kartenoptik, innere Karte bleibt chromlos */
+/* Solo card styles defined above */
+
+/* N = 3: Klassisches 3er-Grid */
+.team-layout-trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* N = 4: 2x2 Komfort-Grid */
+.team-layout-quad {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* N = 5: 3 oben + 2 zentriert unten */
+.team-layout-5 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.75rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.team-layout-5 > .team-card:nth-child(1),
+.team-layout-5 > .team-card:nth-child(2),
+.team-layout-5 > .team-card:nth-child(3) {
+  grid-column: span 2;
+}
+.team-layout-5 > .team-card:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+.team-layout-5 > .team-card:nth-child(5) {
+  grid-column: 4 / span 2;
+}
+
+/* N = 6: Symmetrisches 3x2-Grid */
+.team-layout-6 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* N = 7: 4 oben + 3 zentriert darunter (8 Spalten Basis) */
+.team-layout-7 {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.team-layout-7 > .team-card:nth-child(-n+4) {
+  grid-column: span 2;
+}
+.team-layout-7 > .team-card:nth-child(5) {
+  grid-column: 2 / span 2;
+}
+.team-layout-7 > .team-card:nth-child(6) {
+  grid-column: 4 / span 2;
+}
+.team-layout-7 > .team-card:nth-child(7) {
+  grid-column: 6 / span 2;
+}
+
+/* N >= 8: 4er-Raster */
+.team-layout-multi {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* Allgemeine Karten-Styles */
+.team-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent, #6366f1);
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.3);
+}
+
+.team-card-photo {
+  position: relative;
+  aspect-ratio: 4/5;
+  width: 100%;
+  background: #181920;
+  overflow: hidden;
+}
+
+.team-card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Fallback Initialen-Avatar falls kein Foto */
+.team-card-avatar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+  color: var(--accent-light, #a5b4fc);
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.team-card-body {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.team-card-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+  color: var(--text-heading, #ffffff);
+}
+
+.team-card-role {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--accent-light, #818cf8);
+  margin-bottom: 0.75rem;
+  display: inline-block;
+}
+
+.team-card-bio {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--text-muted, #94a3b8);
+  margin: 0;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .team-layout-trio,
+  .team-layout-quad,
+  .team-layout-5,
+  .team-layout-6,
+  .team-layout-7,
+  .team-layout-multi {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .team-layout-5 > .team-card,
+  .team-layout-7 > .team-card {
+    grid-column: auto !important;
+  }
+  .team-layout-5 > .team-card:nth-child(5) {
+    grid-column: 1 / -1 !important;
+    max-width: 420px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .team-layout-single > .team-card {
+    flex-direction: column !important;
+    max-height: none !important;
+  }
+  #about .about-grid.team-layout-single > .team-card .team-card-photo {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+  .team-layout-duo,
+  .team-layout-trio,
+  .team-layout-quad,
+  .team-layout-5,
+  .team-layout-6,
+  .team-layout-7,
+  .team-layout-multi {
+    grid-template-columns: 1fr !important;
+  }
+  .team-layout-5 > .team-card:nth-child(5) {
+    grid-column: auto !important;
+    max-width: none;
+  }
+}
+

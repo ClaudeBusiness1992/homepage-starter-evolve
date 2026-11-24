@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schriftgrößen-System (5 Größen) — Pixel & Code</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0f12;
+      --card-bg: #15181e;
+      --border: #232832;
+      --text: #f3efe6;
+      --text-muted: #9aa1ad;
+      --accent: #d95d1e;
+      --accent-soft: rgba(217, 93, 30, 0.15);
+      --font-serif: "Playfair Display", Georgia, serif;
+      --font-sans: "DM Sans", -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      padding: 3rem 1.5rem;
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: 40px;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+    .lead {
+      color: var(--text-muted);
+      font-size: 18px;
+      margin-bottom: 2.5rem;
+      max-width: 680px;
+    }
+    .summary-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .metric-val {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .metric-lbl {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .tier-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .tier-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem 2rem;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .tier-card { grid-template-columns: 1fr; gap: 1rem; }
+    }
+    .tier-meta {
+      border-right: 1px solid var(--border);
+      padding-right: 1.5rem;
+    }
+    @media (max-width: 768px) {
+      .tier-meta { border-right: none; padding-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+    }
+    .tier-pill {
+      font-family: monospace;
+      font-size: 13px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+    .tier-px {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+    .tier-rem {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .tier-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: #1c212a;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .tier-preview {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100px;
+    }
+    .tier-sample-serif {
+      font-family: var(--font-serif);
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+    .tier-sample-sans {
+      font-family: var(--font-sans);
+      color: #e4e0d7;
+      line-height: 1.45;
+      margin-bottom: 0.75rem;
+    }
+    .tier-usage {
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px dashed var(--border);
+      padding-top: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .tier-usage strong {
+      color: var(--text);
+    }
+    .back-nav {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+    .back-nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .back-nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="badge">Standardisiertes Design-System</span>
+    <h1>Schriftgrößen-System</h1>
+    <p class="lead">Alle typografischen Elemente der gesamten Homepage wurden auf exakt 5 harmonische Größenstufen vereinheitlicht.</p>
+
+    <div class="summary-bar">
+      <div class="metric-card">
+        <div class="metric-val">5</div>
+        <div class="metric-lbl">Schriftgrößen gesamt</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">100%</div>
+        <div class="metric-lbl">Konformität (0 Sondergrößen)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val">341</div>
+        <div class="metric-lbl">Geprüfte Text-Elemente</div>
+      </div>
+    </div>
+
+    <div class="tier-list">
+      <!-- TIER 1 -->
+      <div class="tier-card">
+        <div class="tier-meta">
+          <div class="tier-pill">--fs-xl</div>
+          <div class="tier-px">56 px</div>
+          <div class="tier-rem">3.5 rem</div>
+          <div class="tier-count">23 Vorkommen</div>
+        </div>
+        <div class="tier-preview">
+          <div class="tier-sample-serif" style="font-size: 56px;">Ihre Website. Fertig.</div>
+          <div class="tier-usage">
+            <strong>Verwendung:</strong> Hero-Haupttitel (H1), Sektions-Überschriften (H2), Countdown-Ziffern, Preiszahlen, Review-Gesamtbewertung, Erfolgs-Icons.
+          </div>
+        </div>
+      </div>
+
+      <!-- TIER 2 -->
+      <div class="tier-card">
+        <div class="tier-meta">
+          <div class="tier-pill">--fs-lg</div>
+          <div class="tier-px">24 px</div>
+          <div class="tier-rem">1.5 rem</div>
+          <div class="tier-count">28 Vorkommen</div>
+        </div>
+        <div class="tier-preview">
+          <div class="tier-sample-serif" style="font-size: 24px;">Zwei Köpfe, eine Leidenschaft</div>
+          <div class="tier-sample-sans" style="font-size: 24px; font-weight: 600;">Webdesign & Entwicklung</div>
+          <div class="tier-usage">
+            <strong>Verwendung:</strong> Sektions-H3, Kachel-Titel (Services, Pakete, Team-Namen), Logo-Wortmarke, Karussell-Navigationspfeile (‹ ›).
+          </div>
+        </div>
+      </div>
+
+      <!-- TIER 3 -->
+      <div class="tier-card">
+        <div class="tier-meta">
+          <div class="tier-pill">--fs-md</div>
+          <div class="tier-px">18 px</div>
+          <div class="tier-rem">1.125 rem</div>
+          <div class="tier-count">59 Vorkommen</div>
+        </div>
+        <div class="tier-preview">
+          <div class="tier-sample-sans" style="font-size: 18px;">Wir bauen moderne, schnelle Websites für kleine Unternehmen.</div>
+          <div class="tier-usage">
+            <strong>Verwendung:</strong> Einleitungen & Lead-Texte (Hero-Subline, Sektions-Sublines), Sterne-Bewertungs-Icons, Testimonial-Avatare.
+          </div>
+        </div>
+      </div>
+
+      <!-- TIER 4 -->
+      <div class="tier-card">
+        <div class="tier-meta">
+          <div class="tier-pill">--fs-base</div>
+          <div class="tier-px">15 px</div>
+          <div class="tier-rem">0.9375 rem</div>
+          <div class="tier-count">114 Vorkommen</div>
+        </div>
+        <div class="tier-preview">
+          <div class="tier-sample-sans" style="font-size: 15px;">Fließtexte, Kartenbeschreibungen, Leistungsaufzählungen und Formularfelder für optimale Lesbarkeit auf allen Bildschirmen.</div>
+          <div class="tier-usage">
+            <strong>Verwendung:</strong> Hauptnavigation, Fließtexte, Leistungsdetails, Bewertungszitate, Buttons & Call-to-Actions, Formulareingaben & Auswahllisten.
+          </div>
+        </div>
+      </div>
+
+      <!-- TIER 5 -->
+      <div class="tier-card">
+        <div class="tier-meta">
+          <div class="tier-pill">--fs-sm</div>
+          <div class="tier-px">12 px</div>
+          <div class="tier-rem">0.75 rem</div>
+          <div class="tier-count">117 Vorkommen</div>
+        </div>
+        <div class="tier-preview">
+          <div class="tier-sample-sans" style="font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600;">Webdesign für kleine Unternehmen • Save the Date</div>
+          <div class="tier-usage">
+            <strong>Verwendung:</strong> Bereichs-Labels (.lbl), Abteilungs-Filter-Buttons, Badges, Formular-Feldhinweise & Fehlermeldungen, Öffnungszeiten, Footer-Links & Copyright.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="back-nav">
+      <span>Pixel & Code — Evolve Starter</span>
+      <a href="/">← Zurück zur Homepage</a>
+    </div>
+  </div>
+</body>
+</html>

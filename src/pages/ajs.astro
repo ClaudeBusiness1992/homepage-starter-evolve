@@ -17,6 +17,9 @@ import Contact   from '../ajs/AjsContact.astro';
 import Cta       from '../ajs/AjsCta.astro';
 import Footer    from '../ajs/AjsFooter.astro';
 import SidebarAds from '../components/SidebarAds.astro';
+import ClientGate from '../components/ClientGate.astro';
+
+const passHashSha256 = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92";
 
 const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
@@ -30,20 +33,25 @@ const labelFor = (id: string, fallback: string) =>
 const cta = (meta.nav ?? []).find((l: any) => l.cta);
 const orderedSections = [
   { id: 'services', label: labelFor('services', "So funktioniert's"), enabled: s.services?.enabled !== false },
-  { id: 'gallery',  label: labelFor('gallery', 'Unser Sortiment'),      enabled: !!(x.active?.gallery && x.gallery) },
+  { id: 'gallery',  label: labelFor('gallery', 'Sortiment'),            enabled: !!(x.active?.gallery && x.gallery) },
   { id: 'about',    label: labelFor('about', 'Über uns'),              enabled: s.about?.enabled !== false },
   { id: 'cta',      label: 'Mitgliedschaft',                            enabled: s.cta?.enabled !== false },
+  { id: 'pricing',  label: labelFor('pricing', 'Preise'),               enabled: s.pricing?.enabled !== false },
+  { id: 'reviews',  label: labelFor('reviews', 'Bewertungen'),          enabled: !!(x.active?.reviews && x.reviews) },
+  { id: 'booking',  label: labelFor('booking', 'Touren & Termine'),     enabled: !!(x.active?.booking && x.booking) },
+  { id: 'sponsors', label: labelFor('sponsors', 'Partner'),             enabled: !!(x.active?.sponsors && x.sponsors) },
   { id: 'contact',  label: labelFor('contact', 'Kontakt'),              enabled: s.contact?.enabled !== false },
 ];
 
 const navLinks = [
   ...orderedSections.filter(o => o.enabled).map(o => ({ label: o.label, href: "#" + o.id, section: o.id })),
-  { label: 'Einloggen', href: '#contact', section: 'login' },
-  ...(cta ? [cta] : [{ label: 'Mitglied werden', href: '#contact', section: 'contact', cta: true }]),
+  { label: 'Einloggen', href: '#login', section: 'login', outline: true },
+  { label: 'Mitglied werden', href: '#register', section: 'register', cta: true },
 ];
 ---
 
-<Base meta={meta} theme={theme}>
+<Base meta={meta} theme={theme} noindex>
+  <ClientGate clientId="ajs" passHashSha256={passHashSha256}>
   <Nav siteName={meta.siteName} siteNameAccent={meta.siteNameAccent} logo={meta.logo} links={navLinks} />
 
   <main id="main" tabindex="-1">
@@ -72,6 +80,102 @@ const navLinks = [
   {x.active?.sidebarAds && x.sidebarAds && (
     <SidebarAds left={x.sidebarAds.left} right={x.sidebarAds.right} />
   )}
+
+
+<!-- AJS Mitglied werden / Registrierungs-Modal -->
+<div id="ajs-register-modal" class="kat" role="dialog" aria-modal="true" aria-labelledby="register-modal-title" aria-hidden="true" hidden>
+  <div class="kat-bg" data-register-close></div>
+  <div class="kat-box" style="max-width: 520px; padding: 0;" tabindex="-1">
+    <div class="kat-head" style="background: var(--ajs-olive, #414C09);">
+      <h3 id="register-modal-title" class="kat-title" style="font-size: 1.3rem;">Mitglied werden (Aufnahmeantrag)</h3>
+      <button type="button" class="kat-close" data-register-close aria-label="Schließen">×</button>
+    </div>
+    <div class="kat-body" style="padding: 1.5rem 1.8rem;">
+      <p style="font-size: 0.9rem; line-height: 1.5; color: #3B3A26; margin-bottom: 1.2rem;">
+        Der Zugang zu unseren Liefertouren ist exklusiv und begrenzt. Fülle das Formular aus – AJ prüft deine Registrierung persönlich und schaltet dein Mitgliedskonto frei.
+      </p>
+      <form id="ajsRegisterForm" onsubmit="event.preventDefault(); document.getElementById('regMsg').hidden = false; this.querySelector('button[type=submit]').disabled = true;">
+        <div style="display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.2rem;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="regName">Vollständiger Name *</label>
+            <input type="text" id="regName" required placeholder="Vor- und Nachname" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="regEmail">E-Mail-Adresse *</label>
+              <input type="email" id="regEmail" required placeholder="du@beispiel.de" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="regPhone">Telefon *</label>
+              <input type="tel" id="regPhone" required placeholder="+49 170..." style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
+            </div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="regDistrict">Stadtteil in Hamburg *</label>
+            <input type="text" id="regDistrict" required placeholder="z. B. Winterhude, Eppendorf, Altona..." style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="regNote">Gewünschte Feinkost-Kategorien (optional)</label>
+            <input type="text" id="regNote" placeholder="z. B. Dry Aged Rind, Garnelen, Wild" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
+          </div>
+          <label style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.78rem; color: #4B4A32; cursor: pointer;">
+            <input type="checkbox" required style="margin-top: 2px;" />
+            <span>Ich stimme der Datenverarbeitung zur Aufnahme in AJ's Liefer-Touren zu.</span>
+          </label>
+        </div>
+        <div id="regMsg" hidden style="padding: 0.75rem; border-radius: 8px; background: rgba(65,76,9,0.12); color: #414C09; font-size: 0.85rem; margin-bottom: 1rem; text-align: center; font-weight: 600;">
+          ✓ Aufnahmeantrag übermittelt! AJ meldet sich innerhalb von 24h persönlich zur Freischaltung bei dir.
+        </div>
+        <button type="submit" class="btn btn-fill" style="width: 100%; justify-content: center; padding: 0.8rem; font-weight: 700;">
+          Kostenlos Mitglied werden →
+        </button>
+      </form>
+      <div style="margin-top: 1.2rem; text-align: center; border-top: 1px solid rgba(65,76,9,0.15); padding-top: 1rem;">
+        <span style="font-size: 0.82rem; color: #6B6A4C;">Bereits registriert? </span>
+        <a href="#login" data-register-close data-open-login style="font-size: 0.82rem; font-weight: 700; color: var(--ajs-terracotta, #97572A); text-decoration: underline;">Hier einloggen</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AJS Mitglieder-Login Modal -->
+<div id="ajs-login-modal" class="kat" role="dialog" aria-modal="true" aria-labelledby="login-modal-title" aria-hidden="true" hidden>
+  <div class="kat-bg" data-login-close></div>
+  <div class="kat-box" style="max-width: 440px; padding: 0;" tabindex="-1">
+    <div class="kat-head" style="background: var(--ajs-olive, #414C09);">
+      <h3 id="login-modal-title" class="kat-title" style="font-size: 1.3rem;">Mitglieder-Login</h3>
+      <button type="button" class="kat-close" data-login-close aria-label="Schließen">×</button>
+    </div>
+    <div class="kat-body" style="padding: 1.5rem 1.8rem;">
+      <p style="font-size: 0.9rem; line-height: 1.5; color: #3B3A26; margin-bottom: 1.4rem;">
+        Willkommen im Inner Circle. Bitte melde dich mit deiner hinterlegten E-Mail-Adresse und deinem Passwort an, um auf das Sortiment und deine Touren zuzugreifen.
+      </p>
+      <form id="ajsLoginForm" onsubmit="event.preventDefault(); document.getElementById('loginMsg').hidden = false;">
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.2rem;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="loginEmail">E-Mail-Adresse</label>
+            <input type="email" id="loginEmail" required placeholder="deine@adresse.de" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #23220F; margin-bottom: 0.35rem;" for="loginPassword">Passwort</label>
+            <input type="password" id="loginPassword" required placeholder="••••••••" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
+          </div>
+        </div>
+        <div id="loginMsg" hidden style="padding: 0.6rem; border-radius: 6px; background: rgba(168,58,104,0.12); color: #A83A68; font-size: 0.82rem; margin-bottom: 1rem; text-align: center;">
+          Konto noch in manueller Prüfung oder Zugangsdaten ungültig. Bei Fragen wende dich direkt an AJ.
+        </div>
+        <button type="submit" class="btn btn-fill" style="width: 100%; justify-content: center; padding: 0.8rem; font-weight: 700;">
+          Anmelden →
+        </button>
+      </form>
+      <div style="margin-top: 1.2rem; text-align: center; border-top: 1px solid rgba(65,76,9,0.15); padding-top: 1rem;">
+        <span style="font-size: 0.82rem; color: #6B6A4C;">Noch kein Mitglied? </span>
+        <a href="#contact" data-login-close style="font-size: 0.82rem; font-weight: 700; color: var(--ajs-terracotta, #97572A); text-decoration: underline;">Hier registrieren</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 </Base>
 
 <script is:inline>
@@ -79,7 +183,7 @@ const navLinks = [
   const html = document.documentElement;
 
   function targets() {
-    return [...document.querySelectorAll('#main > .hero-snap, #main > section, #main > .contact-footer-snap')];
+    return [...document.querySelectorAll('#main > .hero-snap, #main > section, #main > .contact-footer-snap')].filter(el => el.getAttribute('data-hpse-hidden') !== 'true');
   }
 
   function navH() {
@@ -100,7 +204,7 @@ const navLinks = [
     const from = window.scrollY;
     const dist = targetY - from;
     if (Math.abs(dist) < 2) { locked = false; if (onDone) onDone(); return; }
-    const dur = 525;
+    const dur = 405;
     let t0 = null;
     cancelAnimationFrame(animId);
     function step(ts) {
@@ -114,7 +218,7 @@ const navLinks = [
         acc     = 0;           // flush any accumulated wheel delta
         cooling = true;
         clearTimeout(coolTimer);
-        coolTimer = setTimeout(() => { cooling = false; }, 1000); // blocks momentum tail
+        coolTimer = setTimeout(() => { cooling = false; }, 460); // blocks momentum tail
         if (onDone) onDone();
       }
     }
@@ -161,11 +265,11 @@ const navLinks = [
     if (inScrollable(e.target)) return;
     e.preventDefault();
     if (locked || cooling) return;
-    if (Date.now() - lastGoAt < 1700) return; // hard inertia guard beyond cooling
+    if (Date.now() - lastGoAt < 460) return; // inertia guard preventing skipping
     acc += e.deltaY;
     clearTimeout(wt);
     wt = setTimeout(() => { acc = 0; }, 300);
-    if (Math.abs(acc) < 5) return;
+    if (Math.abs(acc) < 4.5) return;
     const dir = acc > 0 ? 1 : -1;
     acc = 0; clearTimeout(wt);
     lastGoAt = Date.now();
@@ -185,10 +289,98 @@ const navLinks = [
     go(dn ? 1 : -1);
   });
 
+  // ── Logo click — smooth scroll to top ────────────────────────────────────
+  document.querySelectorAll('a.logo').forEach(logo => {
+    logo.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (locked) return;
+      locked = true;
+      smoothTo(0);
+    });
+  });
+
+  // ── Register & Login modal handling ──────────────────────────────────────
+  const regModal = document.getElementById('ajs-register-modal');
+  function openRegisterModal() {
+    if (!regModal) return;
+    regModal.hidden = false;
+    requestAnimationFrame(() => regModal.classList.add('is-open'));
+    document.body.classList.add('kat-open');
+    regModal.querySelector('input')?.focus();
+  }
+  function closeRegisterModal() {
+    if (!regModal) return;
+    regModal.classList.remove('is-open');
+    document.body.classList.remove('kat-open');
+    setTimeout(() => { regModal.hidden = true; }, 220);
+  }
+
+  document.querySelectorAll('a[href="#register"], [data-open-register]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeLoginModal();
+      openRegisterModal();
+    });
+  });
+
+  regModal?.querySelectorAll('[data-register-close]').forEach(el => {
+    el.addEventListener('click', () => closeRegisterModal());
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && regModal && !regModal.hidden) {
+      closeRegisterModal();
+    }
+  });
+
+  // ── Login modal handling ─────────────────────────────────────────────────
+  const loginModal = document.getElementById('ajs-login-modal');
+  function openLoginModal() {
+    if (!loginModal) return;
+    loginModal.hidden = false;
+    requestAnimationFrame(() => loginModal.classList.add('is-open'));
+    document.body.classList.add('kat-open');
+    loginModal.querySelector('input')?.focus();
+  }
+  function closeLoginModal() {
+    if (!loginModal) return;
+    loginModal.classList.remove('is-open');
+    document.body.classList.remove('kat-open');
+    setTimeout(() => { loginModal.hidden = true; }, 220);
+  }
+
+  document.querySelectorAll('a[href="#login"], [data-open-login]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openLoginModal();
+    });
+  });
+
+  loginModal?.querySelectorAll('[data-login-close]').forEach(el => {
+    el.addEventListener('click', () => closeLoginModal());
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && loginModal && !loginModal.hidden) {
+      closeLoginModal();
+    }
+  });
+
   // ── Nav link clicks — use same smooth animation ───────────────────────────
   document.querySelectorAll('#navLinks a[href*="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
-      const id = a.getAttribute('href').split('#')[1];
+      const href = a.getAttribute('href') || '';
+      if (href.includes('#login')) {
+        e.preventDefault();
+        openLoginModal();
+        return;
+      }
+      if (href.includes('#register')) {
+        e.preventDefault();
+        openRegisterModal();
+        return;
+      }
+      const id = href.split('#')[1];
       const el = id && document.getElementById(id);
       if (!el) return;
       e.preventDefault();
@@ -689,3 +881,5 @@ const navLinks = [
   revealNow(0);
 }());
 </script>
+  </ClientGate>
+</Base>

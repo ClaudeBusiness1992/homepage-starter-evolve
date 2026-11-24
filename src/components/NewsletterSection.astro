@@ -1,0 +1,198 @@
+---
+import { isSectionEnabled } from '../lib/permissions';
+
+const isEnabled = isSectionEnabled('newsletter');
+---
+
+{isEnabled && (
+  <section class="section" id="newsletter">
+    <div class="wrap">
+      <div class="newsletter-box">
+        <div class="newsletter-content">
+          <h2 class="h2" style="margin: 0.5rem 0 1rem; font-size: 2rem;">
+            Newsletter
+          </h2>
+          <p class="sub" style="margin-bottom: 0;">
+            Immer einen Schritt voraus sein: Erhalten Sie monatlich praxiserprobte Strategien, Einblicke in moderne Web-Architekturen und rechtssichere Digital-Tipps direkt in Ihr Postfach. Kein Spam, jederzeit mit 1 Klick abmeldbar.
+          </p>
+        </div>
+
+        <form class="newsletter-form" id="public-newsletter-form">
+          <!-- Honeypot -->
+          <div style="position: absolute; left: -9999px;">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <div class="newsletter-fields">
+            <input
+              type="text"
+              name="firstName"
+              placeholder="Ihr Vorname (optional)"
+              class="nl-input"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Ihre E-Mail-Adresse *"
+              required
+              class="nl-input"
+            />
+            <button type="submit" class="nl-btn" id="nl-submit-btn">
+              Anmelden
+            </button>
+          </div>
+
+          <div class="nl-consent">
+            <label class="nl-consent-label">
+              <input type="checkbox" required class="nl-checkbox" />
+              <span>
+                Ich willige in den Erhalt des Newsletters ein und habe die <a href="/datenschutz" target="_blank">Datenschutzerklärung</a> zur Kenntnis genommen.
+              </span>
+            </label>
+          </div>
+
+          <div id="nl-status" class="nl-status-msg"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .newsletter-box {
+    background: color-mix(in srgb, var(--cream) 6%, var(--ink));
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+    border-radius: var(--r-lg, 0.75rem);
+    padding: 1.25rem 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.75rem;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    box-shadow: var(--shadow);
+  }
+  .newsletter-fields {
+    display: flex;
+    gap: 0.65rem;
+    margin-bottom: 0.65rem;
+    flex-wrap: wrap;
+  }
+  .nl-input {
+    flex: 1;
+    min-width: 160px;
+    padding: 0.55rem 0.85rem;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--r, 0.5rem);
+    color: #ffffff;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .nl-input:focus {
+    border-color: var(--accent);
+  }
+  .nl-btn {
+    padding: 0.55rem 1.25rem;
+    background: var(--accent);
+    color: #ffffff;
+    border: 1px solid var(--ink);
+    border-radius: var(--r, 0.5rem);
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 40%, transparent);
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .nl-btn:hover { background: color-mix(in srgb, var(--accent) 78%, #000); }
+  .nl-btn:active { transform: scale(0.98); }
+  .nl-consent {
+    font-size: 0.75rem;
+    color: color-mix(in srgb, var(--cream) 60%, var(--ink));
+    line-height: 1.4;
+  }
+  .nl-consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+  .nl-consent a {
+    color: var(--accent-light);
+    text-decoration: underline;
+  }
+  .nl-status-msg {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .newsletter-box {
+      grid-template-columns: 1fr;
+      padding: 2rem 1.5rem;
+      gap: 2rem;
+    }
+  }
+</style>
+
+<script is:inline>
+  const nlForm = document.getElementById('public-newsletter-form');
+  const nlBtn = document.getElementById('nl-submit-btn');
+  const nlStatus = document.getElementById('nl-status');
+
+  if (nlForm) {
+    nlForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (nlBtn) {
+        nlBtn.disabled = true;
+        nlBtn.textContent = 'Wird gesendet...';
+      }
+      if (nlStatus) nlStatus.style.display = 'none';
+
+      const formData = new FormData(nlForm);
+      const payload = {
+        firstName: formData.get('firstName'),
+        email: formData.get('email'),
+        website: formData.get('website'),
+      };
+
+      try {
+        const res = await fetch('/api/public/newsletter/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const d = await res.json();
+
+        if (res.ok) {
+          nlForm.reset();
+          if (nlStatus) {
+            nlStatus.style.color = '#34d399';
+            nlStatus.textContent = d.message || 'Fast geschafft! Bitte prüfen Sie Ihr E-Mail-Postfach.';
+            nlStatus.style.display = 'block';
+          }
+        } else {
+          if (nlStatus) {
+            nlStatus.style.color = '#f87171';
+            nlStatus.textContent = d.error || 'Fehler bei der Anmeldung.';
+            nlStatus.style.display = 'block';
+          }
+        }
+      } catch (err) {
+        if (nlStatus) {
+          nlStatus.style.color = '#f87171';
+          nlStatus.textContent = 'Verbindungsfehler. Bitte versuchen Sie es erneut.';
+          nlStatus.style.display = 'block';
+        }
+      } finally {
+        if (nlBtn) {
+          nlBtn.disabled = false;
+          nlBtn.textContent = 'Anmelden';
+        }
+      }
+    });
+  }
+</script>

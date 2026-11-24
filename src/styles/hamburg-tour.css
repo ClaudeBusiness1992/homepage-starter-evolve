@@ -1,0 +1,449 @@
+/* Hamburg Liefertouren & Zonen — Pixel & Code Markenstil.
+   Helle Section (Cream) mit harmonischer Vektorkarte & dunkler Info-Karte (Ink).
+   Alle Farben exakt im Marken-Farbkonzept (Cream, Ink, Accent, Sage, Gold). */
+
+#hamburg-tour {
+  background: var(--ink, #141724);
+  color: var(--cream, #f5f0e8);
+  height: calc(100dvh - var(--nav-h));
+  min-height: calc(100dvh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+#hamburg-tour > .wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  margin-block: auto;
+}
+
+#hamburg-tour .section-hd {
+  margin-bottom: 0.85rem;
+}
+
+#hamburg-tour .h2 {
+  color: var(--cream, #f5f0e8);
+}
+
+#hamburg-tour .sub {
+  color: color-mix(in srgb, var(--cream, #f5f0e8) 82%, var(--ink));
+  opacity: 1;
+  font-size: clamp(0.82rem, 1.6dvh, 0.92rem);
+  line-height: 1.4;
+  margin-bottom: 0.35rem;
+}
+
+.ht-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.25rem;
+  align-items: stretch;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* ── Karte ── */
+.ht-map {
+  display: flex;
+  flex-direction: column;
+}
+
+.ht-map-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #0f121d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ht-map-frame img.ht-map-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ht-map-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ht-map-frame svg {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: block;
+}
+
+.ht-river {
+  fill: none;
+  stroke: #8fb6c4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.ht-water {
+  fill: #8fb6c4;
+  stroke: #769da8;
+  stroke-width: 1.5;
+  pointer-events: none;
+}
+
+.ht-zone {
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.ht-zone .ht-zone-shape {
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transition: fill 0.2s ease, stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.ht-zone[data-zone="nord"] .ht-zone-shape {
+  fill: #e0ede5;
+  stroke: var(--sage, #4a7c6f);
+}
+.ht-zone[data-zone="nord"] .ht-zone-label {
+  fill: #234b41;
+}
+
+.ht-zone[data-zone="west"] .ht-zone-shape {
+  fill: #eae5f0;
+  stroke: #7c6a8a;
+}
+.ht-zone[data-zone="west"] .ht-zone-label {
+  fill: #4d3d59;
+}
+
+.ht-zone[data-zone="mitte-ost"] .ht-zone-shape {
+  fill: #faece6;
+  stroke: var(--accent, #c8520e);
+}
+.ht-zone[data-zone="mitte-ost"] .ht-zone-label {
+  fill: #8f3204;
+}
+
+.ht-zone[data-zone="sued"] .ht-zone-shape {
+  fill: #faf4e6;
+  stroke: #d49b35;
+}
+.ht-zone[data-zone="sued"] .ht-zone-label {
+  fill: #7a5513;
+}
+
+.ht-zone:hover .ht-zone-shape,
+.ht-zone:focus-visible .ht-zone-shape {
+  stroke-width: 3.5;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
+}
+
+/* Aktiver Zustand: kräftige Markenflächen & weiße Schrift */
+.ht-zone.is-active .ht-zone-shape {
+  stroke-width: 3;
+}
+
+.ht-zone[data-zone="nord"].is-active .ht-zone-shape {
+  fill: var(--sage, #4a7c6f);
+  stroke: #1c3c34;
+}
+.ht-zone[data-zone="nord"].is-active .ht-zone-label {
+  fill: #ffffff;
+}
+
+.ht-zone[data-zone="west"].is-active .ht-zone-shape {
+  fill: #7c6a8a;
+  stroke: #3b2c45;
+}
+.ht-zone[data-zone="west"].is-active .ht-zone-label {
+  fill: #ffffff;
+}
+
+.ht-zone[data-zone="mitte-ost"].is-active .ht-zone-shape {
+  fill: var(--accent, #c8520e);
+  stroke: #732402;
+}
+.ht-zone[data-zone="mitte-ost"].is-active .ht-zone-label {
+  fill: #ffffff;
+}
+
+.ht-zone[data-zone="sued"].is-active .ht-zone-shape {
+  fill: #d49b35;
+  stroke: #66450c;
+}
+.ht-zone[data-zone="sued"].is-active .ht-zone-label {
+  fill: #ffffff;
+}
+
+.ht-zone-label {
+  font-family: var(--sans);
+  font-weight: 800;
+  pointer-events: none;
+  transition: fill 0.2s ease;
+}
+
+/* ── Seitenpanel ── */
+.ht-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.ht-info {
+  background: var(--ink);
+  color: var(--cream);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-lg);
+  padding: 0.9rem 1.1rem;
+  box-shadow: var(--shadow);
+}
+
+.ht-info-kicker {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-light);
+  margin-bottom: 0.25rem;
+}
+
+.ht-info h3 {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.15;
+  margin: 0 0 0.35rem;
+  color: var(--cream);
+}
+
+.ht-info-days {
+  margin: 0 0 0.45rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--cream);
+}
+
+.ht-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.5rem;
+  padding: 0;
+}
+
+.ht-chips li {
+  background: rgba(245, 240, 232, 0.14);
+  border: 1px solid rgba(245, 240, 232, 0.25);
+  color: var(--cream);
+  border-radius: var(--r-pill);
+  padding: 0.15rem 0.55rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.ht-next {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.82rem;
+}
+
+.ht-next strong {
+  color: var(--cream);
+}
+
+.ht-tools {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-lg);
+  padding: 0.85rem 1rem;
+  display: grid;
+  gap: 0.65rem;
+  box-shadow: var(--shadow);
+}
+
+.ht-field label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.82rem;
+  margin-bottom: 0.3rem;
+  color: var(--cream);
+}
+
+.ht-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ht-input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--cream);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--r);
+  padding: 0.45rem 0.65rem;
+}
+
+.ht-input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--cream);
+}
+
+.ht-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--r);
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.ht-btn:active {
+  transform: translateY(1px);
+}
+
+.ht-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.ht-btn--primary {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.ht-btn--primary:hover {
+  background: #000000;
+}
+
+.ht-btn--geo {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--cream);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ht-btn--geo:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.ht-btn[disabled] {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.ht-msg {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--cream);
+}
+
+.ht-msg--ok {
+  font-weight: 700;
+}
+
+.ht-msg--error {
+  font-weight: 700;
+  color: #8f2f0a;
+}
+
+.ht-legend {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem 0.6rem;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: var(--cream);
+}
+
+.ht-legend button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 4px;
+  padding: 0.1rem 0.2rem;
+}
+
+.ht-legend button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.ht-legend button.is-active {
+  font-weight: 700;
+  color: var(--accent-light, #e2a63b);
+}
+
+.ht-dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  border: 1px solid rgba(28, 28, 28, 0.3);
+  flex-shrink: 0;
+}
+
+.ht-dot[data-zone="nord"] { background: var(--sage, #4a7c6f); }
+.ht-dot[data-zone="west"] { background: #7c6a8a; }
+.ht-dot[data-zone="mitte-ost"] { background: var(--accent, #c8520e); }
+.ht-dot[data-zone="sued"] { background: #d49b35; }
+
+/* ── Responsive: unter 900px stapeln ── */
+@media (max-width: 900px) {
+  main > section#hamburg-tour {
+    height: auto;
+    min-height: calc(100dvh - var(--nav-h));
+    overflow: visible;
+  }
+
+  .ht-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .ht-map-frame svg {
+    aspect-ratio: 540 / 390;
+    height: auto;
+  }
+
+  .ht-panel {
+    overflow: visible;
+  }
+
+  .ht-legend {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+

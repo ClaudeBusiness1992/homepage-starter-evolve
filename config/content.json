@@ -11,9 +11,9 @@
     "about": {
       "enabled": true,
       "label": "Das Team",
-      "headline": "Zwei Köpfe, eine Leidenschaft",
-      "subline": "Wir sind ein kleines, eingespieltes Team aus Designer und Entwickler — und wir lieben es, Ideen in funktionierende Websites zu verwandeln.",
-      "intro": "Wir glauben, dass jedes Unternehmen — egal wie klein — eine Website verdient, die wirklich wirkt. Deshalb arbeiten wir persönlich, direkt und ohne Agentur-Overhead. Hier kannst du euren gemeinsamen Ansatz, eure Geschichte oder das beschreiben, was euch von anderen unterscheidet.",
+      "headline": "Über uns",
+      "subline": "Zwei Köpfe, eine Leidenschaft — Wir sind ein eingespieltes Team und lieben funktionierendes Webdesign.",
+      "intro": "Wir glauben, dass jedes Unternehmen eine Website verdient, die wirklich wirkt. Deshalb arbeiten wir persönlich, direkt und ohne Agentur-Overhead.",
       "members": [
         {
           "name": "[Dein Name]",
@@ -32,8 +32,8 @@
     "services": {
       "enabled": true,
       "label": "Was wir tun",
-      "headline": "Alles aus einer Hand",
-      "subline": "Von der ersten Idee bis zur fertigen Website — und dauerhaft darüber hinaus.",
+      "headline": "Leistungen",
+      "subline": "Alles aus einer Hand — Von der ersten Idee bis zur fertigen Website und dauerhaft darüber hinaus.",
       "items": [
         { "icon": "✦", "title": "Webdesign",            "text": "Individuelle Designs, die zu Ihrem Unternehmen passen und bei Besuchern einen bleibenden Eindruck hinterlassen." },
         { "icon": "◈", "title": "Responsive Umsetzung", "text": "Ihre Website sieht auf jedem Gerät perfekt aus — ob Smartphone, Tablet oder großem Monitor." },
@@ -55,8 +55,8 @@
     "pricing": {
       "enabled": true,
       "label": "Transparente Preise",
-      "headline": "Kein Versteckspiel bei den Kosten",
-      "subline": "",
+      "headline": "Preise",
+      "subline": "Kein Versteckspiel bei den Kosten — Transparente Festpreise ohne versteckte Gebühren.",
       "packages": [
         {
           "name": "Starter",
@@ -113,8 +113,8 @@
     "contact": {
       "enabled": true,
       "label": "Kontakt",
-      "headline": "Bereit für Ihre neue Website?",
-      "subline": "Schreiben Sie uns — wir melden uns innerhalb von 24 Stunden und besprechen Ihr Projekt ganz unverbindlich."
+      "headline": "Kontakt",
+      "subline": "Bereit für Ihre neue Website? Schreiben Sie uns — wir melden uns innerhalb von 24 Stunden."
     },
     "footer": {
       "enabled": true,

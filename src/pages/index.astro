@@ -15,10 +15,15 @@ import Gallery  from '../sections/Gallery.astro';
 import Reviews  from '../sections/Reviews.astro';
 import Booking   from '../sections/Booking.astro';
 import Sponsors  from '../sections/Sponsors.astro';
+import HamburgTourSection from '../components/HamburgTourSection.astro';
 import Contact   from '../sections/Contact.astro';
 import Footer    from '../sections/Footer.astro';
 import SidebarAds from '../components/SidebarAds.astro';
 import LiveEditor from '../components/LiveEditor.astro';
+import VerifiedReviews from '../components/VerifiedReviews.astro';
+import NewsletterSection from '../components/NewsletterSection.astro';
+import ServiceReminderSection from '../components/ServiceReminderSection.astro';
+import SocialLinks from '../components/SocialLinks.astro';
 
 const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
@@ -31,17 +36,21 @@ const labelFor = (id: string, fallback: string) =>
 
 const cta = (meta.nav ?? []).find((l: any) => l.cta);
 const orderedSections = [
-  { id: 'about',    label: labelFor('about',    'Über uns'),    enabled: s.about?.enabled !== false },
-  { id: 'services', label: labelFor('services', 'Leistungen'),  enabled: s.services?.enabled !== false },
-  { id: 'gallery',  label: 'Galerie',                            enabled: !!(x.active?.gallery && x.gallery) },
-  { id: 'pricing',  label: labelFor('pricing',  'Preise'),      enabled: s.pricing?.enabled !== false },
-  { id: 'reviews',  label: 'Bewertungen',                        enabled: !!(x.active?.reviews  && x.reviews) },
-  { id: 'booking',  label: 'Buchung',                            enabled: !!(x.active?.booking  && x.booking) },
-  { id: 'sponsors', label: 'Sponsoren',                          enabled: !!(x.active?.sponsors && x.sponsors) },
+  { id: 'hero',     label: 'Start' },
+  { id: 'about',    label: labelFor('about',    'Über uns') },
+  { id: 'services', label: labelFor('services', 'Leistungen') },
+  { id: 'gallery',  label: 'Galerie' },
+  { id: 'pricing',  label: labelFor('pricing',  'Preise') },
+  { id: 'reviews',  label: 'Bewertungen' },
+  { id: 'booking',  label: 'Buchung' },
+  { id: 'sponsors', label: 'Sponsoren' },
+  { id: 'hamburg-tour', label: 'Hamburg Touren' },
+  { id: 'service-erinnerung', label: 'Erinnerungs-Service' },
+  { id: 'newsletter', label: 'Newsletter' },
 ];
 
 const navLinks = [
-  ...orderedSections.filter(o => o.enabled).map(o => ({ label: o.label, href: `#${o.id}`, section: o.id })),
+  ...orderedSections.map(o => ({ label: o.label, href: `#${o.id}`, section: o.id })),
   ...(cta ? [cta] : [{ label: 'Kontakt', href: '#contact', section: 'contact', cta: true }]),
 ];
 
@@ -68,8 +77,12 @@ const isPreviewDeploy =
     {x.active?.gallery   && x.gallery  && <Gallery   {...x.gallery} />}
     {s.pricing?.enabled  && <Pricing   {...s.pricing} />}
     {x.active?.reviews   && x.reviews  && <Reviews  {...x.reviews} stats={s.stats?.enabled ? s.stats.items : []} agencyName={meta.siteName} agencyUrl={Astro.site?.href} telephone={meta.phone} />}
+    <VerifiedReviews />
     {x.active?.booking   && x.booking   && <Booking   {...x.booking} />}
     {x.active?.sponsors  && x.sponsors  && <Sponsors  {...x.sponsors} />}
+    <HamburgTourSection />
+    <ServiceReminderSection />
+    <NewsletterSection />
     {(s.contact?.enabled || s.footer?.enabled) && (
       <div class="contact-footer-snap">
         {s.contact?.enabled  && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} availability={x.booking?.availability} />}
@@ -81,9 +94,7 @@ const isPreviewDeploy =
   {x.active?.sidebarAds && x.sidebarAds && (
     <SidebarAds left={x.sidebarAds.left} right={x.sidebarAds.right} />
   )}
-  {isPreviewDeploy
-    ? <PreviewLogin clients={clientsConfig.clients} />
-    : <LiveEditor />}
+  <LiveEditor meta={meta} theme={theme} />
 </Base>
 
 <script is:inline>
@@ -112,7 +123,7 @@ const isPreviewDeploy =
     const from = window.scrollY;
     const dist = targetY - from;
     if (Math.abs(dist) < 2) { locked = false; if (onDone) onDone(); return; }
-    const dur = 750;
+    const dur = 405;
     let t0 = null;
     cancelAnimationFrame(animId);
     function step(ts) {
@@ -126,7 +137,7 @@ const isPreviewDeploy =
         acc     = 0;           // flush any accumulated wheel delta
         cooling = true;
         clearTimeout(coolTimer);
-        coolTimer = setTimeout(() => { cooling = false; }, 400); // blocks momentum tail
+        coolTimer = setTimeout(() => { cooling = false; }, 460); // blocks momentum tail
         if (onDone) onDone();
       }
     }
@@ -171,19 +182,23 @@ const isPreviewDeploy =
 
   // ── Wheel (mouse + trackpad) ─────────────────────────────────────────────
   // Any vertical gesture triggers exactly one section forward/back.
-  // Threshold 20 = reacts to even a light two-finger nudge.
+  // Threshold reacts to even a light two-finger nudge.
   let acc = 0, wt = null, lastGoAt = 0;
   window.addEventListener('wheel', (e) => {
     if (window.innerWidth < 768) return;
+    if (document.body.classList.contains('kat-open') || document.body.classList.contains('hpse-drawer-open')) {
+      if (!inScrollable(e.target)) e.preventDefault();
+      return;
+    }
     if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) return; // skip horizontal swipes
     if (inScrollable(e.target)) return;
     e.preventDefault();
     if (locked || cooling) return;
-    if (Date.now() - lastGoAt < 800) return; // inertia guard for snappy desktop monitors
+    if (Date.now() - lastGoAt < 460) return; // inertia guard preventing skipping
     acc += e.deltaY;
     clearTimeout(wt);
-    wt = setTimeout(() => { acc = 0; }, 200);
-    if (Math.abs(acc) < 5) return;
+    wt = setTimeout(() => { acc = 0; }, 300);
+    if (Math.abs(acc) < 4.5) return;
     const dir = acc > 0 ? 1 : -1;
     acc = 0; clearTimeout(wt);
     lastGoAt = Date.now();
@@ -193,6 +208,7 @@ const isPreviewDeploy =
   // ── Keyboard ─────────────────────────────────────────────────────────────
   document.addEventListener('keydown', (e) => {
     if (window.innerWidth < 768) return;
+    if (document.body.classList.contains('kat-open') || document.body.classList.contains('hpse-drawer-open')) return;
     const dn = e.key === 'ArrowDown' || e.key === 'PageDown';
     const up = e.key === 'ArrowUp'   || e.key === 'PageUp';
     if (!dn && !up) return;
@@ -202,10 +218,21 @@ const isPreviewDeploy =
     go(dn ? 1 : -1);
   });
 
+  // ── Logo click — smooth scroll to top ────────────────────────────────────
+  document.querySelectorAll('a.logo, a[href="#hero"]').forEach(logo => {
+    logo.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (locked) return;
+      locked = true;
+      smoothTo(0);
+    });
+  });
+
   // ── Nav link clicks — use same smooth animation ───────────────────────────
   document.querySelectorAll('#navLinks a[href*="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
-      const id = a.getAttribute('href').split('#')[1];
+      const href = a.getAttribute('href') || '';
+      const id = href.split('#')[1];
       const el = id && document.getElementById(id);
       if (!el) return;
       e.preventDefault();
@@ -242,6 +269,11 @@ const isPreviewDeploy =
   document.querySelectorAll('select').forEach(sel => {
     sel.addEventListener('wheel', (e) => { if (window.innerWidth >= 768) e.preventDefault(); }, { passive: false });
   });
+
+  window.__HPSE_SCROLL_TO__ = function (targetEl) {
+    if (!targetEl) return;
+    smoothTo(Math.max(0, targetEl.offsetTop - navH()));
+  };
 }());
 </script>
 
@@ -253,7 +285,7 @@ const isPreviewDeploy =
 
   var SWIPE = 44;   /* px-Schwelle für Sektionswechsel    */
   var DIR   = 8;    /* px bis Richtung festgelegt wird    */
-  var EASE  = 'transform .4s cubic-bezier(.25,.46,.45,.94)';
+  var EASE  = 'transform .28s cubic-bezier(.25,.46,.45,.94)';
   var HKEY  = 'pxc-swipe-v1';  /* localStorage-Key Swipe-Hint      */
   var PGSZ  = 4;    /* Gallery-Bilder pro Seite (2×2)     */
 
@@ -280,10 +312,42 @@ const isPreviewDeploy =
     track.style.transition = snap ? 'none' : EASE;
     track.style.transform  = 'translateX(calc(' + (-n * 100) + 'vw))';
     tabSync();
+    edgeSync();
+    scheduleNudge();
     if (!snap) {
       busy = true;
-      setTimeout(function () { busy = false; revealNow(n); }, 460);
+      setTimeout(function () { busy = false; revealNow(n); }, 340);
     }
+  }
+
+  /* Dezente Wisch-Andeutung: Randpfeile + sanfter Anstoß, bis zum ersten echten Wischen */
+  var swiped = false, nudged = {}, nudgeT = null;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var edgeL = document.createElement('div'), edgeR = document.createElement('div');
+  edgeL.className = 'swipe-edge swipe-edge--l';
+  edgeR.className = 'swipe-edge swipe-edge--r';
+  edgeL.setAttribute('aria-hidden', 'true'); edgeR.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(edgeL); document.body.appendChild(edgeR);
+  function edgeSync() {
+    edgeL.classList.toggle('off', cur <= 0);
+    edgeR.classList.toggle('off', cur >= slides.length - 1);
+  }
+  function scheduleNudge() {
+    clearTimeout(nudgeT);
+    if (swiped || reduceMotion) return;
+    nudgeT = setTimeout(nudge, 3200);
+  }
+  function nudge() {
+    if (swiped || busy || nudged[cur] || cur >= slides.length - 1) return;
+    if (document.body.classList.contains('kat-open') || document.body.classList.contains('hpse-drawer-open')) return;
+    nudged[cur] = true;
+    track.style.transition = 'transform .45s ease-out';
+    track.style.transform  = 'translateX(calc(' + (-cur * 100) + 'vw - 24px))';
+    setTimeout(function () {
+      if (busy) return;
+      track.style.transition = 'transform .7s ease-in-out';
+      track.style.transform  = 'translateX(calc(' + (-cur * 100) + 'vw))';
+    }, 480);
   }
 
   function revealNow(n) {
@@ -316,14 +380,30 @@ const isPreviewDeploy =
       else if (slide.classList.contains('contact-footer-snap')) label = 'Kontakt';
       else label = sId || ('Slide ' + (idx + 1));
     }
+    var tabSec = sId || (slide.classList.contains('hero-snap') ? 'hero' : (slide.classList.contains('contact-footer-snap') ? 'contact' : ''));
     var tab = document.createElement('div');
     tab.className = 'mnt';
+    tab.setAttribute('data-tab-id', tabSec);
     tab.textContent = label;
     (function (n) { tab.addEventListener('click', function () { goTo(n); }); })(idx);
     tabBar2.appendChild(tab);
     tabEls.push(tab);
   });
   document.body.appendChild(tabBar2);
+
+  window.__HPSE_MOBILE_REINDEX__ = function () {
+    slides = [].slice.call(track.children);
+    tabEls.forEach(function (tab) {
+      var secId = tab.getAttribute('data-tab-id');
+      var targetSlide = slides.find(function(s) {
+        if (secId === 'hero') return s.classList.contains('hero-snap') || s.id === 'hero';
+        if (secId === 'contact') return s.classList.contains('contact-footer-snap') || s.id === 'contact';
+        return s.id === secId;
+      });
+      var newIdx = slides.indexOf(targetSlide);
+      tab.onclick = function () { if (newIdx >= 0) goTo(newIdx); };
+    });
+  };
 
   /* Measure actual nav + tab heights and set #main size precisely */
   var navEl2 = document.getElementById('nav');
@@ -554,11 +634,12 @@ const isPreviewDeploy =
 
   function lbOpen() {
     var lb = document.getElementById('lightbox');
-    return lb && lb.classList.contains('is-open');
+    return document.body.classList.contains('kat-open') || document.body.classList.contains('hpse-drawer-open') || (lb && lb.classList.contains('is-open'));
   }
 
   document.addEventListener('touchstart', function (e) {
     if (lbOpen()) return;
+    clearTimeout(nudgeT);
     x0 = e.touches[0].clientX;
     y0 = e.touches[0].clientY;
     axis = null;
@@ -602,6 +683,7 @@ const isPreviewDeploy =
     if (axis === 'h') {
       var hId2 = hSubId();
       if (Math.abs(dx) >= SWIPE) {
+        swiped = true;
         var hDir = dx < 0 ? 1 : -1;
         if (hId2 && !hSubGo(hDir)) goTo(cur + hDir);
         else if (!hId2) goTo(cur + hDir);

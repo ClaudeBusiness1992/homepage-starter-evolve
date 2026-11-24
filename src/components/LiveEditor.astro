@@ -1,8 +1,22 @@
 ---
 /* LiveEditor.astro — Modulare Bearbeitungsleiste mit Accordion & Darstellungsoptionen */
+interface Props {
+  meta?: any;
+  theme?: any;
+}
+const { meta = {}, theme = {} } = Astro.props;
+const siteName = meta.siteName || 'Website';
+const safeTheme = {
+  accent: theme.accent || '#c8520e',
+  ink: theme.ink || '#1c1c1c',
+  cream: theme.cream || '#f5f0e8',
+  sage: theme.sage || '#4a7c6f',
+  accentLight: theme.accentLight || '#e2a63b',
+  inkMuted: theme.inkMuted || '#5c5c5c'
+};
 ---
 
-<aside id="hpse-editor" class="hpse-editor" aria-label="Live-Editor Bearbeitungsleiste">
+<aside id="hpse-editor" class="hpse-editor" data-theme={JSON.stringify(safeTheme)} data-sitename={siteName} aria-label="Live-Editor Bearbeitungsleiste">
   <button id="hpse-editor-toggle" class="hpse-fab" type="button" aria-expanded="false" aria-controls="hpse-drawer" title="Live-Editor öffnen (Alt + E)">
     <span class="hpse-fab-icon" aria-hidden="true">⚙</span>
     <span class="hpse-fab-lbl">Editor</span>
@@ -20,28 +34,73 @@
     <div class="hpse-drawer-body">
       <!-- Bereiche mit aufklappbaren Einstellungen -->
       <div class="hpse-group">
-        <div class="hpse-group-head">
-          <label class="hpse-group-title">Bereiche & Einstellungen</label>
-          <button id="hpse-sections-reset" type="button" class="hpse-text-btn">Alle an</button>
+        <div class="hpse-group-head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <label class="hpse-group-title" style="margin-bottom: 0;">Bereiche & Einstellungen</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button id="hpse-open-sort-btn" type="button" class="hpse-sort-trigger-btn" title="Reihenfolge der Bereiche anpassen">
+              <span class="hpse-sort-btn-icon">⇅</span>
+              <span>Reihenfolge</span>
+            </button>
+            <button id="hpse-sections-reset" type="button" class="hpse-text-btn">Alle an</button>
+          </div>
         </div>
-        <p class="hpse-help">Klicke auf einen Bereich, um Details und Optionen aufzuklappen.</p>
-        
-        <div class="hpse-accordion" id="hpse-accordion">
-          <!-- Countdown -->
-          <div class="hpse-acc-item" data-acc-id="countdown">
-            <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
-                <input type="checkbox" data-section="countdown" checked />
+        <p class="hpse-help" style="margin-bottom: 12px;">Klicke auf einen Bereich, um Details und Optionen aufzuklappen.</p>
+
+        <!-- Countdown als modularer Anhang -->
+        <div class="hpse-addon-box" id="hpse-addon-box">
+          <div class="hpse-addon-header" id="hpse-addon-header">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" id="hpse-toggle-countdown" data-section="countdown" checked />
                 <span class="hpse-switch"></span>
               </label>
-              <span class="hpse-acc-title">Event-Countdown</span>
+              <div>
+                <div class="hpse-addon-title">Event-Countdown</div>
+                <div class="hpse-addon-subtitle">Modularer Anhang für einen beliebigen Bereich</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="hpse-addon-badge">Anhang</span>
+              <span class="hpse-addon-arrow" id="hpse-addon-arrow" aria-hidden="true">›</span>
             </div>
           </div>
-
+          <div class="hpse-addon-body" id="hpse-cd-options" hidden>
+            <div class="hpse-fields-grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+              <div class="hpse-field">
+                <label class="hpse-field-label">Anhang an Bereich:</label>
+                <select id="hpse-cd-target" class="hpse-select">
+                  <option value="hero" selected>Hero (Startbereich)</option>
+                  <option value="about">Über uns</option>
+                  <option value="services">Leistungen / So funktioniert's</option>
+                  <option value="gallery">Galerie / Sortiment</option>
+                  <option value="cta">Mitgliedschaft (Banner)</option>
+                  <option value="pricing">Preise</option>
+                  <option value="reviews">Bewertungen</option>
+                  <option value="booking">Buchung / Termin</option>
+                  <option value="sponsors">Sponsoren / Partner</option>
+                  <option value="hamburg-tour">Hamburg Touren</option>
+                  <option value="service-erinnerung">Erinnerungs-Service</option>
+                  <option value="newsletter">Newsletter</option>
+                  <option value="contact">Kontakt</option>
+                </select>
+              </div>
+              <div class="hpse-field">
+                <label class="hpse-field-label">Platzierung:</label>
+                <select id="hpse-cd-pos" class="hpse-select">
+                  <option value="before" selected>Oberhalb des Bereichs</option>
+                  <option value="after">Unterhalb des Bereichs</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="hpse-accordion" id="hpse-accordion">
           <!-- Hero -->
-          <div class="hpse-acc-item" data-acc-id="hero">
+          <div class="hpse-acc-item" data-acc-id="hero" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="hero" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -50,8 +109,9 @@
           </div>
 
           <!-- Über uns -->
-          <div class="hpse-acc-item" data-acc-id="about">
+          <div class="hpse-acc-item" data-acc-id="about" draggable="true">
             <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
               <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="about" checked />
                 <span class="hpse-switch"></span>
@@ -74,8 +134,9 @@
           </div>
 
           <!-- Leistungen -->
-          <div class="hpse-acc-item" data-acc-id="services">
+          <div class="hpse-acc-item" data-acc-id="services" draggable="true">
             <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
               <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="services" checked />
                 <span class="hpse-switch"></span>
@@ -108,8 +169,9 @@
           </div>
 
 <!-- Galerie / Sortiment -->
-          <div class="hpse-acc-item" data-acc-id="gallery">
+          <div class="hpse-acc-item" data-acc-id="gallery" draggable="true">
             <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
               <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="gallery" checked />
                 <span class="hpse-switch"></span>
@@ -149,10 +211,23 @@
             </div>
           </div>
 
-          <!-- Preise -->
-          <div class="hpse-acc-item" data-acc-id="pricing">
+          <!-- Mitgliedschaft (Banner) -->
+          <div class="hpse-acc-item" data-acc-id="cta" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" data-section="cta" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Mitgliedschaft (Banner)</span>
+            </div>
+          </div>
+
+          <!-- Preise -->
+          <div class="hpse-acc-item" data-acc-id="pricing" draggable="true">
+            <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="pricing" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -161,8 +236,9 @@
           </div>
 
 <!-- Bewertungen -->
-          <div class="hpse-acc-item" data-acc-id="reviews">
+          <div class="hpse-acc-item" data-acc-id="reviews" draggable="true">
             <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
               <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="reviews" checked />
                 <span class="hpse-switch"></span>
@@ -202,9 +278,10 @@
           </div>
 
           <!-- Buchung -->
-          <div class="hpse-acc-item" data-acc-id="booking">
+          <div class="hpse-acc-item" data-acc-id="booking" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="booking" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -213,9 +290,10 @@
           </div>
 
           <!-- Sponsoren -->
-          <div class="hpse-acc-item" data-acc-id="sponsors">
+          <div class="hpse-acc-item" data-acc-id="sponsors" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="sponsors" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -223,10 +301,47 @@
             </div>
           </div>
 
-          <!-- Kontakt -->
-          <div class="hpse-acc-item" data-acc-id="contact">
+          <!-- Hamburg Touren -->
+          <div class="hpse-acc-item" data-acc-id="hamburg-tour" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" data-section="hamburg-tour" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Hamburg Touren</span>
+            </div>
+          </div>
+
+          <!-- Erinnerungs-Service -->
+          <div class="hpse-acc-item" data-acc-id="service-erinnerung" draggable="true">
+            <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" data-section="service-erinnerung" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Erinnerungs-Service</span>
+            </div>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="hpse-acc-item" data-acc-id="newsletter" draggable="true">
+            <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
+                <input type="checkbox" data-section="newsletter" checked />
+                <span class="hpse-switch"></span>
+              </label>
+              <span class="hpse-acc-title">Newsletter</span>
+            </div>
+          </div>
+
+          <!-- Kontakt -->
+          <div class="hpse-acc-item" data-acc-id="contact" draggable="true">
+            <div class="hpse-acc-header">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="contact" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -235,9 +350,10 @@
           </div>
 
           <!-- Footer -->
-          <div class="hpse-acc-item" data-acc-id="footer">
+          <div class="hpse-acc-item" data-acc-id="footer" draggable="true">
             <div class="hpse-acc-header">
-              <label class="hpse-toggle-label">
+              <span class="hpse-acc-drag-handle" title="Ziehen zum Verschieben">⠿</span>
+              <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" data-section="footer" checked />
                 <span class="hpse-switch"></span>
               </label>
@@ -257,7 +373,7 @@
             <summary style="padding: 10px 14px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; list-style: none; user-select: none;">
               <span style="display: flex; align-items: center; gap: 6px;">
                 <span>🎨 Marken-Farbpalette</span>
-                <span style="font-size: 0.68rem; color: #9ca3af; font-weight: 400;">(6 Farben)</span>
+                <span style="font-size: 0.68rem; color: #9ca3af; font-weight: 400;">({siteName})</span>
               </span>
               <span style="font-size: 0.75rem; color: #9ca3af;">▼</span>
             </summary>
@@ -265,28 +381,28 @@
               <!-- Übersicht der aktiven Farbwerte -->
               <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; background: rgba(0,0,0,0.25); border-radius: 6px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.06); font-size: 0.75rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #414C09; display: inline-block;"></span> 1. Olive</span>
-                  <span style="font-family: monospace; color: #9ca3af;">#414C09</span>
+                  <span style="display: flex; align-items: center; gap: 6px;"><span id="hpse-dot-accent" style="width: 10px; height: 10px; border-radius: 50%; background: #c8520e; display: inline-block;"></span> 1. Pixel-Orange (Akzent)</span>
+                  <span id="hpse-val-accent" style="font-family: monospace; color: #9ca3af;">#c8520e</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #FBFAF3; border: 1px solid rgba(255,255,255,0.3); display: inline-block;"></span> 2. Paper-Creme</span>
-                  <span style="font-family: monospace; color: #9ca3af;">#FBFAF3</span>
+                  <span style="display: flex; align-items: center; gap: 6px;"><span id="hpse-dot-ink" style="width: 10px; height: 10px; border-radius: 50%; background: #1c1c1c; border: 1px solid rgba(255,255,255,0.3); display: inline-block;"></span> 2. Dunkles Ink (Hintergrund)</span>
+                  <span id="hpse-val-ink" style="font-family: monospace; color: #9ca3af;">#1c1c1c</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #97572A; display: inline-block;"></span> 3. Terracotta</span>
-                  <span style="font-family: monospace; color: #9ca3af;">#97572A</span>
+                  <span style="display: flex; align-items: center; gap: 6px;"><span id="hpse-dot-cream" style="width: 10px; height: 10px; border-radius: 50%; background: #f5f0e8; border: 1px solid rgba(255,255,255,0.3); display: inline-block;"></span> 3. Warm-Creme (Text/Flächen)</span>
+                  <span id="hpse-val-cream" style="font-family: monospace; color: #9ca3af;">#f5f0e8</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #A83A68; display: inline-block;"></span> 4. Radieschen-Pink</span>
-                  <span style="font-family: monospace; color: #9ca3af;">#A83A68</span>
+                  <span style="display: flex; align-items: center; gap: 6px;"><span id="hpse-dot-sage" style="width: 10px; height: 10px; border-radius: 50%; background: #4a7c6f; display: inline-block;"></span> 4. Salbei-Grün (Akzent)</span>
+                  <span id="hpse-val-sage" style="font-family: monospace; color: #9ca3af;">#4a7c6f</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #ECC86C; display: inline-block;"></span> 5. Feinkost-Gold</span>
-                  <span style="font-family: monospace; color: #9ca3af;">#ECC86C</span>
+                  <span style="display: flex; align-items: center; gap: 6px;"><span id="hpse-dot-accentLight" style="width: 10px; height: 10px; border-radius: 50%; background: #e2a63b; display: inline-block;"></span> 5. Gold (Highlights)</span>
+                  <span id="hpse-val-accentLight" style="font-family: monospace; color: #9ca3af;">#e2a63b</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="display: flex; align-items: center; gap: 6px;"><span style="width: 10px; height: 10px; border-radius: 50%; background: #221D15; display: inline-block;"></span> 6. Tief-Espresso</span>
-                  <span style="font-family: monospace; color: #9ca3af;">#221D15</span>
+                  <span style="display: flex; align-items: center; gap: 6px;"><span id="hpse-dot-inkMuted" style="width: 10px; height: 10px; border-radius: 50%; background: #5c5c5c; display: inline-block;"></span> 6. Schiefer-Grau (Dezent)</span>
+                  <span id="hpse-val-inkMuted" style="font-family: monospace; color: #9ca3af;">#5c5c5c</span>
                 </div>
               </div>
 
@@ -294,28 +410,28 @@
               <label style="display: block; font-size: 0.72rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 6px;">Farbtöne anpassen</label>
               <div class="hpse-color-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                 <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
-                  <span>Terracotta</span>
-                  <input type="color" id="hpse-col-terracotta" value="#97572A" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                  <span>Pixel-Orange</span>
+                  <input type="color" id="hpse-col-accent" value="#c8520e" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
                 </label>
                 <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
-                  <span>Olive</span>
-                  <input type="color" id="hpse-col-olive" value="#414C09" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                  <span>Dunkles Ink</span>
+                  <input type="color" id="hpse-col-ink" value="#1c1c1c" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
                 </label>
                 <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
-                  <span>Paper-Creme</span>
-                  <input type="color" id="hpse-col-paper" value="#FBFAF3" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                  <span>Warm-Creme</span>
+                  <input type="color" id="hpse-col-cream" value="#f5f0e8" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
                 </label>
                 <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
-                  <span>Radieschen-Pink</span>
-                  <input type="color" id="hpse-col-berry" value="#A83A68" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                  <span>Salbei-Grün</span>
+                  <input type="color" id="hpse-col-sage" value="#4a7c6f" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
                 </label>
                 <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
-                  <span>Feinkost-Gold</span>
-                  <input type="color" id="hpse-col-gold" value="#ECC86C" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                  <span>Highlight-Gold</span>
+                  <input type="color" id="hpse-col-accentLight" value="#e2a63b" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
                 </label>
                 <label style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px;">
-                  <span>Tief-Espresso</span>
-                  <input type="color" id="hpse-col-espresso" value="#221D15" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
+                  <span>Schiefer-Grau</span>
+                  <input type="color" id="hpse-col-inkMuted" value="#5c5c5c" style="width: 100%; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: transparent; cursor: pointer;" />
                 </label>
               </div>
             </div>
@@ -331,7 +447,7 @@
               <div>
                 <label style="display: block; font-size: 0.75rem; font-weight: 600; color: #9ca3af; margin-bottom: 4px;" for="hpse-font-pair">Schrift-Kombination</label>
                 <select id="hpse-font-pair" style="width: 100%; padding: 6px 8px; border-radius: 6px; background: #1f2937; color: #fff; border: 1px solid rgba(255,255,255,0.15); font-size: 0.8rem;">
-                  <option value="dm-outfit">DM Serif Display + Outfit (Standard AJS)</option>
+                  <option value="dm-outfit">DM Serif Display + Outfit (Standard pixel&amp;code)</option>
                   <option value="playfair-inter">Playfair Display + Inter (Klassisch Elegant)</option>
                   <option value="cinzel-plus">Cinzel + Plus Jakarta Sans (Premium Luxus)</option>
                   <option value="syne-space">Syne + Space Grotesk (Modern Bold)</option>
@@ -379,6 +495,26 @@
           <button id="hpse-reset-btn" type="button" class="btn btn-ghost hpse-btn-sm">Zurücksetzen</button>
         </div>
         <p id="hpse-export-feedback" class="hpse-feedback" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <!-- Dediziertes Sortier-Menü (Verschiebe-Menü) -->
+    <div id="hpse-sort-modal" class="hpse-sort-modal" hidden>
+      <div class="hpse-sort-head">
+        <div>
+          <h3 class="hpse-sort-title">Reihenfolge der Bereiche</h3>
+          <p class="hpse-sort-subtitle">Verschiebe Bereiche per Drag & Drop oder klicke auf ▲ ▼.</p>
+        </div>
+        <button id="hpse-close-sort-btn" type="button" class="btn btn-primary hpse-btn-sm">Fertig ✓</button>
+      </div>
+
+      <div class="hpse-sort-list" id="hpse-sort-list">
+        <!-- Dynamisch gerendert -->
+      </div>
+
+      <div class="hpse-sort-footer">
+        <button id="hpse-sort-reset-btn" type="button" class="btn btn-ghost hpse-btn-sm">Standard-Reihenfolge</button>
+        <button id="hpse-close-sort-btn-2" type="button" class="btn btn-primary hpse-btn-sm">Fertig ✓</button>
       </div>
     </div>
   </div>
@@ -527,7 +663,7 @@
     border-radius: 999px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   }
-  .hpse-audit-fab-icon { font-size: var(--fs-lg); line-height: 1; color: var(--accent-light, #ea580c); }
+  .hpse-audit-fab-icon { font-size: var(--fs-lg); line-height: 1; color: var(--accent-light, #e2a63b); }
   .hpse-audit-fab-lbl { font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
 
   /* Rechter Drawer - Exakt wie linker Drawer */
@@ -629,7 +765,7 @@
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, padding 0.2s ease;
   }
   .hpse-fab:hover { background: #1f2937; padding-left: 18px; }
-  .hpse-fab-icon { font-size: var(--fs-lg); line-height: 1; color: var(--accent-light, #ea580c); }
+  .hpse-fab-icon { font-size: var(--fs-lg); line-height: 1; color: var(--accent-light, #e2a63b); }
   .hpse-fab-lbl { font-size: var(--fs-sm); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
 
   /* Drawer */
@@ -650,6 +786,8 @@
     transform: translateX(-100%);
     transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
     color: #f3f4f6;
+    overscroll-behavior: contain;
+    overscroll-behavior-y: contain;
   }
   .hpse-drawer.is-open { transform: translateX(0); }
   .hpse-drawer-head {
@@ -667,6 +805,8 @@
   .hpse-drawer-body {
     padding: 18px;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    overscroll-behavior-y: contain;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -684,8 +824,93 @@
   .hpse-group-title { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #9ca3af; }
   .hpse-help { font-size: 0.74rem; color: #6b7280; line-height: 1.4; margin: 0; }
 
+  /* Sortier-Button */
+  .hpse-sort-trigger-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(200, 82, 14, 0.12);
+    border: 1px solid var(--accent, #c8520e);
+    color: var(--cream, #f5f0e8);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .hpse-sort-trigger-btn:hover {
+    background: var(--accent, #c8520e);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+  .hpse-sort-btn-icon {
+    font-size: 0.95rem;
+    line-height: 1;
+    color: var(--accent-light, #ea580c);
+  }
+  .hpse-sort-trigger-btn:hover .hpse-sort-btn-icon { color: #fff; }
+
+  /* Modularer Anhang Box (Countdown) */
+  .hpse-addon-box {
+    background: rgba(200, 82, 14, 0.05);
+    border: 1px solid color-mix(in srgb, var(--accent, #c8520e) 30%, transparent);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  }
+  .hpse-addon-box.is-expanded {
+    background: rgba(200, 82, 14, 0.08);
+    border-color: color-mix(in srgb, var(--accent, #c8520e) 45%, transparent);
+  }
+  .hpse-addon-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .hpse-addon-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #f3f4f6;
+    line-height: 1.2;
+  }
+  .hpse-addon-subtitle {
+    font-size: 0.6875rem;
+    color: #9ca3af;
+    margin-top: 1px;
+  }
+  .hpse-addon-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: rgba(200, 82, 14, 0.2);
+    color: var(--accent-light, #ea580c);
+    border: 1px solid color-mix(in srgb, var(--accent, #c8520e) 40%, transparent);
+  }
+  .hpse-addon-arrow {
+    font-size: 1.1rem;
+    color: #9ca3af;
+    transition: transform 0.2s ease;
+    line-height: 1;
+    display: inline-block;
+  }
+  .hpse-addon-box.is-expanded .hpse-addon-arrow {
+    transform: rotate(90deg);
+    color: var(--accent-light, #ea580c);
+  }
+  .hpse-addon-body[hidden] {
+    display: none !important;
+  }
+
   /* Accordion */
-  .hpse-accordion { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .hpse-accordion { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
   .hpse-acc-item {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -695,25 +920,215 @@
   }
   .hpse-acc-item:hover { background: rgba(255, 255, 255, 0.05); }
   .hpse-acc-item.is-expanded { border-color: rgba(255, 255, 255, 0.18); background: rgba(255, 255, 255, 0.04); }
+  .hpse-acc-item.is-dragging {
+    opacity: 0.35;
+    background: rgba(200, 82, 14, 0.1);
+    border: 1px dashed var(--accent, #c8520e);
+  }
   
   .hpse-acc-header {
     display: flex;
     align-items: center;
-    padding: 10px 14px;
-    gap: 12px;
-    min-height: 44px;
+    padding: 6px 10px;
+    gap: 8px;
+    min-height: 34px;
     box-sizing: border-box;
+  }
+
+  .hpse-acc-drag-handle {
+    font-size: 1rem;
+    color: #6b7280;
+    cursor: grab;
+    line-height: 1;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    transition: color 0.15s ease;
+  }
+  .hpse-acc-drag-handle:hover {
+    color: #d1d5db;
+  }
+  .hpse-acc-drag-handle:active {
+    cursor: grabbing;
+  }
+
+  #hpse-accordion .hpse-drop-placeholder {
+    padding: 6px 10px;
+    min-height: 34px;
+    box-sizing: border-box;
+    font-size: 0.75rem;
+  }
+
+  /* Sortier-Menü Modal / Overlay */
+  .hpse-sort-modal {
+    position: absolute;
+    inset: 0;
+    background: #18181b;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    animation: hpse-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hpse-sort-modal[hidden] { display: none !important; }
+  @keyframes hpse-fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hpse-sort-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 14px;
+  }
+  .hpse-sort-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+  }
+  .hpse-sort-subtitle {
+    font-size: 0.74rem;
+    color: #9ca3af;
+    margin: 3px 0 0;
+  }
+  .hpse-sort-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 4px;
+    scrollbar-width: thin;
+  }
+  .hpse-sort-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+    transition: background 0.12s ease, border-color 0.12s ease;
+  }
+  .hpse-sort-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .hpse-sort-card.is-dragging {
+    opacity: 0.35;
+    background: rgba(200, 82, 14, 0.1);
+    border: 1px dashed var(--accent, #c8520e);
+  }
+  .hpse-sort-card-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .hpse-sort-handle {
+    font-size: 1.15rem;
+    color: #6b7280;
+    cursor: grab;
+    line-height: 1;
+  }
+  .hpse-sort-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent-light, #ea580c);
+    background: rgba(200, 82, 14, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+    min-width: 20px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .hpse-sort-icon { font-size: 1rem; line-height: 1; }
+  .hpse-sort-name { font-size: 0.85rem; font-weight: 600; color: #e5e7eb; }
+  .hpse-sort-badge-off {
+    font-size: 0.65rem;
+    color: #9ca3af;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  .hpse-sort-card-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .hpse-sort-btn {
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    color: #d1d5db;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+  }
+  .hpse-sort-btn:hover:not(:disabled) {
+    background: var(--accent, #c8520e);
+    color: #fff;
+    border-color: var(--accent, #c8520e);
+  }
+  .hpse-sort-btn:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+  .hpse-drop-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px;
+    background: color-mix(in srgb, var(--accent, #c8520e) 15%, transparent);
+    border: 2px dashed var(--accent, #c8520e);
+    border-radius: 8px;
+    color: var(--accent-light, #ea580c);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    animation: hpse-pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes hpse-pulse {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.01); }
+  }
+  .hpse-sort-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 14px;
   }
   .hpse-toggle-label {
     display: flex;
     align-items: center;
     cursor: pointer;
+    flex-shrink: 0;
   }
   .hpse-toggle-label input { position: absolute; opacity: 0; pointer-events: none; }
   .hpse-switch {
     position: relative;
-    width: 32px;
-    height: 18px;
+    width: 28px;
+    height: 16px;
     background: #374151;
     border-radius: 999px;
     flex-shrink: 0;
@@ -724,21 +1139,21 @@
     position: absolute;
     top: 2px;
     left: 2px;
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     background: #fff;
     border-radius: 50%;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .hpse-toggle-label input:checked + .hpse-switch { background: var(--accent, #ea580c); }
-  .hpse-toggle-label input:checked + .hpse-switch::after { transform: translateX(14px); }
+  .hpse-toggle-label input:checked + .hpse-switch::after { transform: translateX(12px); }
 
   .hpse-acc-trigger {
     background: transparent;
     border: none;
     color: #e5e7eb;
     font-family: inherit;
-    font-size: 0.85rem;
+    font-size: 0.8125rem;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -751,7 +1166,7 @@
   }
   .hpse-acc-title {
     font-family: inherit;
-    font-size: 0.85rem !important;
+    font-size: 0.8125rem !important;
     font-weight: 600;
     color: #e5e7eb;
     line-height: 1.2;
@@ -760,7 +1175,7 @@
     flex: 1;
   }
   .hpse-acc-arrow {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #9ca3af;
     transition: transform 0.2s ease;
     line-height: 1;
@@ -949,10 +1364,10 @@
   /* ═══ Team-Modus: feste Header-Position & dynamische Kachelgrößen je Personenzahl ═══ */
   :global(body.hpse-about-team #about-default-grid) { display: none !important; }
   :global(body.hpse-about-team #about) {
-    height: 100dvh !important;
-    max-height: 100dvh !important;
-    padding-top: var(--nav-h) !important;
-    padding-bottom: 1.5rem !important;
+    height: calc(100dvh - var(--nav-h)) !important;
+    max-height: calc(100dvh - var(--nav-h)) !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 1rem !important;
     justify-content: flex-start !important;
     box-sizing: border-box !important;
   }
@@ -967,12 +1382,12 @@
   }
   :global(body.hpse-about-team #about .section-hd) {
     flex-shrink: 0 !important;
-    margin-bottom: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
   }
   :global(body.hpse-about-team #about #about-dept-filters) {
     display: flex !important;
     flex-shrink: 0 !important;
-    margin-bottom: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
   }
   :global(body.hpse-about-team #about-team-carousel) {
     display: flex !important;
@@ -980,6 +1395,8 @@
     justify-content: flex-start !important;
     flex: 1 !important;
     min-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 
   :global(.about-depts) {
@@ -1023,7 +1440,7 @@
   }
   :global(.about-team-track) {
     display: grid;
-    grid-template-rows: repeat(2, 310px);
+    grid-template-rows: repeat(2, minmax(0, calc((100dvh - var(--nav-h) - 200px) / 2)));
     grid-auto-flow: column;
     grid-auto-columns: calc((100% - 2 * 1.25rem) / 3);
     gap: 1.25rem;
@@ -1031,7 +1448,9 @@
     overflow-y: visible;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    padding-block: 8px;
+    padding-block: 4px;
+    height: 100%;
+    max-height: calc(100dvh - var(--nav-h) - 170px);
   }
   /* 1 Person im Team: Exakt wie Single (großformatig, Foto links 540px, Text rechts zentriert) */
   :global(.about-team-track[data-visible-count="1"]) {
@@ -1043,7 +1462,8 @@
     margin-inline: auto !important;
   }
   :global(.about-team-track[data-visible-count="1"] .team-card) {
-    height: 640px !important;
+    height: 100% !important;
+    max-height: calc(100dvh - var(--nav-h) - 170px) !important;
     flex-direction: row !important;
     align-items: stretch !important;
   }
@@ -1090,7 +1510,8 @@
     max-width: 100% !important;
   }
   :global(.about-team-track[data-visible-count="2"] .team-card) {
-    height: 640px !important;
+    height: 100% !important;
+    max-height: calc(100dvh - var(--nav-h) - 170px) !important;
     flex-direction: column !important;
   }
   :global(#about .about-team-track[data-visible-count="2"] .team-card .aphoto) {
@@ -1190,7 +1611,7 @@
     width: 145px !important;
   }
   :global(.about-team-track::-webkit-scrollbar) { display: none; }
-  :global(.team-card) {
+  :global(.about-team-track .team-card) {
     scroll-snap-align: start;
     min-width: 0;
     display: flex;
@@ -1202,7 +1623,7 @@
     -webkit-mask-image: -webkit-radial-gradient(white, black);
     border: 1px solid var(--border-subtle);
   }
-  :global(#about .team-card .aphoto) {
+  :global(#about .about-team-track .team-card .aphoto) {
     flex: 0 0 42% !important;
     width: 42% !important;
     height: 100% !important;
@@ -1212,6 +1633,24 @@
     border-top-left-radius: inherit;
     border-bottom-left-radius: inherit;
     overflow: hidden;
+  }
+  :global(#about .about-grid .team-card) {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  :global(#about .about-grid .team-card .aphoto) {
+    flex: unset !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    border-top-left-radius: inherit !important;
+    border-top-right-radius: inherit !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  :global(#about .about-grid .team-card .abody) {
+    padding: 1.25rem 1.4rem 1.5rem !important;
   }
   :global(#about .about-team-track[data-visible-count="4"] .team-card .aphoto) {
     flex: 0 0 185px !important;
@@ -1491,18 +1930,45 @@
     scale: 'normal'
   };
 
+  const editorEl = document.getElementById('hpse-editor');
+  let serverTheme = {};
+  try {
+    serverTheme = editorEl?.dataset?.theme ? JSON.parse(editorEl.dataset.theme) : {};
+  } catch (e) {}
+
   const defaultColors = {
-    terracotta: '#97572A',
-    olive: '#414C09',
-    paper: '#FBFAF3',
-    berry: '#A83A68',
-    gold: '#ECC86C',
-    espresso: '#221D15'
+    accent: serverTheme.accent || '#c8520e',
+    ink: serverTheme.ink || '#1c1c1c',
+    cream: serverTheme.cream || '#f5f0e8',
+    sage: serverTheme.sage || '#4a7c6f',
+    accentLight: serverTheme.accentLight || '#e2a63b',
+    inkMuted: serverTheme.inkMuted || '#5c5c5c'
   };
+
+  const defaultOrder = [
+    'hero',
+    'about',
+    'services',
+    'gallery',
+    'pricing',
+    'reviews',
+    'booking',
+    'sponsors',
+    'hamburg-tour',
+    'service-erinnerung',
+    'newsletter',
+    'contact',
+    'footer'
+  ];
 
   const defaultState = {
     colors: { ...defaultColors },
     typography: { ...defaultTypography },
+    order: [ ...defaultOrder ],
+    countdown: {
+      target: 'hero',
+      position: 'before'
+    },
     sections: {
       countdown: true,
       hero: true,
@@ -1513,6 +1979,9 @@
       reviews: true,
       booking: true,
       sponsors: true,
+      'hamburg-tour': true,
+      'service-erinnerung': true,
+      newsletter: true,
       contact: true,
       footer: true,
     },
@@ -1526,13 +1995,29 @@
     }
   };
 
-  let state = { ...defaultState };
+  let state = JSON.parse(JSON.stringify(defaultState));
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
       state.sections = { ...defaultState.sections, ...(parsed.sections || {}) };
       state.variants = { ...defaultState.variants, ...(parsed.variants || {}) };
+      if (parsed.colors && parsed.colors.accent) {
+        state.colors = { ...defaultColors, ...parsed.colors };
+      }
+      if (parsed.countdown && parsed.countdown.target) {
+        state.countdown = {
+          target: parsed.countdown.target || 'hero',
+          position: parsed.countdown.position || 'before'
+        };
+      }
+      if (Array.isArray(parsed.order) && parsed.order.length > 0) {
+        const loadedOrder = parsed.order.filter(id => id !== 'countdown' && defaultOrder.includes(id));
+        defaultOrder.forEach(id => {
+          if (!loadedOrder.includes(id)) loadedOrder.push(id);
+        });
+        state.order = loadedOrder;
+      }
     }
   } catch (e) {}
 
@@ -1545,6 +2030,7 @@
   function setOpen(open) {
     drawer.hidden = !open;
     fab.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('hpse-drawer-open', open);
     if (open) {
       requestAnimationFrame(() => drawer.classList.add('is-open'));
     } else {
@@ -1552,6 +2038,14 @@
       setTimeout(() => { if (!drawer.classList.contains('is-open')) drawer.hidden = true; }, 320);
     }
   }
+
+  // Verhindert Scroll-Chaining & Durchscrollen auf die Homepage beim Scrollen im Drawer
+  drawer.addEventListener('wheel', (e) => {
+    e.stopPropagation();
+  }, true);
+  drawer.addEventListener('touchmove', (e) => {
+    e.stopPropagation();
+  }, { passive: true });
 
   fab.addEventListener('click', () => setOpen(!drawer.classList.contains('is-open')));
   closeBtn?.addEventListener('click', () => setOpen(false));
@@ -1627,27 +2121,595 @@
 
   function applyColors() {
     const cols = state.colors || defaultColors;
-    document.documentElement.style.setProperty('--ajs-terracotta', cols.terracotta || '#97572A');
-    document.documentElement.style.setProperty('--accent', cols.terracotta || '#97572A');
-    document.documentElement.style.setProperty('--accent-light', cols.terracotta || '#97572A');
-    document.documentElement.style.setProperty('--ajs-olive', cols.olive || '#414C09');
-    document.documentElement.style.setProperty('--footer-bg', cols.olive || '#414C09');
-    document.documentElement.style.setProperty('--ajs-paper', cols.paper || '#FBFAF3');
-    document.documentElement.style.setProperty('--nav-bg', cols.paper || '#FBFAF3');
-    document.documentElement.style.setProperty('--ajs-berry', cols.berry || '#A83A68');
-    document.documentElement.style.setProperty('--berry', cols.berry || '#A83A68');
+    const acc = cols.accent || '#c8520e';
+    const ink = cols.ink || '#1c1c1c';
+    const cream = cols.cream || '#f5f0e8';
+    const sage = cols.sage || '#4a7c6f';
+    const accL = cols.accentLight || '#e2a63b';
+    const muted = cols.inkMuted || '#5c5c5c';
 
-    const inpT = document.getElementById('hpse-col-terracotta');
-    if (inpT && cols.terracotta) inpT.value = cols.terracotta;
-    const inpO = document.getElementById('hpse-col-olive');
-    if (inpO && cols.olive) inpO.value = cols.olive;
-    const inpP = document.getElementById('hpse-col-paper');
-    if (inpP && cols.paper) inpP.value = cols.paper;
-    const inpB = document.getElementById('hpse-col-berry');
-    if (inpB && cols.berry) inpB.value = cols.berry;
+    document.documentElement.style.setProperty('--accent', acc);
+    document.documentElement.style.setProperty('--accent-text', `color-mix(in srgb, ${acc} 75%, #000)`);
+    document.documentElement.style.setProperty('--accent-light', accL);
+    document.documentElement.style.setProperty('--ink', ink);
+    document.documentElement.style.setProperty('--bg', ink);
+    document.documentElement.style.setProperty('--nav-bg', ink);
+    document.documentElement.style.setProperty('--footer-bg', ink);
+    document.documentElement.style.setProperty('--cream', cream);
+    document.documentElement.style.setProperty('--sage', sage);
+    document.documentElement.style.setProperty('--ink-muted', muted);
+
+    const pairs = [
+      { key: 'accent', val: acc },
+      { key: 'ink', val: ink },
+      { key: 'cream', val: cream },
+      { key: 'sage', val: sage },
+      { key: 'accentLight', val: accL },
+      { key: 'inkMuted', val: muted }
+    ];
+    pairs.forEach(({ key, val }) => {
+      const inp = document.getElementById('hpse-col-' + key);
+      if (inp) inp.value = val;
+      const dot = document.getElementById('hpse-dot-' + key);
+      if (dot) dot.style.background = val;
+      const lbl = document.getElementById('hpse-val-' + key);
+      if (lbl) lbl.textContent = val;
+    });
+  }
+
+  function applyCountdown() {
+    const cd = document.getElementById('countdown');
+    if (!cd) return;
+
+    const enabled = state.sections.countdown !== false;
+    cd.setAttribute('data-hpse-hidden', String(!enabled));
+
+    const cdBox = document.getElementById('hpse-addon-box');
+    if (cdBox) {
+      cdBox.style.opacity = enabled ? '1' : '0.6';
+    }
+
+    if (!enabled) {
+      document.documentElement.style.setProperty('--cd-h', '0px');
+      return;
+    }
+
+    const targetId = state.countdown?.target || 'hero';
+    const pos = state.countdown?.position || 'before';
+
+    const heroSnap = document.querySelector('.hero-snap');
+
+    if (targetId === 'hero') {
+      if (heroSnap) {
+        if (pos === 'before') {
+          const heroEl = document.getElementById('hero');
+          if (heroEl) heroSnap.insertBefore(cd, heroEl);
+          else heroSnap.prepend(cd);
+        } else {
+          heroSnap.appendChild(cd);
+        }
+        document.documentElement.style.setProperty('--cd-h', (cd.offsetHeight || 96) + 'px');
+      }
+    } else {
+      document.documentElement.style.setProperty('--cd-h', '0px');
+      const targetEl = document.getElementById(targetId);
+      if (targetEl && targetEl.parentElement) {
+        if (pos === 'before') {
+          targetEl.parentElement.insertBefore(cd, targetEl);
+        } else {
+          targetEl.parentElement.insertBefore(cd, targetEl.nextSibling);
+        }
+      }
+    }
+
+    const selTarget = document.getElementById('hpse-cd-target');
+    if (selTarget && state.countdown?.target) selTarget.value = state.countdown.target;
+    const selPos = document.getElementById('hpse-cd-pos');
+    if (selPos && state.countdown?.position) selPos.value = state.countdown.position;
+  }
+
+  const sectionMeta = {
+    hero: { title: 'Hero (Startbereich)', icon: '🏠' },
+    about: { title: 'Über uns', icon: '👥' },
+    services: { title: 'Leistungen', icon: '🛠️' },
+    gallery: { title: 'Galerie / Sortiment', icon: '🖼️' },
+    pricing: { title: 'Preise', icon: '🏷️' },
+    reviews: { title: 'Bewertungen', icon: '⭐' },
+    booking: { title: 'Buchung / Termin', icon: '📅' },
+    sponsors: { title: 'Sponsoren / Partner', icon: '🤝' },
+    'hamburg-tour': { title: 'Hamburg Touren', icon: '⚓' },
+    'service-erinnerung': { title: 'Erinnerungs-Service', icon: '⏰' },
+    newsletter: { title: 'Newsletter', icon: '📧' },
+    contact: { title: 'Kontakt', icon: '✉️' },
+    footer: { title: 'Footer', icon: '📄' }
+  };
+
+  let draggedSortId = null;
+  let placeholderEl = null;
+
+  function removePlaceholder() {
+    if (placeholderEl && placeholderEl.parentElement) {
+      placeholderEl.remove();
+    }
+    placeholderEl = null;
+  }
+
+  function renderSortList() {
+    const listEl = document.getElementById('hpse-sort-list');
+    if (!listEl) return;
+
+    let rawOrder = (state.order || defaultOrder).filter(id => id !== 'countdown' && sectionMeta[id]);
+    const middle = rawOrder.filter(id => id !== 'hero' && id !== 'footer');
+    const curOrder = ['hero', ...middle, 'footer'];
+
+    listEl.innerHTML = curOrder.map((id, idx) => {
+      const meta = sectionMeta[id] || { title: id, icon: '📌' };
+      const numStr = String(idx + 1).padStart(2, '0');
+      const isHero = id === 'hero';
+      const isFooter = id === 'footer';
+      const isPinned = isHero || isFooter;
+      const isFirst = idx <= 1;
+      const isLast = idx >= curOrder.length - 2;
+      const isEnabled = state.sections[id] !== false;
+
+      return `
+        <div class="hpse-sort-card ${isPinned ? 'hpse-sort-card--pinned' : ''}" data-sort-id="${id}" draggable="${!isPinned}">
+          <div class="hpse-sort-card-left">
+            ${isPinned 
+              ? '<span class="hpse-sort-pin-badge" style="font-size: 0.68rem; font-weight: 700; background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; color: #9ca3af;">Fest</span>' 
+              : '<span class="hpse-sort-handle" title="Ziehen zum Verschieben">⠿</span>'}
+            <span class="hpse-sort-num">${numStr}</span>
+            <span class="hpse-sort-icon">${meta.icon}</span>
+            <span class="hpse-sort-name">${meta.title} ${isHero ? '(Kopfzeile / Start)' : isFooter ? '(Fußzeile / Ende)' : ''}</span>
+            ${!isEnabled ? '<span class="hpse-sort-badge-off">Aus</span>' : ''}
+          </div>
+          <div class="hpse-sort-card-right">
+            ${isPinned ? '<span style="font-size: 0.72rem; color: #6b7280; font-weight: 600;">' + (isHero ? 'Seite 1' : 'Letzte Seite') + '</span>' : `
+              <button type="button" class="hpse-sort-btn hpse-sort-up" data-move-id="${id}" data-dir="up" ${isFirst ? 'disabled' : ''} title="Nach oben">▲</button>
+              <button type="button" class="hpse-sort-btn hpse-sort-down" data-move-id="${id}" data-dir="down" ${isLast ? 'disabled' : ''} title="Nach unten">▼</button>
+            `}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    initSortListEvents();
+  }
+
+  function initSortListEvents() {
+    const listEl = document.getElementById('hpse-sort-list');
+    if (!listEl) return;
+
+    // Pfeiltasten ▲ ▼
+    listEl.querySelectorAll('.hpse-sort-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.getAttribute('data-move-id');
+        const dir = btn.getAttribute('data-dir');
+        const curOrder = (state.order || defaultOrder).filter(x => x !== 'countdown');
+        const idx = curOrder.indexOf(id);
+        if (idx === -1) return;
+        if (dir === 'up' && idx > 0) {
+          curOrder.splice(idx, 1);
+          curOrder.splice(idx - 1, 0, id);
+        } else if (dir === 'down' && idx < curOrder.length - 1) {
+          curOrder.splice(idx, 1);
+          curOrder.splice(idx + 1, 0, id);
+        }
+        state.order = curOrder;
+        saveState();
+        applyOrder();
+      });
+    });
+
+    // Drag & Drop mit visuellem Platzhalter
+    listEl.querySelectorAll('.hpse-sort-card').forEach(card => {
+      card.addEventListener('dragstart', (e) => {
+        draggedSortId = card.getAttribute('data-sort-id');
+        card.classList.add('is-dragging');
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', draggedSortId);
+        }
+      });
+
+      card.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (!draggedSortId) return;
+        const targetId = card.getAttribute('data-sort-id');
+        if (targetId === draggedSortId) return;
+
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+
+        const rect = card.getBoundingClientRect();
+        const isBefore = e.clientY < rect.top + rect.height / 2;
+
+        if (!placeholderEl) {
+          placeholderEl = document.createElement('div');
+          placeholderEl.className = 'hpse-drop-placeholder';
+        }
+
+        const draggedMeta = sectionMeta[draggedSortId] || { title: draggedSortId };
+        placeholderEl.innerHTML = `<span>↓ "${draggedMeta.title}" hier einfügen ↓</span>`;
+
+        if (isBefore) {
+          if (card.previousElementSibling !== placeholderEl) {
+            card.parentElement.insertBefore(placeholderEl, card);
+          }
+        } else {
+          if (card.nextElementSibling !== placeholderEl) {
+            card.parentElement.insertBefore(placeholderEl, card.nextSibling);
+          }
+        }
+      });
+
+      card.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (!draggedSortId) return;
+
+        const newOrder = [];
+        [...listEl.children].forEach(child => {
+          if (child === placeholderEl) {
+            newOrder.push(draggedSortId);
+          } else if (child.classList.contains('hpse-sort-card')) {
+            const id = child.getAttribute('data-sort-id');
+            if (id !== draggedSortId) {
+              newOrder.push(id);
+            }
+          }
+        });
+
+        removePlaceholder();
+        draggedSortId = null;
+
+        if (newOrder.length > 0) {
+          state.order = newOrder;
+          saveState();
+          applyOrder();
+        }
+      });
+
+      card.addEventListener('dragend', () => {
+        card.classList.remove('is-dragging');
+        removePlaceholder();
+        draggedSortId = null;
+      });
+    });
+
+    // Touch Drag & Drop mit visuellem Platzhalter
+    let touchCard = null;
+    listEl.querySelectorAll('.hpse-sort-handle').forEach(handle => {
+      handle.addEventListener('touchstart', (e) => {
+        const card = handle.closest('.hpse-sort-card');
+        if (!card) return;
+        touchCard = card;
+        draggedSortId = card.getAttribute('data-sort-id');
+        touchCard.classList.add('is-dragging');
+      }, { passive: true });
+
+      handle.addEventListener('touchmove', (e) => {
+        if (!touchCard || !draggedSortId) return;
+        const touch = e.touches[0];
+        const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+        const hoverCard = targetEl ? targetEl.closest('.hpse-sort-card') : null;
+        if (hoverCard && hoverCard !== touchCard && listEl.contains(hoverCard)) {
+          const rect = hoverCard.getBoundingClientRect();
+          const isBefore = touch.clientY < rect.top + rect.height / 2;
+          if (!placeholderEl) {
+            placeholderEl = document.createElement('div');
+            placeholderEl.className = 'hpse-drop-placeholder';
+          }
+          const draggedMeta = sectionMeta[draggedSortId] || { title: draggedSortId };
+          placeholderEl.innerHTML = `<span>↓ "${draggedMeta.title}" hier einfügen ↓</span>`;
+
+          if (isBefore) {
+            hoverCard.parentElement.insertBefore(placeholderEl, hoverCard);
+          } else {
+            hoverCard.parentElement.insertBefore(placeholderEl, hoverCard.nextSibling);
+          }
+        }
+      }, { passive: true });
+
+      handle.addEventListener('touchend', () => {
+        if (!touchCard || !draggedSortId) return;
+        if (placeholderEl && placeholderEl.parentElement) {
+          const newOrder = [];
+          [...listEl.children].forEach(child => {
+            if (child === placeholderEl) {
+              newOrder.push(draggedSortId);
+            } else if (child.classList.contains('hpse-sort-card')) {
+              const id = child.getAttribute('data-sort-id');
+              if (id !== draggedSortId) {
+                newOrder.push(id);
+              }
+            }
+          });
+          removePlaceholder();
+          if (newOrder.length > 0) {
+            state.order = newOrder;
+            saveState();
+            applyOrder();
+          }
+        }
+        touchCard.classList.remove('is-dragging');
+        removePlaceholder();
+        touchCard = null;
+        draggedSortId = null;
+      });
+
+      handle.addEventListener('touchcancel', () => {
+        if (touchCard) touchCard.classList.remove('is-dragging');
+        removePlaceholder();
+        touchCard = null;
+        draggedSortId = null;
+      });
+    });
+  }
+
+  // Accordion Drag & Drop in der Hauptliste
+  let draggedAccId = null;
+  let accPlaceholderEl = null;
+
+  function removeAccPlaceholder() {
+    if (accPlaceholderEl && accPlaceholderEl.parentElement) {
+      accPlaceholderEl.remove();
+    }
+    accPlaceholderEl = null;
+  }
+
+  function initAccordionDragAndDrop() {
+    if (!accordion) return;
+
+    // Desktop Drag & Drop
+    accordion.querySelectorAll('.hpse-acc-item').forEach(item => {
+      item.addEventListener('dragstart', (e) => {
+        if (e.target.closest('input, select, .hpse-acc-content')) {
+          e.preventDefault();
+          return;
+        }
+        draggedAccId = item.getAttribute('data-acc-id');
+        item.classList.add('is-dragging');
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', draggedAccId);
+        }
+      });
+
+      item.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (!draggedAccId) return;
+        const targetId = item.getAttribute('data-acc-id');
+        if (targetId === draggedAccId) return;
+
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+
+        const rect = item.getBoundingClientRect();
+        const isBefore = e.clientY < rect.top + rect.height / 2;
+
+        if (!accPlaceholderEl) {
+          accPlaceholderEl = document.createElement('div');
+          accPlaceholderEl.className = 'hpse-drop-placeholder';
+        }
+
+        const draggedMeta = sectionMeta[draggedAccId] || { title: draggedAccId };
+        accPlaceholderEl.innerHTML = `<span>↓ "${draggedMeta.title}" hier einfügen ↓</span>`;
+
+        if (isBefore) {
+          if (item.previousElementSibling !== accPlaceholderEl) {
+            item.parentElement.insertBefore(accPlaceholderEl, item);
+          }
+        } else {
+          if (item.nextElementSibling !== accPlaceholderEl) {
+            item.parentElement.insertBefore(accPlaceholderEl, item.nextSibling);
+          }
+        }
+      });
+
+      item.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (!draggedAccId) return;
+
+        const newOrder = [];
+        [...accordion.children].forEach(child => {
+          if (child === accPlaceholderEl) {
+            newOrder.push(draggedAccId);
+          } else if (child.classList.contains('hpse-acc-item')) {
+            const id = child.getAttribute('data-acc-id');
+            if (id && id !== draggedAccId) {
+              newOrder.push(id);
+            }
+          }
+        });
+
+        removeAccPlaceholder();
+        draggedAccId = null;
+
+        if (newOrder.length > 0) {
+          state.order = newOrder;
+          saveState();
+          applyOrder();
+        }
+      });
+
+      item.addEventListener('dragend', () => {
+        item.classList.remove('is-dragging');
+        removeAccPlaceholder();
+        draggedAccId = null;
+      });
+    });
+
+    // Touch Drag & Drop auf Handle
+    let touchAccItem = null;
+    accordion.querySelectorAll('.hpse-acc-drag-handle').forEach(handle => {
+      handle.addEventListener('touchstart', (e) => {
+        const item = handle.closest('.hpse-acc-item');
+        if (!item) return;
+        touchAccItem = item;
+        draggedAccId = item.getAttribute('data-acc-id');
+        touchAccItem.classList.add('is-dragging');
+      }, { passive: true });
+
+      handle.addEventListener('touchmove', (e) => {
+        if (!touchAccItem || !draggedAccId) return;
+        const touch = e.touches[0];
+        const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+        const hoverItem = targetEl ? targetEl.closest('.hpse-acc-item') : null;
+        if (hoverItem && hoverItem !== touchAccItem && accordion.contains(hoverItem)) {
+          const rect = hoverItem.getBoundingClientRect();
+          const isBefore = touch.clientY < rect.top + rect.height / 2;
+          if (!accPlaceholderEl) {
+            accPlaceholderEl = document.createElement('div');
+            accPlaceholderEl.className = 'hpse-drop-placeholder';
+          }
+          const draggedMeta = sectionMeta[draggedAccId] || { title: draggedAccId };
+          accPlaceholderEl.innerHTML = `<span>↓ "${draggedMeta.title}" hier einfügen ↓</span>`;
+
+          if (isBefore) {
+            hoverItem.parentElement.insertBefore(accPlaceholderEl, hoverItem);
+          } else {
+            hoverItem.parentElement.insertBefore(accPlaceholderEl, hoverItem.nextSibling);
+          }
+        }
+      }, { passive: true });
+
+      handle.addEventListener('touchend', () => {
+        if (!touchAccItem || !draggedAccId) return;
+        if (accPlaceholderEl && accPlaceholderEl.parentElement) {
+          const newOrder = [];
+          [...accordion.children].forEach(child => {
+            if (child === accPlaceholderEl) {
+              newOrder.push(draggedAccId);
+            } else if (child.classList.contains('hpse-acc-item')) {
+              const id = child.getAttribute('data-acc-id');
+              if (id && id !== draggedAccId) {
+                newOrder.push(id);
+              }
+            }
+          });
+          removeAccPlaceholder();
+          if (newOrder.length > 0) {
+            state.order = newOrder;
+            saveState();
+            applyOrder();
+          }
+        }
+        touchAccItem.classList.remove('is-dragging');
+        removeAccPlaceholder();
+        touchAccItem = null;
+        draggedAccId = null;
+      });
+
+      handle.addEventListener('touchcancel', () => {
+        if (touchAccItem) touchAccItem.classList.remove('is-dragging');
+        removeAccPlaceholder();
+        touchAccItem = null;
+        draggedAccId = null;
+      });
+    });
+  }
+
+  function applyOrder() {
+    let rawOrder = (state.order || defaultOrder).filter(id => id !== 'countdown');
+    const middleSections = rawOrder.filter(id => id !== 'hero' && id !== 'footer');
+    const curOrder = ['hero', ...middleSections, 'footer'];
+    state.order = [ ...curOrder ];
+
+    // 1. Accordion-Elemente im Editor anordnen
+    if (accordion) {
+      curOrder.forEach(id => {
+        const item = accordion.querySelector(`.hpse-acc-item[data-acc-id="${id}"]`);
+        if (item) accordion.appendChild(item);
+      });
+    }
+
+    // 2. Sort-Liste im Sortier-Menü aktualisieren
+    renderSortList();
+
+    // 3. Sektionen im Hauptbereich anordnen (#main bzw. .mobile-swipe-track)
+    const mainContainer = document.querySelector('.mobile-swipe-track') || document.getElementById('main');
+    if (mainContainer) {
+      const heroSnap = document.querySelector('.hero-snap');
+      const cfSnap = document.querySelector('.contact-footer-snap');
+
+      // 1. Hero / Kopfzeile immer fest an erster Position
+      if (heroSnap) {
+        mainContainer.prepend(heroSnap);
+      }
+
+      // 2. Mittlere Inhaltsbereiche in gewünschter Reihenfolge
+      middleSections.forEach(id => {
+        const sec = document.getElementById(id);
+        if (sec && sec.parentElement === mainContainer) {
+          mainContainer.appendChild(sec);
+        }
+        if (id === 'reviews') {
+          const vrev = document.getElementById('verified-reviews');
+          if (vrev && vrev.parentElement === mainContainer) {
+            mainContainer.appendChild(vrev);
+          }
+        }
+      });
+
+      // 3. Fußzeile / Footer immer fest an letzter Position
+      if (cfSnap) {
+        mainContainer.appendChild(cfSnap);
+        const ct = document.getElementById('contact');
+        const ft = document.querySelector('footer');
+        if (ct && ft) {
+          cfSnap.appendChild(ct);
+          cfSnap.appendChild(ft);
+        }
+      }
+
+      // Countdown als modularer Anhang platzieren
+      applyCountdown();
+
+      // Erste sichtbare Sektion für Nav-Abstand ermitteln
+      const topEl = [...mainContainer.children].find(el => el.getAttribute('data-hpse-hidden') !== 'true');
+      const allSections = [...mainContainer.querySelectorAll(':scope > section')];
+      allSections.forEach(s => s.classList.remove('hpse-first-visible'));
+      if (topEl && topEl.tagName.toLowerCase() === 'section') {
+        topEl.classList.add('hpse-first-visible');
+      }
+    }
+
+    // 4. Desktop-Navigation Links anordnen (#navLinks / .nav-ul)
+    const navUl = document.getElementById('navLinks') || document.querySelector('.nav-ul');
+    if (navUl) {
+      // Normale Links nach curOrder sortieren (ohne CTA/Kontakt)
+      curOrder.forEach(id => {
+        if (id === 'contact' || id === 'footer') return;
+        const link = navUl.querySelector(`a[href*="#${id}"]:not(.cta-link)`);
+        if (link) {
+          const li = link.closest('li') || link;
+          navUl.appendChild(li);
+        }
+      });
+      // CTA Button (Kontakt) immer zwingend ganz rechts an letzter Position
+      const ctaLink = navUl.querySelector('a.cta-link, a[href*="#contact"]');
+      if (ctaLink) {
+        const ctaLi = ctaLink.closest('li') || ctaLink;
+        navUl.appendChild(ctaLi);
+      }
+    }
+
+    // 5. Mobile Navigation Tabs anordnen (#mobile-nav-tabs)
+    const mobTabs = document.getElementById('mobile-nav-tabs');
+    if (mobTabs) {
+      curOrder.forEach(id => {
+        const tab = mobTabs.querySelector(`.mnt[data-tab-id="${id}"]`);
+        if (tab) {
+          mobTabs.appendChild(tab);
+        }
+      });
+      if (typeof window.__HPSE_MOBILE_REINDEX__ === 'function') {
+        window.__HPSE_MOBILE_REINDEX__();
+      }
+    }
   }
 
   function applyState() {
+    applyOrder();
     applyColors();
     applyTypography();
     // 1. Toggles anwenden
@@ -1682,6 +2744,16 @@
           } else {
             li.style.removeProperty('display');
           }
+        }
+      });
+
+      // Mobile Nav Tab für diesen Bereich ein-/ausblenden
+      const mobTabs = document.querySelectorAll(`#mobile-nav-tabs .mnt[data-tab-id="${id}"]`);
+      mobTabs.forEach(tab => {
+        if (!enabled) {
+          tab.style.setProperty('display', 'none', 'important');
+        } else {
+          tab.style.removeProperty('display');
         }
       });
 
@@ -1793,13 +2865,13 @@
     saveState();
   });
 
-  ['terracotta', 'olive', 'paper', 'berry', 'gold', 'espresso'].forEach(colKey => {
+  ['accent', 'ink', 'cream', 'sage', 'accentLight', 'inkMuted'].forEach(colKey => {
     const el = document.getElementById('hpse-col-' + colKey);
     el?.addEventListener('input', (e) => {
       if (!state.colors) state.colors = { ...defaultColors };
       state.colors[colKey] = e.target.value;
       applyColors();
-    applyTypography();
+      applyTypography();
     });
     el?.addEventListener('change', () => {
       saveState();
@@ -1820,16 +2892,85 @@
     }
   });
 
-  sectionsResetBtn?.addEventListener('click', () => {
-    Object.keys(state.sections).forEach(k => state.sections[k] = true);
+  // Countdown Anhang Steuerung
+  const cdAddonBox = document.getElementById('hpse-addon-box');
+  const cdAddonHeader = document.getElementById('hpse-addon-header');
+  const cdOptions = document.getElementById('hpse-cd-options');
+  const cdToggleInp = document.getElementById('hpse-toggle-countdown');
+  const cdTargetSelect = document.getElementById('hpse-cd-target');
+  const cdPosSelect = document.getElementById('hpse-cd-pos');
+
+  cdAddonHeader?.addEventListener('click', (e) => {
+    if (e.target.closest('.hpse-toggle-label')) return;
+    const isExpanded = cdAddonBox?.classList.contains('is-expanded');
+    const willExpand = !isExpanded;
+    cdAddonBox?.classList.toggle('is-expanded', willExpand);
+    if (cdOptions) {
+      cdOptions.hidden = !willExpand;
+    }
+  });
+
+  cdToggleInp?.addEventListener('change', (e) => {
+    state.sections.countdown = e.target.checked;
     saveState();
     applyState();
+  });
+
+  cdTargetSelect?.addEventListener('change', (e) => {
+    if (!state.countdown) state.countdown = { target: 'hero', position: 'before' };
+    state.countdown.target = e.target.value;
+    saveState();
+    applyCountdown();
+  });
+
+  cdPosSelect?.addEventListener('change', (e) => {
+    if (!state.countdown) state.countdown = { target: 'hero', position: 'before' };
+    state.countdown.position = e.target.value;
+    saveState();
+    applyCountdown();
+  });
+
+  // Sortier-Menü Steuerung
+  const sortModal = document.getElementById('hpse-sort-modal');
+  const openSortBtn = document.getElementById('hpse-open-sort-btn');
+  const closeSortBtn = document.getElementById('hpse-close-sort-btn');
+  const closeSortBtn2 = document.getElementById('hpse-close-sort-btn-2');
+  const sortResetBtn = document.getElementById('hpse-sort-reset-btn');
+
+  openSortBtn?.addEventListener('click', () => {
+    if (sortModal) {
+      sortModal.hidden = false;
+      renderSortList();
+    }
+  });
+
+  const hideSortModal = () => {
+    if (sortModal) sortModal.hidden = true;
+  };
+
+  closeSortBtn?.addEventListener('click', hideSortModal);
+  closeSortBtn2?.addEventListener('click', hideSortModal);
+
+  sortResetBtn?.addEventListener('click', () => {
+    state.order = [ ...defaultOrder ];
+    saveState();
+    applyOrder();
+    renderSortList();
+  });
+
+  sectionsResetBtn?.addEventListener('click', () => {
+    Object.keys(state.sections).forEach(k => state.sections[k] = true);
+    state.order = [ ...defaultOrder ];
+    saveState();
+    applyState();
+    renderSortList();
   });
 
   resetBtn?.addEventListener('click', () => {
     state = JSON.parse(JSON.stringify(defaultState));
     saveState();
     applyState();
+    renderSortList();
     if (feedback) {
       feedback.textContent = 'Auf Standardwerte zurückgesetzt!';
       setTimeout(() => feedback.textContent = '', 2500);
@@ -1863,53 +3004,51 @@
   function parseRGB(str) {
     if (!str || str === 'transparent' || str === 'inherit') return null;
     var m = str.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-    if (!m) return null;
-    var alpha = m[4] !== undefined ? parseFloat(m[4]) : 1;
-    if (alpha < 0.1) return null;
-    return { r: parseInt(m[1]), g: parseInt(m[2]), b: parseInt(m[3]), a: alpha };
+    if (m) {
+      var alpha = m[4] !== undefined ? parseFloat(m[4]) : 1;
+      if (alpha < 0.1) return null;
+      return { r: parseInt(m[1]), g: parseInt(m[2]), b: parseInt(m[3]), a: alpha };
+    }
+    var m2 = str.match(/color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)(?:\s*\/\s*([\d.]+))?\)/);
+    if (m2) {
+      var alpha2 = m2[4] !== undefined ? parseFloat(m2[4]) : 1;
+      if (alpha2 < 0.1) return null;
+      return {
+        r: Math.round(parseFloat(m2[1]) * 255),
+        g: Math.round(parseFloat(m2[2]) * 255),
+        b: Math.round(parseFloat(m2[3]) * 255),
+        a: alpha2
+      };
+    }
+    return null;
   }
 
   function getEffectiveBg(el) {
-    // 1. Spezifische Buttons, Badges und gefärbte Container (höchste Priorität)
-    if (el.closest('.btn-fill, a.cta-link, .pbadge, .btn-email, .btn-submit, .bk-submit, .btn-primary')) {
-      return { r: 151, g: 87, b: 42, a: 1 }; // Terracotta #97572A
+    // 1. Spezifische Buttons, Badges und gefärbte Container
+    if (el.closest('.skip-link')) {
+      return { r: 185, g: 70, b: 10, a: 1 };
     }
-    if (el.closest('.review-verified')) {
-      return { r: 65, g: 76, b: 9, a: 1 }; // Olive #414C09
-    }
-    if (el.closest('.gallery-img, .kat-head')) {
-      return { r: 65, g: 76, b: 9, a: 1 }; // Olive #414C09
-    }
-    if (el.closest('.btn-ghost')) {
-      if (el.closest('#services, #about, #contact, #pricing, #booking, #nav')) {
-        return { r: 251, g: 250, b: 243, a: 1 }; // Paper
-      }
-      return { r: 65, g: 76, b: 9, a: 1 }; // Olive
-    }
-    if (el.closest('.btn-outline')) {
-      return { r: 251, g: 250, b: 243, a: 1 }; // Paper
+    if (el.closest('.btn-fill, a.cta-link, .pbadge, .btn-email, .btn-submit, .bk-submit, .btn-primary, .cookie-btn-primary')) {
+      var rootAcc = window.getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+      var accRgb = parseRGB(rootAcc);
+      if (accRgb) return accRgb;
+      return { r: 200, g: 82, b: 14, a: 1 }; // #c8520e
     }
 
-    // 2. Kacheln (Cards) & Formularkästen
-    if (el.closest('.review-card, .sponsor-card, .pcard, .scard, .acard, .gallery-item-body, .booking-form, .contact-form-wrap, .reviews-note')) {
-      return { r: 251, g: 250, b: 243, a: 1 }; // Paper #FBFAF3
-    }
-    
-    // 3. DOM Parent Background Walk
+    // 2. DOM Parent Background Walk
     var cur = el;
     while (cur && cur !== document.documentElement) {
       var bgStr = window.getComputedStyle(cur).backgroundColor;
       var rgb = parseRGB(bgStr);
-      if (rgb && rgb.a > 0.7) return rgb;
+      if (rgb && rgb.a > 0.4) return rgb;
       cur = cur.parentElement;
     }
 
-    // 4. Sektions-Ebene
-    var sec = el.closest('#services, #about, #contact, #pricing, #booking, #nav');
-    if (sec) {
-      return { r: 251, g: 250, b: 243, a: 1 }; // #FBFAF3 Paper
-    }
-    return { r: 65, g: 76, b: 9, a: 1 }; // #414C09 Olive
+    // 3. Body / Theme Hintergrund
+    var bodyBg = parseRGB(window.getComputedStyle(document.body).backgroundColor);
+    if (bodyBg && bodyBg.a > 0.4) return bodyBg;
+
+    return { r: 28, g: 28, b: 28, a: 1 }; // #1c1c1c Ink
   }
 
   function runAudit() {
@@ -1942,8 +3081,9 @@
       var fs = parseFloat(style.fontSize);
       var isLarge = fs >= 24 || (fs >= 18 && (style.fontWeight === '700' || style.fontWeight === 'bold'));
       var minRatio = isLarge ? 3.0 : 4.5;
+      var displayRatio = Math.round(ratio * 100) / 100;
 
-      if (ratio < minRatio) {
+      if (displayRatio < minRatio) {
         var tag = el.tagName.toLowerCase();
         var snippet = text.length > 28 ? text.slice(0, 28) + '…' : text;
         var selector = el.id ? '#' + el.id : (el.className ? '.' + el.className.split(' ')[0] : tag);
@@ -1951,12 +3091,12 @@
         var existing = cats.contrast.find(function (i) { return i.selector === selector && i.text === snippet; });
         if (!existing) {
           cats.contrast.push({
-            type: ratio < (minRatio - 1) ? 'err' : 'warn',
+            type: displayRatio < (minRatio - 1) ? 'err' : 'warn',
             tag: tag + selector,
             text: snippet,
-            ratio: ratio.toFixed(2),
+            ratio: displayRatio.toFixed(2),
             needed: minRatio.toFixed(1),
-            msg: 'Kontrast: ' + ratio.toFixed(2) + ':1 (Soll: min. ' + minRatio.toFixed(1) + ':1)'
+            msg: 'Kontrast: ' + displayRatio.toFixed(2) + ':1 (Soll: min. ' + minRatio.toFixed(1) + ':1)'
           });
         }
       }
@@ -2056,7 +3196,7 @@
       }).join('');
     }
 
-    renderCategory('contrast', 'hpse-list-contrast', 'hpse-count-contrast');
+        renderCategory('contrast', 'hpse-list-contrast', 'hpse-count-contrast');
     renderCategory('a11y', 'hpse-list-a11y', 'hpse-count-a11y');
     renderCategory('interactive', 'hpse-list-interactive', 'hpse-count-interactive');
     renderCategory('layout', 'hpse-list-layout', 'hpse-count-layout');
@@ -2084,7 +3224,9 @@
     runAudit();
   });
 
-  setTimeout(runAudit, 800);
   applyState();
+  renderSortList();
+  initAccordionDragAndDrop();
+  setTimeout(runAudit, 800);
 })();
 </script>
