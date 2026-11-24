@@ -146,9 +146,11 @@
 
 .aphoto[data-lightbox] { cursor: zoom-in; }
 .aphoto[data-lightbox] img { transition: filter .3s ease; }
+/* Team-Porträts zoomen bewusst nicht: Jede Skalierung/Rotation würde das Bild
+   im overflow-hidden-Rahmen beschneiden (HPSE-AJS-TEAM-20261124). Nur Filter. */
 .aphoto[data-lightbox]:hover img {
   filter: grayscale(35%) brightness(.85);
-  animation: lb-shake .55s ease-out forwards;
+  animation: none;
 }
 
 /* Zoom-Cursor-Indikator — kein "Click me" Badge mehr */

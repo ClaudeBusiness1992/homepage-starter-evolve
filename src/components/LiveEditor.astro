@@ -1610,63 +1610,83 @@ const safeTheme = {
     -webkit-line-clamp: unset !important;
   }
 
-  /* 3 Personen: 3 Spalten nebeneinander, Side-by-Side Split wie alle Teamkacheln */
+  /* 3 Personen: Bild oben, Text darunter — volle Kachelbreite pro Person
+     (HPSE-AJS-TEAM-20261124: Side-by-Side machte die Bilder zu schmal). */
   :global(.about-team-track[data-visible-count="3"]) {
     grid-template-rows: 1fr !important;
     grid-template-columns: repeat(3, 1fr) !important;
     grid-auto-flow: row !important;
     grid-auto-columns: unset !important;
+    height: 100% !important;
+    max-height: calc(100dvh - var(--nav-h) - 170px) !important;
   }
   :global(.about-team-track[data-visible-count="3"] .team-card) {
-    height: 640px !important;
-    flex-direction: row !important;
+    height: 100% !important;
+    max-height: 640px !important;
+    min-height: 0 !important;
+    flex-direction: column !important;
   }
   :global(#about .about-team-track[data-visible-count="3"] .team-card .aphoto) {
-    flex: 0 0 44% !important;
-    width: 44% !important;
-    height: 100% !important;
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 5 !important;
+    min-height: 0 !important;
+    max-height: none !important;
     border-top-left-radius: inherit !important;
-    border-bottom-left-radius: inherit !important;
-    border-top-right-radius: 0 !important;
+    border-top-right-radius: inherit !important;
+    border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
   }
   :global(#about .about-team-track[data-visible-count="3"] .team-card .abody) {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
     padding: 1.25rem 1.15rem !important;
-    border-top-right-radius: inherit !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-left-radius: inherit !important;
     border-bottom-right-radius: inherit !important;
-    border-bottom-left-radius: 0 !important;
   }
 
-  /* 4 Personen: 2×2 Raster, füllt die Seite komplett aus */
+  /* 4 Personen: 2×2 Raster, viewport-gebunden statt fix 640px
+     (HPSE-AJS-TEAM-20261124: fixe Höhe schnitt die untere Reihe ab). */
   :global(.about-team-track[data-visible-count="4"]) {
-    grid-template-rows: repeat(2, 310px) !important;
+    grid-template-rows: repeat(2, minmax(0, 1fr)) !important;
     grid-template-columns: repeat(2, 1fr) !important;
     grid-auto-flow: row !important;
     grid-auto-columns: unset !important;
     gap: 20px !important;
-    height: 640px !important;
+    height: 100% !important;
+    max-height: 640px !important;
+    min-height: 0 !important;
   }
   :global(.about-team-track[data-visible-count="4"] .team-card) {
-    height: 310px !important;
+    height: 100% !important;
+    min-height: 0 !important;
   }
   :global(.about-team-track[data-visible-count="4"] .aphoto) {
     flex: 0 0 185px !important;
     width: 185px !important;
   }
 
-  /* 5 & 6 Personen: 2 Reihen × 3 Spalten, füllt die Seite komplett aus */
+  /* 5 & 6 Personen: 2 Reihen × 3 Spalten, viewport-gebunden statt fix 640px
+     (HPSE-AJS-TEAM-20261124: fixe Höhe schnitt die untere Reihe ab). */
   :global(.about-team-track[data-visible-count="5"]),
   :global(.about-team-track[data-visible-count="6"]) {
-    grid-template-rows: repeat(2, 310px) !important;
+    grid-template-rows: repeat(2, minmax(0, 1fr)) !important;
     grid-template-columns: repeat(3, 1fr) !important;
     grid-auto-flow: row !important;
     grid-auto-columns: unset !important;
     gap: 20px !important;
-    height: 640px !important;
+    height: 100% !important;
+    max-height: 640px !important;
+    min-height: 0 !important;
   }
   :global(.about-team-track[data-visible-count="5"] .team-card),
   :global(.about-team-track[data-visible-count="6"] .team-card) {
-    height: 310px !important;
+    height: 100% !important;
+    min-height: 0 !important;
   }
   :global(.about-team-track[data-visible-count="5"] .aphoto),
   :global(.about-team-track[data-visible-count="6"] .aphoto) {

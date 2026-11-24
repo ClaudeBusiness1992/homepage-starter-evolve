@@ -1749,3 +1749,6 @@ footer .social-icon-btn:hover { color: #fff !important; background: var(--ajs-te
     font-size: 0.72rem !important;
   }
 }
+
+/* Team-Zuschnitt/Zoom (HPSE-AJS-TEAM-20261124): gemeinsame Regeln in
+   global.css (Base + AjsBase) — keine AJS-Doppelung. */

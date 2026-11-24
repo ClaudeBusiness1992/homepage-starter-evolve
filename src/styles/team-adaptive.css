@@ -71,9 +71,27 @@
   margin: 0 auto;
 }
 
-/* Vertikal-Garantie Solo/Duo: Bio zwingend unterhalb des Fotos —
-   schlägt globale .team-card-row-Overrides (z. B. Editor-Styles) anhand
-   höherer Spezifität, gilt auf allen Bildschirmgrößen. */
+/* Vertikal-Garantie Duo/Trio: Bio zwingend unterhalb des Fotos, Foto mit
+   eigenem 4/5-Seitenverhältnis — schlägt die globale .aphoto-Streckung
+   (flex:1, aspect-ratio:unset, HPSE-AJS-TEAM-20261124) anhand höherer
+   Spezifität, gilt auf allen Bildschirmgrößen. */
+#about .about-grid.team-layout-trio > .team-card {
+  flex-direction: column;
+}
+#about .about-grid.team-layout-trio > .team-card .team-card-photo {
+  order: 0;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/5;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+#about .about-grid.team-layout-trio > .team-card .team-card-body {
+  order: 1;
+}
 #about .about-grid.team-layout-duo > .team-card {
   flex-direction: column;
 }
