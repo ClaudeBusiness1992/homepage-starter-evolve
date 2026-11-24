@@ -19,6 +19,7 @@ import Footer    from '../ajs/AjsFooter.astro';
 import SidebarAds from '../components/SidebarAds.astro';
 import LiveEditor from '../components/LiveEditor.astro';
 import ClientGate from '../components/ClientGate.astro';
+import AjsNewsletterModal from '../components/AjsNewsletterModal.astro';
 
 const passHashSha256 = "d00fe23d6bfdb4efb074ebc664a7b3b02196062737760e8e6db9f75606160b6a";
 
@@ -883,5 +884,6 @@ const navLinks = [
   revealNow(0);
 }());
 </script>
+  <AjsNewsletterModal />
   </ClientGate>
 </Base>
