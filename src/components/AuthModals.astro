@@ -1,0 +1,484 @@
+---
+/* AuthModals.astro — generische Baukasten-Fenster für Anmeldung und
+   Registrierung (HPSE-AJS-KITFULL), nach AJS-Vorbild (ajs-login-modal,
+   ajs-register-modal): Buttons oben rechts, Deep-Link-Auto-Öffnung
+   (#login / #register), Schließen (Fond, Knopf, Escape), Erfolgszustand.
+   Verdrahtet mit der vorhandenen Baukasten-Anmeldung: Die Anmeldung prüft
+   Profil + Passwort gegen config/clients.json (nur Hashes im Markup, gleiche
+   SHA-256-Prüfung und Weiterleitung auf /<route> wie PreviewLogin); die Ziele
+   liegen hinter dem ClientGate-Passwort-Overlay. KEINE AJS-Ziele, KEINE
+   kunden- oder projektspezifischen Texte, Farben oder Links. */
+import clientsConfig from '../../config/clients.json';
+
+const safeClients = (clientsConfig.clients ?? []).map((c: any) => ({
+  id: String(c.id),
+  label: String(c.label),
+  route: String(c.route),
+  passHashSha256: String(c.passHashSha256).toLowerCase(),
+}));
+---
+
+<div data-hpse-auth data-clients={JSON.stringify(safeClients)} hidden></div>
+
+<!-- Generische Anmeldung -->
+<div id="hpse-login-modal" class="hpse-modal" role="dialog" aria-modal="true" aria-labelledby="hpse-login-title" aria-hidden="true" hidden>
+  <div class="hpse-modal-bg" data-login-close></div>
+  <div class="hpse-modal-box" style="max-width: 440px;" tabindex="-1">
+    <div class="hpse-modal-head">
+      <h3 id="hpse-login-title" class="hpse-modal-title">Anmelden</h3>
+      <button type="button" class="hpse-modal-close" data-login-close aria-label="Schließen">&times;</button>
+    </div>
+    <div class="hpse-modal-body">
+      <p class="hpse-modal-text">
+        Bitte melden Sie sich mit Ihrem Profilnamen und Passwort an, um die gesch&uuml;tzte Vorschau zu &ouml;ffnen.
+      </p>
+      <form id="hpseLoginForm" novalidate>
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.2rem;">
+          <div>
+            <label class="hpse-field-label" for="hpseLoginProfile">Profilname</label>
+            <input type="text" id="hpseLoginProfile" required placeholder="Profilname" autocomplete="username" autocapitalize="off" spellcheck="false" class="hpse-field" />
+          </div>
+          <div>
+            <label class="hpse-field-label" for="hpseLoginPassword">Passwort</label>
+            <input type="password" id="hpseLoginPassword" required placeholder="Passwort" autocomplete="current-password" class="hpse-field" />
+          </div>
+        </div>
+        <p id="hpseLoginError" role="alert" hidden class="hpse-error"></p>
+        <button type="submit" class="btn btn-fill hpse-submit">
+          Anmelden &rarr;
+        </button>
+      </form>
+      <p class="hpse-hint">Kundenbereiche sind zus&auml;tzlich durch ein Passwort gesch&uuml;tzt.</p>
+      <div class="hpse-switch">
+        <span>Noch kein Zugang? </span>
+        <a href="#register" data-login-close data-open-register class="hpse-inline-link">Hier registrieren</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Generische Registrierung -->
+<div id="hpse-register-modal" class="hpse-modal" role="dialog" aria-modal="true" aria-labelledby="hpse-register-title" aria-hidden="true" hidden>
+  <div class="hpse-modal-bg" data-register-close></div>
+  <div class="hpse-modal-box" style="max-width: 520px;" tabindex="-1">
+    <div class="hpse-modal-head">
+      <h3 id="hpse-register-title" class="hpse-modal-title">Registrieren</h3>
+      <button type="button" class="hpse-modal-close" data-register-close aria-label="Schließen">&times;</button>
+    </div>
+    <div class="hpse-modal-body">
+      <div data-register-form-view>
+        <p class="hpse-modal-text">
+          Fordern Sie Ihren pers&ouml;nlichen Zugang an &ndash; wir melden uns in K&uuml;rze bei Ihnen.
+        </p>
+        <form id="hpseRegisterForm" novalidate>
+          <div style="display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.2rem;">
+            <div>
+              <label class="hpse-field-label" for="hpseRegName">Vollst&auml;ndiger Name *</label>
+              <input type="text" id="hpseRegName" required placeholder="Vor- und Nachname" autocomplete="name" class="hpse-field" />
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+              <div>
+                <label class="hpse-field-label" for="hpseRegEmail">E-Mail-Adresse *</label>
+                <input type="email" id="hpseRegEmail" required placeholder="name@beispiel.de" autocomplete="email" class="hpse-field" />
+              </div>
+              <div>
+                <label class="hpse-field-label" for="hpseRegPhone">Telefon (optional)</label>
+                <input type="tel" id="hpseRegPhone" placeholder="+49 ..." autocomplete="tel" class="hpse-field" />
+              </div>
+            </div>
+            <label class="hpse-consent">
+              <input type="checkbox" id="hpseRegConsent" required />
+              <span>Ich stimme der Verarbeitung meiner Daten zur Bearbeitung der Anfrage zu.</span>
+            </label>
+          </div>
+          <p id="hpseRegError" role="alert" hidden class="hpse-error"></p>
+          <button type="submit" class="btn btn-fill hpse-submit">
+            Zugang anfragen &rarr;
+          </button>
+        </form>
+      </div>
+      <div data-register-success-view hidden>
+        <p class="hpse-success-title">Anfrage &uuml;bermittelt!</p>
+        <p class="hpse-modal-text hpse-center">
+          Vielen Dank &ndash; wir melden uns in K&uuml;rze mit Ihren Zugangsdaten bei Ihnen.
+        </p>
+        <button type="button" class="btn btn-fill hpse-submit" data-register-close>
+          Schlie&szlig;en
+        </button>
+      </div>
+      <div class="hpse-switch">
+        <span>Bereits registriert? </span>
+        <a href="#login" data-register-close data-open-login class="hpse-inline-link">Hier anmelden</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  'use strict';
+  // Baukasten-Anmeldung: gleiche Prüfung und Weiterleitung wie PreviewLogin
+  // (Profil + SHA-256-Passwort aus config/clients.json → /<route>, dahinter ClientGate).
+  var holder = document.querySelector('[data-hpse-auth]');
+  var clients = [];
+  try { clients = JSON.parse(holder ? holder.getAttribute('data-clients') : '[]') || []; } catch (e) { clients = []; }
+
+  function sha256Sync(ascii) {
+    function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
+    var mathPow = Math.pow;
+    var maxWord = mathPow(2, 32);
+    var lengthProperty = 'length';
+    var i, j, result = '';
+    var words = [];
+    var asciiBitLength = ascii[lengthProperty] * 8;
+    var hash = [], k = [], primeCounter = 0, isComposite = {};
+    for (var candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1/3) * maxWord) | 0;
+      }
+    }
+    ascii += '\x80';
+    while (ascii[lengthProperty] % 64 - 56) ascii += '\x00';
+    for (i = 0; i < ascii[lengthProperty]; i++) {
+      j = ascii.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words[lengthProperty]] = ((asciiBitLength / maxWord) | 0);
+    words[words[lengthProperty]] = (asciiBitLength) | 0;
+    for (j = 0; j < words[lengthProperty];) {
+      var w = words.slice(j, j += 16), oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        var w15 = w[i - 15], w2 = w[i - 2];
+        var a = hash[0], e = hash[4];
+        var temp1 = hash[7]
+          + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+          + ((e & hash[5]) ^ ((~e) & hash[6]))
+          + k[i]
+          + (w[i] = (i < 16) ? w[i] : (
+              w[i - 16]
+              + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))
+              + w[i - 7]
+              + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))
+            ) | 0
+          );
+        var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+          + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (var b = 3; b >= 0; b--) {
+        var byteVal = (hash[i] >> (8 * b)) & 255;
+        result += (byteVal < 16 ? '0' : '') + byteVal.toString(16);
+      }
+    }
+    return result;
+  }
+
+  var loginModal = document.getElementById('hpse-login-modal');
+  var regModal = document.getElementById('hpse-register-modal');
+
+  function wire(modal, closeAttr) {
+    if (!modal) return { open: function () {}, close: function () {} };
+    function open() {
+      if (!modal.hidden) return;
+      modal.hidden = false;
+      modal.setAttribute('aria-hidden', 'false');
+      requestAnimationFrame(function () { modal.classList.add('is-open'); });
+      document.body.classList.add('hpse-modal-open');
+    document.body.classList.add('kat-open');
+      var input = modal.querySelector('input');
+      if (input) setTimeout(function () { try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); } }, 60);
+    }
+    function close() {
+      if (modal.hidden) return;
+      modal.classList.remove('is-open');
+      var other = (modal === loginModal) ? regModal : loginModal;
+      if (!other || other.hidden) { document.body.classList.remove('hpse-modal-open'); document.body.classList.remove('kat-open'); }
+      setTimeout(function () { modal.hidden = true; modal.setAttribute('aria-hidden', 'true'); }, 220);
+    }
+    modal.querySelectorAll('[' + closeAttr + ']').forEach(function (el) {
+      el.addEventListener('click', close);
+    });
+    return { open: open, close: close };
+  }
+
+  var login = wire(loginModal, 'data-login-close');
+  var register = wire(regModal, 'data-register-close');
+
+  document.querySelectorAll('[data-open-login]').forEach(function (el) {
+    el.addEventListener('click', function () { register.close(); login.open(); });
+  });
+  document.querySelectorAll('[data-open-register]').forEach(function (el) {
+    el.addEventListener('click', function () { login.close(); register.open(); });
+  });
+
+  document.querySelectorAll('a[href="#login"], [data-open-login]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      register.close();
+      login.open();
+    });
+  });
+  document.querySelectorAll('a[href="#register"], [data-open-register]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      login.close();
+      register.open();
+    });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (loginModal && !loginModal.hidden) login.close();
+    if (regModal && !regModal.hidden) register.close();
+  });
+
+  var loginForm = document.getElementById('hpseLoginForm');
+  var loginProfile = document.getElementById('hpseLoginProfile');
+  var loginPassword = document.getElementById('hpseLoginPassword');
+  var loginError = document.getElementById('hpseLoginError');
+  function loginFail(msg, field) {
+    if (!loginError) return;
+    loginError.textContent = msg;
+    loginError.hidden = false;
+    if (field && field.focus) field.focus();
+  }
+  if (loginForm && loginProfile && loginPassword) {
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (loginError) loginError.hidden = true;
+      var name = (loginProfile.value || '').trim().toLowerCase();
+      var hit = null;
+      for (var i = 0; i < clients.length; i++) {
+        var c = clients[i];
+        if (String(c.id).toLowerCase() === name ||
+            String(c.route).toLowerCase() === name ||
+            String(c.label).toLowerCase() === name) { hit = c; break; }
+      }
+      if (!hit) {
+        loginFail('Profil oder Passwort ist falsch. Bitte erneut versuchen.', loginProfile);
+        return;
+      }
+      var hex = sha256Sync((loginPassword.value || '').trim());
+      if (hex === String(hit.passHashSha256).toLowerCase()) {
+        location.href = '/' + hit.route;
+      } else {
+        loginFail('Profil oder Passwort ist falsch. Bitte erneut versuchen.', loginPassword);
+      }
+    });
+  }
+
+  var regForm = document.getElementById('hpseRegisterForm');
+  var regName = document.getElementById('hpseRegName');
+  var regEmail = document.getElementById('hpseRegEmail');
+  var regConsent = document.getElementById('hpseRegConsent');
+  var regError = document.getElementById('hpseRegError');
+  var regFormView = regModal ? regModal.querySelector('[data-register-form-view]') : null;
+  var regSuccessView = regModal ? regModal.querySelector('[data-register-success-view]') : null;
+  function regFail(msg, field) {
+    if (!regError) return;
+    regError.textContent = msg;
+    regError.hidden = false;
+    if (field && field.focus) field.focus();
+  }
+  if (regForm && regName && regEmail && regConsent && regFormView && regSuccessView) {
+    regForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      regError.hidden = true;
+      if (!(regName.value || '').trim()) {
+        regFail('Bitte geben Sie Ihren Namen ein.', regName);
+        return;
+      }
+      var val = (regEmail.value || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)) {
+        regFail('Bitte geben Sie eine g\u00fcltige E-Mail-Adresse ein.', regEmail);
+        return;
+      }
+      if (!regConsent.checked) {
+        regFail('Bitte stimmen Sie der Datenverarbeitung zu.', regConsent);
+        return;
+      }
+      regFormView.hidden = true;
+      regSuccessView.hidden = false;
+      var btn = regSuccessView.querySelector('button');
+      if (btn) btn.focus();
+    });
+  }
+
+  // Deep-Link-Auto-Öffnung: #login / #register öffnet das jeweilige Fenster.
+  function openFromHash() {
+    var h = (location.hash || '').toLowerCase();
+    if (h === '#login') { register.close(); login.open(); }
+    else if (h === '#register') { login.close(); register.open(); }
+  }
+  window.addEventListener('hashchange', openFromHash);
+  if (document.querySelector('[data-gate]') && !document.documentElement.classList.contains('is-unlocked')) {
+    var mo = new MutationObserver(function () {
+      if (document.documentElement.classList.contains('is-unlocked')) { mo.disconnect(); openFromHash(); }
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  } else {
+    openFromHash();
+  }
+}());
+</script>
+
+<style>
+  .hpse-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .hpse-modal[hidden] { display: none; }
+  .hpse-modal.is-open { opacity: 1; }
+  .hpse-modal-bg {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--ink) 78%, transparent);
+    backdrop-filter: blur(3px);
+  }
+  .hpse-modal-box {
+    position: relative;
+    width: min(860px, 100%);
+    max-height: min(88dvh, 820px);
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+    color: var(--ink);
+    border-radius: 18px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    outline: none;
+    transform: translateY(10px) scale(0.985);
+    transition: transform 0.22s ease;
+  }
+  .hpse-modal.is-open .hpse-modal-box { transform: none; }
+  .hpse-modal-head {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.25rem;
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .hpse-modal-title {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--cream);
+  }
+  .hpse-modal-close {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--cream) 35%, transparent);
+    background: transparent;
+    color: var(--cream);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .hpse-modal-close:hover { background: color-mix(in srgb, var(--cream) 14%, transparent); }
+  .hpse-modal-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .hpse-modal-body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 1.5rem 1.8rem;
+  }
+  .hpse-modal-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 1.2rem;
+  }
+  .hpse-center { text-align: center; }
+  .hpse-field-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+  .hpse-field {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.95rem;
+    box-sizing: border-box;
+  }
+  .hpse-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+  }
+  .hpse-consent input { margin-top: 2px; }
+  .hpse-error {
+    padding: 0.6rem;
+    border-radius: 6px;
+    background: color-mix(in srgb, #a83a68 12%, transparent);
+    color: #a83a68;
+    font-size: 0.82rem;
+    margin: 0 0 1rem;
+    text-align: center;
+  }
+  .hpse-submit {
+    width: 100%;
+    justify-content: center;
+    padding: 0.8rem;
+    font-weight: 700;
+  }
+  .hpse-hint {
+    margin-top: 1.2rem;
+    font-size: 0.78rem;
+    text-align: center;
+    opacity: 0.75;
+  }
+  .hpse-switch {
+    margin-top: 0.6rem;
+    text-align: center;
+    border-top: 1px solid color-mix(in srgb, var(--ink) 15%, transparent);
+    padding-top: 1rem;
+    font-size: 0.82rem;
+  }
+  .hpse-success-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: center;
+    margin: 0.2rem 0 0.6rem;
+  }
+  .hpse-inline-link {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  body.hpse-modal-open { overflow: hidden; }
+  @media (max-width: 768px) {
+    .hpse-modal { padding: 0.5rem; align-items: flex-end; }
+    .hpse-modal-box { max-height: 92dvh; border-radius: 16px 16px 12px 12px; }
+    .hpse-modal-body { padding: 0.8rem 0.9rem 1.2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hpse-modal, .hpse-modal-box { transition: none; }
+  }
+</style>

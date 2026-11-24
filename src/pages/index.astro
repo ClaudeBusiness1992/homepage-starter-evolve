@@ -20,6 +20,8 @@ import SidebarAds from '../components/SidebarAds.astro';
 import LiveEditor from '../components/LiveEditor.astro';
 import VerifiedReviews from '../components/VerifiedReviews.astro';
 import NewsletterSection from '../components/NewsletterSection.astro';
+import NewsletterModal from '../components/NewsletterModal.astro';
+import AuthModals from '../components/AuthModals.astro';
 import ServiceReminderSection from '../components/ServiceReminderSection.astro';
 import SocialLinks from '../components/SocialLinks.astro';
 
@@ -50,6 +52,10 @@ const orderedSections = [
 const navLinks = [
   ...orderedSections.map(o => ({ label: o.label, href: `#${o.id}`, section: o.id })),
   ...(cta ? [cta] : [{ label: 'Kontakt', href: '#contact', section: 'contact', cta: true }]),
+  // HPSE-AJS-KITFULL (3): generische Anmeldung oben rechts (verdrahtet mit
+  // PreviewLogin/ClientGate, ohne kundenspezifische Ziele).
+  { label: 'Einloggen', href: '#login', section: 'login', outline: true },
+  { label: 'Registrieren', href: '#register', section: 'register', cta: true },
 ];
 ---
 
@@ -74,6 +80,8 @@ const navLinks = [
     <HamburgTourSection />
     <ServiceReminderSection />
     <NewsletterSection />
+    <NewsletterModal />
+    <AuthModals />
     {(s.contact?.enabled || s.footer?.enabled) && (
       <div class="contact-footer-snap">
         {s.contact?.enabled  && <Contact   {...s.contact} email={meta.email} phone={meta.phone} phoneDisplay={meta.phoneDisplay} availability={x.booking?.availability} />}

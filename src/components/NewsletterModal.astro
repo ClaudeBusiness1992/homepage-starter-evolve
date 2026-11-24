@@ -1,0 +1,303 @@
+---
+/* NewsletterModal.astro — generisches Baukasten-Fenster (HPSE-AJS-KITFULL).
+   Reine Oberfläche nach AJS-Vorbild (AjsNewsletterModal): einmalig verzögertes
+   Erscheinen, E-Mail-Prüfung, Schließen (Fond, Knopf, Escape), Erfolgszustand,
+   Einmal-Logik via localStorage. KEINE Backend-Anbindung, KEIN Versand, KEINE
+   kunden- oder projektspezifischen Texte, Farben, Bilder oder Links.
+   Dockt an die vorhandene NewsletterSection an (Erfolgsansicht verlinkt auf
+   #newsletter); Stile bewusst eigenständig im Baukasten-Theme. */
+---
+
+<div id="hpse-newsletter-modal" class="hpse-modal" role="dialog" aria-modal="true" aria-labelledby="hpse-nl-title" aria-hidden="true" hidden>
+  <div class="hpse-modal-bg" data-nl-close></div>
+  <div class="hpse-modal-box" style="max-width: 460px;" tabindex="-1">
+    <div class="hpse-modal-head">
+      <h3 id="hpse-nl-title" class="hpse-modal-title">Newsletter</h3>
+      <button type="button" class="hpse-modal-close" data-nl-close aria-label="Fenster schließen">&times;</button>
+    </div>
+    <div class="hpse-modal-body">
+      <div data-nl-form-view>
+        <p class="hpse-modal-text">
+          Einmal im Monat: Neuigkeiten, Termine und Angebote &ndash; direkt in Ihr Postfach. Kein Spam, jederzeit abmeldbar.
+        </p>
+        <form id="hpseNlForm" novalidate>
+          <div style="margin-bottom: 1rem;">
+            <label class="hpse-field-label" for="hpseNlEmail">E-Mail-Adresse *</label>
+            <input type="email" id="hpseNlEmail" name="email" required placeholder="name@beispiel.de" autocomplete="email" aria-describedby="hpseNlError" class="hpse-field" />
+          </div>
+          <label class="hpse-consent">
+            <input type="checkbox" id="hpseNlConsent" required />
+            <span>Ich willige in den Erhalt des Newsletters ein und habe die <a href="/datenschutz" target="_blank" rel="noopener">Datenschutzerkl&auml;rung</a> zur Kenntnis genommen.</span>
+          </label>
+          <p id="hpseNlError" role="alert" hidden class="hpse-error"></p>
+          <button type="submit" class="btn btn-fill hpse-submit">
+            Anmelden &rarr;
+          </button>
+        </form>
+      </div>
+      <div data-nl-success-view hidden>
+        <p class="hpse-success-title">Danke f&uuml;r Ihre Anmeldung!</p>
+        <p class="hpse-modal-text hpse-center">
+          Bitte best&auml;tigen Sie sie noch &uuml;ber den Link in Ihrem Postfach.
+        </p>
+        <button type="button" class="btn btn-fill hpse-submit" data-nl-close>
+          Schlie&szlig;en
+        </button>
+        <p class="hpse-center" style="margin-top: 1rem;">
+          <a href="#newsletter" data-nl-close class="hpse-inline-link">Zum Newsletter-Bereich</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  'use strict';
+  var SEEN = 'hpse-nl-seen-v1';
+  var DONE = 'hpse-nl-done-v1';
+  var DELAY_MS = 2500;
+
+  function store(key, val) { try { localStorage.setItem(key, val); } catch (e) {} }
+  function read(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+
+  if (read(SEEN) || read(DONE)) return;
+
+  var modal = document.getElementById('hpse-newsletter-modal');
+  if (!modal) return;
+  var form = document.getElementById('hpseNlForm');
+  var email = document.getElementById('hpseNlEmail');
+  var consent = document.getElementById('hpseNlConsent');
+  var err = document.getElementById('hpseNlError');
+  var formView = modal.querySelector('[data-nl-form-view]');
+  var successView = modal.querySelector('[data-nl-success-view]');
+  if (!form || !email || !consent || !err || !formView || !successView) return;
+  var lastFocus = null;
+
+  function open() {
+    if (!modal.hidden) return;
+    lastFocus = document.activeElement;
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(function () { modal.classList.add('is-open'); });
+    document.body.classList.add('hpse-modal-open');
+    document.body.classList.add('kat-open');
+    setTimeout(function () { try { email.focus({ preventScroll: true }); } catch (e) { email.focus(); } }, 60);
+  }
+
+  function close() {
+    if (modal.hidden) return;
+    store(SEEN, '1');
+    modal.classList.remove('is-open');
+    document.body.classList.remove('hpse-modal-open');
+      document.body.classList.remove('kat-open');
+    setTimeout(function () {
+      modal.hidden = true;
+      modal.setAttribute('aria-hidden', 'true');
+      if (lastFocus && lastFocus.focus) { try { lastFocus.focus({ preventScroll: true }); } catch (e) { lastFocus.focus(); } }
+    }, 220);
+  }
+
+  function fail(msg, field) {
+    err.textContent = msg;
+    err.hidden = false;
+    if (field && field.focus) field.focus();
+  }
+
+  // Manuelles Öffnen (z. B. aus der Newsletter-Sektion via [data-open-newsletter]).
+  document.querySelectorAll('[data-open-newsletter]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (modal.hidden) open();
+    });
+  });
+
+  modal.querySelectorAll('[data-nl-close]').forEach(function (el) {
+    el.addEventListener('click', close);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !modal.hidden) close();
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err.hidden = true;
+    var val = (email.value || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)) {
+      fail('Bitte geben Sie eine g\u00fcltige E-Mail-Adresse ein.', email);
+      return;
+    }
+    if (!consent.checked) {
+      fail('Bitte stimmen Sie dem Newsletter-Empfang zu.', consent);
+      return;
+    }
+    store(DONE, '1');
+    store(SEEN, '1');
+    formView.hidden = true;
+    successView.hidden = false;
+    var btn = successView.querySelector('button');
+    if (btn) btn.focus();
+  });
+
+  function gateOpen() {
+    return document.documentElement.classList.contains('is-unlocked') || !document.querySelector('[data-gate]');
+  }
+  function schedule() {
+    setTimeout(function () { if (!read(SEEN) && !read(DONE)) open(); }, DELAY_MS);
+  }
+
+  if (gateOpen()) {
+    schedule();
+  } else {
+    var mo = new MutationObserver(function () {
+      if (gateOpen()) { mo.disconnect(); schedule(); }
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    setTimeout(function () { mo.disconnect(); }, 120000);
+  }
+}());
+</script>
+
+<style>
+  .hpse-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .hpse-modal[hidden] { display: none; }
+  .hpse-modal.is-open { opacity: 1; }
+  .hpse-modal-bg {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--ink) 78%, transparent);
+    backdrop-filter: blur(3px);
+  }
+  .hpse-modal-box {
+    position: relative;
+    width: min(860px, 100%);
+    max-height: min(88dvh, 820px);
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+    color: var(--ink);
+    border-radius: 18px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    outline: none;
+    transform: translateY(10px) scale(0.985);
+    transition: transform 0.22s ease;
+  }
+  .hpse-modal.is-open .hpse-modal-box { transform: none; }
+  .hpse-modal-head {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.25rem;
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .hpse-modal-title {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--cream);
+  }
+  .hpse-modal-close {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    border: 1.5px solid color-mix(in srgb, var(--cream) 35%, transparent);
+    background: transparent;
+    color: var(--cream);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .hpse-modal-close:hover { background: color-mix(in srgb, var(--cream) 14%, transparent); }
+  .hpse-modal-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .hpse-modal-body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 1.5rem 1.8rem;
+  }
+  .hpse-modal-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 1.2rem;
+  }
+  .hpse-center { text-align: center; }
+  .hpse-field-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+  .hpse-field {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+    border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+    background: #fff;
+    color: var(--ink);
+    font-size: 0.95rem;
+    box-sizing: border-box;
+  }
+  .hpse-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+  }
+  .hpse-consent input { margin-top: 2px; }
+  .hpse-consent a { color: var(--accent); text-decoration: underline; }
+  .hpse-error {
+    padding: 0.6rem;
+    border-radius: 6px;
+    background: color-mix(in srgb, #a83a68 12%, transparent);
+    color: #a83a68;
+    font-size: 0.82rem;
+    margin: 0 0 1rem;
+    text-align: center;
+  }
+  .hpse-submit {
+    width: 100%;
+    justify-content: center;
+    padding: 0.8rem;
+    font-weight: 700;
+  }
+  .hpse-success-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: center;
+    margin: 0.2rem 0 0.6rem;
+  }
+  .hpse-inline-link {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  body.hpse-modal-open { overflow: hidden; }
+  @media (max-width: 768px) {
+    .hpse-modal { padding: 0.5rem; align-items: flex-end; }
+    .hpse-modal-box { max-height: 92dvh; border-radius: 16px 16px 12px 12px; }
+    .hpse-modal-body { padding: 0.8rem 0.9rem 1.2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hpse-modal, .hpse-modal-box { transition: none; }
+  }
+</style>
