@@ -10,7 +10,7 @@ export default defineConfig({
   security: {
     checkOrigin: false,
   },
-  site: 'https://ihre-domain.de',
+  site: 'https://homepage-starter-evolve.vercel.app',
   trailingSlash: 'never',
   integrations: [sitemap({ filter: (page) => !page.endsWith('/test') })],
 });
