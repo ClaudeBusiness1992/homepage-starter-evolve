@@ -2511,6 +2511,6 @@ p, .sub, .hero-sub, .stxt, .atext, .plist li,
 #service-erinnerung .h2,
 #newsletter .h2,
 #contact .h2 {
-  font-size: clamp(2rem, 3.5vw, 2.5rem) !important;
+  font-size: clamp(calc(var(--fs-xl) * 0.5714), 3.5vw, calc(var(--fs-xl) * 0.7143)) !important;
   line-height: 1.15 !important;
 }

@@ -482,31 +482,32 @@ const safeTheme = {
               </div>
               <div>
                 <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
-                  <label style="font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Verwendete Schriftgrößen (Max. 5)</label>
-                  <span style="font-size: 0.68rem; color: #10b981; font-weight: 700;">5 / 5 aktiv</span>
+                  <label style="font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase;">Schriftgröße (5 Stufen als Liste)</label>
+                  <span style="font-size: 0.68rem; color: #10b981; font-weight: 700;">5 Stufen</span>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 6px; background: rgba(0,0,0,0.25); border-radius: 6px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.06); font-size: 0.76rem;">
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #e5e7eb; font-weight: 600;">1. XL (56px / 3.5rem)</span>
-                    <span style="color: #9ca3af; font-size: 0.7rem;">Hero H1, Sektions-H2</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #e5e7eb; font-weight: 600;">2. LG (24px / 1.5rem)</span>
-                    <span style="color: #9ca3af; font-size: 0.7rem;">H3, Kacheltitel, Logo</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #e5e7eb; font-weight: 600;">3. MD (18px / 1.125rem)</span>
-                    <span style="color: #9ca3af; font-size: 0.7rem;">Sublines, Einleitungen</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #e5e7eb; font-weight: 600;">4. Base (15px / 0.94rem)</span>
-                    <span style="color: #9ca3af; font-size: 0.7rem;">Fließtext, Buttons, Menü</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #e5e7eb; font-weight: 600;">5. SM (12px / 0.75rem)</span>
-                    <span style="color: #9ca3af; font-size: 0.7rem;">Badges, Labels, Footer</span>
-                  </div>
+                <div role="radiogroup" aria-label="Schriftgröße" style="display: flex; flex-direction: column; gap: 6px; background: rgba(0,0,0,0.25); border-radius: 6px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.06); font-size: 0.76rem;">
+                  <label style="display: flex; justify-content: space-between; align-items: center; gap: 8px; cursor: pointer;">
+                    <span style="display: flex; align-items: center; gap: 8px; color: #e5e7eb; font-weight: 600;"><input type="radio" name="hpse-font-scale" value="xs" style="accent-color: #c8520e;" /> XS (kompakt)</span>
+                    <span style="color: #9ca3af; font-size: 0.7rem;">kleinste Darstellung</span>
+                  </label>
+                  <label style="display: flex; justify-content: space-between; align-items: center; gap: 8px; cursor: pointer;">
+                    <span style="display: flex; align-items: center; gap: 8px; color: #e5e7eb; font-weight: 600;"><input type="radio" name="hpse-font-scale" value="s" style="accent-color: #c8520e;" /> S (reduziert)</span>
+                    <span style="color: #9ca3af; font-size: 0.7rem;">dezent kleiner</span>
+                  </label>
+                  <label style="display: flex; justify-content: space-between; align-items: center; gap: 8px; cursor: pointer;">
+                    <span style="display: flex; align-items: center; gap: 8px; color: #e5e7eb; font-weight: 600;"><input type="radio" name="hpse-font-scale" value="m" checked style="accent-color: #c8520e;" /> M (Standard)</span>
+                    <span style="color: #9ca3af; font-size: 0.7rem;">XL 56px · Base 15px · SM 12px</span>
+                  </label>
+                  <label style="display: flex; justify-content: space-between; align-items: center; gap: 8px; cursor: pointer;">
+                    <span style="display: flex; align-items: center; gap: 8px; color: #e5e7eb; font-weight: 600;"><input type="radio" name="hpse-font-scale" value="l" style="accent-color: #c8520e;" /> L (groß)</span>
+                    <span style="color: #9ca3af; font-size: 0.7rem;">deutlich größer</span>
+                  </label>
+                  <label style="display: flex; justify-content: space-between; align-items: center; gap: 8px; cursor: pointer;">
+                    <span style="display: flex; align-items: center; gap: 8px; color: #e5e7eb; font-weight: 600;"><input type="radio" name="hpse-font-scale" value="xl" style="accent-color: #c8520e;" /> XL (maximal)</span>
+                    <span style="color: #9ca3af; font-size: 0.7rem;">größte Darstellung</span>
+                  </label>
                 </div>
+                <p class="hpse-help" style="margin-top: 6px;">M ist Standard (unverändert). Die Stufen skalieren XL/LG/MD/Base/SM gemeinsam in der Vorschau.</p>
               </div>
             </div>
           </details>
@@ -1974,16 +1975,25 @@ const safeTheme = {
     'sans-only': { serif: "'Outfit', system-ui, sans-serif", sans: "'Outfit', system-ui, sans-serif" }
   };
 
+  // 5 Schriftgrößen-Stufen (XS–XL als Liste, max. 5): M ist Standard (Werte unverändert).
   const fontScales = {
-    compact: { xl: '3.1rem', lg: '1.35rem', md: '1rem', base: '0.85rem', sm: '0.7rem' },
-    normal:  { xl: '3.5rem', lg: '1.5rem',  md: '1.125rem', base: '0.9375rem', sm: '0.75rem' },
-    large:   { xl: '4.0rem', lg: '1.7rem',  md: '1.25rem', base: '1.05rem', sm: '0.82rem' },
-    xlarge:  { xl: '4.5rem', lg: '1.9rem',  md: '1.35rem', base: '1.15rem', sm: '0.9rem' }
+    xs: { xl: '2.8rem', lg: '1.25rem', md: '0.95rem',  base: '0.8rem',     sm: '0.65rem' },
+    s:  { xl: '3.1rem', lg: '1.35rem', md: '1rem',     base: '0.85rem',    sm: '0.7rem' },
+    m:  { xl: '3.5rem', lg: '1.5rem',  md: '1.125rem', base: '0.9375rem',  sm: '0.75rem' },
+    l:  { xl: '4.0rem', lg: '1.7rem',  md: '1.25rem',  base: '1.05rem',    sm: '0.82rem' },
+    xl: { xl: '4.5rem', lg: '1.9rem',  md: '1.35rem',  base: '1.15rem',    sm: '0.9rem' }
   };
+
+  // Alt-Schlüssel (compact/normal/large/xlarge) auf XS–XL abbilden (Rückwärtskompatibilität).
+  const LEGACY_SCALE_MAP = { compact: 's', normal: 'm', large: 'l', xlarge: 'xl', xs: 'xs', s: 's', m: 'm', l: 'l', xl: 'xl' };
+  function normalizeScale(v) {
+    const k = String(v || '').toLowerCase();
+    return LEGACY_SCALE_MAP[k] || 'm';
+  }
 
   const defaultTypography = {
     fontPair: 'dm-outfit',
-    scale: 'normal'
+    scale: 'm'
   };
 
   const editorEl = document.getElementById('hpse-editor');
@@ -2071,6 +2081,14 @@ const safeTheme = {
         state.countdown = {
           target: parsed.countdown.target || 'hero',
           position: parsed.countdown.position || 'before'
+        };
+      }
+      if (parsed.typography && typeof parsed.typography === 'object') {
+        const rawPair = String(parsed.typography.fontPair || '');
+        const rawScale = String(parsed.typography.scale || '');
+        state.typography = {
+          fontPair: fontPairs[rawPair] ? rawPair : defaultTypography.fontPair,
+          scale: normalizeScale(rawScale)
         };
       }
       if (parsed.background && (parsed.background.mode === 'wechsel' || parsed.background.mode === 'einfarbig')) {
@@ -2181,7 +2199,7 @@ const safeTheme = {
   function applyTypography() {
     const typo = state.typography || defaultTypography;
     const pair = fontPairs[typo.fontPair] || fontPairs['dm-outfit'];
-    const scale = fontScales[typo.scale] || fontScales['normal'];
+    const scale = fontScales[normalizeScale(typo.scale)] || fontScales['m'];
 
     document.documentElement.style.setProperty('--serif', pair.serif);
     document.documentElement.style.setProperty('--sans', pair.sans);
@@ -2194,8 +2212,10 @@ const safeTheme = {
 
     const selPair = document.getElementById('hpse-font-pair');
     if (selPair && typo.fontPair) selPair.value = typo.fontPair;
-    const selScale = document.getElementById('hpse-font-scale');
-    if (selScale && typo.scale) selScale.value = typo.scale;
+    const curScale = normalizeScale(typo.scale);
+    document.querySelectorAll('input[name="hpse-font-scale"]').forEach(r => {
+      r.checked = (r.value === curScale);
+    });
   }
 
   function applyColors() {
@@ -2970,12 +2990,13 @@ const safeTheme = {
     saveState();
   });
 
-  const selScale = document.getElementById('hpse-font-scale');
-  selScale?.addEventListener('change', (e) => {
-    if (!state.typography) state.typography = { ...defaultTypography };
-    state.typography.scale = e.target.value;
-    applyTypography();
-    saveState();
+  document.querySelectorAll('input[name="hpse-font-scale"]').forEach(r => {
+    r.addEventListener('change', (e) => {
+      if (!state.typography) state.typography = { ...defaultTypography };
+      state.typography.scale = normalizeScale(e.target.value);
+      applyTypography();
+      saveState();
+    });
   });
 
   ['accent', 'ink', 'cream', 'sage', 'accentLight', 'inkMuted'].forEach(colKey => {
