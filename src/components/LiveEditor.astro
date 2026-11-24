@@ -1351,10 +1351,10 @@ const safeTheme = {
   /* ═══ Team-Modus: feste Header-Position & dynamische Kachelgrößen je Personenzahl ═══ */
   :global(body.hpse-about-team #about-default-grid) { display: none !important; }
   :global(body.hpse-about-team #about) {
-    height: 100dvh !important;
-    max-height: 100dvh !important;
-    padding-top: var(--nav-h) !important;
-    padding-bottom: 1.5rem !important;
+    height: calc(100dvh - var(--nav-h)) !important;
+    max-height: calc(100dvh - var(--nav-h)) !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 1rem !important;
     justify-content: flex-start !important;
     box-sizing: border-box !important;
   }
@@ -1369,12 +1369,12 @@ const safeTheme = {
   }
   :global(body.hpse-about-team #about .section-hd) {
     flex-shrink: 0 !important;
-    margin-bottom: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
   }
   :global(body.hpse-about-team #about #about-dept-filters) {
     display: flex !important;
     flex-shrink: 0 !important;
-    margin-bottom: 1.25rem !important;
+    margin-bottom: 0.75rem !important;
   }
   :global(body.hpse-about-team #about-team-carousel) {
     display: flex !important;
@@ -1382,6 +1382,8 @@ const safeTheme = {
     justify-content: flex-start !important;
     flex: 1 !important;
     min-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 
   :global(.about-depts) {
@@ -1425,7 +1427,7 @@ const safeTheme = {
   }
   :global(.about-team-track) {
     display: grid;
-    grid-template-rows: repeat(2, 310px);
+    grid-template-rows: repeat(2, minmax(0, calc((100dvh - var(--nav-h) - 200px) / 2)));
     grid-auto-flow: column;
     grid-auto-columns: calc((100% - 2 * 1.25rem) / 3);
     gap: 1.25rem;
@@ -1433,7 +1435,9 @@ const safeTheme = {
     overflow-y: visible;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    padding-block: 8px;
+    padding-block: 4px;
+    height: 100%;
+    max-height: calc(100dvh - var(--nav-h) - 170px);
   }
   /* 1 Person im Team: Exakt wie Single (großformatig, Foto links 540px, Text rechts zentriert) */
   :global(.about-team-track[data-visible-count="1"]) {
@@ -1445,7 +1449,8 @@ const safeTheme = {
     margin-inline: auto !important;
   }
   :global(.about-team-track[data-visible-count="1"] .team-card) {
-    height: 640px !important;
+    height: 100% !important;
+    max-height: calc(100dvh - var(--nav-h) - 170px) !important;
     flex-direction: row !important;
     align-items: stretch !important;
   }
@@ -1492,7 +1497,8 @@ const safeTheme = {
     max-width: 100% !important;
   }
   :global(.about-team-track[data-visible-count="2"] .team-card) {
-    height: 640px !important;
+    height: 100% !important;
+    max-height: calc(100dvh - var(--nav-h) - 170px) !important;
     flex-direction: column !important;
   }
   :global(#about .about-team-track[data-visible-count="2"] .team-card .aphoto) {
@@ -2641,7 +2647,6 @@ const safeTheme = {
           cfSnap.appendChild(ft);
         }
       }
-    }
 
       // Countdown als modularer Anhang platzieren
       applyCountdown();
@@ -2658,13 +2663,21 @@ const safeTheme = {
     // 4. Desktop-Navigation Links anordnen (#navLinks / .nav-ul)
     const navUl = document.getElementById('navLinks') || document.querySelector('.nav-ul');
     if (navUl) {
+      // Normale Links nach curOrder sortieren (ohne CTA/Kontakt)
       curOrder.forEach(id => {
-        const link = navUl.querySelector(`a[href*="#${id}"]`);
+        if (id === 'contact' || id === 'footer') return;
+        const link = navUl.querySelector(`a[href*="#${id}"]:not(.cta-link)`);
         if (link) {
           const li = link.closest('li') || link;
           navUl.appendChild(li);
         }
       });
+      // CTA Button (Kontakt) immer zwingend ganz rechts an letzter Position
+      const ctaLink = navUl.querySelector('a.cta-link, a[href*="#contact"]');
+      if (ctaLink) {
+        const ctaLi = ctaLink.closest('li') || ctaLink;
+        navUl.appendChild(ctaLi);
+      }
     }
 
     // 5. Mobile Navigation Tabs anordnen (#mobile-nav-tabs)
@@ -3002,7 +3015,7 @@ const safeTheme = {
     if (el.closest('.skip-link')) {
       return { r: 185, g: 70, b: 10, a: 1 };
     }
-    if (el.closest('.btn-fill, a.cta-link, .pbadge, .btn-email, .btn-submit, .bk-submit, .btn-primary')) {
+    if (el.closest('.btn-fill, a.cta-link, .pbadge, .btn-email, .btn-submit, .bk-submit, .btn-primary, .cookie-btn-primary')) {
       var rootAcc = window.getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
       var accRgb = parseRGB(rootAcc);
       if (accRgb) return accRgb;
@@ -3170,7 +3183,7 @@ const safeTheme = {
       }).join('');
     }
 
-    renderCategory('contrast', 'hpse-list-contrast', 'hpse-count-contrast');
+        renderCategory('contrast', 'hpse-list-contrast', 'hpse-count-contrast');
     renderCategory('a11y', 'hpse-list-a11y', 'hpse-count-a11y');
     renderCategory('interactive', 'hpse-list-interactive', 'hpse-count-interactive');
     renderCategory('layout', 'hpse-list-layout', 'hpse-count-layout');

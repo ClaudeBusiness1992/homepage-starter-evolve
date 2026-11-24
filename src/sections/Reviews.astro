@@ -72,6 +72,10 @@ const jsonLd = {
 <section class="section" id="reviews">
   <div class="wrap">
     <SectionHeader {label} {headline} {subline} center />
+    <div class="reviews-switch-nav" id="reviews-view-switch">
+      <button type="button" class="reviews-switch-btn is-active" data-rev-view="carousel">Kundenstimmen</button>
+      <button type="button" class="reviews-switch-btn" data-rev-view="verified">Geprüfte Auftraggeber</button>
+    </div>
     {stats.length > 0 && (
       <div class="reviews-stats">
         {stats.map(s => (
@@ -122,3 +126,58 @@ const jsonLd = {
 </section>
 
 <CarouselScript />
+
+<script is:inline>
+(() => {
+  const switchContainer = document.getElementById("reviews-view-switch");
+  if (!switchContainer) return;
+
+  const btnCarousel = switchContainer.querySelector("[data-rev-view='carousel']");
+  const btnVerified = switchContainer.querySelector("[data-rev-view='verified']");
+  const secReviews = document.getElementById("reviews");
+  const secVerified = document.getElementById("verified-reviews");
+
+  // Initial: #reviews ist sichtbar, #verified-reviews ist ausgeblendet
+  if (secVerified) {
+    secVerified.style.display = "none";
+  }
+
+  function setView(view) {
+    if (!secReviews || !secVerified) return;
+    if (view === "carousel") {
+      secReviews.style.display = "";
+      secVerified.style.display = "none";
+      btnCarousel?.classList.add("is-active");
+      btnVerified?.classList.remove("is-active");
+      secReviews.scrollIntoView({ behavior: "smooth" });
+    } else {
+      secReviews.style.display = "none";
+      secVerified.style.display = "";
+      let vSwitch = secVerified.querySelector("#reviews-view-switch-clone");
+      if (!vSwitch) {
+        const wrap = secVerified.querySelector(".wrap");
+        const hd = secVerified.querySelector(".section-hd");
+        if (wrap && hd) {
+          vSwitch = document.createElement("div");
+          vSwitch.id = "reviews-view-switch-clone";
+          vSwitch.className = "reviews-switch-nav";
+          vSwitch.innerHTML = `
+            <button type="button" class="reviews-switch-btn" data-rev-view="carousel">Kundenstimmen</button>
+            <button type="button" class="reviews-switch-btn is-active" data-rev-view="verified">Geprüfte Auftraggeber</button>
+          `;
+          hd.insertAdjacentElement("afterend", vSwitch);
+          vSwitch.querySelector("[data-rev-view='carousel']")?.addEventListener("click", () => setView("carousel"));
+          vSwitch.querySelector("[data-rev-view='verified']")?.addEventListener("click", () => setView("verified"));
+        }
+      } else {
+        vSwitch.querySelector("[data-rev-view='carousel']")?.classList.remove("is-active");
+        vSwitch.querySelector("[data-rev-view='verified']")?.classList.add("is-active");
+      }
+      secVerified.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  btnCarousel?.addEventListener("click", () => setView("carousel"));
+  btnVerified?.addEventListener("click", () => setView("verified"));
+})();
+</script>

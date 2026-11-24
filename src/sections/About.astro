@@ -28,13 +28,23 @@ try {
   dbMembers = db.prepare('SELECT * FROM team_members WHERE is_published = 1 ORDER BY sort_order ASC').all();
 } catch (e) {}
 
-const dynamicMembers: Member[] = dbMembers.length > 0 ? dbMembers.map((m: any) => ({
+const defaultPhotos = [
+  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80'
+];
+
+const dynamicMembers: Member[] = dbMembers.length > 0 ? dbMembers.map((m: any, idx: number) => ({
   name: m.name,
   role: m.role,
   bio: m.bio,
-  photo: m.photo_url,
+  photo: m.photo_url && m.photo_url.trim() ? m.photo_url : (defaultPhotos[idx % defaultPhotos.length]),
   department: 'Team'
-})) : members;
+})) : members.map((m: any, idx: number) => ({
+  ...m,
+  photo: m.photo && m.photo.trim() ? m.photo : (defaultPhotos[idx % defaultPhotos.length])
+}));
 
 const memberCount = dynamicMembers.length;
 const layoutClass = memberCount === 1 ? 'team-layout-single'

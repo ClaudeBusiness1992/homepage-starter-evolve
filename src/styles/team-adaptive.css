@@ -7,24 +7,59 @@
 
 /* N = 1: Einzelkarte, strikt vertikal (Foto oben, Name/Rolle/Bio darunter) */
 .team-layout-single {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  max-width: 440px;
+  display: block;
+  max-width: 860px;
   margin: 0 auto;
-  align-items: stretch;
+  width: 100%;
+}
+
+.team-layout-single > .team-card {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: stretch !important;
   background: var(--card-bg, rgba(255, 255, 255, 0.03));
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
   border-radius: 1.25rem;
-  padding: 2rem;
+  overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  max-height: min(440px, calc(100dvh - var(--nav-h) - 180px));
 }
 
-.team-layout-single .team-card-photo {
-  aspect-ratio: 4/5;
-  width: 100%;
-  border-radius: 1rem;
-  overflow: hidden;
+#about .about-grid.team-layout-single > .team-card {
+  flex-direction: row !important;
+}
+
+#about .about-grid.team-layout-single > .team-card .team-card-photo {
+  flex: 0 0 45% !important;
+  width: 45% !important;
+  height: 100% !important;
+  min-height: 280px !important;
+  max-height: none !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 0 !important;
+}
+
+#about .about-grid.team-layout-single > .team-card .team-card-body {
+  flex: 1 1 auto !important;
+  padding: 2.5rem 2rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+#about .about-grid.team-layout-single > .team-card .team-card-name {
+  font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+  margin-bottom: 0.35rem;
+}
+
+#about .about-grid.team-layout-single > .team-card .team-card-role {
+  font-size: var(--fs-md);
+  margin-bottom: 1.25rem;
+}
+
+#about .about-grid.team-layout-single > .team-card .team-card-bio {
+  font-size: var(--fs-base);
+  line-height: 1.65;
 }
 
 /* N = 2: Symmetrisches Duo-Grid (Karten strikt vertikal: Foto oben, Bio unten) */
@@ -39,11 +74,9 @@
 /* Vertikal-Garantie Solo/Duo: Bio zwingend unterhalb des Fotos —
    schlägt globale .team-card-row-Overrides (z. B. Editor-Styles) anhand
    höherer Spezifität, gilt auf allen Bildschirmgrößen. */
-#about .about-grid.team-layout-single > .team-card,
 #about .about-grid.team-layout-duo > .team-card {
   flex-direction: column;
 }
-#about .about-grid.team-layout-single > .team-card .team-card-photo,
 #about .about-grid.team-layout-duo > .team-card .team-card-photo {
   order: 0;
   flex: 0 0 auto;
@@ -55,17 +88,11 @@
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
-#about .about-grid.team-layout-single > .team-card .team-card-body,
 #about .about-grid.team-layout-duo > .team-card .team-card-body {
   order: 1;
 }
 /* Solo: Container stellt die Kartenoptik, innere Karte bleibt chromlos */
-.team-layout-single > .team-card {
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  overflow: visible;
-}
+/* Solo card styles defined above */
 
 /* N = 3: Klassisches 3er-Grid */
 .team-layout-trio {
@@ -243,10 +270,15 @@
 }
 
 @media (max-width: 640px) {
-  .team-layout-single {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    padding: 1.25rem;
+  .team-layout-single > .team-card {
+    flex-direction: column !important;
+    max-height: none !important;
+  }
+  #about .about-grid.team-layout-single > .team-card .team-card-photo {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
   }
   .team-layout-duo,
   .team-layout-trio,
@@ -262,3 +294,4 @@
     max-width: none;
   }
 }
+

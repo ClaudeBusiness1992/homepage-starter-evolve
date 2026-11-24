@@ -3,15 +3,23 @@
    Alle Farben exakt im Marken-Farbkonzept (Cream, Ink, Accent, Sage, Gold). */
 
 #hamburg-tour {
-  background: var(--cream);
-  color: var(--ink);
+  background: var(--ink, #141724);
+  color: var(--cream, #f5f0e8);
+  height: calc(100dvh - var(--nav-h));
+  min-height: calc(100dvh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 #hamburg-tour > .wrap {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: 0;
+  justify-content: center;
+  width: 100%;
+  margin-block: auto;
 }
 
 #hamburg-tour .section-hd {
@@ -19,53 +27,60 @@
 }
 
 #hamburg-tour .h2 {
-  color: var(--ink);
-  font-size: clamp(1.4rem, 2.8dvh, 1.85rem);
-  margin-bottom: 0.25rem;
+  color: var(--cream, #f5f0e8);
 }
 
 #hamburg-tour .sub {
-  color: var(--ink);
-  opacity: 0.82;
+  color: color-mix(in srgb, var(--cream, #f5f0e8) 82%, var(--ink));
+  opacity: 1;
   font-size: clamp(0.82rem, 1.6dvh, 0.92rem);
   line-height: 1.4;
   margin-bottom: 0.35rem;
 }
 
 .ht-grid {
-  flex: 1;
-  min-height: 0;
-  max-height: min(580px, calc(100dvh - var(--nav-h) - 130px));
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 1rem;
+  gap: 1.25rem;
   align-items: stretch;
   margin: 0 auto;
   width: 100%;
+  max-width: 1100px;
 }
 
 /* ── Karte ── */
 .ht-map {
-  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ht-map-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #0f121d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.ht-map-frame {
+.ht-map-frame img.ht-map-bg {
   width: 100%;
-  max-height: 100%;
-  aspect-ratio: 540 / 390;
-  background: #fffdf8;
-  border: 1px solid rgba(28, 28, 28, 0.12);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow);
-  padding: 0.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  box-sizing: border-box;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ht-map-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .ht-map-frame svg {
@@ -186,12 +201,10 @@
 
 /* ── Seitenpanel ── */
 .ht-panel {
-  min-height: 0;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding-right: 0.25rem;
+  justify-content: space-between;
 }
 
 .ht-info {
@@ -261,8 +274,8 @@
 }
 
 .ht-tools {
-  background: #fffdf8;
-  border: 1px solid rgba(28, 28, 28, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--r-lg);
   padding: 0.85rem 1rem;
   display: grid;
@@ -275,7 +288,7 @@
   font-weight: 700;
   font-size: 0.82rem;
   margin-bottom: 0.3rem;
-  color: var(--ink);
+  color: var(--cream);
 }
 
 .ht-row {
@@ -288,9 +301,9 @@
   min-width: 0;
   font: inherit;
   font-size: 0.85rem;
-  color: var(--ink);
-  background: var(--cream);
-  border: 1px solid rgba(28, 28, 28, 0.25);
+  color: var(--cream);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--r);
   padding: 0.45rem 0.65rem;
 }
@@ -298,7 +311,7 @@
 .ht-input:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
-  border-color: var(--ink);
+  border-color: var(--cream);
 }
 
 .ht-btn {
@@ -308,7 +321,7 @@
   border-radius: var(--r);
   padding: 0.45rem 0.85rem;
   cursor: pointer;
-  border: 1px solid var(--ink);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   transition: transform 0.12s ease, background 0.15s ease;
 }
 
@@ -332,12 +345,14 @@
 
 .ht-btn--geo {
   width: 100%;
-  background: var(--cream);
-  color: var(--ink);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--cream);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .ht-btn--geo:hover {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .ht-btn[disabled] {
@@ -349,7 +364,7 @@
   margin: 0.35rem 0 0;
   font-size: 0.82rem;
   line-height: 1.4;
-  color: var(--ink);
+  color: var(--cream);
 }
 
 .ht-msg--ok {
@@ -369,7 +384,7 @@
   margin: 0;
   padding: 0;
   font-size: 0.8rem;
-  color: var(--ink);
+  color: var(--cream);
 }
 
 .ht-legend button {
@@ -389,7 +404,7 @@
 
 .ht-legend button.is-active {
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-light, #e2a63b);
 }
 
 .ht-dot {
@@ -431,3 +446,4 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
