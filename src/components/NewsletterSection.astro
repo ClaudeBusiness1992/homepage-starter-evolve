@@ -46,7 +46,7 @@ const isEnabled = isSectionEnabled('newsletter');
             <label class="nl-consent-label">
               <input type="checkbox" required class="nl-checkbox" />
               <span>
-                Ich willige in den Erhalt des Newsletters ein und habe die <a href="/datenschutz" target="_blank">Datenschutzerklärung</a> zur Kenntnis genommen.
+                Ich willige in den Erhalt des Newsletters ein und habe die <a href="/datenschutz" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a> zur Kenntnis genommen.
               </span>
             </label>
           </div>
@@ -92,6 +92,7 @@ const isEnabled = isSectionEnabled('newsletter');
   }
   .nl-input:focus {
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
   }
   .nl-btn {
     padding: 0.55rem 1.25rem;
