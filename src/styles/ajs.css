@@ -607,11 +607,11 @@ body.swipe-active *:not(.kat-body)::-webkit-scrollbar { display: none; width: 0;
 }
 #nav .logo span {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.25rem;
   white-space: nowrap;
   font-family: var(--serif);
-  font-size: 1.25rem;
+  font-size: 1.6rem;
   color: var(--ajs-olive);
 }
 #nav .logo-img {
@@ -761,11 +761,13 @@ footer p, footer span, footer a {
 #nav .logo {
   display: inline-flex !important;
   align-items: center !important;
+  align-self: center !important;
   gap: 0.5rem !important;
   white-space: nowrap !important;
   flex-shrink: 0 !important;
   margin: 0 !important;
   text-decoration: none !important;
+  line-height: 1 !important;
 }
 #nav .logo-img {
   width: 40px !important;
@@ -776,9 +778,17 @@ footer p, footer span, footer a {
 #nav .logo span {
   white-space: nowrap !important;
   font-family: var(--serif) !important;
-  font-size: 1.15rem !important;
+  font-size: 1.6rem !important;
   color: var(--ajs-olive) !important;
   line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+/* HPSE-AJS-EDITORSCROLL: schmal (Burger) etwas kleiner, damit kein Umbruch/Überlauf entsteht. */
+@media (max-width: 768px) {
+  #nav .logo span {
+    font-size: 1.3rem !important;
+  }
 }
 #nav .nav-ul {
   display: inline-flex !important;

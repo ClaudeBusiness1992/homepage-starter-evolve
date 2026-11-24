@@ -315,6 +315,10 @@ main > section:not(#hero) > .wrap {
   color: var(--cream);
   text-decoration: none;
   margin-right: auto;
+  align-self: center;
+  line-height: 1.1;
+  display: inline-flex;
+  align-items: center;
 }
 .logo em { font-style: normal; color: var(--accent-light, #e2a63b); }
 .logo:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 2px; }
@@ -2404,6 +2408,10 @@ p, .sub, .hero-sub, .stxt, .atext, .plist li,
 /* ── STRICT 5-TIER FONT ENFORCEMENT ── */
 .skip-link { font-size: var(--fs-base) !important; }
 .logo { font-size: var(--fs-lg) !important; }
+/* HPSE-AJS-EDITORSCROLL: Marken-Schriftzug deutlich größer und optisch mittig zur Leistenhöhe;
+   übrige Navi-Ordnung (Links mittig, Aktionen rechts, Umbruch, Burger) unberührt. */
+#nav .logo { font-size: 1.9rem !important; align-self: center; line-height: 1.1; }
+@media (max-width: 768px) { #nav .logo { font-size: 1.45rem !important; } }
 .nav-ul a, .nav-ul li a, header nav a, .nav-links a { font-size: var(--fs-base) !important; }
 .cta-link { font-size: var(--fs-base) !important; }
 

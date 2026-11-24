@@ -2108,6 +2108,16 @@ const safeTheme = {
     }
   }
 
+  // HPSE-AJS-EDITORSCROLL: Klick auf die Seitenfläche gibt den Seiten-Bildlauf frei.
+  // Der Drawer bleibt geöffnet und behält seinen eigenen Bildlauf (.hpse-drawer-body);
+  // nur die Seiten-Feststellung (Body-Klasse) wird gelöst. Schließen stellt den Normalzustand her.
+  document.addEventListener('click', (e) => {
+    if (!drawer.classList.contains('is-open')) return;
+    const root = document.getElementById('hpse-editor');
+    if (root && root.contains(e.target)) return;
+    document.body.classList.remove('hpse-drawer-open');
+  }, true);
+
   // Verhindert Scroll-Chaining & Durchscrollen auf die Homepage beim Scrollen im Drawer
   drawer.addEventListener('wheel', (e) => {
     e.stopPropagation();
