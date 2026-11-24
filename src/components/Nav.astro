@@ -2,7 +2,9 @@
 interface NavLink {
   label: string;
   href: string;
+  section?: string;
   cta?: boolean;
+  outline?: boolean;
 }
 interface Props {
   siteName: string;
@@ -15,6 +17,11 @@ const logoBefore = accentIdx > -1 ? siteName.slice(0, accentIdx) : siteName;
 const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.length ?? 0)) : '';
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href : `/${href}`;
+// Aktions-Buttons (Einloggen/outline, Mitglied werden/cta, Kontakt/cta) immer ganz rechts,
+// konsistent zur AjsNav-Anmutung: in der Burger-Ansicht als Liste, auf Desktop als Buttons rechts.
+const isAction = (l: NavLink) => !!(l.cta || l.outline || l.section === 'login' || l.section === 'register');
+const contentLinks = links.filter(l => !isAction(l));
+const actionLinks = links.filter(l => isAction(l));
 ---
 
 <nav id="nav" aria-label="Hauptnavigation">
@@ -23,12 +30,24 @@ const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href :
       <a href="/" class="logo">{logoBefore}{siteNameAccent && <em>{siteNameAccent}</em>}{logoAfter}</a>
       {links.length > 0 && (
         <ul class="nav-ul" id="navLinks">
-          {links.map(l => (
+          {contentLinks.map(l => (
             <li>
-              <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : ''}>{l.label}</a>
+              <a href={resolveHref(l.href)}>{l.label}</a>
+            </li>
+          ))}
+          {actionLinks.map(l => (
+            <li class="nav-action-mobile">
+              <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
             </li>
           ))}
         </ul>
+      )}
+      {actionLinks.length > 0 && (
+        <div class="nav-actions-desktop">
+          {actionLinks.map(l => (
+            <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
+          ))}
+        </div>
       )}
       <button class="burger" id="burger" aria-label="Menü" aria-expanded="false" aria-controls="navLinks">
         <span></span><span></span><span></span>
@@ -36,3 +55,58 @@ const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href :
     </div>
   </div>
 </nav>
+
+<style>
+  /* Outline-Button (Einloggen): schlicht, passend zum Startseiten-Theme */
+  #nav .nav-btn-outline {
+    display: inline-block;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 0.42rem 1.05rem;
+    color: var(--cream);
+    background: transparent;
+    border: 1.5px solid var(--accent-light, #e2a63b);
+    border-radius: 999px;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+  #nav .nav-btn-outline:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+  #nav .nav-btn-outline:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  #nav .nav-actions-desktop {
+    display: none;
+  }
+  @media (min-width: 769px) {
+    #nav .nav-actions-desktop {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      flex: 0 0 auto;
+    }
+    #nav .nav-actions-desktop a.cta-link,
+    #nav .nav-actions-desktop a.nav-btn-outline {
+      font-size: 0.8rem;
+      padding: 0.42rem 0.95rem;
+    }
+    #nav .nav-ul li.nav-action-mobile {
+      display: none;
+    }
+  }
+  @media (max-width: 768px) {
+    #nav .nav-actions-desktop {
+      display: none;
+    }
+    #nav .nav-ul.open a.nav-btn-outline,
+    #nav .nav-ul.open a.cta-link {
+      display: block;
+      text-align: center;
+    }
+  }
+</style>

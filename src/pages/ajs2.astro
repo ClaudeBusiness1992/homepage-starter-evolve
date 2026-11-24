@@ -369,6 +369,21 @@ const navLinks = [
     }
   });
 
+  // ── Deep-Link: /ajs2#login bzw. /ajs2#register öffnet das jeweilige Fenster direkt ──
+  function openFromHash() {
+    const h = (location.hash || '').toLowerCase();
+    if (h === '#login') openLoginModal();
+    else if (h === '#register') openRegisterModal();
+  }
+  window.addEventListener('hashchange', openFromHash);
+  if (document.querySelector('[data-gate]') && !document.documentElement.classList.contains('is-unlocked')) {
+    const mo = new MutationObserver(() => {
+      if (document.documentElement.classList.contains('is-unlocked')) { mo.disconnect(); openFromHash(); }
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  }
+  openFromHash();
+
   // ── Nav link clicks — use same smooth animation ───────────────────────────
   document.querySelectorAll('#navLinks a[href*="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
