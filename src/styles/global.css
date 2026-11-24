@@ -2487,7 +2487,7 @@ p, .sub, .hero-sub, .stxt, .atext, .plist li,
   box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
-/* ── EINHEITLICHE ÜBERSCHRIFTEN-GRÖSSE FÜR ALLE SEKTIONEN ── */
+/* ── EINHEITLICHE ÜBERSCHRIFTEN-GRÖSSE FÜR ALLE SEKTIONEN (folgt der XL-Stufe) ── */
 .h2,
 .section-hd .h2,
 #hero .hero-h1,
@@ -2503,6 +2503,6 @@ p, .sub, .hero-sub, .stxt, .atext, .plist li,
 #service-erinnerung .h2,
 #newsletter .h2,
 #contact .h2 {
-  font-size: clamp(2rem, 3.5vw, 2.5rem) !important;
+  font-size: clamp(calc(var(--fs-xl) * 0.5714), 3.5vw, calc(var(--fs-xl) * 0.7143)) !important;
   line-height: 1.15 !important;
 }
