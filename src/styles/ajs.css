@@ -1250,6 +1250,7 @@ input, textarea {
 input:focus, textarea:focus {
   border-color: var(--ajs-terracotta) !important;
   outline: none !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ajs-terracotta) 35%, transparent);
 }
 
 
