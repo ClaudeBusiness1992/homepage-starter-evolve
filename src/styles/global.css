@@ -1397,6 +1397,13 @@ body:has(.countdown--card)   { --cd-h: 320px; }
   line-height: 1.7;
   color: color-mix(in srgb, var(--cream) 55%, transparent);
 }
+/* Sichtbare Platzhalter-Markierung für noch zu ergänzende Rechtsangaben */
+.legal-ph {
+  background: color-mix(in srgb, var(--accent-light) 16%, transparent);
+  border: 1px dashed color-mix(in srgb, var(--accent-light) 65%, transparent);
+  border-radius: 8px;
+  padding: .15rem .5rem;
+}
 
 /* ── FOOTER ── */
 footer {

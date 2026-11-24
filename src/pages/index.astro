@@ -24,6 +24,7 @@ import VerifiedReviews from '../components/VerifiedReviews.astro';
 import NewsletterSection from '../components/NewsletterSection.astro';
 import ServiceReminderSection from '../components/ServiceReminderSection.astro';
 import SocialLinks from '../components/SocialLinks.astro';
+import LegalModal from '../components/LegalModal.astro';
 
 const { meta, theme } = metaConfig;
 const { sections: s } = contentConfig;
@@ -93,6 +94,7 @@ const isPreviewDeploy =
       </div>
     )}
   </main>
+  <LegalModal />
 
   {x.active?.sidebarAds && x.sidebarAds && (
     <SidebarAds left={x.sidebarAds.left} right={x.sidebarAds.right} />

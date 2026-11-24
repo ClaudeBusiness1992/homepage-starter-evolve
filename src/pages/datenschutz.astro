@@ -98,11 +98,11 @@ const analyticsEnabled = l.analytics?.enabled === true;
           personenbezogenen Daten entscheidet.
         </p>
 
-        {hasDPO && (
-          <>
-            <h3>Datenschutzbeauftragter</h3>
-            <p>{l.dataProtectionOfficer}</p>
-          </>
+        <h3>Datenschutzbeauftragter</h3>
+        {hasDPO ? (
+          <p>{l.dataProtectionOfficer}</p>
+        ) : (
+          <p><span class="legal-ph">[Datenschutzbeauftragter — falls benannt, Kontaktdaten ergänzen; sonst Abschnitt streichen]</span></p>
         )}
 
         <h3>Speicherdauer</h3>

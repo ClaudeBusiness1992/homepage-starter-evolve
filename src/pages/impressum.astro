@@ -49,26 +49,30 @@ const hasProfession = l.professionalRegulations && !l.professionalRegulations.st
         </p>
       </section>
 
-      {hasRegister && (
-        <section class="legal-section">
-          <h2>Registereintrag</h2>
+      <section class="legal-section">
+        <h2>Registereintrag</h2>
+        {hasRegister ? (
           <p>
             Eintragung im Handelsregister.<br />
             Registergericht: {l.register.court}<br />
             Registernummer: {l.register.type} {l.register.number}
           </p>
-        </section>
-      )}
+        ) : (
+          <p><span class="legal-ph">[Registereintrag: Registergericht und Registernummer ergänzen — falls kein Register besteht, diesen Abschnitt streichen]</span></p>
+        )}
+      </section>
 
-      {hasVatId && (
-        <section class="legal-section">
-          <h2>Umsatzsteuer-ID</h2>
+      <section class="legal-section">
+        <h2>Umsatzsteuer-ID</h2>
+        {hasVatId ? (
           <p>
             Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br />
             {l.vatId}
           </p>
-        </section>
-      )}
+        ) : (
+          <p><span class="legal-ph">[Umsatzsteuer-ID: USt-IdNr. DE… — nach Erteilung ergänzen]</span></p>
+        )}
+      </section>
 
       <section class="legal-section">
         <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
@@ -79,19 +83,23 @@ const hasProfession = l.professionalRegulations && !l.professionalRegulations.st
         </p>
       </section>
 
-      {hasProfession && (
-        <section class="legal-section">
-          <h2>Berufsrechtliche Angaben</h2>
+      <section class="legal-section">
+        <h2>Berufsrechtliche Angaben</h2>
+        {hasProfession ? (
           <p>{l.professionalRegulations}</p>
-        </section>
-      )}
+        ) : (
+          <p><span class="legal-ph">[Berufsrechtliche Angaben — falls einschlägig, ergänzen; sonst Abschnitt streichen]</span></p>
+        )}
+      </section>
 
-      {hasAuthority && (
-        <section class="legal-section">
-          <h2>Aufsichtsbehörde</h2>
+      <section class="legal-section">
+        <h2>Aufsichtsbehörde</h2>
+        {hasAuthority ? (
           <p>{l.supervisoryAuthority}</p>
-        </section>
-      )}
+        ) : (
+          <p><span class="legal-ph">[Zuständige Aufsichtsbehörde — falls einschlägig, ergänzen; sonst Abschnitt streichen]</span></p>
+        )}
+      </section>
 
       <section class="legal-section">
         <h2>EU-Streitschlichtung</h2>
