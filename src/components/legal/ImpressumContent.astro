@@ -1,0 +1,140 @@
+---
+/* Geteilter Impressum-Inhalt — eine Quelle für Startseiten-Fenster und /impressum.
+   level=2: Direktroute (Seitentitel h1, Abschnitte h2). level=3: Fenster (Titel h2, Abschnitte h3).
+   Keine erfundenen Daten: leere oder mit "[" beginnende Werte werden als .legal-ph markiert. */
+import legalConfig from '../../../config/legal.json';
+import LegalField from './LegalField.astro';
+import { isPlaceholder } from './legal-utils';
+
+interface Props { level?: 2 | 3; showNote?: boolean; }
+const { level = 2, showNote = true } = Astro.props;
+const S = (level === 3 ? 'h3' : 'h2') as any;
+
+const { legal: l } = legalConfig as any;
+const fullCompanyName = `${String(l.company.name ?? '')}${l.company.legalForm ? ' ' + String(l.company.legalForm) : ''}`.trim();
+const companyPh = isPlaceholder(l.company.name) || isPlaceholder(l.company.legalForm);
+const hasRegister =
+  !isPlaceholder(l.register?.number) && !isPlaceholder(l.register?.court) && !isPlaceholder(l.register?.type);
+const hasVatId = !isPlaceholder(l.vatId);
+const hasAuthority = !isPlaceholder(l.supervisoryAuthority);
+const hasProfession = !isPlaceholder(l.professionalRegulations);
+const emailPh = isPlaceholder(l.contact.email);
+---
+<section class="legal-section">
+  <S>Angaben gemäß § 5 DDG</S>
+  <p>
+    {companyPh ? (
+      <LegalField value="" placeholder="[Firmenname + Rechtsform ergänzen]" block />
+    ) : (
+      <>{fullCompanyName}</>
+    )}<br />
+    <LegalField value={l.address.street} placeholder="[Straße + Hausnummer]" /><br />
+    <LegalField value={l.address.zip} placeholder="[PLZ]" /> <LegalField value={l.address.city} placeholder="[Stadt]" /><br />
+    {String(l.address.country ?? '')}
+  </p>
+</section>
+<section class="legal-section">
+  <S>Vertreten durch</S>
+  <p><LegalField value={l.company.representedBy} placeholder="[Vor- und Nachname Vertretungsberechtigter]" /></p>
+</section>
+<section class="legal-section">
+  <S>Kontakt</S>
+  <p>
+    Telefon: <LegalField value={l.contact.phone} placeholder="[Telefon mit Vorwahl]" /><br />
+    E-Mail: {emailPh ? (
+      <LegalField value="" placeholder="[E-Mail-Adresse]" />
+    ) : (
+      <a href={`mailto:${String(l.contact.email).trim()}`}>{String(l.contact.email).trim()}</a>
+    )}
+  </p>
+</section>
+<section class="legal-section">
+  <S>Registereintrag</S>
+  {hasRegister ? (
+    <p>
+      Eintragung im Handelsregister.<br />
+      Registergericht: {String(l.register.court).trim()}<br />
+      Registernummer: {String(l.register.type).trim()} {String(l.register.number).trim()}
+    </p>
+  ) : (
+    <p><span class="legal-ph legal-ph--block">[Registereintrag: Registergericht und Registernummer ergänzen — falls kein Register besteht, diesen Abschnitt streichen]</span></p>
+  )}
+</section>
+<section class="legal-section">
+  <S>Umsatzsteuer-ID</S>
+  {hasVatId ? (
+    <p>
+      Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz:<br />
+      {String(l.vatId).trim()}
+    </p>
+  ) : (
+    <p><span class="legal-ph legal-ph--block">[Umsatzsteuer-ID: USt-IdNr. DE… — nach Erteilung ergänzen]</span></p>
+  )}
+</section>
+<section class="legal-section">
+  <S>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</S>
+  <p>
+    <LegalField value={l.responsibleForContent} placeholder="[Verantwortlicher § 18 Abs. 2 MStV]" /><br />
+    <LegalField value={l.address.street} placeholder="[Straße + Hausnummer]" /><br />
+    <LegalField value={l.address.zip} placeholder="[PLZ]" /> <LegalField value={l.address.city} placeholder="[Stadt]" />
+  </p>
+</section>
+<section class="legal-section">
+  <S>Berufsrechtliche Angaben</S>
+  {hasProfession ? (
+    <p>{String(l.professionalRegulations).trim()}</p>
+  ) : (
+    <p><span class="legal-ph legal-ph--block">[Berufsrechtliche Angaben — falls einschlägig, ergänzen; sonst Abschnitt streichen]</span></p>
+  )}
+</section>
+<section class="legal-section">
+  <S>Aufsichtsbehörde</S>
+  {hasAuthority ? (
+    <p>{String(l.supervisoryAuthority).trim()}</p>
+  ) : (
+    <p><span class="legal-ph legal-ph--block">[Zuständige Aufsichtsbehörde — falls einschlägig, ergänzen; sonst Abschnitt streichen]</span></p>
+  )}
+</section>
+<section class="legal-section">
+  <S>Verbraucherstreitbeilegung / Universalschlichtungsstelle</S>
+  <p>
+    Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+    Verbraucherschlichtungsstelle teilzunehmen.
+  </p>
+</section>
+<section class="legal-section">
+  <S>Haftung für Inhalte</S>
+  <p>
+    Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten
+    nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als
+    Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde
+    Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige
+    Tätigkeit hinweisen.
+  </p>
+</section>
+<section class="legal-section">
+  <S>Haftung für Links</S>
+  <p>
+    Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen
+    Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.
+    Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber
+    der Seiten verantwortlich.
+  </p>
+</section>
+<section class="legal-section">
+  <S>Urheberrecht</S>
+  <p>
+    Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen
+    dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art
+    der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen
+    Zustimmung des jeweiligen Autors bzw. Erstellers.
+  </p>
+</section>
+{showNote && (
+  <p class="legal-note">
+    <em>
+      Dieses Impressum ist eine Vorlage. Vor dem Live-Gang sollten die Angaben anhand der
+      tatsächlichen Unternehmensdaten vervollständigt und geprüft werden.
+    </em>
+  </p>
+)}

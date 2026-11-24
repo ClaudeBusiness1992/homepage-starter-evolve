@@ -1,0 +1,19 @@
+---
+/* Kleines Feld für Rechtsangaben: gibt Platzhalter als .legal-ph aus,
+   echte Werte als normalen Text. Verhindert u. a. defekte mailto:-Links. */
+import { isPlaceholder } from './legal-utils';
+
+interface Props {
+  value: unknown;
+  placeholder: string;
+  block?: boolean;
+}
+
+const { value, placeholder, block = false } = Astro.props;
+const ph = isPlaceholder(value);
+---
+{ph ? (
+  <span class:list={["legal-ph", block && "legal-ph--block"]}>{placeholder}</span>
+) : (
+  <>{String(value)}</>
+)}

@@ -251,6 +251,7 @@ const isPreviewDeploy =
   let st = null;
   function settle() {
     if (window.innerWidth < 768 || locked || cooling) return;
+    if (document.body.classList.contains('kat-open')) return;
     const list = targets();
     const nh = navH(), sy = window.scrollY;
     let best = list[0], bestD = Infinity;
@@ -264,6 +265,7 @@ const isPreviewDeploy =
   }
   window.addEventListener('scroll', () => {
     if (window.innerWidth < 768 || locked || cooling) return;
+    if (document.body.classList.contains('kat-open')) return;
     clearTimeout(st); st = setTimeout(settle, 250);
   }, { passive: true });
   window.addEventListener('resize', () => {
@@ -567,7 +569,7 @@ const isPreviewDeploy =
       cs1.appendChild(cInfo);
       var legal = document.createElement('div');
       legal.className = 'swipe-legal';
-      legal.innerHTML = '<a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a>';
+      legal.innerHTML = '<a href="/impressum">Impressum</a><a href="/datenschutz">Datenschutz</a><button type="button" class="swipe-cookie-btn" data-cookie-settings>Cookie-Einstellungen</button>';
       cs1.appendChild(legal);
       var cs2 = document.createElement('div');
       cs2.className = 'contact-sub-slide';
