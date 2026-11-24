@@ -41,6 +41,7 @@ import DatenschutzContent from './legal/DatenschutzContent.astro';
   .hpse-legal-modal { position: fixed; inset: 0; z-index: 1100; display: flex; align-items: center; justify-content: center; padding: 1rem; opacity: 0; transition: opacity .2s ease; }
   .hpse-legal-modal[hidden] { display: none; }
   .hpse-legal-modal.is-open { opacity: 1; }
+  .hpse-legal-modal:not(.is-open) { pointer-events: none; }
   .hpse-legal-bg { position: absolute; inset: 0; background: rgba(0,0,0,.62); }
   .hpse-legal-box { position: relative; width: min(680px, 100%); max-height: min(88dvh, 820px); display: flex; flex-direction: column; background: var(--ink); color: var(--cream); border: 1px solid color-mix(in srgb, var(--cream) 16%, transparent); border-radius: 18px; box-shadow: 0 24px 70px rgba(0,0,0,.45); overflow: hidden; outline: none; transform: translateY(10px) scale(.985); transition: transform .22s ease; }
   .hpse-legal-modal.is-open .hpse-legal-box { transform: none; }
@@ -79,15 +80,17 @@ import DatenschutzContent from './legal/DatenschutzContent.astro';
   function open(id) {
     var modal = getModal(id);
     if (!modal) return;
-    // Laufenden Schließ-Timer dieses Fensters abbrechen (schnelles Wiederöffnen).
-    if (closeTimers[id]) { clearTimeout(closeTimers[id]); closeTimers[id] = null; }
-    if (!modal.hidden) return;
+    // Laufenden Schließ-Timer dieses Fensters abbrechen (schnelles Wiederöffnen, N1).
+    var wasClosing = !!closeTimers[id];
+    if (wasClosing) { try { clearTimeout(closeTimers[id].t); } catch (e) { clearTimeout(closeTimers[id]); } closeTimers[id] = null; }
+    // Nur abbrechen, wenn das Fenster bereits stabil geöffnet ist.
+    if (!modal.hidden && modal.classList.contains('is-open') && !wasClosing) return;
     // Beim Wechsel Fenster A -> B das jeweils andere sauber schließen.
     var otherId = id === IMPRESSUM_ID ? DATENSCHUTZ_ID : IMPRESSUM_ID;
     var other = getModal(otherId);
     if (other && !other.hidden) close(other);
-    // Fokus nur sichern, wenn noch kein Fenster offen war.
-    if (!anyOtherOpen(modal)) lastFocus = document.activeElement;
+    // Fokus nur sichern, wenn noch kein Fenster offen war (N1: bei Wiederöffnen bewahren).
+    if (!wasClosing && !anyOtherOpen(modal)) lastFocus = document.activeElement;
     modal.hidden = false;
     modal.setAttribute('aria-hidden', 'false');
     var body = modal.querySelector('.hpse-legal-body');
@@ -107,24 +110,37 @@ import DatenschutzContent from './legal/DatenschutzContent.astro';
     }, 60);
   }
 
-  function close(modal) {
+  function close(modal, opts) {
     if (!modal || modal.hidden) return;
+    var restore = !opts || opts.restoreFocus !== false;
     modal.classList.remove('is-open');
     var othersOpen = [getModal(IMPRESSUM_ID), getModal(DATENSCHUTZ_ID)]
       .some(function (m) { return m && m !== modal && !m.hidden; });
     if (!othersOpen) document.body.classList.remove('kat-open');
     var id = modal.id;
-    if (closeTimers[id]) clearTimeout(closeTimers[id]);
-    closeTimers[id] = setTimeout(function () {
-      closeTimers[id] = null;
-      modal.hidden = true;
-      modal.setAttribute('aria-hidden', 'true');
-      // Fokus nur zurückgeben, wenn kein anderes Fenster offen ist.
-      if (!anyOtherOpen(null) && lastFocus && lastFocus.focus) {
-        try { lastFocus.focus({ preventScroll: true }); } catch (e) { lastFocus.focus(); }
-        lastFocus = null;
-      }
-    }, 220);
+    if (closeTimers[id]) { try { clearTimeout(closeTimers[id].t); } catch (e) { clearTimeout(closeTimers[id]); } }
+    closeTimers[id] = {
+      t: setTimeout(function () {
+        closeTimers[id] = null;
+        modal.hidden = true;
+        modal.setAttribute('aria-hidden', 'true');
+        // N2: keine Fokus-Rückgabe, wenn der Aufruf sie unterdrückt oder ein anderer Dialog offen ist.
+        if (!restore) { lastFocus = null; return; }
+        var banner = document.getElementById('cookie-banner');
+        var bannerOpen = banner && !banner.hidden;
+        if (bannerOpen) return;
+        var activeInDialog = bannerOpen || [getModal(IMPRESSUM_ID), getModal(DATENSCHUTZ_ID)].some(function (m) {
+          return m && !m.hidden && m.contains(document.activeElement);
+        });
+        if (activeInDialog) return;
+        // Fokus nur zurückgeben, wenn kein anderes Fenster offen ist.
+        if (!anyOtherOpen(null) && lastFocus && lastFocus.focus) {
+          try { lastFocus.focus({ preventScroll: true }); } catch (e) { lastFocus.focus(); }
+          lastFocus = null;
+        }
+      }, 220),
+      restore: restore
+    };
   }
 
   function focusables(modal) {
@@ -138,15 +154,23 @@ import DatenschutzContent from './legal/DatenschutzContent.astro';
     });
   }
 
-  // Vollständiger Focus-Trap innerhalb des aktiven Fensters (Tab / Shift+Tab).
+  // Vollständiger Focus-Trap innerhalb des aktiven Fensters (Tab / Shift+Tab, N3).
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Tab') return;
     var openModals = [getModal(IMPRESSUM_ID), getModal(DATENSCHUTZ_ID)].filter(function (m) { return m && !m.hidden; });
     if (!openModals.length) return;
-    var modal = openModals[openModals.length - 1];
+    // N3: während der 220-ms-Ausblendung das tatsächlich offene Fenster wählen.
+    var modal = openModals.slice().reverse().find(function (m) { return m.classList.contains('is-open'); }) || openModals[openModals.length - 1];
     var items = focusables(modal);
     if (!items.length) { e.preventDefault(); return; }
     var first = items[0], last = items[items.length - 1];
+    // N3: Klick in den Modal-Text / auf die Box lässt den Fokus sonst entweichen.
+    if (items.indexOf(document.activeElement) === -1) {
+      e.preventDefault();
+      if (e.shiftKey) last.focus();
+      else first.focus();
+      return;
+    }
     if (e.shiftKey) {
       if (document.activeElement === first) { e.preventDefault(); last.focus(); }
     } else {
@@ -181,12 +205,12 @@ import DatenschutzContent from './legal/DatenschutzContent.astro';
   });
 
   // „Cookie-Einstellungen“-Knopf im Datenschutzttext: erst Fenster schließen,
-  // dann Banner erneut öffnen (der CookieBanner horcht auf [data-cookie-settings]).
+  // dann Banner erneut öffnen (der CookieBanner horcht auf [data-cookie-settings], N2 ohne Fokus-Rückgabe).
   document.addEventListener('click', function (e) {
     var t = e.target && e.target.closest ? e.target.closest('.hpse-legal-modal [data-cookie-settings]') : null;
     if (!t) return;
     var modal = t.closest('.hpse-legal-modal');
-    if (modal) close(modal);
+    if (modal) close(modal, { restoreFocus: false });
   }, true);
 
   // Links auf /impressum & /datenschutz abfangen: Fenster statt Seitennavigation.

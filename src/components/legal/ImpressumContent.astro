@@ -11,8 +11,10 @@ const { level = 2, showNote = true } = Astro.props;
 const S = (level === 3 ? 'h3' : 'h2') as any;
 
 const { legal: l } = legalConfig as any;
-const fullCompanyName = `${String(l.company.name ?? '')}${l.company.legalForm ? ' ' + String(l.company.legalForm) : ''}`.trim();
-const companyPh = isPlaceholder(l.company.name) || isPlaceholder(l.company.legalForm);
+const legalFormRaw = String(l.company.legalForm ?? '').trim();
+const fullCompanyName = `${String(l.company.name ?? '').trim()}${legalFormRaw ? ' ' + legalFormRaw : ''}`.trim();
+// N5: leere legalForm (z. B. Einzelunternehmen) darf den echten Firmennamen nicht verwerfen.
+const companyPh = isPlaceholder(l.company.name) || (legalFormRaw.length > 0 && isPlaceholder(legalFormRaw));
 const hasRegister =
   !isPlaceholder(l.register?.number) && !isPlaceholder(l.register?.court) && !isPlaceholder(l.register?.type);
 const hasVatId = !isPlaceholder(l.vatId);
@@ -26,8 +28,8 @@ const emailPh = isPlaceholder(l.contact.email);
     {companyPh ? (
       <LegalField value="" placeholder="[Firmenname + Rechtsform ergänzen]" block />
     ) : (
-      <>{fullCompanyName}</>
-    )}<br />
+      <>{fullCompanyName}<br /></>
+    )}
     <LegalField value={l.address.street} placeholder="[Straße + Hausnummer]" /><br />
     <LegalField value={l.address.zip} placeholder="[PLZ]" /> <LegalField value={l.address.city} placeholder="[Stadt]" /><br />
     {String(l.address.country ?? '')}

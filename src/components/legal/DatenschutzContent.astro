@@ -12,9 +12,14 @@ const S = (level === 3 ? 'h3' : 'h2') as any;
 const T = (level === 3 ? 'h4' : 'h3') as any;
 
 const { legal: l } = legalConfig as any;
-const fullCompanyName = `${String(l.company.name ?? '')}${l.company.legalForm ? ' ' + String(l.company.legalForm) : ''}`.trim();
-const companyPh = isPlaceholder(l.company.name) || isPlaceholder(l.company.legalForm);
+const legalFormRaw = String(l.company.legalForm ?? '').trim();
+const fullCompanyName = `${String(l.company.name ?? '').trim()}${legalFormRaw ? ' ' + legalFormRaw : ''}`.trim();
+// N5: leere legalForm (z. B. Einzelunternehmen) darf den echten Firmennamen nicht verwerfen.
+const companyPh = isPlaceholder(l.company.name) || (legalFormRaw.length > 0 && isPlaceholder(legalFormRaw));
 const hasDPO = !isPlaceholder(l.dataProtectionOfficer);
+const hasHostingProvider = !isPlaceholder(l.hosting?.provider);
+const hasHostingAddress = !isPlaceholder(l.hosting?.address);
+const hasHostingPrivacyUrl = !isPlaceholder(l.hosting?.privacyUrl);
 const analyticsEnabled = l.analytics?.enabled === true;
 const emailPh = isPlaceholder(l.contact.email);
 const authorityVal = (l as any).dataProtectionAuthority ?? '';
@@ -48,8 +53,8 @@ const authorityPh = isPlaceholder(authorityVal);
   <S>2. Hosting</S>
   <p>Wir hosten die Inhalte unserer Website beim folgenden Anbieter:</p>
   <p>
-    <strong>{String(l.hosting.provider ?? '')}</strong><br />
-    {String(l.hosting.address ?? '')}
+    <strong>{hasHostingProvider ? String(l.hosting.provider).trim() : <LegalField value="" placeholder="[Hosting-Anbieter]" />}</strong><br />
+    {hasHostingAddress ? String(l.hosting.address).trim() : <LegalField value="" placeholder="[Anschrift des Hosting-Anbieters]" />}
   </p>
   <p>
     Die personenbezogenen Daten, die auf dieser Website erfasst werden, werden auf den
@@ -65,7 +70,11 @@ const authorityPh = isPlaceholder(authorityVal);
   </p>
   <p>
     Weitere Informationen entnehmen Sie der Datenschutzerklärung des Anbieters:
-    {' '}<a href={String(l.hosting.privacyUrl)} target="_blank" rel="noopener noreferrer">{String(l.hosting.privacyUrl)}</a>.
+    {' '}{hasHostingPrivacyUrl ? (
+      <a href={String(l.hosting.privacyUrl).trim()} target="_blank" rel="noopener noreferrer">{String(l.hosting.privacyUrl).trim()}</a>
+    ) : (
+      <LegalField value="" placeholder="[URL der Datenschutzerklärung des Hosting-Anbieters]" />
+    )}.
   </p>
   <p><span class="legal-ph legal-ph--block">[Drittlandübermittlung / Hosting: falls Server oder Subdienstleister in Drittländern (z. B. USA) sitzen — Rechtsgrundlage (Art. 44 ff. DSGVO, EU-US Data Privacy Framework, Standardvertragsklauseln) und Auftragsverarbeitungsvertrag ergänzen]</span></p>
 </section>
@@ -234,7 +243,7 @@ const authorityPh = isPlaceholder(authorityVal);
     Durchführung vorvertraglicher Maßnahmen erforderlich ist. In allen übrigen Fällen
     beruht die Verarbeitung auf unserem berechtigten Interesse an der effektiven
     Bearbeitung der an uns gerichteten Anfragen (Art. 6 Abs. 1 lit. f DSGVO) oder auf
-    Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) sofern diese abgefragt wurde.
+    Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO), sofern diese abgefragt wurde.
   </p>
   <T>Kontaktformular dieser Website</T>
   <p><span class="legal-ph legal-ph--block">[Kontaktformular: welche Felder werden übertragen, wohin (E-Mail / Speicherung), Speicherdauer und Rechtsgrundlage ergänzen]</span></p>
