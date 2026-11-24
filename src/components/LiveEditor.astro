@@ -46,9 +46,10 @@ const safeTheme = {
         </div>
         <p class="hpse-help" style="margin-bottom: 12px;">Klicke auf einen Bereich, um Details und Optionen aufzuklappen.</p>
 
-        <!-- Countdown als modularer Anhang -->
-        <div class="hpse-addon-box" id="hpse-addon-box">
+        <!-- Countdown als modularer Anhang (per Drag an Bereich hängbar, wie die Blöcke darunter) -->
+        <div class="hpse-addon-box" id="hpse-addon-box" draggable="true" title="Countdown per Ziehen an einen Bereich hängen">
           <div class="hpse-addon-header" id="hpse-addon-header">
+            <span class="hpse-acc-drag-handle" id="hpse-cd-drag-handle" title="Ziehen zum Anhängen an einen Bereich">⠿</span>
             <div style="display: flex; align-items: center; gap: 8px;">
               <label class="hpse-toggle-label" onclick="event.stopPropagation()">
                 <input type="checkbox" id="hpse-toggle-countdown" data-section="countdown" checked />
@@ -889,6 +890,11 @@ const safeTheme = {
   .hpse-addon-box.is-expanded {
     background: rgba(200, 82, 14, 0.08);
     border-color: color-mix(in srgb, var(--accent, #c8520e) 45%, transparent);
+  }
+  .hpse-addon-box.is-dragging {
+    opacity: 0.35;
+    background: rgba(200, 82, 14, 0.1);
+    border: 1px dashed var(--accent, #c8520e);
   }
   .hpse-addon-header {
     display: flex;
@@ -2341,6 +2347,7 @@ const safeTheme = {
   }
 
   const sectionMeta = {
+    countdown: { title: 'Event-Countdown', icon: '⏳' },
     hero: { title: 'Hero (Startbereich)', icon: '🏠' },
     about: { title: 'Über uns', icon: '👥' },
     services: { title: 'Leistungen', icon: '🛠️' },
@@ -2737,6 +2744,161 @@ const safeTheme = {
         touchAccItem = null;
         draggedAccId = null;
       });
+    });
+  }
+
+  // Countdown per Drag an einen Bereich hängen (Ablegen = Umpositionieren).
+  // Dasselbe Muster wie die Block-Drags darüber: Griff ⠿, Platzhalter
+  // „hier anhängen", before/after nach Ablegehälfte, Persistenz über
+  // state.countdown im bestehenden STORAGE_KEY (Neuladen erhält Anordnung).
+  // Gültige Ziele = Optionen von #hpse-cd-target (Footer hat keine Anker-ID
+  // und ist dort ebenfalls kein Ziel).
+  let draggedCdId = null;
+  let cdPlaceholderEl = null;
+
+  function removeCdPlaceholder() {
+    if (cdPlaceholderEl && cdPlaceholderEl.parentElement) {
+      cdPlaceholderEl.remove();
+    }
+    cdPlaceholderEl = null;
+  }
+
+  function validCountdownTargets() {
+    const sel = document.getElementById('hpse-cd-target');
+    if (sel && sel.options && sel.options.length > 0) {
+      return [...sel.options].map(o => o.value);
+    }
+    return ['hero', 'about', 'services', 'gallery', 'cta', 'pricing', 'reviews', 'booking', 'sponsors', 'hamburg-tour', 'service-erinnerung', 'newsletter', 'contact'];
+  }
+
+  function commitCountdownDrop(targetId, isBefore) {
+    if (!targetId || !validCountdownTargets().includes(targetId)) return false;
+    if (!state.countdown) state.countdown = { target: 'hero', position: 'before' };
+    state.countdown.target = targetId;
+    state.countdown.position = isBefore ? 'before' : 'after';
+    saveState();
+    applyCountdown();
+    return true;
+  }
+
+  function showCdPlaceholder(anchorEl, isBefore) {
+    if (!anchorEl || !anchorEl.parentElement) return;
+    if (!cdPlaceholderEl) {
+      cdPlaceholderEl = document.createElement('div');
+      cdPlaceholderEl.className = 'hpse-drop-placeholder';
+    }
+    const cdMeta = sectionMeta.countdown || { title: 'Event-Countdown' };
+    cdPlaceholderEl.innerHTML = `<span>↓ "${cdMeta.title}" hier anhängen ↓</span>`;
+    if (isBefore) {
+      if (anchorEl.previousElementSibling !== cdPlaceholderEl) {
+        anchorEl.parentElement.insertBefore(cdPlaceholderEl, anchorEl);
+      }
+    } else {
+      if (anchorEl.nextElementSibling !== cdPlaceholderEl) {
+        anchorEl.parentElement.insertBefore(cdPlaceholderEl, anchorEl.nextSibling);
+      }
+    }
+  }
+
+  // Anker des aktuell angezeigten Platzhalters: Ziel + Hälfte werden beim
+  // Darüberziehen (dragover/touchmove) festgehalten, der Drop übernimmt sie
+  // exakt — keine Ableitung aus Nachbar-Elementen (Lücke "nach X" vs.
+  // "vor Y" wäre mehrdeutig).
+  let cdDropAnchor = null;
+
+  function initCountdownDragAndDrop() {
+    const cdBox = document.getElementById('hpse-addon-box');
+    const cdHandle = document.getElementById('hpse-cd-drag-handle');
+    if (!cdBox || !accordion) return;
+
+    // Desktop Drag & Drop: Start am Kasten, Guard wie bei den Blöcken
+    // (kein Drag aus Toggle/Selects/Optionen heraus).
+    cdBox.addEventListener('dragstart', (e) => {
+      if (e.target.closest && e.target.closest('input, select, textarea, .hpse-addon-body')) {
+        e.preventDefault();
+        return;
+      }
+      draggedCdId = 'countdown';
+      cdBox.classList.add('is-dragging');
+      if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', 'countdown');
+      }
+    });
+
+    cdBox.addEventListener('dragend', () => {
+      cdBox.classList.remove('is-dragging');
+      removeCdPlaceholder();
+      cdDropAnchor = null;
+      draggedCdId = null;
+    });
+
+    // Ablageziele: dieselben Bereichs-Items wie beim Block-Drag.
+    accordion.querySelectorAll('.hpse-acc-item').forEach(item => {
+      item.addEventListener('dragover', (e) => {
+        if (!draggedCdId) return;
+        const targetId = item.getAttribute('data-acc-id');
+        if (!validCountdownTargets().includes(targetId)) return;
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+        const rect = item.getBoundingClientRect();
+        const isBefore = e.clientY < rect.top + rect.height / 2;
+        showCdPlaceholder(item, isBefore);
+        cdDropAnchor = { targetId, isBefore };
+      });
+
+      item.addEventListener('drop', (e) => {
+        if (!draggedCdId) return;
+        e.preventDefault();
+        const anchor = cdDropAnchor;
+        draggedCdId = null;
+        removeCdPlaceholder();
+        cdDropAnchor = null;
+        if (anchor) commitCountdownDrop(anchor.targetId, anchor.isBefore);
+      });
+    });
+
+    // Touch Drag & Drop am Griff (wie bei den Blöcken): halten, über einen
+    // Bereich ziehen, loslassen = anhängen.
+    let cdTouchActive = false;
+    cdHandle?.addEventListener('touchstart', () => {
+      draggedCdId = 'countdown';
+      cdTouchActive = true;
+      cdBox.classList.add('is-dragging');
+    }, { passive: true });
+
+    cdHandle?.addEventListener('touchmove', (e) => {
+      if (!cdTouchActive || !draggedCdId) return;
+      const touch = e.touches[0];
+      const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
+      const hoverItem = targetEl ? targetEl.closest('.hpse-acc-item') : null;
+      if (hoverItem && accordion.contains(hoverItem)) {
+        const hoverId = hoverItem.getAttribute('data-acc-id');
+        if (!validCountdownTargets().includes(hoverId)) return;
+        const rect = hoverItem.getBoundingClientRect();
+        const isBefore = touch.clientY < rect.top + rect.height / 2;
+        showCdPlaceholder(hoverItem, isBefore);
+        cdDropAnchor = { targetId: hoverId, isBefore };
+      }
+    }, { passive: true });
+
+    const endCdTouch = () => {
+      if (!cdTouchActive || !draggedCdId) return;
+      const anchor = cdDropAnchor;
+      cdTouchActive = false;
+      cdBox.classList.remove('is-dragging');
+      draggedCdId = null;
+      removeCdPlaceholder();
+      cdDropAnchor = null;
+      if (anchor) commitCountdownDrop(anchor.targetId, anchor.isBefore);
+    };
+    cdHandle?.addEventListener('touchend', endCdTouch);
+    cdHandle?.addEventListener('touchcancel', () => {
+      cdTouchActive = false;
+      cdBox.classList.remove('is-dragging');
+      removeCdPlaceholder();
+      cdDropAnchor = null;
+      draggedCdId = null;
     });
   }
 
@@ -3385,6 +3547,7 @@ const safeTheme = {
   applyState();
   renderSortList();
   initAccordionDragAndDrop();
+  initCountdownDragAndDrop();
   setTimeout(runAudit, 800);
 })();
 </script>
