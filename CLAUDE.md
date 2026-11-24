@@ -29,10 +29,14 @@ Der Code selbst wird nie angefasst. Deployment auf Vercel Free Tier.
 
 ## Verbindliche Projektregeln (Nick-Vorgabe)
 
-### 1. Routen-Nomenklatur: Kunden-Vorschau vs. Bearbeitungsversion
+### 1. Routen-Nomenklatur: EINE Seite /ajs mit Login-Rollen (seit 24.11.2026, Nick)
 
-- **Version mit '2' am Ende (z. B. /ajs2):** Steht immer für Nicks Bearbeitungs- und Arbeitsversion. Enthält den Live-Editor, den Bug-Audit-Bereich und interne Arbeitswerkzeuge. Das Passwort der Bearbeitungsversion ist IMMER `qnc89i`, egal bei welchem Projekt.
-- **Version ohne '2' (z. B. /ajs):** Ist immer die reine Kunden-Vorschau. Hier dürfen nur Dinge zu sehen sein, die nachher auch der echte Website-Besucher sieht (KEIN Live-Editor, KEIN Bug-Audit, keine internen Admin-Links).
+- Die frühere ajs/ajs2-Trennung ist ersetzt: Es gibt genau EINE Seite **/ajs** mit Login aus **Name + Passwort** und drei Rollen:
+  - **Kunde:** sieht nur die Seite (bisheriges /ajs-Passwort).
+  - **Designer:** sieht Seite + Live-Editor + Bug-Audit-Bereich (bisheriges Bearbeitungspasswort, IMMER `qnc89i`, egal bei welchem Projekt).
+  - **Admin:** sieht Seite + Live-Editor + Bug-Audit + Admin-Link (Admin-PIN; Unterscheidung zum Kunden über den NAMEN).
+- Nur SHA-256-Hashes im Markup (Hashmuster je Rolle), niemals Klartext.
+- **/ajs2** leitet dauerhaft auf **/ajs** weiter (eigene Redirect-Seite) und wird nicht mehr als Arbeitsversion genutzt.
 
 ### 2. Port 4401 als Baukasten-Grundlage & Spiegelungsregel
 

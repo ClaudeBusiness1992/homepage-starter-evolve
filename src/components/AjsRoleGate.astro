@@ -1,0 +1,368 @@
+---
+/* AjsRoleGate.astro — Rollen-Login (Name + Passwort) für /ajs.
+   Ersetzt die ajs/ajs2-Trennung (Nick 24.11.2026): EINE Seite, drei Rollen.
+   - kunde:    nur die Seite (bisheriges /ajs-Passwort)
+   - designer: Seite + Live-Editor + Bug-Audit (bisheriges /ajs2-Passwort, siehe AGENTS.md)
+   - admin:    Seite + Live-Editor + Bug-Audit + Admin-Link (Admin-PIN aus data/config/site.config.json;
+               gleicher Hash-Wert wie Kunde möglich — die Rolle unterscheidet sich über den NAMEN)
+   Hashmuster je Rolle: data-roles enthält pro Rolle { name, label, passHashSha256 } —
+   nur SHA-256-Hashes im Markup, niemals Klartext.
+   Nach erfolgreichem Check: sessionStorage 'hp-gate-<id>' = '1' + 'hp-role-<id>' = Rollenname.
+   Sichtbarkeit: [data-role-only="designer"] für Designer+Admin, [data-role-only="admin"] nur für Admin;
+   Links auf /admin werden für Kunde/Designer aus dem DOM entfernt. */
+interface Role {
+  name: string;
+  label: string;
+  passHashSha256: string;
+}
+interface Props {
+  clientId: string;
+  roles: Role[];
+}
+const { clientId, roles } = Astro.props;
+const safeRoles = (roles ?? []).map((r) => ({
+  name: String(r.name).toLowerCase(),
+  label: String(r.label),
+  passHashSha256: String(r.passHashSha256).toLowerCase(),
+}));
+---
+
+<div
+  class="hp-gate"
+  data-gate
+  data-client-id={clientId}
+  data-roles={JSON.stringify(safeRoles)}
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="hp-gate-title"
+>
+  <form class="hp-gate-card" data-gate-form>
+    <p class="hp-gate-kicker">AJ&rsquo;s Inner Circle</p>
+    <h2 id="hp-gate-title" class="hp-gate-title">Bitte einloggen</h2>
+    <p class="hp-gate-sub">Name und Passwort eingeben — je nach Zugang erscheinen Seite, Editor/Audit oder Admin.</p>
+    <label class="hp-gate-label" for="hp-gate-name">Name</label>
+    <input
+      id="hp-gate-name"
+      class="hp-gate-input"
+      type="text"
+      name="username"
+      placeholder="z. B. kunde"
+      autocomplete="username"
+      autocapitalize="off"
+      spellcheck="false"
+      required
+    />
+    <label class="hp-gate-label" for="hp-gate-pass">Passwort</label>
+    <input
+      id="hp-gate-pass"
+      class="hp-gate-input"
+      type="password"
+      name="password"
+      autocomplete="current-password"
+      required
+    />
+    <p class="hp-gate-error" data-gate-error role="alert" style="display: none;">
+      Name oder Passwort ist falsch. Bitte erneut versuchen.
+    </p>
+    <button class="btn btn-fill hp-gate-btn" type="submit">Einloggen</button>
+  </form>
+</div>
+
+<div class="hp-gate-content" data-gate-content style="display: none;">
+  <slot />
+</div>
+
+<div class="hp-role-badge" data-role-badge hidden>
+  <span data-role-label></span>
+  <button type="button" data-role-logout>Abmelden</button>
+</div>
+
+<script is:inline>
+(function () {
+  var gate = document.querySelector('[data-gate]');
+  var content = document.querySelector('[data-gate-content]');
+  var badge = document.querySelector('[data-role-badge]');
+  if (!gate || !content) return;
+  var id = gate.getAttribute('data-client-id') || 'client';
+  var roles = [];
+  try { roles = JSON.parse(gate.getAttribute('data-roles') || '[]'); } catch (e) { roles = []; }
+  var key = 'hp-gate-' + id;
+  var roleKey = 'hp-role-' + id;
+
+  function applyRoleVisibility(role) {
+    // designer-Bereiche (Live-Editor inkl. Audit) nur für designer + admin
+    if (role !== 'designer' && role !== 'admin') {
+      content.querySelectorAll('[data-role-only="designer"]').forEach(function (el) { el.remove(); });
+    }
+    // admin-Bereiche nur für admin (Editor bleibt, nur Admin-Extras verschwinden)
+    if (role !== 'admin') {
+      content.querySelectorAll('[data-role-only="admin"]').forEach(function (el) { el.remove(); });
+      content.querySelectorAll('a[href="/admin"], a[href^="/admin?"], a[href^="/admin#"]').forEach(function (el) {
+        var li = el.closest('li');
+        (li || el).remove();
+      });
+    }
+    document.documentElement.setAttribute('data-ajs-role', role);
+  }
+
+  function showBadge(role) {
+    if (!badge) return;
+    var label = role;
+    for (var i = 0; i < roles.length; i++) {
+      if (String(roles[i].name).toLowerCase() === role) { label = roles[i].label; break; }
+    }
+    var labelEl = badge.querySelector('[data-role-label]');
+    if (labelEl) labelEl.textContent = 'Rolle: ' + label;
+    badge.hidden = false;
+  }
+
+  function unlock(role) {
+    gate.style.display = 'none';
+    gate.remove();
+    content.style.display = 'block';
+    content.removeAttribute('hidden');
+    content.classList.add('is-unlocked');
+    document.documentElement.classList.add('is-unlocked');
+    document.documentElement.style.overflow = '';
+    try {
+      sessionStorage.setItem(key, '1');
+      sessionStorage.setItem(roleKey, role);
+    } catch (e) {}
+    applyRoleVisibility(role);
+    showBadge(role);
+  }
+
+  document.documentElement.style.overflow = 'hidden';
+  var stored = null, storedRole = null;
+  try {
+    stored = sessionStorage.getItem(key);
+    storedRole = (sessionStorage.getItem(roleKey) || '').toLowerCase();
+  } catch (e) {}
+  var roleKnown = roles.some(function (r) { return String(r.name).toLowerCase() === storedRole; });
+  if (stored === '1' && roleKnown) {
+    unlock(storedRole);
+    return;
+  }
+  try { sessionStorage.removeItem(key); sessionStorage.removeItem(roleKey); } catch (e) {}
+
+  var form = gate.querySelector('[data-gate-form]');
+  var nameInput = gate.querySelector('#hp-gate-name');
+  var passInput = gate.querySelector('#hp-gate-pass');
+  var err = gate.querySelector('[data-gate-error]');
+  if (nameInput) nameInput.focus();
+
+  // Pure JavaScript SHA-256 (funktioniert immer, auch im unsicheren HTTP-Context auf mobilen IP-Adressen)
+  function sha256Sync(ascii) {
+    function rightRotate(value, amount) { return (value >>> amount) | (value << (32 - amount)); }
+    var mathPow = Math.pow;
+    var maxWord = mathPow(2, 32);
+    var lengthProperty = 'length';
+    var i, j, result = '';
+    var words = [];
+    var asciiBitLength = ascii[lengthProperty] * 8;
+    var hash = [], k = [], primeCounter = 0, isComposite = {};
+    for (var candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;
+        k[primeCounter++] = (mathPow(candidate, 1/3) * maxWord) | 0;
+      }
+    }
+    ascii += '\x80';
+    while (ascii[lengthProperty] % 64 - 56) ascii += '\x00';
+    for (i = 0; i < ascii[lengthProperty]; i++) {
+      j = ascii.charCodeAt(i);
+      words[i >> 2] |= j << ((3 - i) % 4) * 8;
+    }
+    words[words[lengthProperty]] = ((asciiBitLength / maxWord) | 0);
+    words[words[lengthProperty]] = (asciiBitLength) | 0;
+    for (j = 0; j < words[lengthProperty];) {
+      var w = words.slice(j, j += 16), oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        var w15 = w[i - 15], w2 = w[i - 2];
+        var a = hash[0], e = hash[4];
+        var temp1 = hash[7]
+          + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+          + ((e & hash[5]) ^ ((~e) & hash[6]))
+          + k[i]
+          + (w[i] = (i < 16) ? w[i] : (
+              w[i - 16]
+              + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))
+              + w[i - 7]
+              + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))
+            ) | 0
+          );
+        var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+          + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(temp1 + temp2) | 0].concat(hash);
+        hash[4] = (hash[4] + temp1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (var b = 3; b >= 0; b--) {
+        var byteVal = (hash[i] >> (8 * b)) & 255;
+        result += (byteVal < 16 ? '0' : '') + byteVal.toString(16);
+      }
+    }
+    return result;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    err.style.display = 'none';
+    var name = (nameInput.value || '').trim().toLowerCase();
+    var hit = null;
+    for (var i = 0; i < roles.length; i++) {
+      if (String(roles[i].name).toLowerCase() === name) { hit = roles[i]; break; }
+    }
+    if (!hit) {
+      err.style.display = 'block';
+      nameInput.focus();
+      return;
+    }
+    var hex = sha256Sync((passInput.value || '').trim());
+    if (hex === String(hit.passHashSha256).toLowerCase()) {
+      unlock(String(hit.name).toLowerCase());
+    } else {
+      err.style.display = 'block';
+      passInput.select();
+      passInput.focus();
+    }
+  });
+
+  var logoutBtn = badge ? badge.querySelector('[data-role-logout]') : null;
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function () {
+      try { sessionStorage.removeItem(key); sessionStorage.removeItem(roleKey); } catch (e) {}
+      location.reload();
+    });
+  }
+  // Logout-Knopf existiert erst nach unlock im DOM — Delegation für den Fall,
+  // dass das Badge bereits vor dem Login-Submit im DOM war:
+  document.addEventListener('click', function (e) {
+    var t = e.target && e.target.closest ? e.target.closest('[data-role-logout]') : null;
+    if (!t) return;
+    try { sessionStorage.removeItem(key); sessionStorage.removeItem(roleKey); } catch (err2) {}
+    location.reload();
+  });
+}());
+</script>
+
+<style>
+  .hp-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    background: var(--ink);
+  }
+  .hp-gate-card {
+    width: min(22rem, 100%);
+    background: color-mix(in srgb, var(--cream) 12%, var(--ink));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-lg);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    padding: 2rem 1.75rem;
+    text-align: center;
+    color: var(--cream);
+  }
+  .hp-gate-kicker {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin: 0 0 0.5rem;
+  }
+  .hp-gate-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--cream);
+    margin: 0 0 0.5rem;
+  }
+  .hp-gate-sub {
+    font-size: 0.85rem;
+    color: var(--cream);
+    opacity: 0.75;
+    margin: 0 0 1.25rem;
+  }
+  .hp-gate-label {
+    display: block;
+    text-align: left;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 0.35rem;
+  }
+  .hp-gate-card .hp-gate-label ~ .hp-gate-label {
+    margin-top: 0.9rem;
+  }
+  .hp-gate-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem 0.9rem;
+    font-size: 1rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--cream);
+  }
+  .hp-gate-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+  .hp-gate-input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+  .hp-gate-error {
+    font-size: 0.85rem;
+    color: #ff6b6b;
+    margin: 0.6rem 0 0;
+  }
+  .hp-gate-btn {
+    width: 100%;
+    margin-top: 1.1rem;
+    justify-content: center;
+  }
+  .hp-gate-content {
+    min-height: 100dvh;
+    background: var(--ink);
+  }
+  .hp-gate-content.is-unlocked {
+    display: block !important;
+  }
+  .hp-role-badge {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--cream);
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    padding: 0.4rem 0.5rem 0.4rem 0.9rem;
+    backdrop-filter: blur(6px);
+  }
+  .hp-role-badge button {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--cream);
+    border: 0;
+    border-radius: 999px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+  }
+</style>

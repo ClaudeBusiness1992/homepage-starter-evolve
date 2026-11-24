@@ -53,7 +53,7 @@ const orderedSections = [
 const navLinks = [
   ...orderedSections.map(o => ({ label: o.label, href: `#${o.id}`, section: o.id })),
   ...(cta ? [cta] : [{ label: 'Kontakt', href: '#contact', section: 'contact', cta: true }]),
-  // Login-Buttons oben rechts, konsistent zur AjsNav-Anmutung (/ajs, /ajs2)
+  // Login-Buttons oben rechts, konsistent zur AjsNav-Anmutung (/ajs, Rollen-Login)
   { label: 'Einloggen', href: '/ajs#login', section: 'login', outline: true },
   { label: 'Mitglied werden', href: '/ajs#register', section: 'register', cta: true },
 ];

@@ -22,8 +22,9 @@ const accentIdx = siteNameAccent ? siteName.indexOf(siteNameAccent) : -1;
 const logoBefore = accentIdx > -1 ? siteName.slice(0, accentIdx) : siteName;
 const logoAfter  = accentIdx > -1 ? siteName.slice(accentIdx + (siteNameAccent?.length ?? 0)) : '';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+// Eine Seite /ajs für alle Rollen (seit 24.11.2026); /ajs2 leitet nur noch auf /ajs weiter.
 const isHome = path === '/ajs' || path === '/ajs2' || path === '/';
-const base = path.startsWith('/ajs2') ? '/ajs2' : path.startsWith('/ajs') ? '/ajs' : '/ajs';
+const base = '/ajs';
 const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href : `${base}${href}`;
 ---
 

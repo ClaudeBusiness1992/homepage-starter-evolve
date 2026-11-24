@@ -1577,8 +1577,8 @@ footer .social-icon-btn:hover { color: #fff !important; background: var(--ajs-te
    Anlass Nick 24.11.2026: alles viel größer (Kacheln, Logos, Typo, Breite).
    Scope: ausschließlich #sponsors. 6er-Palette, Typo-Stufen und übriges
    Seiten-Layout unberührt; keine Inhaltsänderung. Generische Mechanik in der
-   gemeinsamen Komponente + diesem Sheet (via AjsBase) → gilt für /ajs und
-   /ajs2; /ajs bleibt ohne Editor/Audit. Höhen sind dvh-skaliert, damit bei
+   gemeinsamen Komponente + diesem Sheet (via AjsBase) → gilt für /ajs in allen
+   Rollen; die Kunden-Rolle bleibt ohne Editor/Audit. Höhen sind dvh-skaliert, damit bei
    kurzen Fenstern nichts überläuft (Sektion: 100dvh − Nav, overflow hidden). */
 #sponsors > .wrap { max-width: min(1500px, 94vw) !important; }
 #sponsors .section-hd { margin-bottom: clamp(0.7rem, 2dvh, 1.3rem) !important; }
