@@ -19,8 +19,8 @@ const isEnabled = isSectionEnabled('newsletter');
 
         <form class="newsletter-form" id="public-newsletter-form">
           <!-- Honeypot -->
-          <div style="position: absolute; left: -9999px;">
-            <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          <div style="position: absolute; left: -9999px;" aria-hidden="true">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
           </div>
 
           <div class="newsletter-fields">
@@ -28,12 +28,14 @@ const isEnabled = isSectionEnabled('newsletter');
               type="text"
               name="firstName"
               placeholder="Ihr Vorname (optional)"
+              aria-label="Ihr Vorname (optional)"
               class="nl-input"
             />
             <input
               type="email"
               name="email"
               placeholder="Ihre E-Mail-Adresse *"
+              aria-label="Ihre E-Mail-Adresse"
               required
               class="nl-input"
             />

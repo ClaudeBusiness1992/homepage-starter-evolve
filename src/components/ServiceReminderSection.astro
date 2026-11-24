@@ -33,8 +33,8 @@ const months = [
       <div class="reminder-card">
         <form id="public-reminder-form">
           <!-- Honeypot -->
-          <div style="position: absolute; left: -9999px;">
-            <input type="text" name="website" tabindex="-1" autocomplete="off" />
+          <div style="position: absolute; left: -9999px;" aria-hidden="true">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
           </div>
 
           <div class="rem-grid">
@@ -49,14 +49,14 @@ const months = [
             </div>
 
             <div class="rem-field">
-              <label class="rem-label">Nächste Fälligkeit (Monat / Jahr) *</label>
-              <div style="display: flex; gap: 0.5rem;">
-                <select name="dueMonth" class="rem-select" style="flex: 2;" required>
+              <span class="rem-label" id="rem-due-label">Nächste Fälligkeit (Monat / Jahr) *</span>
+              <div style="display: flex; gap: 0.5rem;" role="group" aria-labelledby="rem-due-label">
+                <select name="dueMonth" class="rem-select" style="flex: 2;" required aria-label="Fälligkeitsmonat">
                   {months.map((m) => (
                     <option value={m.val}>{m.label}</option>
                   ))}
                 </select>
-                <select name="dueYear" class="rem-select" style="flex: 1;" required>
+                <select name="dueYear" class="rem-select" style="flex: 1;" required aria-label="Fälligkeitsjahr">
                   {years.map((y) => (
                     <option value={y}>{y}</option>
                   ))}
