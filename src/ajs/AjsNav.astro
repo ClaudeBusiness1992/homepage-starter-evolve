@@ -15,7 +15,8 @@ interface Props {
 const { siteName, siteNameAccent, logo, links = [] } = Astro.props;
 // Inhalts-Links zuerst, Aktions-Buttons (Einloggen / Mitglied werden) immer ganz rechts dahinter.
 const isAction = (l: NavLink) => !!(l.cta || l.outline || l.section === 'login' || l.section === 'register');
-const contentLinks = links.filter(l => !isAction(l));
+const contentLinks = links.filter(l => !isAction(l) && l.section !== 'contact');
+const contactLink = links.find(l => l.section === 'contact');
 const actionLinks = links.filter(l => isAction(l));
 const accentIdx = siteNameAccent ? siteName.indexOf(siteNameAccent) : -1;
 const logoBefore = accentIdx > -1 ? siteName.slice(0, accentIdx) : siteName;
@@ -37,15 +38,19 @@ const resolveHref = (href: string) => (isHome || !href.startsWith('#')) ? href :
               <a href={resolveHref(l.href)}>{l.label}</a>
             </li>
           ))}
-          {actionLinks.map(l => (
-            <li class="nav-action-mobile">
-              <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
+          {(contactLink || actionLinks.length > 0) && (
+            <li class="nav-action-mobile nav-action-group-mobile">
+              {contactLink && <a href={resolveHref(contactLink.href)} class="nav-contact-link">{contactLink.label}</a>}
+              {actionLinks.map(l => (
+                <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
+              ))}
             </li>
-          ))}
+          )}
         </ul>
       )}
-      {actionLinks.length > 0 && (
-        <div class="nav-actions-desktop">
+      {(contactLink || actionLinks.length > 0) && (
+        <div class="nav-actions-desktop nav-action-group">
+          {contactLink && <a href={resolveHref(contactLink.href)} class="nav-contact-link">{contactLink.label}</a>}
           {actionLinks.map(l => (
             <a href={resolveHref(l.href)} class={l.cta ? 'cta-link' : 'nav-btn-outline'}>{l.label}</a>
           ))}

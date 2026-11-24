@@ -1668,3 +1668,83 @@ footer .social-icon-btn:hover { color: #fff !important; background: var(--ajs-te
   #sponsors .sponsors-grid--top .sponsor-logo-wrap { height: 112px !important; }
   #sponsors .sponsors-grid--middle .sponsor-logo-wrap { height: 88px !important; }
 }
+
+/* ── HPSE-AJS-LOGINZEILE-20261124: Kontakt + Einloggen + Mitglied werden ──
+   Eine untrennbare Aktionsgruppe in einer Zeile (kein Umbruch innerhalb der
+   Gruppe, auch nicht beim zweizeiligen Umbruch der übrigen Punkte).
+   Kontakt wandert dafür aus der Linkliste in die rechte Aktionsgruppe und
+   bleibt dort ein schlichter Textlink (kein Button). Übrige Ordnung
+   (Links mittig, Buttons rechts, Burger, Fokus) unberührt; kein Überlauf. */
+#nav .nav-actions-desktop.nav-action-group {
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+#nav .nav-actions-desktop .nav-contact-link {
+  font-size: 0.77rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  padding: 4px 3px !important;
+  color: var(--ajs-olive) !important;
+  text-decoration: none !important;
+  flex: 0 0 auto !important;
+}
+#nav .nav-actions-desktop .nav-contact-link:hover {
+  color: var(--ajs-terracotta, #97572A) !important;
+}
+#nav .nav-actions-desktop .nav-contact-link:focus-visible {
+  outline: 2px solid var(--ajs-terracotta, #97572A) !important;
+  outline-offset: 2px !important;
+}
+#nav .nav-actions-desktop a.cta-link,
+#nav .nav-actions-desktop a.nav-btn-outline {
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
+/* Mobile Burger-Menü: die drei als eine horizontale, untrennbare Reihe */
+#nav .nav-ul li.nav-action-group-mobile {
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+}
+@media (max-width: 1120px) {
+  #nav .nav-ul li.nav-action-group-mobile {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.55rem !important;
+    width: 100% !important;
+  }
+  #nav .nav-ul li.nav-action-group-mobile a {
+    flex: 0 1 auto !important;
+    min-width: 0 !important;
+    white-space: nowrap !important;
+  }
+  #nav .nav-ul li.nav-action-group-mobile .nav-contact-link {
+    color: var(--ajs-olive) !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.2rem !important;
+    text-decoration: none !important;
+  }
+}
+@media (min-width: 1121px) {
+  #nav .nav-ul li.nav-action-group-mobile {
+    display: none !important;
+  }
+}
+/* Sehr schmal: Gruppen-Buttons verdichten, damit die Zeile ohne Überlauf passt */
+@media (max-width: 480px) {
+  #nav .nav-ul li.nav-action-group-mobile {
+    gap: 0.4rem !important;
+  }
+  #nav .nav-ul li.nav-action-group-mobile a.cta-link,
+  #nav .nav-ul li.nav-action-group-mobile a.nav-btn-outline {
+    font-size: 0.72rem !important;
+    padding: 0.35rem 0.6rem !important;
+  }
+  #nav .nav-ul li.nav-action-group-mobile .nav-contact-link {
+    font-size: 0.72rem !important;
+  }
+}
