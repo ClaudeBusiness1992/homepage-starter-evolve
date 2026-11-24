@@ -1,8 +1,8 @@
 ---
-/* AjsNewsletterModal.astro — reines Oberflächen-Fenster für /ajs und /ajs2.
-   Erscheint einmalig verzögert nach Entsperrung des Produkt-Login-Tors,
-   E-Mail-Prüfung, Schließen-Knopf, Erfolgszustand, Einmal-Logik via
-   localStorage. KEINE Backend-Anbindung, KEIN Versand (offener Folgepunkt). */
+/* AjsNewsletterModal.astro — Newsletter mit Double-Opt-in für /ajs und /ajs2.
+   POST an /api/public/newsletter/subscribe (gleicher Resend-Weg wie Kontakt),
+   Bestätigung erst über Link in der Mail. Token-Hash liegt in SQLite
+   (newsletter_subscribers.doi_token_hash), Klartext nur im Mail-Link. */
 ---
 
 <div id="ajs-newsletter-modal" class="kat" role="dialog" aria-modal="true" aria-labelledby="ajs-nl-title" aria-hidden="true" hidden>
@@ -18,6 +18,10 @@
           Einmal im Monat: neues Sortiment, Touren-Termine und Angebote aus AJ&rsquo;s Feinkost-Touren &ndash; direkt in dein Postfach. Kein Spam, jederzeit abmeldbar.
         </p>
         <form id="ajsNlForm" novalidate>
+          <div style="position: absolute; left: -9999px;" aria-hidden="true">
+            <input type="text" id="ajsNlWebsite" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+          <input type="hidden" id="ajsNlTs" name="ts" value="" />
           <div style="margin-bottom: 1rem;">
             <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="ajsNlEmail">E-Mail-Adresse *</label>
             <input type="email" id="ajsNlEmail" name="email" required placeholder="du@beispiel.de" autocomplete="email" aria-describedby="ajsNlError" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
@@ -27,15 +31,18 @@
             <span>Ich willige in den Erhalt des Newsletters ein und habe die <a href="/datenschutz" target="_blank" rel="noopener" style="color: #97572A; text-decoration: underline;">Datenschutzerkl&auml;rung</a> zur Kenntnis genommen.</span>
           </label>
           <p id="ajsNlError" role="alert" hidden style="padding: 0.6rem; border-radius: 6px; background: rgba(168,58,104,0.12); color: #A83A68; font-size: 0.82rem; margin: 0 0 1rem; text-align: center;"></p>
-          <button type="submit" class="btn btn-fill" style="width: 100%; justify-content: center; padding: 0.8rem; font-weight: 700;">
+          <button type="submit" class="btn btn-fill" data-nl-submit style="width: 100%; justify-content: center; padding: 0.8rem; font-weight: 700;">
             Anmelden &rarr;
           </button>
         </form>
       </div>
       <div data-nl-success-view hidden>
         <p style="font-size: 1.05rem; font-weight: 700; color: #414C09; text-align: center; margin: 0.2rem 0 0.6rem;">Danke f&uuml;r deine Anmeldung!</p>
-        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--ajs-espresso, #221D15); text-align: center; margin: 0 0 1.2rem;">
+        <p data-nl-success-text style="font-size: 0.9rem; line-height: 1.5; color: var(--ajs-espresso, #221D15); text-align: center; margin: 0 0 0.8rem;">
           Bitte best&auml;tige sie noch &uuml;ber den Link in deinem Postfach.
+        </p>
+        <p data-nl-mail-hint hidden style="font-size: 0.8rem; line-height: 1.5; color: #6b6259; text-align: center; margin: 0 0 1.2rem;">
+          Hinweis: Der E-Mail-Versand ist derzeit nicht konfiguriert, daher kommt gerade keine Best&auml;tigungsmail an.
         </p>
         <button type="button" class="btn btn-fill" data-nl-close style="width: 100%; justify-content: center; padding: 0.8rem; font-weight: 700;">
           Schlie&szlig;en
@@ -63,6 +70,8 @@
   var email = document.getElementById('ajsNlEmail');
   var consent = document.getElementById('ajsNlConsent');
   var err = document.getElementById('ajsNlError');
+  var tsField = document.getElementById('ajsNlTs');
+  var hpField = document.getElementById('ajsNlWebsite');
   var formView = modal.querySelector('[data-nl-form-view]');
   var successView = modal.querySelector('[data-nl-success-view]');
   if (!form || !email || !consent || !err || !formView || !successView) return;
@@ -71,6 +80,7 @@
   function open() {
     if (!modal.hidden) return;
     lastFocus = document.activeElement;
+    if (tsField) tsField.value = String(Date.now());
     modal.hidden = false;
     modal.setAttribute('aria-hidden', 'false');
     requestAnimationFrame(function () { modal.classList.add('is-open'); });
@@ -96,6 +106,17 @@
     if (field && field.focus) field.focus();
   }
 
+  function showSuccess(mailConfigured) {
+    store(DONE, '1');
+    store(SEEN, '1');
+    formView.hidden = true;
+    successView.hidden = false;
+    var hint = successView.querySelector('[data-nl-mail-hint]');
+    if (hint) hint.hidden = mailConfigured !== false;
+    var btn = successView.querySelector('button');
+    if (btn) btn.focus();
+  }
+
   modal.querySelectorAll('[data-nl-close]').forEach(function (el) {
     el.addEventListener('click', close);
   });
@@ -109,19 +130,38 @@
     err.hidden = true;
     var val = (email.value || '').trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)) {
-      fail('Bitte gib eine g\u00fcltige E-Mail-Adresse ein.', email);
+      fail('Gib eine E-Mail-Adresse mit @ ein.', email);
       return;
     }
     if (!consent.checked) {
       fail('Bitte stimme dem Newsletter-Empfang zu.', consent);
       return;
     }
-    store(DONE, '1');
-    store(SEEN, '1');
-    formView.hidden = true;
-    successView.hidden = false;
-    var btn = successView.querySelector('button');
-    if (btn) btn.focus();
+    var btn = form.querySelector('[data-nl-submit]');
+    if (btn) { btn.disabled = true; btn.textContent = 'Wird gesendet …'; }
+    fetch('/api/public/newsletter/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: val,
+        firstName: '',
+        website: hpField ? hpField.value : '',
+        ts: tsField && tsField.value ? parseInt(tsField.value, 10) : Date.now()
+      })
+    }).then(function (res) { return res.json().then(function (d) { return { ok: res.ok, d: d }; }); })
+      .then(function (out) {
+        if (out.ok) {
+          showSuccess(out.d.mailConfigured);
+        } else {
+          fail(out.d.error || 'Anmeldung nicht möglich. Versuche es erneut.', email);
+        }
+      })
+      .catch(function () {
+        fail('Verbindung fehlgeschlagen. Prüfe deine Internetverbindung und versuche es erneut.', email);
+      })
+      .finally(function () {
+        if (btn) { btn.disabled = false; btn.innerHTML = 'Anmelden &rarr;'; }
+      });
   });
 
   function gateOpen() {

@@ -95,7 +95,11 @@ const navLinks = [
       <p style="font-size: 0.9rem; line-height: 1.5; color: var(--ajs-espresso, #221D15); margin-bottom: 1.2rem;">
         Der Zugang zu unseren Liefertouren ist exklusiv und begrenzt. Fülle das Formular aus – AJ prüft deine Registrierung persönlich und schaltet dein Mitgliedskonto frei.
       </p>
-      <form id="ajsRegisterForm" onsubmit="event.preventDefault(); document.getElementById('regMsg').hidden = false; this.querySelector('button[type=submit]').disabled = true;">
+      <form id="ajsRegisterForm" novalidate>
+        <div style="position: absolute; left: -9999px;" aria-hidden="true">
+          <input type="text" id="regWebsite" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+        <input type="hidden" id="regTs" name="ts" value="" />
         <div style="display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.2rem;">
           <div>
             <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="regName">Vollständiger Name *</label>
@@ -120,14 +124,18 @@ const navLinks = [
             <input type="text" id="regNote" placeholder="z. B. Dry Aged Rind, Garnelen, Wild" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
           </div>
           <label style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.78rem; color: var(--ajs-espresso, #221D15); cursor: pointer;">
-            <input type="checkbox" required style="margin-top: 2px;" />
+            <input type="checkbox" id="regConsent" required style="margin-top: 2px;" />
             <span>Ich stimme der Datenverarbeitung zur Aufnahme in AJ's Liefer-Touren zu.</span>
           </label>
         </div>
-        <div id="regMsg" hidden style="padding: 0.75rem; border-radius: 8px; background: rgba(65,76,9,0.12); color: #414C09; font-size: 0.85rem; margin-bottom: 1rem; text-align: center; font-weight: 600;">
-          ✓ Aufnahmeantrag übermittelt! AJ meldet sich innerhalb von 24h persönlich zur Freischaltung bei dir.
+        <p id="regError" role="alert" hidden style="padding: 0.6rem; border-radius: 6px; background: rgba(168,58,104,0.12); color: #A83A68; font-size: 0.82rem; margin: 0 0 1rem; text-align: center;"></p>
+        <div id="regMsg" hidden style="padding: 0.75rem; border-radius: 8px; background: rgba(65,76,9,0.12); color: #414C09; font-size: 0.85rem; margin-bottom: 0.6rem; text-align: center; font-weight: 600;">
+          Aufnahmeantrag gespeichert. Bitte bestätige deine E-Mail-Adresse über den Link in deinem Postfach.
         </div>
-        <button type="submit" class="btn btn-fill" style="width: 100%; justify-content: center; padding: 0.8rem; font-weight: 700;">
+        <p id="regMailHint" hidden style="font-size: 0.8rem; color: #6b6259; margin: 0 0 1rem; text-align: center;">
+          Hinweis: Der E-Mail-Versand ist derzeit nicht konfiguriert, daher kommt gerade keine Bestätigungsmail an.
+        </p>
+        <button type="submit" class="btn btn-fill" data-register-submit style="width: 100%; justify-content: center; padding: 0.8rem; font-weight: 700;">
           Kostenlos Mitglied werden →
         </button>
       </form>
@@ -139,43 +147,97 @@ const navLinks = [
   </div>
 </div>
 
-<!-- AJS Mitglieder-Login Modal -->
+<!-- AJS Kundenbereich: bewusster Platzhalter, keine Anmeldung -->
 <div id="ajs-login-modal" class="kat" role="dialog" aria-modal="true" aria-labelledby="login-modal-title" aria-hidden="true" hidden>
   <div class="kat-bg" data-login-close></div>
   <div class="kat-box" style="max-width: 440px; padding: 0;" tabindex="-1">
     <div class="kat-head" style="background: var(--ajs-olive, #414C09);">
-      <h3 id="login-modal-title" class="kat-title" style="font-size: 1.3rem;">Mitglieder-Login</h3>
+      <h3 id="login-modal-title" class="kat-title" style="font-size: 1.3rem;">Kundenbereich (Platzhalter)</h3>
       <button type="button" class="kat-close" data-login-close aria-label="Schließen">×</button>
     </div>
     <div class="kat-body" style="padding: 1.5rem 1.8rem;">
-      <p style="font-size: 0.9rem; line-height: 1.5; color: var(--ajs-espresso, #221D15); margin-bottom: 1.4rem;">
-        Willkommen im Inner Circle. Bitte melde dich mit deiner hinterlegten E-Mail-Adresse und deinem Passwort an, um auf das Sortiment und deine Touren zuzugreifen.
+      <p style="display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #414C09; background: rgba(65,76,9,0.12); border-radius: 999px; padding: 0.25rem 0.7rem; margin: 0 0 0.9rem;">
+        Platzhalter — noch keine Anmeldung
       </p>
-      <form id="ajsLoginForm" onsubmit="event.preventDefault(); document.getElementById('loginMsg').hidden = false;">
-        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.2rem;">
-          <div>
-            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="loginEmail">E-Mail-Adresse</label>
-            <input type="email" id="loginEmail" required placeholder="deine@adresse.de" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
-          </div>
-          <div>
-            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: var(--ajs-espresso, #221D15); margin-bottom: 0.35rem;" for="loginPassword">Passwort</label>
-            <input type="password" id="loginPassword" required placeholder="••••••••" style="width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid rgba(65,76,9,0.25); background: #fff; font-size: 0.95rem; box-sizing: border-box;" />
-          </div>
-        </div>
-        <div id="loginMsg" hidden style="padding: 0.6rem; border-radius: 6px; background: rgba(168,58,104,0.12); color: #A83A68; font-size: 0.82rem; margin-bottom: 1rem; text-align: center;">
-          Konto noch in manueller Prüfung oder Zugangsdaten ungültig. Bei Fragen wende dich direkt an AJ.
-        </div>
-        <button type="submit" class="btn btn-fill" style="width: 100%; justify-content: center; padding: 0.8rem; font-weight: 700;">
-          Anmelden →
-        </button>
-      </form>
+      <p style="font-size: 0.9rem; line-height: 1.5; color: var(--ajs-espresso, #221D15); margin-bottom: 1.2rem;">
+        Dieser Bereich zeigt später das Kundenkonto. Aktuell gibt es hier keine Anmeldung und keine gespeicherten Konten.
+      </p>
+      <button type="button" class="btn btn-fill" data-login-close style="width: 100%; justify-content: center; padding: 0.8rem; font-weight: 700;">
+        Verstanden
+      </button>
       <div style="margin-top: 1.2rem; text-align: center; border-top: 1px solid rgba(65,76,9,0.15); padding-top: 1rem;">
-        <span style="font-size: 0.82rem; color: var(--ajs-olive, #414C09);">Noch kein Mitglied? </span>
-        <a href="#contact" data-login-close style="font-size: 0.82rem; font-weight: 700; color: var(--ajs-terracotta, #97572A); text-decoration: underline;">Hier registrieren</a>
+        <span style="font-size: 0.82rem; color: var(--ajs-olive, #414C09);">Interesse an einer Mitgliedschaft? </span>
+        <a href="#register" data-login-close data-open-login style="font-size: 0.82rem; font-weight: 700; color: var(--ajs-terracotta, #97572A); text-decoration: underline;">Aufnahme anfragen</a>
       </div>
     </div>
   </div>
 </div>
+
+<script is:inline>
+(function () {
+  'use strict';
+  var form = document.getElementById('ajsRegisterForm');
+  if (!form) return;
+  var tsField = document.getElementById('regTs');
+  function armTs() { if (tsField && !tsField.value) tsField.value = String(Date.now()); }
+  document.addEventListener('click', function (e) {
+    var t = e.target && e.target.closest ? e.target.closest('a[href="#register"], [data-open-register]') : null;
+    if (t) setTimeout(armTs, 0);
+  });
+  armTs();
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var err = document.getElementById('regError');
+    var msg = document.getElementById('regMsg');
+    var hint = document.getElementById('regMailHint');
+    if (err) err.hidden = true;
+    if (msg) msg.hidden = true;
+    if (hint) hint.hidden = true;
+    function fail(text) {
+      if (!err) return;
+      err.textContent = text;
+      err.hidden = false;
+    }
+    var name = (document.getElementById('regName').value || '').trim();
+    var email = (document.getElementById('regEmail').value || '').trim();
+    var phone = (document.getElementById('regPhone').value || '').trim();
+    var district = (document.getElementById('regDistrict').value || '').trim();
+    var note = (document.getElementById('regNote').value || '').trim();
+    var consent = document.getElementById('regConsent');
+    var hp = (document.getElementById('regWebsite').value || '');
+    if (!name) { fail('Bitte gib deinen Namen an.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { fail('Gib eine E-Mail-Adresse mit @ ein.'); return; }
+    if (!phone) { fail('Bitte gib deine Telefonnummer an.'); return; }
+    if (!district) { fail('Bitte gib deinen Stadtteil an.'); return; }
+    if (!consent || !consent.checked) { fail('Bitte stimme der Datenverarbeitung zu.'); return; }
+    var btn = form.querySelector('[data-register-submit]');
+    if (btn) { btn.disabled = true; btn.textContent = 'Wird gesendet …'; }
+    fetch('/api/public/register/request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name, email: email, phone: phone, district: district, note: note,
+        consent: true, website: hp,
+        ts: tsField && tsField.value ? parseInt(tsField.value, 10) : Date.now()
+      })
+    }).then(function (res) { return res.json().then(function (d) { return { ok: res.ok, d: d }; }); })
+      .then(function (out) {
+        if (out.ok) {
+          if (msg) msg.hidden = false;
+          if (hint) hint.hidden = out.d.mailConfigured !== false;
+          form.querySelectorAll('input').forEach(function (el) {
+            if (el.type !== 'hidden' && el.id !== 'regWebsite') el.value = '';
+            if (el.type === 'checkbox') el.checked = false;
+          });
+        } else {
+          fail(out.d.error || 'Registrierung nicht möglich. Versuche es erneut.');
+        }
+      })
+      .catch(function () { fail('Verbindung fehlgeschlagen. Prüfe deine Internetverbindung und versuche es erneut.'); })
+      .finally(function () { if (btn) { btn.disabled = false; btn.innerHTML = 'Kostenlos Mitglied werden →'; } });
+  });
+}());
+</script>
 
 </Base>
 
