@@ -1,0 +1,172 @@
+---
+// AjsSwipeConsent.astro — Kombiniertes Erstbesuchs-Fenster für /ajs (nur Handy-Ansicht).
+// Erklärt die seitliche Wisch-Navigation und holt die Cookie-Zustimmung in einem Schritt.
+// Einmalig: speichert 'cookie-consent-v1' (Format wie CookieBanner) und setzt zusätzlich
+// 'pxc-swipe-v1', damit der alte Swipe-Hinweis nicht nachträglich erscheint.
+---
+
+<div id="ajs-consent" class="ajs-consent" role="dialog" aria-modal="true" aria-labelledby="ajs-consent-title" aria-describedby="ajs-consent-desc" hidden>
+  <div class="ajs-consent-card">
+    <h2 id="ajs-consent-title" class="ajs-consent-title">Wischen und Cookies</h2>
+    <div id="ajs-consent-desc" class="ajs-consent-body">
+      <p>Auf dem Handy bl&auml;tterst du seitlich durch die Seite &mdash; wische nach links f&uuml;r den n&auml;chsten Abschnitt.</p>
+      <p>Wir nutzen technisch notwendige Cookies, um diese Website zu betreiben. Optional verwenden wir Analyse-Cookies, um die Nutzung zu verstehen und zu verbessern. Mehr in unserer <a href="/ajs/datenschutz">Datenschutzerkl&auml;rung</a>.</p>
+    </div>
+    <div class="ajs-consent-actions">
+      <button type="button" class="ajs-consent-btn ajs-consent-secondary" data-consent="reject">
+        Nur notwendige
+      </button>
+      <button type="button" class="ajs-consent-btn ajs-consent-primary" data-consent="accept">
+        Alle akzeptieren
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+(function () {
+  'use strict';
+  if (window.innerWidth >= 768) return;
+  var KEY = 'cookie-consent-v1';
+  var HINT = 'pxc-swipe-v1';
+  var box = document.getElementById('ajs-consent');
+  if (!box) return;
+
+  function stored() {
+    try { return window.localStorage.getItem(KEY); }
+    catch (e) { return null; }
+  }
+
+  function save(value) {
+    try {
+      window.localStorage.setItem(KEY, JSON.stringify({ value: value, timestamp: Date.now() }));
+      window.localStorage.setItem(HINT, '1');
+    } catch (e) {}
+  }
+
+  function trapFocus(e) {
+    if (e.key !== 'Tab') return;
+    var focusable = box.querySelectorAll('button, a[href]');
+    var first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }
+
+  function show() {
+    if (!box.hidden || window.innerWidth >= 768) return;
+    box.hidden = false;
+    box.classList.add('is-open');
+    box.addEventListener('keydown', trapFocus);
+    var target = box.querySelector('.ajs-consent-secondary');
+    if (target) target.focus();
+  }
+
+  function hide() {
+    box.hidden = true;
+    box.classList.remove('is-open');
+    box.removeEventListener('keydown', trapFocus);
+  }
+
+  function choose(value) {
+    save(value);
+    hide();
+    window.dispatchEvent(new CustomEvent('cookie-consent', { detail: { value: value } }));
+  }
+
+  box.querySelectorAll('[data-consent]').forEach(function (btn) {
+    btn.addEventListener('click', function () { choose(btn.getAttribute('data-consent')); });
+  });
+
+  // Erneutes Öffnen über Einstellungs-Links (z. B. aus Datenschutz-Texten).
+  document.addEventListener('click', function (e) {
+    var t = e.target && e.target.closest ? e.target.closest('[data-cookie-settings]') : null;
+    if (t) { e.preventDefault(); show(); }
+  });
+
+  // Erst nach dem Rollen-Login zeigen: Das Gate entfernt [data-gate] beim Entsperren.
+  if (stored()) return;
+  if (!document.querySelector('[data-gate]')) { show(); return; }
+  var obs = new MutationObserver(function () {
+    if (document.querySelector('[data-gate]')) return;
+    obs.disconnect();
+    if (!stored()) show();
+  });
+  obs.observe(document.documentElement, { childList: true, subtree: true });
+})();
+</script>
+
+<style>
+  .ajs-consent {
+    position: fixed;
+    inset: 0;
+    z-index: 9500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    background: rgba(0, 0, 0, 0.55);
+  }
+  .ajs-consent[hidden] { display: none !important; }
+  .ajs-consent-card {
+    width: min(24rem, 100%);
+    background: var(--cream);
+    color: var(--ink);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 1.5rem 1.4rem;
+    animation: ajs-consent-in .25s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ajs-consent-card { animation: none; }
+  }
+  .ajs-consent-title {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    margin: 0 0 .6rem;
+  }
+  .ajs-consent-body p {
+    font-size: .9rem;
+    line-height: 1.55;
+    margin: 0 0 .7rem;
+  }
+  .ajs-consent-body p:last-child { margin-bottom: 0; }
+  .ajs-consent-body a {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  .ajs-consent-actions {
+    display: flex;
+    gap: .6rem;
+    margin-top: 1.1rem;
+  }
+  .ajs-consent-btn {
+    flex: 1;
+    min-height: 44px;
+    padding: .7rem .8rem;
+    border-radius: 100px;
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+  }
+  .ajs-consent-primary {
+    background: var(--accent);
+    color: var(--white);
+  }
+  .ajs-consent-secondary {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+  @media (min-width: 768px) {
+    .ajs-consent { display: none !important; }
+  }
+  @keyframes ajs-consent-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: none; }
+  }
+</style>
