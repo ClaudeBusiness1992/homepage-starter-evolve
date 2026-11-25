@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Prototyp Newsletter-Modul – pixel&amp;code</title>
+<style>
+/* Design-Tokens aus src/styles/global.css (Stand 25.11.2026). Schriften: keine Dateien, nur Systemfallbacks. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #1c1c1c;
+  --cream: #f5f0e8;
+  --accent: #c8520e;
+  --accent-light: #e2a63b;
+  --accent-text: color-mix(in srgb, var(--accent) 75%, #000);
+  --sage: #4a7c6f;
+  --sage-text: color-mix(in srgb, var(--sage) 70%, #000);
+  --white: #ffffff;
+  --border: rgba(28,28,28,.12);
+  --error: #e85555;
+  --error-text: color-mix(in srgb, var(--error) 55%, #000);
+
+  --bg: var(--ink);
+  --bg-card: color-mix(in srgb, var(--cream) 8%, var(--ink));
+  --bg-input: color-mix(in srgb, var(--cream) 12%, var(--ink));
+  --border-subtle: color-mix(in srgb, var(--cream) 18%, var(--ink));
+  --text-soft: color-mix(in srgb, var(--cream) 82%, var(--ink));
+
+  --muted: color-mix(in srgb, var(--ink) 72%, var(--cream));
+  --paper: color-mix(in srgb, var(--white) 70%, var(--cream));
+
+  --fs-lg: 1.5rem;
+  --fs-md: 1.125rem;
+  --fs-base: 0.9375rem;
+  --fs-sm: 0.75rem;
+
+  --serif: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+  --sans: 'Outfit', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --r: 12px;
+  --r-lg: 20px;
+  --r-pill: 100px;
+  --shadow: 0 4px 24px rgba(28,28,28,.10);
+  --shadow-sm: 0 2px 8px color-mix(in srgb, var(--ink) 6%, transparent);
+
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+}
+html { -webkit-text-size-adjust: 100%; }
+body { font-family: var(--sans); font-size: var(--fs-base); line-height: 1.6; color: var(--ink); background: var(--cream); min-height: 100vh; }
+[hidden] { display: none !important; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.2; }
+h1 { font-size: 1.75rem; } h2 { font-size: var(--fs-lg); } h3 { font-size: var(--fs-md); }
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--accent-text); }
+
+/* Fokus: überall sichtbar */
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.dark :focus-visible { outline-color: var(--accent-light); }
+.dark a:not(.btn) { color: var(--accent-light); }
+
+.skip { position: absolute; left: -999px; top: 0; background: var(--ink); color: var(--cream); padding: .75rem 1rem; z-index: 100; border-radius: 0 0 var(--r) 0; }
+.skip:focus { left: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ── Prototyp-Rahmen ── */
+.proto-bar { background: var(--ink); color: var(--cream); padding: var(--s3) var(--s4); }
+.proto-bar-in { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: var(--s3) var(--s5); align-items: center; justify-content: space-between; }
+.proto-bar strong { font-family: var(--serif); font-weight: 400; font-size: var(--fs-md); }
+.proto-note { font-size: var(--fs-sm); color: var(--text-soft); }
+.tabs { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.tab { background: transparent; color: var(--cream); border: 1.5px solid var(--border-subtle); border-radius: var(--r-pill); padding: .5rem 1.1rem; cursor: pointer; font-weight: 600; min-height: 44px; }
+.tab:hover { border-color: var(--accent-light); }
+.tab[aria-selected="true"] { background: var(--cream); color: var(--ink); border-color: var(--cream); }
+.proto-bar .tab:focus-visible { outline-color: var(--accent-light); }
+.reset { background: none; border: none; color: var(--text-soft); text-decoration: underline; cursor: pointer; padding: .5rem; min-height: 44px; }
+.reset:hover { color: var(--cream); }
+
+main { max-width: 1200px; margin: 0 auto; padding: var(--s5) var(--s4) var(--s7); }
+.panel-title { margin-bottom: var(--s2); }
+.panel-lead { color: var(--muted); max-width: 70ch; margin-bottom: var(--s5); }
+
+/* ── Buttons ── */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .8rem 1.6rem; min-height: 44px; border-radius: var(--r-pill); border: 1.5px solid transparent; font-weight: 600; cursor: pointer; text-decoration: none; transition: transform .2s, background .2s, border-color .2s; }
+.btn:hover:not(:disabled) { transform: translateY(-1px); }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+.btn-fill { background: color-mix(in srgb, var(--accent) 80%, #000); color: var(--white); }
+.btn-fill:hover:not(:disabled) { background: var(--accent-text); }
+.btn-ink { background: var(--ink); color: var(--cream); }
+.btn-ink:hover:not(:disabled) { background: color-mix(in srgb, var(--ink) 85%, var(--accent)); }
+.btn-line { background: transparent; color: var(--ink); border-color: color-mix(in srgb, var(--ink) 40%, var(--cream)); }
+.btn-line:hover:not(:disabled) { border-color: var(--ink); }
+.dark .btn-line { color: var(--cream); border-color: var(--border-subtle); }
+.dark .btn-line:hover { border-color: var(--accent-light); }
+.btn-sm { padding: .5rem 1rem; }
+
+/* ── Formulare (hell, /admin) ── */
+.field { display: flex; flex-direction: column; gap: .35rem; margin-bottom: var(--s4); }
+.field > label, .field > .label, legend { font-weight: 600; font-size: .875rem; }
+.opt { font-weight: 400; color: var(--muted); }
+.help { font-size: .8125rem; color: var(--muted); }
+.input, .textarea, .select { background: var(--white); border: 1.5px solid color-mix(in srgb, var(--ink) 45%, var(--cream)); border-radius: var(--r); padding: .7rem .9rem; font-size: 16px; width: 100%; min-height: 44px; }
+.textarea { min-height: 9rem; resize: vertical; }
+.input:hover, .textarea:hover { border-color: var(--ink); }
+.input[aria-invalid="true"], .textarea[aria-invalid="true"] { border-color: var(--error-text); border-width: 2px; }
+.err { color: var(--error-text); font-size: .8125rem; font-weight: 600; display: flex; gap: .35rem; }
+.err::before { content: "⚠"; }
+fieldset { border: none; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--s4); }
+.counter { font-size: .8125rem; color: var(--muted); text-align: right; }
+
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); padding: var(--s5); box-shadow: var(--shadow-sm); }
+.card + .card { margin-top: var(--s4); }
+.card h2, .card h3 { margin-bottom: var(--s3); }
+
+.notice { display: flex; gap: var(--s3); padding: var(--s4); border-radius: var(--r); border: 1.5px solid; margin-bottom: var(--s4); }
+.notice .ico { font-size: 1.25rem; line-height: 1.4; flex-shrink: 0; }
+.notice-info { background: color-mix(in srgb, var(--sage) 12%, var(--white)); border-color: var(--sage-text); }
+.notice-warn { background: color-mix(in srgb, var(--accent-light) 25%, var(--white)); border-color: var(--accent-text); }
+.notice-danger { background: color-mix(in srgb, var(--error) 12%, var(--white)); border-color: var(--error-text); }
+.notice p + p { margin-top: .35rem; }
+
+/* ── Ansicht 1: Website ── */
+.demo-ctl { border: 2px dashed color-mix(in srgb, var(--ink) 40%, var(--cream)); border-radius: var(--r); padding: var(--s3) var(--s4); margin-bottom: var(--s4); display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; background: var(--paper); }
+.demo-ctl > span { font-weight: 600; font-size: .875rem; }
+.seg { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.seg button { border: 1.5px solid color-mix(in srgb, var(--ink) 45%, var(--cream)); background: var(--white); border-radius: var(--r-pill); padding: .4rem .9rem; min-height: 44px; cursor: pointer; font-weight: 500; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+.site { border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow); background: var(--cream); }
+.site-nav { background: var(--ink); color: var(--cream); display: flex; justify-content: space-between; align-items: center; padding: .9rem 1.5rem; gap: var(--s4); flex-wrap: wrap; }
+.site-nav .brand { font-family: var(--serif); font-size: 1.25rem; }
+.site-nav .brand em { color: var(--accent-light); font-style: normal; }
+.site-nav ul { list-style: none; display: flex; gap: var(--s5); font-size: .9rem; color: var(--text-soft); }
+.site-hint { padding: var(--s6) 1.5rem; color: var(--muted); font-size: .875rem; text-align: center; border-bottom: 1px dashed var(--border); }
+.dark { background: var(--ink); color: var(--cream); }
+.nl-sec { padding: var(--s7) var(--s5); }
+.nl-in { max-width: 560px; margin: 0 auto; }
+.lbl { font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: .12em; font-weight: 600; color: var(--accent-light); margin-bottom: var(--s2); }
+.nl-in h2 { font-size: 2rem; color: var(--cream); margin-bottom: var(--s3); }
+.nl-in .sub { color: var(--text-soft); margin-bottom: var(--s5); }
+.d-field { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1.1rem; }
+.d-field label { font-size: .8125rem; font-weight: 600; color: color-mix(in srgb, var(--cream) 92%, var(--ink)); }
+.d-field .opt { color: var(--text-soft); }
+.d-input { background: var(--bg-input); border: 1.5px solid color-mix(in srgb, var(--cream) 45%, var(--ink)); border-radius: var(--r); padding: .75rem 1rem; color: var(--cream); font-size: 16px; width: 100%; min-height: 44px; }
+.d-input::placeholder { color: color-mix(in srgb, var(--cream) 55%, var(--ink)); }
+.d-input:focus-visible { border-color: var(--accent-light); outline: 3px solid var(--accent-light); outline-offset: 1px; }
+.d-input[aria-invalid="true"] { border-color: var(--error); border-width: 2px; }
+.d-err { color: #ff9b9b; font-size: .8125rem; font-weight: 600; display: flex; gap: .35rem; }
+.d-err::before { content: "⚠"; }
+.d-check { display: flex; gap: .75rem; align-items: flex-start; margin-bottom: 1.25rem; }
+.d-check input { width: 22px; height: 22px; margin-top: .1rem; accent-color: var(--accent-light); flex-shrink: 0; cursor: pointer; }
+.d-check label { font-size: .875rem; color: color-mix(in srgb, var(--cream) 90%, var(--ink)); line-height: 1.6; cursor: pointer; }
+.d-check label a { color: var(--accent-light); }
+.d-check.bad { outline: 2px solid var(--error); outline-offset: 6px; border-radius: 4px; }
+.dark .btn-fill { width: 100%; padding: 1rem; font-size: 1rem; }
+.fine { font-size: .8125rem; color: var(--text-soft); margin-top: var(--s3); }
+.done-ico { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; font-size: 1.6rem; background: color-mix(in srgb, var(--accent-light) 25%, var(--ink)); color: var(--accent-light); margin-bottom: var(--s4); }
+.dark .box { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--r); padding: var(--s4); margin: var(--s4) 0; }
+.mail { background: var(--white); color: var(--ink); border-radius: var(--r); overflow: hidden; margin: var(--s4) 0; }
+.mail-h { background: color-mix(in srgb, var(--ink) 8%, var(--white)); padding: .75rem 1rem; font-size: .8125rem; color: var(--muted); border-bottom: 1px solid var(--border); }
+.mail-h b { color: var(--ink); }
+.mail-b { padding: var(--s5); }
+.mail-b p { margin-bottom: var(--s3); }
+
+/* ── Ansicht 2/3: Admin ── */
+.admin { display: grid; grid-template-columns: 230px 1fr; gap: var(--s5); align-items: start; }
+.side { background: var(--ink); color: var(--cream); border-radius: var(--r-lg); padding: var(--s4); position: sticky; top: var(--s4); }
+.side .who { font-size: .8125rem; color: var(--text-soft); padding: 0 .5rem var(--s3); border-bottom: 1px solid var(--border-subtle); margin-bottom: var(--s3); }
+.side ul { list-style: none; }
+.side li > span, .side li > button { display: block; width: 100%; text-align: left; padding: .6rem .75rem; border-radius: var(--r); background: none; border: none; color: var(--text-soft); }
+.side li > span { cursor: default; }
+.side .on-mod { color: var(--cream); font-weight: 600; }
+.side ul ul { margin: .15rem 0 .5rem .75rem; border-left: 2px solid var(--border-subtle); }
+.side ul ul button { cursor: pointer; min-height: 44px; }
+.side ul ul button:hover { color: var(--cream); }
+.side ul ul button[aria-current="page"] { background: var(--cream); color: var(--ink); font-weight: 600; }
+.side :focus-visible { outline-color: var(--accent-light); }
+.side-note { font-size: .75rem; color: var(--text-soft); padding: var(--s3) .5rem 0; }
+
+.stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--s3); margin-bottom: var(--s4); }
+.stat { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--r); padding: var(--s3) var(--s4); text-align: left; cursor: pointer; min-height: 44px; }
+.stat:hover { border-color: var(--ink); }
+.stat[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.stat .n { display: block; font-family: var(--serif); font-size: 1.9rem; line-height: 1.1; }
+.stat .t { font-size: .8125rem; color: var(--muted); }
+.toolbar { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: end; margin-bottom: var(--s4); }
+.toolbar .field { margin: 0; flex: 1 1 240px; }
+.status { display: inline-flex; align-items: center; gap: .35rem; padding: .15rem .65rem; border-radius: var(--r-pill); font-size: .8125rem; font-weight: 600; border: 1.5px solid; white-space: nowrap; }
+.st-bestaetigt { color: var(--sage-text); background: color-mix(in srgb, var(--sage) 14%, var(--white)); border-color: var(--sage-text); }
+.st-unbestaetigt { color: color-mix(in srgb, var(--accent-light) 40%, #000); background: color-mix(in srgb, var(--accent-light) 25%, var(--white)); border-color: color-mix(in srgb, var(--accent-light) 40%, #000); }
+.st-abgemeldet { color: var(--muted); background: color-mix(in srgb, var(--ink) 6%, var(--white)); border-color: var(--muted); }
+.st-gesperrt { color: var(--error-text); background: color-mix(in srgb, var(--error) 12%, var(--white)); border-color: var(--error-text); }
+.tbl-wrap { background: var(--white); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+caption { text-align: left; padding: var(--s4) var(--s4) var(--s2); font-weight: 600; }
+th { text-align: left; font-size: .8125rem; color: var(--muted); font-weight: 600; padding: .6rem var(--s4); border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--ink) 4%, var(--white)); }
+td { padding: .7rem var(--s4); border-bottom: 1px solid var(--border); vertical-align: middle; }
+tbody tr.detail td { background: var(--paper); font-size: .875rem; }
+.detail dl { display: grid; grid-template-columns: 11rem 1fr; gap: .25rem var(--s4); }
+.detail dt { color: var(--muted); }
+.link-btn { background: none; border: none; color: var(--accent-text); text-decoration: underline; cursor: pointer; font-weight: 600; padding: .5rem; min-height: 44px; }
+.empty { padding: var(--s6); text-align: center; color: var(--muted); }
+.export { margin-bottom: var(--s4); }
+.export fieldset { margin: var(--s3) 0; }
+.export label { display: flex; gap: .6rem; align-items: center; min-height: 36px; }
+.export input[type=radio], .radios input[type=radio], .check input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--accent-text); flex-shrink: 0; }
+.statusline { font-size: .875rem; margin-top: var(--s3); }
+
+/* Verfassen */
+.steps { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); margin-bottom: var(--s5); counter-reset: s; }
+.steps li { display: flex; align-items: center; gap: .5rem; color: var(--muted); font-weight: 600; }
+.steps li::before { counter-increment: s; content: counter(s); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--muted); font-size: .875rem; }
+.steps li[aria-current="step"] { color: var(--ink); }
+.steps li[aria-current="step"]::before { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.steps li.done::before { content: "✓"; background: var(--sage-text); border-color: var(--sage-text); color: var(--white); }
+.steps li.done { color: var(--sage-text); }
+.compose { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--s5); align-items: start; }
+.errsum { border: 2px solid var(--error-text); background: color-mix(in srgb, var(--error) 10%, var(--white)); border-radius: var(--r); padding: var(--s4); margin-bottom: var(--s4); }
+.errsum ul { margin: .4rem 0 0 1.2rem; }
+.errsum a { color: var(--error-text); font-weight: 600; }
+.checks { list-style: none; }
+.checks li { display: flex; gap: .6rem; padding: .35rem 0; font-size: .9rem; }
+.checks .ok { color: var(--sage-text); font-weight: 700; }
+.checks .no { color: var(--error-text); font-weight: 700; }
+.imgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--s3); }
+.imgs label { display: block; cursor: pointer; border: 2px solid var(--border); border-radius: var(--r); overflow: hidden; background: var(--white); position: relative; }
+.imgs input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; cursor: pointer; }
+.imgs label:has(input:checked) { border-color: var(--ink); box-shadow: 0 0 0 2px var(--ink); }
+.imgs label:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 3px; }
+.thumb { aspect-ratio: 16/9; display: block; }
+.imgs .cap { display: block; padding: .4rem .6rem; font-size: .8125rem; }
+.t1 { background: linear-gradient(135deg, #3b5d54, #8fb3a6); }
+.t2 { background: linear-gradient(135deg, #a8420c, #e2a63b); }
+.t3 { background: linear-gradient(135deg, #2c2c2c, #7a6a55); }
+.t0 { background: repeating-linear-gradient(45deg, #eee, #eee 8px, #ddd 8px, #ddd 16px); display: grid; place-items: center; color: var(--muted); font-size: .8125rem; }
+.tools { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: center; justify-content: space-between; margin-top: var(--s5); }
+.tools .grp { display: flex; flex-wrap: wrap; gap: var(--s3); }
+.radios { display: flex; flex-direction: column; gap: var(--s2); }
+.radios label, .check { display: flex; gap: .6rem; align-items: flex-start; cursor: pointer; line-height: 1.5; }
+
+/* E-Mail-Vorschau */
+.prev-wrap { background: color-mix(in srgb, var(--ink) 10%, var(--cream)); border-radius: var(--r); padding: var(--s4); }
+.prev-bar { display: flex; gap: var(--s2); margin-bottom: var(--s3); flex-wrap: wrap; align-items: center; }
+.prev-meta { font-size: .8125rem; color: var(--muted); margin-bottom: var(--s3); }
+.prev-meta b { color: var(--ink); }
+.email { background: var(--white); margin: 0 auto; max-width: 100%; width: 600px; border-radius: 6px; overflow: hidden; transition: width .2s; }
+.email.mobile { width: 340px; }
+.email-head { background: var(--ink); color: var(--cream); padding: 1rem 1.5rem; font-family: var(--serif); font-size: 1.15rem; }
+.email-head em { color: var(--accent-light); font-style: normal; }
+.email-img { aspect-ratio: 16/7; }
+.email-body { padding: 1.5rem; }
+.email-body h3 { font-size: 1.5rem; margin-bottom: var(--s3); }
+.email-body p { margin-bottom: var(--s3); }
+.email-btn { display: inline-block; background: color-mix(in srgb, var(--accent) 80%, #000); color: var(--white); padding: .8rem 1.6rem; border-radius: var(--r-pill); font-weight: 600; text-decoration: none; margin-top: var(--s2); }
+.email-foot { background: color-mix(in srgb, var(--ink) 5%, var(--white)); padding: 1rem 1.5rem; font-size: .75rem; color: var(--muted); line-height: 1.6; }
+.pre-hidden { font-size: .8125rem; color: var(--muted); font-style: italic; padding: .5rem 1.5rem; border-bottom: 1px dashed var(--border); }
+
+.sum { display: grid; grid-template-columns: 11rem 1fr; gap: .6rem var(--s4); margin: var(--s4) 0; }
+.sum dt { color: var(--muted); }
+.sum dd { font-weight: 600; word-break: break-word; }
+.big-n { font-family: var(--serif); font-size: 2.2rem; line-height: 1; }
+.success { text-align: center; padding: var(--s6) var(--s4); }
+.success .done-ico { margin: 0 auto var(--s4); background: color-mix(in srgb, var(--sage) 15%, var(--white)); color: var(--sage-text); }
+.mini-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s3); margin-top: var(--s5); }
+.mini-stats div { border: 1px solid var(--border); border-radius: var(--r); padding: var(--s3); }
+.mini-stats b { display: block; font-family: var(--serif); font-size: 1.5rem; font-weight: 400; }
+.mini-stats span { font-size: .8125rem; color: var(--muted); }
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .admin { grid-template-columns: 1fr; }
+  .side { position: static; }
+  .side > ul > li:not(.mod-nl) { display: none; }
+  .side .who, .side-note { display: none; }
+  .side ul ul { border-left: none; margin: 0; display: flex; flex-wrap: wrap; gap: var(--s2); }
+  .side ul ul li { flex: 1 1 140px; }
+  .side .on-mod { display: none; }
+  .compose { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 720px) {
+  main { padding: var(--s4) .75rem var(--s6); }
+  .row2 { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .site-nav ul { display: none; }
+  .nl-sec { padding: var(--s6) var(--s4); }
+  .nl-in h2 { font-size: 1.6rem; }
+  .card { padding: var(--s4); }
+  .sum, .detail dl { grid-template-columns: 1fr; gap: 0; }
+  .sum dt, .detail dt { margin-top: .6rem; }
+  .mini-stats { grid-template-columns: repeat(2, 1fr); }
+  /* Tabelle wird zu Karten */
+  table, tbody, tr, td { display: block; width: 100%; }
+  thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  tr.row { border-bottom: 1px solid var(--border); padding: var(--s3) var(--s4); }
+  tr.row td { border: none; padding: .2rem 0; display: flex; justify-content: space-between; gap: var(--s3); }
+  tr.row td::before { content: attr(data-l); color: var(--muted); font-size: .8125rem; flex-shrink: 0; }
+  tr.detail td { padding: var(--s3) var(--s4); }
+  .email { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+@media (forced-colors: active) { .status, .stat, .btn { border: 2px solid ButtonText; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+
+<header class="proto-bar">
+  <div class="proto-bar-in">
+    <div>
+      <strong>Prototyp: Newsletter-Modul</strong><br>
+      <span class="proto-note">Klickbare Vorschau mit Beispieldaten. Nichts wird gespeichert oder verschickt.</span>
+    </div>
+    <div role="tablist" aria-label="Ansicht wählen" class="tabs" id="tabs">
+      <button class="tab" role="tab" id="tab-1" aria-controls="v1" aria-selected="true" tabindex="0">1 · Anmeldung auf der Website</button>
+      <button class="tab" role="tab" id="tab-2" aria-controls="v2" aria-selected="false" tabindex="-1">2 · Abonnenten im /admin</button>
+      <button class="tab" role="tab" id="tab-3" aria-controls="v3" aria-selected="false" tabindex="-1">3 · Newsletter verfassen</button>
+    </div>
+    <button type="button" class="reset" id="reset">Prototyp zurücksetzen</button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<!-- ═════════ Ansicht 1: Website ═════════ -->
+<section id="v1" role="tabpanel" aria-labelledby="tab-1">
+  <h1 class="panel-title">Anmeldung auf der Website</h1>
+  <p class="panel-lead">So sieht ein Besucher die Anmeldung auf der Kundenseite. Die Anmeldung gilt erst, wenn der Besucher den Link in der Bestätigungsmail anklickt (Double-Opt-in).</p>
+
+  <div class="demo-ctl">
+    <span id="demo1">Prototyp-Steuerung · Schritt:</span>
+    <div class="seg" role="group" aria-labelledby="demo1" id="seg1">
+      <button type="button" data-s="form" aria-pressed="true">Formular</button>
+      <button type="button" data-s="mail" aria-pressed="false">Hinweis und E-Mail</button>
+      <button type="button" data-s="ok" aria-pressed="false">Bestätigungsseite</button>
+      <button type="button" data-s="expired" aria-pressed="false">Link abgelaufen</button>
+    </div>
+  </div>
+
+  <div class="site">
+    <div class="site-nav" aria-hidden="true">
+      <span class="brand">Café Lindenhof<em>.</em></span>
+      <ul><li>Über uns</li><li>Karte</li><li>Öffnungszeiten</li><li>Kontakt</li></ul>
+    </div>
+    <div class="site-hint">Beispielseite des Kunden „Café Lindenhof“ · Ausschnitt weiter unten auf der Startseite</div>
+
+    <div class="dark nl-sec" id="site-area">
+      <div class="nl-in">
+        <!-- Schritt: Formular -->
+        <div data-step="form">
+          <p class="lbl">Newsletter</p>
+          <h2 id="nl-h">Neues vom Lindenhof</h2>
+          <p class="sub">Ein- bis zweimal im Monat: Aktionen, neue Karte und besondere Öffnungszeiten. Direkt in Ihr Postfach.</p>
+          <form id="signup" novalidate aria-labelledby="nl-h">
+            <div class="d-field">
+              <label for="s-name">Vorname <span class="opt">(freiwillig)</span></label>
+              <input class="d-input" id="s-name" name="vorname" type="text" autocomplete="given-name" placeholder="Zum Beispiel Anna">
+            </div>
+            <div class="d-field">
+              <label for="s-mail">E-Mail-Adresse</label>
+              <input class="d-input" id="s-mail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="s-mail-err" placeholder="name@beispiel.de">
+              <p class="d-err" id="s-mail-err" hidden></p>
+            </div>
+            <!-- Honigtopf gegen Spam-Skripte: für Menschen unsichtbar, nicht per Tastatur erreichbar -->
+            <div style="position:absolute;left:-9999px" aria-hidden="true"><label>Bitte leer lassen<input type="text" tabindex="-1" autocomplete="off" name="website"></label></div>
+            <div class="d-check" id="s-consent-wrap">
+              <input type="checkbox" id="s-consent" name="einwilligung" aria-describedby="s-consent-err">
+              <div>
+                <label for="s-consent">Ja, ich möchte den Newsletter des Café Lindenhof per E-Mail erhalten (etwa ein- bis zweimal im Monat). Ich kann meine Einwilligung jederzeit widerrufen, zum Beispiel über den Abmeldelink in jeder E-Mail.</label>
+                <p class="fine" style="margin-top:.35rem">Wie wir Ihre Daten verarbeiten, steht in der <a href="#" data-proto="Im echten Betrieb öffnet sich hier die Datenschutzerklärung des Kunden.">Datenschutzerklärung</a>.</p>
+                <p class="d-err" id="s-consent-err" hidden></p>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-fill">Anmelden</button>
+            <p class="fine">Danach schicken wir Ihnen eine E-Mail mit einem Bestätigungslink. Erst wenn Sie darauf klicken, sind Sie angemeldet.</p>
+          </form>
+        </div>
+
+        <!-- Schritt: Hinweis + Mail -->
+        <div data-step="mail" hidden>
+          <div class="done-ico" aria-hidden="true">✉</div>
+          <h2 tabindex="-1" id="mail-h">Fast geschafft: Bitte bestätigen Sie Ihre Anmeldung</h2>
+          <p class="sub">Wir haben eine E-Mail an <strong id="mail-to">name@beispiel.de</strong> geschickt. Bitte klicken Sie darin auf den Bestätigungslink. Erst danach erhalten Sie den Newsletter.</p>
+          <p class="fine">Nichts angekommen? Schauen Sie bitte auch im Spam-Ordner nach. Der Link ist 24 Stunden gültig.</p>
+          <p class="fine"><button type="button" class="link-btn" style="color:var(--accent-light)" data-go="form">Andere Adresse eingeben</button></p>
+
+          <div class="mail" role="group" aria-label="So sieht die Bestätigungsmail aus (Beispiel)">
+            <div class="mail-h"><b>Von:</b> Café Lindenhof &lt;newsletter@cafe-lindenhof.example&gt;<br><b>Betreff:</b> Bitte bestätigen Sie Ihre Newsletter-Anmeldung</div>
+            <div class="mail-b">
+              <p>Hallo <span id="mail-name">Anna</span>,</p>
+              <p>Sie haben sich auf der Website des Café Lindenhof für den Newsletter angemeldet. Bitte bestätigen Sie Ihre E-Mail-Adresse mit einem Klick:</p>
+              <p><button type="button" class="btn btn-fill btn-sm" id="do-confirm" style="width:auto;padding:.7rem 1.4rem">E-Mail-Adresse bestätigen</button></p>
+              <p style="font-size:.8125rem;color:var(--muted)">Wenn Sie sich nicht angemeldet haben, ignorieren Sie diese E-Mail. Dann passiert nichts und Ihre Adresse wird nach kurzer Zeit gelöscht.</p>
+            </div>
+          </div>
+          <p class="fine">Beispiel: Im Prototyp klicken Sie auf den Knopf in der Mail, um zur Bestätigungsseite zu kommen.</p>
+        </div>
+
+        <!-- Schritt: Bestätigt -->
+        <div data-step="ok" hidden>
+          <div class="done-ico" aria-hidden="true">✓</div>
+          <h2 tabindex="-1" id="ok-h">Vielen Dank, Ihre Anmeldung ist bestätigt</h2>
+          <p class="sub">Ab sofort erhalten Sie den Newsletter des Café Lindenhof. Jede E-Mail enthält einen Abmeldelink. Mit einem Klick sind Sie wieder abgemeldet.</p>
+          <p><a class="btn btn-line" href="#" data-proto="Im echten Betrieb führt dieser Knopf zurück zur Startseite des Kunden.">Zurück zur Startseite</a></p>
+        </div>
+
+        <!-- Schritt: abgelaufen -->
+        <div data-step="expired" hidden>
+          <div class="done-ico" aria-hidden="true" style="background:color-mix(in srgb,var(--error) 20%,var(--ink));color:#ff9b9b">!</div>
+          <h2 tabindex="-1" id="exp-h">Dieser Link ist nicht mehr gültig</h2>
+          <p class="sub">Der Bestätigungslink war 24 Stunden gültig oder wurde schon benutzt. Sie können sich einfach noch einmal anmelden.</p>
+          <p><button type="button" class="btn btn-fill" style="width:auto" data-go="form">Erneut anmelden</button></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="help" style="margin-top:var(--s3)" id="proto-msg1" role="status"></p>
+</section>
+
+<!-- ═════════ Ansicht 2: Abonnenten ═════════ -->
+<section id="v2" role="tabpanel" aria-labelledby="tab-2" hidden>
+  <div class="admin">
+    <nav class="side" aria-label="Bereiche im Kundenbereich">
+      <p class="who">Angemeldet für<br><strong style="color:var(--cream)">Café Lindenhof</strong></p>
+      <ul>
+        <li><span>Team</span></li>
+        <li><span>Galerie</span></li>
+        <li class="mod-nl"><span class="on-mod">Newsletter</span>
+          <ul>
+            <li><button type="button" data-view="2" aria-current="page">Abonnenten</button></li>
+            <li><button type="button" data-view="3">Newsletter verfassen</button></li>
+          </ul>
+        </li>
+        <li><span>Öffnungszeiten und Kontakt</span></li>
+        <li><span>Hinweis-Banner</span></li>
+      </ul>
+      <p class="side-note">Im Prototyp sind nur die Newsletter-Seiten klickbar.</p>
+    </nav>
+
+    <div>
+      <h1 class="panel-title">Abonnenten</h1>
+      <p class="panel-lead">Hier sehen Sie, wer sich angemeldet hat und wer den Newsletter erhält. Nur bestätigte Abonnenten bekommen Post.</p>
+
+      <div class="stats" id="stats" role="group" aria-label="Nach Status filtern"></div>
+
+      <div class="notice notice-info" id="status-note">
+        <span class="ico" aria-hidden="true">ⓘ</span>
+        <div><p><strong>Was bedeuten die Status?</strong></p>
+        <p>Bestätigt: hat den Link in der Mail angeklickt und erhält den Newsletter. Unbestätigt: noch nicht bestätigt, erhält nichts und wird nach 7 Tagen gelöscht. Abgemeldet: hat sich selbst abgemeldet. Gesperrt: nicht zustellbar oder Beschwerde, dauerhaft ausgeschlossen.</p></div>
+      </div>
+
+      <div class="toolbar">
+        <div class="field">
+          <label for="q">Suchen</label>
+          <input class="input" id="q" type="search" placeholder="E-Mail-Adresse oder Name" autocomplete="off">
+        </div>
+        <button type="button" class="btn btn-line" id="exp-toggle" aria-expanded="false" aria-controls="exp-panel">Liste exportieren</button>
+      </div>
+
+      <div class="card export" id="exp-panel" hidden>
+        <h2>Abonnenten exportieren</h2>
+        <fieldset>
+          <legend>Was soll in die Datei?</legend>
+          <label><input type="radio" name="exp" value="bestaetigt" checked> Nur bestätigte Abonnenten (E-Mail, Vorname, Zeitpunkt der Bestätigung)</label>
+          <label><input type="radio" name="exp" value="alle"> Alle Einträge mit Status</label>
+          <label><input type="radio" name="exp" value="nachweis"> Alle Einträge mit Einwilligungsnachweis (Text, Version, Quelle, Zeitpunkte)</label>
+        </fieldset>
+        <div class="notice notice-warn"><span class="ico" aria-hidden="true">⚠</span>
+          <p>Die Datei enthält personenbezogene Daten. Bitte speichern Sie sie sicher und geben Sie sie nicht weiter. Jeder Export wird protokolliert.</p></div>
+        <button type="button" class="btn btn-ink" id="exp-go">Export erstellen (CSV-Datei)</button>
+        <p class="statusline" id="exp-status" role="status"></p>
+      </div>
+
+      <div class="tbl-wrap">
+        <table>
+          <caption id="tbl-cap">Abonnenten</caption>
+          <thead><tr><th scope="col">E-Mail-Adresse</th><th scope="col">Vorname</th><th scope="col">Status</th><th scope="col">Angemeldet am</th><th scope="col">Quelle</th><th scope="col"><span class="sr-only">Aktion</span></th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <p class="empty" id="empty" hidden>Keine Einträge gefunden. Ändern Sie die Suche oder den Filter.</p>
+      </div>
+      <p class="help" style="margin-top:var(--s3)">Adressen werden im Prototyp nur als Beispiele gezeigt. Gesperrte Adressen bleiben auch nach einem späteren Import oder einer erneuten Anmeldung ausgeschlossen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ Ansicht 3: Verfassen ═════════ -->
+<section id="v3" role="tabpanel" aria-labelledby="tab-3" hidden>
+  <div class="admin">
+    <nav class="side" aria-label="Bereiche im Kundenbereich">
+      <p class="who">Angemeldet für<br><strong style="color:var(--cream)">Café Lindenhof</strong></p>
+      <ul>
+        <li><span>Team</span></li>
+        <li><span>Galerie</span></li>
+        <li class="mod-nl"><span class="on-mod">Newsletter</span>
+          <ul>
+            <li><button type="button" data-view="2">Abonnenten</button></li>
+            <li><button type="button" data-view="3" aria-current="page">Newsletter verfassen</button></li>
+          </ul>
+        </li>
+        <li><span>Öffnungszeiten und Kontakt</span></li>
+        <li><span>Hinweis-Banner</span></li>
+      </ul>
+      <p class="side-note">Im Prototyp sind nur die Newsletter-Seiten klickbar.</p>
+    </nav>
+
+    <div>
+      <h1 class="panel-title">Newsletter verfassen</h1>
+      <p class="panel-lead">Füllen Sie die Felder aus. Das Aussehen ist fest vorgegeben, so sieht jeder Newsletter einheitlich aus.</p>
+
+      <ol class="steps" id="steps" aria-label="Fortschritt">
+        <li aria-current="step">Inhalt schreiben</li>
+        <li>Vorschau und Testmail</li>
+        <li>Versand bestätigen</li>
+      </ol>
+
+      <!-- Schritt 1 -->
+      <div id="c1">
+        <div class="errsum" id="errsum" role="alert" tabindex="-1" hidden></div>
+        <form id="compose" novalidate class="compose">
+          <div class="card">
+            <h2>Inhalt</h2>
+            <div class="field">
+              <label for="c-subj">Betreff</label>
+              <input class="input" id="c-subj" type="text" maxlength="90" aria-describedby="c-subj-h c-subj-e" value="Neu im Dezember: Winterkarte und Weihnachtsöffnungszeiten">
+              <div style="display:flex;justify-content:space-between;gap:1rem"><span class="help" id="c-subj-h">Das sehen die Leser zuerst. Am besten kurz und konkret.</span><span class="counter" id="c-subj-n" aria-live="off"></span></div>
+              <p class="err" id="c-subj-e" hidden></p>
+            </div>
+            <div class="field">
+              <label for="c-pre">Vorschautext <span class="opt">(freiwillig)</span></label>
+              <input class="input" id="c-pre" type="text" maxlength="120" aria-describedby="c-pre-h" value="Heißer Kakao, Apfelstrudel und warme Suppen: die neue Karte ist da.">
+              <span class="help" id="c-pre-h">Steht im Postfach neben dem Betreff. Bis 120 Zeichen.</span>
+            </div>
+            <div class="field">
+              <label for="c-head">Überschrift im Newsletter</label>
+              <input class="input" id="c-head" type="text" maxlength="80" aria-describedby="c-head-e" value="Die Winterkarte ist da">
+              <p class="err" id="c-head-e" hidden></p>
+            </div>
+            <div class="field">
+              <label for="c-text">Text</label>
+              <textarea class="textarea" id="c-text" aria-describedby="c-text-h c-text-e">Ab dem 1. Dezember wärmen wir Sie mit frischem Apfelstrudel, hausgemachter Kürbissuppe und unserem neuen Gewürz-Kakao.
+
+An den Feiertagen ändern sich unsere Öffnungszeiten: Heiligabend schließen wir um 14 Uhr, am 1. und 2. Weihnachtstag haben wir von 10 bis 18 Uhr für Sie geöffnet.</textarea>
+              <span class="help" id="c-text-h">Leere Zeile = neuer Absatz. Schrift und Farben sind vorgegeben.</span>
+              <p class="err" id="c-text-e" hidden></p>
+            </div>
+            <fieldset class="field">
+              <legend>Bild <span class="opt">(freiwillig, aus Ihrer Bildablage)</span></legend>
+              <div class="imgs" id="imgs">
+                <label><input type="radio" name="img" value="0"><span class="thumb t0">kein Bild</span><span class="cap">Kein Bild</span></label>
+                <label><input type="radio" name="img" value="1" checked><span class="thumb t1"></span><span class="cap">Winterkarte.jpg</span></label>
+                <label><input type="radio" name="img" value="2"><span class="thumb t2"></span><span class="cap">Apfelstrudel.jpg</span></label>
+                <label><input type="radio" name="img" value="3"><span class="thumb t3"></span><span class="cap">Cafe-Innen.jpg</span></label>
+              </div>
+            </fieldset>
+            <div class="field" id="alt-wrap">
+              <label for="c-alt">Bildbeschreibung</label>
+              <input class="input" id="c-alt" type="text" maxlength="120" aria-describedby="c-alt-h c-alt-e" value="Tisch mit Winterkarte und Kakao">
+              <span class="help" id="c-alt-h">Beschreibt das Bild für Leser, die es nicht sehen können oder deren Programm Bilder blockiert.</span>
+              <p class="err" id="c-alt-e" hidden></p>
+            </div>
+            <div class="row2">
+              <div class="field">
+                <label for="c-btn">Beschriftung des Knopfes <span class="opt">(freiwillig)</span></label>
+                <input class="input" id="c-btn" type="text" maxlength="30" aria-describedby="c-btn-e" value="Zur Winterkarte">
+                <p class="err" id="c-btn-e" hidden></p>
+              </div>
+              <div class="field">
+                <label for="c-url">Ziel des Knopfes</label>
+                <input class="input" id="c-url" type="url" inputmode="url" placeholder="https://" aria-describedby="c-url-h c-url-e" value="https://cafe-lindenhof.example/karte">
+                <span class="help" id="c-url-h">Muss mit https:// beginnen.</span>
+                <p class="err" id="c-url-e" hidden></p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <h2>Das wird automatisch geprüft</h2>
+              <ul class="checks" id="checks" aria-live="polite"></ul>
+            </div>
+            <div class="card">
+              <h3>Absender</h3>
+              <p><strong>Café Lindenhof</strong><br>newsletter@cafe-lindenhof.example</p>
+              <p class="help" style="margin-top:.5rem">Die Absenderadresse wird von pixel&amp;code eingerichtet und geprüft. Sie können sie hier nicht ändern.</p>
+            </div>
+            <div style="margin-top:var(--s4)">
+              <button type="submit" class="btn btn-ink" style="width:100%">Weiter zur Vorschau</button>
+              <p class="help" style="margin-top:.5rem;text-align:center">Es wird noch nichts verschickt.</p>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Schritt 2 -->
+      <div id="c2" hidden>
+        <h2 tabindex="-1" id="c2-h" class="panel-title">Vorschau und Testmail</h2>
+        <div class="compose" style="margin-top:var(--s4)">
+          <div class="prev-wrap">
+            <div class="prev-bar">
+              <span class="help" id="vw-l">Ansicht:</span>
+              <div class="seg" role="group" aria-labelledby="vw-l" id="seg-vw">
+                <button type="button" data-w="desk" aria-pressed="true">Computer</button>
+                <button type="button" data-w="mob" aria-pressed="false">Handy</button>
+              </div>
+            </div>
+            <p class="prev-meta"><b>Von:</b> Café Lindenhof · <b>Betreff:</b> <span id="p-subj"></span></p>
+            <div class="email" id="email" role="group" aria-label="Vorschau des Newsletters"></div>
+          </div>
+
+          <div>
+            <div class="card">
+              <h2>Testmail</h2>
+              <p class="help" style="margin-bottom:var(--s3)">Schicken Sie sich den Newsletter erst selbst zu. Prüfen Sie ihn am Handy und am Computer.</p>
+              <div class="field">
+                <label for="t-mail">Testmail senden an</label>
+                <input class="input" id="t-mail" type="email" value="inhaberin@cafe-lindenhof.example" autocomplete="email" aria-describedby="t-mail-e">
+                <p class="err" id="t-mail-e" hidden></p>
+              </div>
+              <button type="button" class="btn btn-line" id="t-send">Testmail senden</button>
+              <p class="statusline" id="t-status" role="status"></p>
+            </div>
+          </div>
+        </div>
+        <div class="tools">
+          <button type="button" class="btn btn-line" id="c2-back">Zurück zum Inhalt</button>
+          <button type="button" class="btn btn-ink" id="c2-next">Weiter zur Sendebestätigung</button>
+        </div>
+      </div>
+
+      <!-- Schritt 3 -->
+      <div id="c3" hidden>
+        <div id="c3-form">
+          <h2 tabindex="-1" id="c3-h" class="panel-title">Versand bestätigen</h2>
+          <p class="panel-lead">Bitte prüfen Sie die Angaben ein letztes Mal. Danach können Sie den Versand nicht mehr zurückholen.</p>
+
+          <div class="notice notice-danger" role="group" aria-labelledby="warn-t">
+            <span class="ico" aria-hidden="true">⚠</span>
+            <div>
+              <p id="warn-t"><strong>Ein Versand lässt sich nicht rückgängig machen.</strong></p>
+              <p>Sobald Sie auf „Jetzt senden“ klicken, geht der Newsletter an alle Empfänger. Er kann weder gestoppt noch zurückgeholt werden. Tippfehler lassen sich dann nur mit einer zweiten E-Mail berichtigen.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Zusammenfassung</h3>
+            <dl class="sum">
+              <dt>Empfänger</dt><dd><span class="big-n" id="s-count">8</span> bestätigte Abonnenten<br><span class="help" style="font-weight:400">Abgemeldete, gesperrte und unbestätigte Adressen sind nicht dabei.</span></dd>
+              <dt>Absender</dt><dd>Café Lindenhof &lt;newsletter@cafe-lindenhof.example&gt;</dd>
+              <dt>Betreff</dt><dd id="s-subj"></dd>
+              <dt>Zeitpunkt</dt><dd id="s-when">Sofort nach Ihrer Bestätigung</dd>
+            </dl>
+            <fieldset class="field" style="margin-top:var(--s4)">
+              <legend>Wann soll der Newsletter rausgehen?</legend>
+              <div class="radios">
+                <label><input type="radio" name="when" value="now" checked> Sofort</label>
+                <label><input type="radio" name="when" value="plan"> Zu einem bestimmten Zeitpunkt (Zeitzone Berlin)</label>
+              </div>
+            </fieldset>
+            <div class="field" id="plan-wrap" hidden>
+              <label for="plan-dt">Datum und Uhrzeit</label>
+              <input class="input" id="plan-dt" type="datetime-local" aria-describedby="plan-e" style="max-width:20rem">
+              <p class="err" id="plan-e" hidden></p>
+            </div>
+            <p class="help">Ihr Tarif: bis zu 500 E-Mails pro Monat · bereits genutzt: 0 · dieser Versand: <span id="s-count2">8</span></p>
+          </div>
+
+          <div class="card">
+            <label class="check"><input type="checkbox" id="sure"> <span>Ich habe Betreff, Inhalt und Empfängerzahl geprüft. Mir ist klar, dass der Versand nicht rückholbar ist.</span></label>
+          </div>
+          <div class="tools">
+            <button type="button" class="btn btn-line" id="c3-back">Zurück zur Vorschau</button>
+            <button type="button" class="btn btn-fill" id="send" disabled aria-describedby="send-h">Jetzt an 8 Empfänger senden</button>
+          </div>
+          <p class="help" id="send-h" style="text-align:right;margin-top:.5rem">Der Knopf wird frei, sobald Sie das Häkchen setzen.</p>
+        </div>
+
+        <div id="c3-done" hidden>
+          <div class="card success" role="status">
+            <div class="done-ico" aria-hidden="true">✓</div>
+            <h2 tabindex="-1" id="done-h" style="margin-bottom:.5rem">Der Newsletter wird jetzt versendet</h2>
+            <p id="done-p">Ihr Newsletter geht an 8 Abonnenten.</p>
+            <p class="help" style="margin-top:.5rem">Kennung dieses Versands: <strong>K-2026-11-001</strong>. Ein zweites Auslösen derselben Kennung wird verhindert, so geht nichts doppelt raus.</p>
+            <div class="mini-stats" aria-label="Versandstatistik (Beispiel, noch leer)">
+              <div><b>0</b><span>zugestellt</span></div>
+              <div><b>0</b><span>nicht zustellbar</span></div>
+              <div><b>0</b><span>Beschwerden</span></div>
+              <div><b>–</b><span>Öffnungen (nur bei aktivierter Messung)</span></div>
+            </div>
+            <p style="margin-top:var(--s5)"><button type="button" class="btn btn-line" id="new-nl">Neuen Newsletter beginnen (Prototyp zurücksetzen)</button></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function show(el, on) { el.hidden = !on; }
+  function setErr(input, errEl, msg) {
+    if (msg) { errEl.textContent = msg; errEl.hidden = false; input.setAttribute('aria-invalid', 'true'); }
+    else { errEl.hidden = true; errEl.textContent = ''; input.removeAttribute('aria-invalid'); }
+  }
+  var MAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  /* ── Hauptumschalter (Tabs) ── */
+  var tabs = $$('.tab'), panels = ['v1', 'v2', 'v3'];
+  function selectTab(i, focus) {
+    tabs.forEach(function (t, k) {
+      t.setAttribute('aria-selected', k === i ? 'true' : 'false');
+      t.tabIndex = k === i ? 0 : -1;
+      show($('#' + panels[k]), k === i);
+    });
+    if (focus) tabs[i].focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { selectTab(i); });
+    t.addEventListener('keydown', function (e) {
+      var n = null;
+      if (e.key === 'ArrowRight') n = (i + 1) % 3;
+      else if (e.key === 'ArrowLeft') n = (i + 2) % 3;
+      else if (e.key === 'Home') n = 0;
+      else if (e.key === 'End') n = 2;
+      if (n !== null) { e.preventDefault(); selectTab(n, true); }
+    });
+  });
+  $$('[data-view]').forEach(function (b) {
+    b.addEventListener('click', function () { selectTab(Number(b.dataset.view) - 1); $('#main').focus(); });
+  });
+  $$('[data-proto]').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); $('#proto-msg1').textContent = a.dataset.proto + ' (Prototyp)'; });
+  });
+
+  /* ── Ansicht 1: Anmeldung ── */
+  var steps1 = $$('[data-step]');
+  function go1(s, focus) {
+    steps1.forEach(function (el) { show(el, el.dataset.step === s); });
+    $$('#seg1 button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.s === s ? 'true' : 'false'); });
+    if (focus) {
+      var h = { mail: '#mail-h', ok: '#ok-h', expired: '#exp-h', form: '#s-mail' }[s];
+      var t = $(h); if (t) t.focus();
+    }
+  }
+  $$('#seg1 button').forEach(function (b) { b.addEventListener('click', function () { fillMail(); go1(b.dataset.s); }); });
+  $$('[data-go]').forEach(function (b) { b.addEventListener('click', function () { go1(b.dataset.go, true); }); });
+  function fillMail() {
+    var m = $('#s-mail').value.trim() || 'name@beispiel.de';
+    var n = $('#s-name').value.trim();
+    $('#mail-to').textContent = m;
+    $('#mail-name').textContent = n || 'und willkommen';
+  }
+  $('#signup').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var mail = $('#s-mail'), cons = $('#s-consent');
+    var mErr = '', cErr = '';
+    if (!mail.value.trim()) mErr = 'Bitte tragen Sie Ihre E-Mail-Adresse ein.';
+    else if (!MAIL_RE.test(mail.value.trim())) mErr = 'Diese E-Mail-Adresse sieht nicht vollständig aus. Beispiel: name@beispiel.de';
+    if (!cons.checked) cErr = 'Ohne Ihre Einwilligung können wir Ihnen den Newsletter nicht schicken. Bitte setzen Sie das Häkchen.';
+    setErr(mail, $('#s-mail-err'), mErr);
+    $('#s-consent-wrap').classList.toggle('bad', !!cErr);
+    if (cErr) { $('#s-consent-err').textContent = cErr; show($('#s-consent-err'), true); cons.setAttribute('aria-invalid', 'true'); } else { show($('#s-consent-err'), false); cons.removeAttribute('aria-invalid'); }
+    if (mErr) { mail.focus(); return; }
+    if (cErr) { cons.focus(); return; }
+    fillMail(); go1('mail', true);
+  });
+  $('#do-confirm').addEventListener('click', function () { go1('ok', true); });
+
+  /* ── Ansicht 2: Abonnenten ── */
+  var SUBS = [
+    { m: 'anna.berger@example.de', n: 'Anna', s: 'bestaetigt', a: '02.11.2026', b: '02.11.2026, 18:41 Uhr', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'j.winkler@example.de', n: 'Jonas', s: 'bestaetigt', a: '04.11.2026', b: '05.11.2026, 08:15 Uhr', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'familie.kurz@example.de', n: '', s: 'bestaetigt', a: '07.11.2026', b: '07.11.2026, 12:03 Uhr', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'mira.schulz@example.de', n: 'Mira', s: 'bestaetigt', a: '09.11.2026', b: '09.11.2026, 20:27 Uhr', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'thomas.lehmann@example.de', n: 'Thomas', s: 'bestaetigt', a: '12.11.2026', b: '12.11.2026, 09:48 Uhr', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'sabine.roth@example.de', n: 'Sabine', s: 'bestaetigt', a: '15.11.2026', b: '16.11.2026, 07:30 Uhr', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'lars.mueller@example.de', n: '', s: 'bestaetigt', a: '19.11.2026', b: '19.11.2026, 15:12 Uhr', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'c.hoffmann@example.de', n: 'Clara', s: 'bestaetigt', a: '23.11.2026', b: '23.11.2026, 19:55 Uhr', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'peter.neu@example.de', n: 'Peter', s: 'unbestaetigt', a: '24.11.2026', b: '', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'ute.frank@example.de', n: 'Ute', s: 'unbestaetigt', a: '25.11.2026', b: '', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'k.demir@example.de', n: '', s: 'unbestaetigt', a: '25.11.2026', b: '', q: 'Startseite, Abschnitt Newsletter' },
+    { m: 'old.gast@example.de', n: 'Heinz', s: 'abgemeldet', a: '03.11.2026', b: '03.11.2026, 10:20 Uhr', q: 'Startseite, Abschnitt Newsletter', x: 'Abgemeldet am 14.11.2026 über den Link in der E-Mail.' },
+    { m: 'nora.klein@example.de', n: 'Nora', s: 'abgemeldet', a: '06.11.2026', b: '06.11.2026, 21:02 Uhr', q: 'Startseite, Abschnitt Newsletter', x: 'Abgemeldet am 20.11.2026 über den Link in der E-Mail.' },
+    { m: 'defekt.postfach@example.de', n: '', s: 'gesperrt', a: '05.11.2026', b: '05.11.2026, 11:44 Uhr', q: 'Startseite, Abschnitt Newsletter', x: 'Gesperrt am 18.11.2026: Die Adresse ist nicht zustellbar (dauerhafter Zustellfehler).' },
+    { m: 'beschwerde@example.de', n: 'Gast', s: 'gesperrt', a: '08.11.2026', b: '08.11.2026, 17:36 Uhr', q: 'Startseite, Abschnitt Newsletter', x: 'Gesperrt am 21.11.2026: Der Empfänger hat die E-Mail als unerwünscht gemeldet.' }
+  ];
+  var LABEL = { bestaetigt: 'Bestätigt', unbestaetigt: 'Unbestätigt', abgemeldet: 'Abgemeldet', gesperrt: 'Gesperrt' };
+  var ICON = { bestaetigt: '✓', unbestaetigt: '…', abgemeldet: '–', gesperrt: '⛔' };
+  var filter = 'alle', open = {};
+  function counts() {
+    var c = { alle: SUBS.length, bestaetigt: 0, unbestaetigt: 0, abgemeldet: 0, gesperrt: 0 };
+    SUBS.forEach(function (s) { c[s.s]++; });
+    return c;
+  }
+  function renderStats() {
+    var c = counts();
+    var defs = [['alle', 'Alle Einträge'], ['bestaetigt', 'Bestätigt'], ['unbestaetigt', 'Unbestätigt'], ['abgemeldet', 'Abgemeldet'], ['gesperrt', 'Gesperrt']];
+    $('#stats').innerHTML = defs.map(function (d) {
+      return '<button type="button" class="stat" data-f="' + d[0] + '" aria-pressed="' + (filter === d[0]) + '"><span class="n">' + c[d[0]] + '</span><span class="t">' + d[1] + '</span></button>';
+    }).join('');
+    $$('#stats .stat').forEach(function (b) {
+      b.addEventListener('click', function () { filter = b.dataset.f; renderStats(); renderTable(); $('#stats [data-f="' + filter + '"]').focus(); });
+    });
+    $('#s-count').textContent = c.bestaetigt; $('#s-count2').textContent = c.bestaetigt;
+    $('#send').textContent = 'Jetzt an ' + c.bestaetigt + ' Empfänger senden';
+    $('#done-p').textContent = 'Ihr Newsletter geht an ' + c.bestaetigt + ' Abonnenten.';
+  }
+  function renderTable() {
+    var q = $('#q').value.trim().toLowerCase();
+    var rows = SUBS.map(function (s, i) { s.i = i; return s; }).filter(function (s) {
+      return (filter === 'alle' || s.s === filter) && (!q || (s.m + ' ' + s.n).toLowerCase().indexOf(q) > -1);
+    });
+    $('#tbl-cap').textContent = (filter === 'alle' ? 'Alle Einträge' : LABEL[filter]) + ': ' + rows.length + ' angezeigt';
+    show($('#empty'), rows.length === 0);
+    $('#tbody').innerHTML = rows.map(function (s) {
+      var o = !!open[s.i];
+      var proof = '<dl><dt>Einwilligung erteilt</dt><dd>' + esc(s.a) + (s.s === 'unbestaetigt' ? ' (Bestätigung steht aus)' : '') + '</dd>' +
+        '<dt>Bestätigt</dt><dd>' + (s.b ? esc(s.b) : 'noch nicht') + '</dd>' +
+        '<dt>Einwilligungstext</dt><dd>Version 1 vom 01.11.2026: „Ja, ich möchte den Newsletter des Café Lindenhof per E-Mail erhalten …“</dd>' +
+        '<dt>Quelle</dt><dd>' + esc(s.q) + '</dd>' +
+        '<dt>Herkunftskennung</dt><dd>gekürzt gespeichert (z. B. 203.0.113.xxx)</dd>' +
+        (s.x ? '<dt>Hinweis</dt><dd>' + esc(s.x) + '</dd>' : '') + '</dl>';
+      return '<tr class="row"><td data-l="E-Mail-Adresse"><strong>' + esc(s.m) + '</strong></td>' +
+        '<td data-l="Vorname">' + (s.n ? esc(s.n) : '<span class="opt">nicht angegeben</span>') + '</td>' +
+        '<td data-l="Status"><span class="status st-' + s.s + '"><span aria-hidden="true">' + ICON[s.s] + '</span>' + LABEL[s.s] + '</span></td>' +
+        '<td data-l="Angemeldet am">' + esc(s.a) + '</td>' +
+        '<td data-l="Quelle">Website</td>' +
+        '<td data-l=""><button type="button" class="link-btn" data-i="' + s.i + '" aria-expanded="' + o + '" aria-controls="d' + s.i + '">' + (o ? 'Nachweis ausblenden' : 'Nachweis anzeigen') + '<span class="sr-only"> für ' + esc(s.m) + '</span></button></td></tr>' +
+        '<tr class="detail" id="d' + s.i + '"' + (o ? '' : ' hidden') + '><td colspan="6">' + proof + '</td></tr>';
+    }).join('');
+    $$('#tbody .link-btn').forEach(function (b) {
+      b.addEventListener('click', function () { var i = b.dataset.i; open[i] = !open[i]; renderTable(); $('#tbody [data-i="' + i + '"]').focus(); });
+    });
+  }
+  $('#q').addEventListener('input', renderTable);
+  $('#exp-toggle').addEventListener('click', function () {
+    var on = $('#exp-panel').hidden;
+    show($('#exp-panel'), on); this.setAttribute('aria-expanded', on);
+    if (on) $('#exp-panel h2').scrollIntoView({ block: 'nearest' });
+  });
+  $('#exp-go').addEventListener('click', function () {
+    var v = $('input[name=exp]:checked').value, c = counts();
+    var n = v === 'bestaetigt' ? c.bestaetigt : c.alle;
+    var d = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Berlin', dateStyle: 'medium', timeStyle: 'short' });
+    $('#exp-status').textContent = 'Prototyp: Hier würde jetzt die Datei mit ' + n + ' Einträgen heruntergeladen. Der Export wurde protokolliert (' + d + ' Uhr, Berlin).';
+  });
+
+  /* ── Ansicht 3: Verfassen ── */
+  var IMG = { 1: 't1', 2: 't2', 3: 't3' };
+  var c1 = $('#c1'), c2 = $('#c2'), c3 = $('#c3');
+  var sent = false;
+  function setStep(n, focus) {
+    show(c1, n === 1); show(c2, n === 2); show(c3, n === 3);
+    $$('#steps li').forEach(function (li, k) {
+      li.classList.toggle('done', k < n - 1);
+      if (k === n - 1) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+    });
+    if (focus) {
+      var h = $({ 1: '#compose h2', 2: '#c2-h', 3: sent ? '#done-h' : '#c3-h' }[n]);
+      h.setAttribute('tabindex', '-1'); h.focus();
+    }
+  }
+  function val() {
+    var v = {
+      subj: $('#c-subj').value.trim(), pre: $('#c-pre').value.trim(), head: $('#c-head').value.trim(), text: $('#c-text').value.trim(),
+      img: $('input[name=img]:checked').value, alt: $('#c-alt').value.trim(), btn: $('#c-btn').value.trim(), url: $('#c-url').value.trim()
+    };
+    var e = {};
+    if (!v.subj) e.subj = ['c-subj', 'Bitte geben Sie einen Betreff ein.'];
+    if (!v.head) e.head = ['c-head', 'Bitte geben Sie eine Überschrift ein.'];
+    if (!v.text) e.text = ['c-text', 'Bitte schreiben Sie einen Text.'];
+    if (v.img !== '0' && !v.alt) e.alt = ['c-alt', 'Bitte beschreiben Sie das Bild kurz.'];
+    if (v.btn && !v.url) e.url = ['c-url', 'Der Knopf braucht ein Ziel. Tragen Sie eine Adresse ein oder löschen Sie die Beschriftung.'];
+    else if (v.url && !/^https:\/\/[^\s\/]+\.[^\s\/]{2,}(\/\S*)?$/.test(v.url)) e.url = ['c-url', 'Die Adresse muss mit https:// beginnen und vollständig sein, zum Beispiel https://cafe-lindenhof.example/karte'];
+    if (v.url && !v.btn && !e.url) e.btn = ['c-btn', 'Bitte geben Sie dem Knopf eine Beschriftung oder löschen Sie das Ziel.'];
+    return { v: v, e: e };
+  }
+  function renderChecks() {
+    var r = val(), v = r.v, e = r.e;
+    var items = [
+      [!!v.subj, 'Betreff ist vorhanden'],
+      [true, 'Absender ist geprüft (cafe-lindenhof.example)'],
+      [true, 'Impressum steht automatisch in der Fußzeile'],
+      [true, 'Abmeldelink wird automatisch eingefügt'],
+      [!e.url && !e.btn, v.url ? 'Link des Knopfes ist gültig' : 'Kein Link im Knopf'],
+      [!e.alt, 'Bildbeschreibung ist vorhanden']
+    ];
+    $('#checks').innerHTML = items.map(function (i) {
+      return '<li><span class="' + (i[0] ? 'ok' : 'no') + '" aria-hidden="true">' + (i[0] ? '✓' : '✗') + '</span><span><span class="sr-only">' + (i[0] ? 'In Ordnung: ' : 'Problem: ') + '</span>' + esc(i[1]) + '</span></li>';
+    }).join('');
+    $('#c-subj-n').textContent = v.subj.length + ' von 90 Zeichen';
+    show($('#alt-wrap'), v.img !== '0');
+  }
+  $('#compose').addEventListener('input', renderChecks);
+  $('#compose').addEventListener('change', renderChecks);
+  $('#compose').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var r = val(), e = r.e, keys = Object.keys(e), sum = $('#errsum');
+    ['subj', 'head', 'text', 'alt', 'btn', 'url'].forEach(function (k) {
+      var id = { subj: 'c-subj', head: 'c-head', text: 'c-text', alt: 'c-alt', btn: 'c-btn', url: 'c-url' }[k];
+      setErr($('#' + id), $('#' + id + '-e'), e[k] ? e[k][1] : '');
+    });
+    if (keys.length) {
+      sum.innerHTML = '<strong>Bitte korrigieren Sie ' + (keys.length === 1 ? 'dieses Feld' : 'diese ' + keys.length + ' Felder') + ':</strong><ul>' +
+        keys.map(function (k) { return '<li><a href="#' + e[k][0] + '">' + esc(e[k][1]) + '</a></li>'; }).join('') + '</ul>';
+      show(sum, true);
+      $$('a', sum).forEach(function (a) { a.addEventListener('click', function (x) { x.preventDefault(); $(a.getAttribute('href')).focus(); }); });
+      sum.focus();
+      return;
+    }
+    show(sum, false);
+    buildPreview(r.v); setStep(2, true);
+  });
+
+  function buildPreview(v) {
+    $('#p-subj').textContent = v.subj;
+    $('#s-subj').textContent = v.subj;
+    var paras = v.text.split(/\n\s*\n/).map(function (p) { return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>'; }).join('');
+    $('#email').innerHTML =
+      (v.pre ? '<div class="pre-hidden">Vorschautext im Postfach: ' + esc(v.pre) + '</div>' : '') +
+      '<div class="email-head">Café Lindenhof<em>.</em></div>' +
+      (v.img !== '0' ? '<div class="email-img ' + IMG[v.img] + '" role="img" aria-label="' + esc(v.alt) + '"></div>' : '') +
+      '<div class="email-body"><h3>' + esc(v.head) + '</h3>' + paras +
+      (v.btn && v.url ? '<a class="email-btn" href="#" data-dead="1">' + esc(v.btn) + '</a>' : '') + '</div>' +
+      '<div class="email-foot">Café Lindenhof · Lindenallee 1 · 20000 Musterstadt<br>Inhaberin: Maria Muster · Impressum: cafe-lindenhof.example/impressum<br>Sie erhalten diese E-Mail, weil Sie sich für den Newsletter angemeldet haben. <a href="#" data-dead="1">Vom Newsletter abmelden</a></div>';
+    $$('[data-dead]', $('#email')).forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); }); });
+  }
+  $$('#seg-vw button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      $$('#seg-vw button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      $('#email').classList.toggle('mobile', b.dataset.w === 'mob');
+    });
+  });
+  $('#t-send').addEventListener('click', function () {
+    var i = $('#t-mail'), m = i.value.trim();
+    if (!MAIL_RE.test(m)) { setErr(i, $('#t-mail-e'), 'Bitte geben Sie eine gültige E-Mail-Adresse ein.'); $('#t-status').textContent = ''; i.focus(); return; }
+    setErr(i, $('#t-mail-e'), '');
+    $('#t-status').textContent = 'Prototyp: Die Testmail wäre jetzt an ' + m + ' unterwegs. Der Betreff beginnt mit „[TEST]“. Testmails zählen nicht als Versand.';
+  });
+  $('#c2-back').addEventListener('click', function () { setStep(1, true); });
+  $('#c2-next').addEventListener('click', function () { setStep(3, true); });
+  $('#c3-back').addEventListener('click', function () { setStep(2, true); });
+
+  function whenText() {
+    var w = $('input[name=when]:checked').value;
+    var pw = $('#plan-wrap');
+    show(pw, w === 'plan');
+    if (w === 'now') { $('#s-when').textContent = 'Sofort nach Ihrer Bestätigung'; return true; }
+    var dt = $('#plan-dt').value;
+    if (!dt) { $('#s-when').textContent = 'Zeitpunkt noch nicht gewählt'; return false; }
+    var d = new Date(dt);
+    $('#s-when').textContent = d.toLocaleString('de-DE', { dateStyle: 'full', timeStyle: 'short' }) + ' Uhr (Berlin)';
+    return true;
+  }
+  $$('input[name=when]').forEach(function (r) { r.addEventListener('change', whenText); });
+  $('#plan-dt').addEventListener('input', whenText);
+  $('#sure').addEventListener('change', function () {
+    $('#send').disabled = !this.checked || sent;
+    $('#send-h').textContent = this.checked ? 'Prüfen Sie Zeitpunkt und Empfänger noch einmal. Danach gibt es kein Zurück.' : 'Der Knopf wird frei, sobald Sie das Häkchen setzen.';
+  });
+  $('#send').addEventListener('click', function () {
+    if (sent) return;
+    var w = $('input[name=when]:checked').value, pe = $('#plan-e'), pi = $('#plan-dt');
+    if (w === 'plan') {
+      var d = pi.value ? new Date(pi.value) : null;
+      if (!d) { setErr(pi, pe, 'Bitte wählen Sie Datum und Uhrzeit.'); pi.focus(); return; }
+      if (d.getTime() < Date.now() + 5 * 60000) { setErr(pi, pe, 'Der Zeitpunkt muss mindestens 5 Minuten in der Zukunft liegen.'); pi.focus(); return; }
+    }
+    setErr(pi, pe, '');
+    sent = true; this.disabled = true;
+    $('#done-h').textContent = w === 'plan' ? 'Der Newsletter ist eingeplant' : 'Der Newsletter wird jetzt versendet';
+    if (w === 'plan') $('#done-p').textContent = $('#done-p').textContent + ' Versand: ' + $('#s-when').textContent + '.';
+    show($('#c3-form'), false); show($('#c3-done'), true);
+    $('#done-h').focus();
+  });
+  $('#new-nl').addEventListener('click', resetAll);
+
+  function resetAll() {
+    sent = false;
+    $('#compose').reset(); $('#signup').reset(); $('#sure').checked = false; $('#send').disabled = true;
+    $('#plan-dt').value = ''; $('#t-status').textContent = ''; $('#exp-status').textContent = ''; $('#proto-msg1').textContent = '';
+    $$('[aria-invalid]').forEach(function (x) { x.removeAttribute('aria-invalid'); });
+    $$('.err, .d-err').forEach(function (x) { x.hidden = true; });
+    $('#s-consent-wrap').classList.remove('bad');
+    show($('#errsum'), false); show($('#c3-form'), true); show($('#c3-done'), false); show($('#exp-panel'), false);
+    $('#exp-toggle').setAttribute('aria-expanded', 'false');
+    $('#send-h').textContent = 'Der Knopf wird frei, sobald Sie das Häkchen setzen.';
+    filter = 'alle'; open = {}; $('#q').value = '';
+    renderStats(); renderTable(); renderChecks(); whenText(); go1('form'); setStep(1);
+    $('#main').focus();
+  }
+  $('#reset').addEventListener('click', function () { resetAll(); selectTab(0); });
+
+  renderStats(); renderTable(); renderChecks(); whenText();
+})();
+</script>
+</body>
+</html>
