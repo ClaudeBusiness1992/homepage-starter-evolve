@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 function getSecretKey(): string {
   const secret = process.env.QR_SIGNING_SECRET;
-  if (!secret) throw new Error('QR_SIGNING_SECRET is not configured');
+  if (!secret || secret.trim().length < 32) throw new Error('QR_SIGNING_SECRET is not configured or too short');
   return secret;
 }
 

@@ -2,10 +2,9 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
-import { fileURLToPath } from 'node:url';
 
 if (!process.stdin.isTTY) throw new Error('A terminal is required');
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const root = path.resolve(process.env.PROJECT_ROOT || process.cwd());
 const target = path.join(root, 'data/config/site.config.json');
 fs.mkdirSync(path.dirname(target), { recursive: true });
 if (!fs.existsSync(target)) {
@@ -31,7 +30,7 @@ process.stdin.on('keypress', (character, key) => {
     process.stdin.setRawMode(false);
     process.stdin.pause();
     process.stdout.write('\n');
-    if (!pin.trim()) throw new Error('PIN must not be empty');
+    if (!/^\d{6,8}$/.test(pin.trim())) throw new Error('PIN must contain 6 to 8 digits');
     const salt = crypto.randomBytes(16);
     const digest = crypto.scryptSync(pin.trim(), salt, 64);
     config.auth = { ...config.auth, adminPinHash: `scrypt$${salt.toString('hex')}$${digest.toString('hex')}` };
