@@ -1,8 +1,7 @@
-import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
-// Deterministische Pfadauflösung relativ zur Datei selbst, unabhängig vom Aufrufverzeichnis process.cwd()
-export const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+// Server, Build und Einrichtung verwenden dieselbe Instanzwurzel.
+export const PROJECT_ROOT = path.resolve(process.env.PROJECT_ROOT || process.cwd());
 export const DATA_DIR = path.join(PROJECT_ROOT, 'data');
 export const CONFIG_DIR = path.join(DATA_DIR, 'config');
 export const RUNTIME_DIR = path.join(DATA_DIR, 'runtime');

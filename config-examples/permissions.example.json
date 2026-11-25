@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "sections": {
+    "team": { "enabled": true },
+    "gallery": { "enabled": true },
+    "reviews": { "enabled": true },
+    "social": { "enabled": true },
+    "newsletter": { "enabled": true },
+    "reminders": { "enabled": true }
+  },
+  "permissions": {
+    "canEditTeam": true,
+    "canEditGallery": true,
+    "canManageReviews": true,
+    "canEditSocial": true,
+    "canManageNewsletter": true,
+    "canManageReminders": true
+  }
+}

@@ -21,7 +21,7 @@ export interface PermissionsConfig {
   };
 }
 
-import { PERMISSIONS_FILE } from './paths.ts';
+import { PERMISSIONS_FILE, PROJECT_ROOT } from './paths.ts';
 
 const DEFAULT_PERMISSIONS: PermissionsConfig = {
   schemaVersion: 1,
@@ -51,6 +51,14 @@ export function getPermissions(): PermissionsConfig {
     }
   } catch (err) {
     console.error('[permissions] Fehler beim Laden von permissions.json:', err);
+  }
+  fs.mkdirSync(path.dirname(PERMISSIONS_FILE), { recursive: true });
+  try {
+    fs.copyFileSync(path.join(PROJECT_ROOT, 'config-examples/permissions.example.json'), PERMISSIONS_FILE, fs.constants.COPYFILE_EXCL);
+    fs.chmodSync(PERMISSIONS_FILE, 0o600);
+  } catch (err: any) {
+    if (err.code !== 'EEXIST') throw err;
+    return JSON.parse(fs.readFileSync(PERMISSIONS_FILE, 'utf-8')) as PermissionsConfig;
   }
   return DEFAULT_PERMISSIONS;
 }
