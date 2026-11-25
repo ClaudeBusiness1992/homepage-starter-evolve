@@ -165,5 +165,6 @@ Empfohlene Prüfreihenfolge (jede Stufe baut auf der vorherigen auf):
 | ANWALT-7 | Abschnitt 3 (Überwachung/Alarm) | Personenbezug prüfen; ggf. als Unterauftragsverarbeiter aufnehmen oder streichen. |
 | ANWALT-8 | Abschnitt 6 (Muss/Kann) | Go-Live-Sperre bei offenen Muss-Punkten und Stufenfolge bestätigen; B2B/B2C-Weiche, Schuld- und Haftungsfragen im Zusammenhang mit dem Kundenvertrags-Gerüst entscheiden. |
 | ANWALT-9 | Block A, A17 (KI-Werkzeuge) | Claude, Codex, Gemini, Muse (Contributor, Training möglich): Offenlegung, Unterauftragsverarbeiter-Status, Drittlandbezug; Wirksamkeit der Zustimmung eines einzelnen Kunden und Wortlaut; Abschaltung ab dem zweiten Kunden. |
+| ANWALT-10 | Abschnitt 3 (Server und Sicherung, Standort) | Reicht ein Standort in der EU/im EWR (z. B. Deutschland oder Finnland) für Server und Sicherung, oder ist Deutschland aus Gründen der Kundenverträge oder Branche nötig? Bedeutung eines Anbieters mit Sitz in der EU gegenüber einem mit US-Mutterkonzern. Vertrag zur Auftragsverarbeitung mit dem Sicherungsanbieter. |
 
 HPSE_RECHT_UEBERGABE_20261125_FERTIG
