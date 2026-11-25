@@ -27,3 +27,6 @@ BITTE LÖSCHEN/
 tools/screenshots/
 audit-sections.cjs
 audit-sections.js
+
+# Lokale Instanzdaten und Konfiguration
+data/
