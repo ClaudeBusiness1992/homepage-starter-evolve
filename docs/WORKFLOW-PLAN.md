@@ -32,7 +32,7 @@ Sonderregel eigene Homepage: Sie ist der erste Kunde und das Vorzeigeprojekt. Ih
 - **Datenweg (V3, Pflicht):** Vercel-Funktionen sind nicht im Tailnet. Die Daten-Schnittstelle auf dem eigenen Server ist deshalb öffentlich erreichbar und wird entsprechend gehärtet: wenige feste Lese- und Schreibwege, eigener Schlüssel je Kunde, Ratenbegrenzung, Protokoll. Sie ist ein eigenes Arbeitspaket in Phase 1.
 - **Zwischenspeicher (V3, Pflicht):** Die Kundenseite wird aus dem Zwischenspeicher von Vercel ausgeliefert. Beim Speichern im /admin wird die betroffene Seite neu zwischengespeichert. Fällt der eigene Server aus, bleibt die Seite für Besucher erreichbar. Nur Formulare und Speichern brauchen den Server. Der Server ist sonst ein unbewachter Ausfallpunkt für alle Kunden. Fällt der Pilot damit zu aufwendig aus, ist eine verwaltete Datenbank in der EU der Rückfallweg.
 - **Inhalte live (V3):** Speichern im /admin löst eine Neuvalidierung der betroffenen Seite aus (Sekunden, kein vollständiger Neubau). Daraus folgt: Inhalte sind nicht in den Build eingebacken, und ein Rollback des Seitenstands holt keine alten Inhalte zurück.
-- **Medienablage (V3):** Bilder liegen nicht im Vercel-Dateisystem, sondern hinter der Schnittstelle auf dem eigenen Server oder in einem EU-Objektspeicher. Die Wahl wird im Piloten getroffen und gemessen.
+- **Medienablage (Entscheidung Nick, 25.11.2026):** Bilder liegen nicht im Vercel-Dateisystem, sondern auf dem Hauptserver hinter der Schnittstelle. Die Kundenseiten holen sie über Vercel mit Zwischenspeicher, sodass Bilder bei kurzem Serverausfall weiter erscheinen und der kleine Server entlastet wird. Die Medien sind Teil der Sicherung. Platz: Nick nennt Erweiterbarkeit des Speichers beim gewählten netcup-Tarif bis 4 TB (nicht geprüft, Preis offen). Ein EU-Objektspeicher bleibt ein späterer Ausbau. Die Sicherung wächst mit den Medien mit.
 - **Standort von /editor (V3):** /editor läuft ausschließlich auf dem eigenen Server im Tailnet. Auf den Kundenseiten auf Vercel gibt es keine Editor-Route. Die Rollenprüfung in Abschnitt 3 gilt für /admin.
 - **Offen (bei der Umsetzung klären):** Wo die eigene Homepage selbst läuft. Empfehlung aus der Gegenlesung: auf Vercel, damit der Pilot Vercel, Schnittstelle und Zwischenspeicher wirklich testet.
 - **Bestandskunden mit WordPress:** Ein künftiger Kunde auf Raidboxen mit WordPress wäre ein Umzugsfall: Seite im Baukasten neu aufbauen, Domain und Inhalte übernehmen, auf Vercel setzen. Der Umzug ist ein eigener Punkt in Phase 3.
@@ -151,7 +151,7 @@ Offen aus der Gegenlesung: Haupttexte (Hero, Leistungen, Preise) sollen ohne Rel
 - Wo die eigene Homepage läuft (Empfehlung: Vercel).
 - Preise, Resend-Domaingrenzen und die Projektbegrenzung von Vercel-Schlüsseln sind bestätigt (Abschnitt 2a).
 - Prüfseite mit echten Daten auf Zeit (Nicks Entscheidung) oder feste Positivliste öffentlicher Inhalte (Empfehlung der Gegenlesung, weil weniger Nachweisaufwand).
-- Medienablage: eigener Server oder EU-Objektspeicher.
+- Medienablage: entschieden, Hauptserver mit Auslieferung über Vercel (Abschnitt 2); Objektspeicher später. Offen: Preis der Speichererweiterung, Messung im Piloten.
 - Vercel-Build nach Merge der Sicherheitsänderung: Bewertungen und Social-Links kommen künftig nicht mehr aus einer versionierten Datenbank (Nick: alte Datenbank enthielt keine realen Daten).
 - Rotation von PIN und QR-Schlüssel (von Nick auf später verschoben), Entscheidung zur Historienbereinigung.
 - Ein echter Build- und Starttest des Sicherheitspakets in funktionsfähiger Umgebung.
