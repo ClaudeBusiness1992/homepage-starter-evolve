@@ -1,19 +1,29 @@
 import { getDb } from './db.ts';
 import { randomToken, sha256 } from './crypto.ts';
-import { SITE_CONFIG_FILE } from './paths.ts';
+import { PROJECT_ROOT, SITE_CONFIG_FILE } from './paths.ts';
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 
 const SESSION_COOKIE_NAME = 'hps_admin_session';
 const SESSION_DURATION_DAYS = 30;
 
-function getSiteConfig() {
-  try {
-    if (fs.existsSync(SITE_CONFIG_FILE)) {
-      return JSON.parse(fs.readFileSync(SITE_CONFIG_FILE, 'utf-8'));
+function getAdminPinHash(): string {
+  if (!fs.existsSync(SITE_CONFIG_FILE)) {
+    fs.mkdirSync(path.dirname(SITE_CONFIG_FILE), { recursive: true });
+    try {
+      fs.copyFileSync(path.join(PROJECT_ROOT, 'config-examples/site.config.example.json'), SITE_CONFIG_FILE, fs.constants.COPYFILE_EXCL);
+      fs.chmodSync(SITE_CONFIG_FILE, 0o600);
+    } catch (err: any) {
+      if (err.code !== 'EEXIST') throw err;
     }
-  } catch {}
-  return { auth: { adminPin: '123456' } };
+  }
+  const cfg = JSON.parse(fs.readFileSync(SITE_CONFIG_FILE, 'utf-8'));
+  const hash = cfg?.auth?.adminPinHash;
+  if (typeof hash !== 'string' || !/^scrypt\$[0-9a-f]{32}\$[0-9a-f]{128}$/.test(hash)) {
+    throw new Error('Admin PIN setup required: configure auth.adminPinHash');
+  }
+  return hash;
 }
 
 export function checkRateLimit(ip: string): { allowed: boolean; remainingAttempts: number } {
@@ -53,9 +63,10 @@ export function resetLoginAttempts(ip: string): void {
 }
 
 export function verifyAdminPin(enteredPin: string): boolean {
-  const cfg = getSiteConfig();
-  const expectedPin = cfg?.auth?.adminPin || '123456';
-  return Boolean(enteredPin && enteredPin.trim() === expectedPin.trim());
+  const [, salt, digest] = getAdminPinHash().split('$');
+  const expected = Buffer.from(digest, 'hex');
+  const actual = crypto.scryptSync(enteredPin.trim(), Buffer.from(salt, 'hex'), expected.length);
+  return Boolean(enteredPin.trim()) && crypto.timingSafeEqual(actual, expected);
 }
 
 export function createAdminSession(userIdentifier = 'admin'): { token: string; cookieHeader: string } {

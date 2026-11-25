@@ -1,16 +1,8 @@
 import crypto from 'node:crypto';
-import fs from 'node:fs';
-import path from 'node:path';
-import { SITE_CONFIG_FILE } from './paths.ts';
-
 function getSecretKey(): string {
-  try {
-    if (fs.existsSync(SITE_CONFIG_FILE)) {
-      const cfg = JSON.parse(fs.readFileSync(SITE_CONFIG_FILE, 'utf-8'));
-      if (cfg.qrSecret) return cfg.qrSecret;
-    }
-  } catch {}
-  return 'default-instance-qr-secret-2026-pixelcode';
+  const secret = process.env.QR_SIGNING_SECRET;
+  if (!secret) throw new Error('QR_SIGNING_SECRET is not configured');
+  return secret;
 }
 
 export function sha256(input: string): string {
