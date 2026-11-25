@@ -335,6 +335,8 @@ tbody tr.detail td { background: var(--paper); font-size: .875rem; }
       <button type="button" data-s="mail" aria-pressed="false">Hinweis und E-Mail</button>
       <button type="button" data-s="ok" aria-pressed="false">Bestätigungsseite</button>
       <button type="button" data-s="expired" aria-pressed="false">Link abgelaufen</button>
+      <button type="button" data-s="unsub" aria-pressed="false">Abmeldeseite</button>
+      <button type="button" data-s="bye" aria-pressed="false">Abgemeldet</button>
     </div>
   </div>
 
@@ -411,6 +413,28 @@ tbody tr.detail td { background: var(--paper); font-size: .875rem; }
           <h2 tabindex="-1" id="exp-h">Dieser Link ist nicht mehr gültig</h2>
           <p class="sub">Der Bestätigungslink war 24 Stunden gültig oder wurde schon benutzt. Sie können sich einfach noch einmal anmelden.</p>
           <p><button type="button" class="btn btn-fill" style="width:auto" data-go="form">Erneut anmelden</button></p>
+        </div>
+
+        <!-- Schritt: Abmeldeseite (Link aus jeder Mail, ohne Login) -->
+        <div data-step="unsub" hidden>
+          <p class="lbl">Newsletter</p>
+          <h2 tabindex="-1" id="unsub-h">Möchten Sie den Newsletter abbestellen?</h2>
+          <p class="sub">Sie erhalten dann keine weiteren E-Mails vom Café Lindenhof. Ein Login ist nicht nötig.</p>
+          <p class="fine">Adresse: <strong id="unsub-mail">name@beispiel.de</strong></p>
+          <p style="display:flex;gap:.75rem;flex-wrap:wrap">
+            <button type="button" class="btn btn-fill" style="width:auto" id="do-unsub">Newsletter abbestellen</button>
+            <button type="button" class="btn btn-line" style="width:auto" data-go="form">Abbrechen, ich bleibe angemeldet</button>
+          </p>
+          <p class="fine">Mit dem Klick wird Ihre Adresse sofort gesperrt, auch für bereits geplante Newsletter. Sie müssen nichts weiter bestätigen.</p>
+        </div>
+
+        <!-- Schritt: Abgemeldet -->
+        <div data-step="bye" hidden>
+          <div class="done-ico" aria-hidden="true">✓</div>
+          <h2 tabindex="-1" id="bye-h">Sie sind abgemeldet</h2>
+          <p class="sub">Die Adresse <strong id="bye-mail">name@beispiel.de</strong> erhält keinen Newsletter mehr. Ein bereits unterwegs befindlicher Newsletter kann noch ankommen.</p>
+          <p class="fine">Aus Versehen abgemeldet? Dann können Sie sich auf der Website jederzeit neu anmelden. Die Anmeldung müssen Sie dann wieder per E-Mail bestätigen.</p>
+          <p><button type="button" class="btn btn-line" style="width:auto" data-go="form">Neu anmelden</button></p>
         </div>
       </div>
     </div>
@@ -744,7 +768,7 @@ An den Feiertagen ändern sich unsere Öffnungszeiten: Heiligabend schließen wi
     steps1.forEach(function (el) { show(el, el.dataset.step === s); });
     $$('#seg1 button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.s === s ? 'true' : 'false'); });
     if (focus) {
-      var h = { mail: '#mail-h', ok: '#ok-h', expired: '#exp-h', form: '#s-mail' }[s];
+      var h = { mail: '#mail-h', ok: '#ok-h', expired: '#exp-h', form: '#s-mail', unsub: '#unsub-h', bye: '#bye-h' }[s];
       var t = $(h); if (t) t.focus();
     }
   }
@@ -755,6 +779,8 @@ An den Feiertagen ändern sich unsere Öffnungszeiten: Heiligabend schließen wi
     var n = $('#s-name').value.trim();
     $('#mail-to').textContent = m;
     $('#mail-name').textContent = n || 'und willkommen';
+    $('#unsub-mail').textContent = m;
+    $('#bye-mail').textContent = m;
   }
   $('#signup').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -771,6 +797,7 @@ An den Feiertagen ändern sich unsere Öffnungszeiten: Heiligabend schließen wi
     fillMail(); go1('mail', true);
   });
   $('#do-confirm').addEventListener('click', function () { go1('ok', true); });
+  $('#do-unsub').addEventListener('click', function () { fillMail(); go1('bye', true); });
 
   /* ── Ansicht 2: Abonnenten ── */
   var SUBS = [
@@ -928,8 +955,9 @@ An den Feiertagen ändern sich unsere Öffnungszeiten: Heiligabend schließen wi
       (v.img !== '0' ? '<div class="email-img ' + IMG[v.img] + '" role="img" aria-label="' + esc(v.alt) + '"></div>' : '') +
       '<div class="email-body"><h3>' + esc(v.head) + '</h3>' + paras +
       (v.btn && v.url ? '<a class="email-btn" href="#" data-dead="1">' + esc(v.btn) + '</a>' : '') + '</div>' +
-      '<div class="email-foot">Café Lindenhof · Lindenallee 1 · 20000 Musterstadt<br>Inhaberin: Maria Muster · Impressum: cafe-lindenhof.example/impressum<br>Sie erhalten diese E-Mail, weil Sie sich für den Newsletter angemeldet haben. <a href="#" data-dead="1">Vom Newsletter abmelden</a></div>';
+      '<div class="email-foot">Café Lindenhof · Lindenallee 1 · 20000 Musterstadt<br>Inhaberin: Maria Muster · Impressum: cafe-lindenhof.example/impressum<br>Sie erhalten diese E-Mail, weil Sie sich für den Newsletter angemeldet haben. <a href="#" data-unsub="1">Vom Newsletter abmelden</a></div>';
     $$('[data-dead]', $('#email')).forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); }); });
+    $$('[data-unsub]', $('#email')).forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); selectTab(0); fillMail(); go1('unsub', true); }); });
   }
   $$('#seg-vw button').forEach(function (b) {
     b.addEventListener('click', function () {
