@@ -1,6 +1,6 @@
 # HPSE-Workflow – Plan Version 3 (25.11.2026)
 
-Status: überarbeiteter Plan, nicht umgesetzt. Grundlage: der ursprüngliche Plan, die Bewertungen von Fable 5.1 (62/100) und Fable 5.2 (66/100), das externe Feedback, Nicks acht Entscheidungen vom 25.11.2026 und die Gegenlesung von Fable 5.2 (low) zu Version 2. Änderungen gegenüber Version 1 sind mit "NEU" oder "GEÄNDERT" markiert, Änderungen aus der Gegenlesung zusätzlich mit "V3". Hinweis: Preise und Grenzen von Vercel und Resend wurden am 25.11.2026 gegen die offiziellen Seiten geprüft (siehe Abschnitt 2a). Nicht bestätigt ist die Reichweite von Vercel-Zugriffsschlüsseln (Team oder Projekt).
+Status: überarbeiteter Plan, nicht umgesetzt. Grundlage: der ursprüngliche Plan, die Bewertungen von Fable 5.1 (62/100) und Fable 5.2 (66/100), das externe Feedback, Nicks acht Entscheidungen vom 25.11.2026 und die Gegenlesung von Fable 5.2 (low) zu Version 2. Änderungen gegenüber Version 1 sind mit "NEU" oder "GEÄNDERT" markiert, Änderungen aus der Gegenlesung zusätzlich mit "V3". Hinweis: Preise und Grenzen von Vercel und Resend wurden am 25.11.2026 gegen die offiziellen Seiten geprüft (siehe Abschnitt 2a). Auch die Reichweite von Vercel-Zugriffsschlüsseln ist bestätigt (projektbezogen möglich).
 
 ## 0. Leitplanken (NEU)
 
@@ -42,7 +42,7 @@ Sonderregel eigene Homepage: Sie ist der erste Kunde und das Vorzeigeprojekt. Ih
 - **Vercel Pro:** Kostenbasiert mit monatlichem Guthaben, unbegrenzte kostenlose Betrachter-Plätze, 1 TB Datenübertragung und 1 Mio. CDN-Anfragen im Basis-Tarif. **Passwortschutz für Vorschauen: 20 US-Dollar pro Monat und geschütztem Projekt** (Add-on). Quelle: vercel.com/docs/plans/pro-plan und vercel.com/docs/deployment-protection.
 - **Resend:** Free 3 Domains, 3.000 Mails im Monat. **Pro 20 US-Dollar im Monat: 50.000 Mails, 10 Domains.** Scale 90 US-Dollar im Monat: 100.000 Mails, 1.000 Domains. Zusatzpaket Domains: 20 US-Dollar im Monat für 100 weitere Domains (Pro und Scale). Konsequenz: Bis zu 10 Kunden mit eigener Absenderdomain passen in Pro, danach 20 US-Dollar je 100 Domains zusätzlich. Quelle: resend.com/pricing.
 - **Folgerung:** Der Vercel-Passwortschutz würde bei zehn Kunden 200 US-Dollar im Monat kosten. Ein eigener Schutz ist hier klar günstiger.
-- **Noch nicht bestätigt:** Reichweite von Vercel-Zugriffsschlüsseln (Team oder Projekt).
+- **Bestätigt:** Vercel-Zugriffsschlüssel lassen sich per API auf ein einzelnes Projekt begrenzen (Parameter projectId beim Erzeugen).
 
 ## 3. Zugänge, Rollen und Vorschau-Schutz (GEÄNDERT)
 
@@ -103,7 +103,7 @@ Regeln gelten nur, wenn sie technisch durchgesetzt werden. Ein Chat-Hinweis sch�
 - Übersicht pro Kunde: Links, Kern-Version mit Hinweis auf neuere Version, Status der Vorschau-Sperre, Ampel, offene Audit-Treffer.
 - **Kunden anlegen (zentral, NEU):** Ein Befehl legt alles automatisch an: Vercel-Projekt, Domains, Datenbank und Rolle, Resend-Domain und API-Schlüssel, Vorschau-Sperre, Standard-Einstellungen. Nur Anbieter mit API oder Kommandozeile werden angebunden. Ziel: Handarbeit je Kunde nahe null.
 - **Befehlshülle (V3, geändert):** Eine kleine Befehlshülle auf dem eigenen Server mit festen Befehlen: Kunde anlegen, Update einspielen, Go, Zurück. Der Generalschlüssel für Vercel und Resend liegt nur dort. Die KI darf die Befehle aufrufen, aber die Schlüssel nicht lesen. Go verlangt Nicks Bestätigung. Das Anlegen legt ein Vercel-Projekt, Datenbankrolle, Schnittstellenschlüssel und Resend-Zugang an. Vor Schritten, die die Datenbank ändern (Migration, Go, Import), sichert die Hülle automatisch.
-- Trennung je Kunde dort, wo sie billig und echt ist: eigene Datenbankrolle, eigener Schlüssel der Daten-Schnittstelle, eigener Resend-Schlüssel. Vercel-Schlüssel gelten laut Prüfer für ein Team, daher ein Team mit der Befehlshülle als einzigem Halter (bestätigen). Der Generalschlüssel ist ein bewusst benanntes Einzelrisiko: zweiter Faktor, Protokoll, Sicherung außerhalb des eigenen Servers, die sich mit dem Betreiberzugang nicht löschen lässt, enge Tailscale-Regeln, Betreibergerät sperrbar.
+- Trennung je Kunde dort, wo sie billig und echt ist: eigene Datenbankrolle, eigener Schlüssel der Daten-Schnittstelle, eigener Resend-Schlüssel. Bestätigt (Vercel-REST-API-Dokumentation, 25.11.2026): Beim Erzeugen eines Zugriffsschlüssels kann ein Projekt als Geltungsbereich angegeben werden. Die Befehlshülle erzeugt deshalb je Kunde einen auf dessen Projekt begrenzten Schlüssel und hält selbst nur den Generalschlüssel des Teams. Der Generalschlüssel ist ein bewusst benanntes Einzelrisiko: zweiter Faktor, Protokoll, Sicherung außerhalb des eigenen Servers, die sich mit dem Betreiberzugang nicht löschen lässt, enge Tailscale-Regeln, Betreibergerät sperrbar.
 - Updates werden gestaffelt ausgerollt: zuerst eigene Homepage und ein repräsentativer Kunde, danach gruppenweise. Bei Fehlern stoppt der Rollout.
 
 ## 10. Betrieb, Sicherung und Störfall (NEU)
@@ -148,7 +148,7 @@ Offen aus der Gegenlesung: Haupttexte (Hero, Leistungen, Preise) sollen ohne Rel
 - Alarmkanal festlegen (genau ein aktiver Kanal).
 - Bestätigung der Vercel-Preise auf der offiziellen Seite.
 - Wo die eigene Homepage läuft (Empfehlung: Vercel).
-- Reichweite der Vercel-Zugriffsschlüssel (Team oder Projekt): vor der Umsetzung bestätigen. Preise und Resend-Domaingrenzen sind bestätigt (Abschnitt 2a).
+- Preise, Resend-Domaingrenzen und die Projektbegrenzung von Vercel-Schlüsseln sind bestätigt (Abschnitt 2a).
 - Prüfseite mit echten Daten auf Zeit (Nicks Entscheidung) oder feste Positivliste öffentlicher Inhalte (Empfehlung der Gegenlesung, weil weniger Nachweisaufwand).
 - Medienablage: eigener Server oder EU-Objektspeicher.
 - Vercel-Build nach Merge der Sicherheitsänderung: Bewertungen und Social-Links kommen künftig nicht mehr aus einer versionierten Datenbank (Nick: alte Datenbank enthielt keine realen Daten).
