@@ -1,0 +1,11 @@
+[Unit]
+Description=HPSE nächtliche Sicherung
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=hpse-backup
+ExecStart=/opt/hpse/scripts/backup/backup.sh --ausfuehren
+Nice=10
+IOSchedulingClass=idle
