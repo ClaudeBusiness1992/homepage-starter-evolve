@@ -155,3 +155,14 @@ Offen aus der Gegenlesung: Haupttexte (Hero, Leistungen, Preise) sollen ohne Rel
 - Vercel-Build nach Merge der Sicherheitsänderung: Bewertungen und Social-Links kommen künftig nicht mehr aus einer versionierten Datenbank (Nick: alte Datenbank enthielt keine realen Daten).
 - Rotation von PIN und QR-Schlüssel (von Nick auf später verschoben), Entscheidung zur Historienbereinigung.
 - Ein echter Build- und Starttest des Sicherheitspakets in funktionsfähiger Umgebung.
+
+## 15. Entscheidungen und offene Punkte 26.11.2026
+
+Stand: 26.11.2026. Ergänzung, keine Änderung am bestehenden Text. Nick bringt morgen drei Recherche-Ergebnisse mit (EU-Mailanbieter, EU-Hosting als Ersatz, Anmeldelösung als Ersatz) und arbeitet ein Thema nach dem anderen ab.
+
+- **Clerk ausgeschieden:** Nach eigener Sicherheitsseite keine EU-Datenhaltung (laut Websuche, gegen das Original zu prüfen, PRÜFEN).
+- **Besteller-Login als Anforderung des ersten Kunden:** Selbstregistrierung, Anmeldung, Produktauswahl mit ungefährem Preis, Absenden ohne Zahlung; siehe `docs/BESTELLPLATTFORM-ANFORDERUNGEN.md`.
+- **Auswahl der Anmeldelösung offen:** Anforderungsprofil mit Muss-, Soll- und Kann-Kriterien in `docs/BESTELLPLATTFORM-ANFORDERUNGEN.md`; laufende Recherche nach `docs/recherche/PROMPT-AUTH-EU.md`; keine Entscheidung ohne Prototyp mit getrennten Hosts.
+- **EU-Prüfung für Mail und Hosting offen:** Prompts unter `docs/recherche/PROMPT-MAIL-EU.md` und `docs/recherche/PROMPT-HOSTING-EU.md`; Auswertung nach `docs/recherche/AUSWERTUNGSRASTER.md` mit Belegstufen, Pflicht-Tests und Zeitleiste (Mail zuerst, Hosting danach, Anmeldung zuletzt).
+- **Bisherige Startpfade bleiben bis zur Entscheidung der geplante Weg:** Die Einrichtung war für morgen früh vorgesehen (`docs/EINRICHTUNG-VERCEL-RESEND.md`); sie ist erst nach der EU-Auswertung sinnvoll oder wird als bewusster Startpfad entschieden.
+- **Hauptserver und Sicherung:** Bestell- und Einrichtungsplan in `docs/SERVER-BESTELLUNG-UND-ERSTEINRICHTUNG.md`; Sicherungsziel und Anbietervorschlag in `docs/SICHERUNG-ZIEL.md`; Verträge und Datenorte vor dem ersten Kunden zu klären (siehe `docs/recht/ANWALT-UEBERGABE.md`).
