@@ -96,6 +96,7 @@ Sortierung: Block A blockiert den ersten Kunden (Go-Live-Sperre bis zur Klärung
 | A14 | Unterauftragsverarbeiter-Verfahren festlegen: allgemeine Genehmigung mit Widerspruch vs. Einzelfreigabe, Ankündigungsfrist, Widerspruchsfolgen, Vertragsnachweis-Umfang (Volltext vs. Auszug), Verantwortlichkeit und Einsatzsperre bis zur Klärung. | AVV-ENTWURF [ANWALT-20–23, 42]; AVV-ANLAGEN [ANWALT-1, 10] |
 | A15 | Prüf- und Kontrollrechte festlegen: Ankündigung, Häufigkeit, Kosten, Fremddaten-Schutz, Vorrang Fernprüfung vs. Vor-Ort, Ersatz durch Zertifikate. | AVV-ENTWURF [ANWALT-36–38] |
 | A16 | Kontaktformular: Rechtsgrundlage je Anfrageart, Spam-Schutz-Verfahren, Zustellweg (Kundenpostfach), Aufbewahrungsdauer und Datenbankablage ja/nein. | BAUSTEINE [ANWALT-5]; AVV-ENTWURF [ANWALT-7] |
+| A17 | KI-Werkzeuge: Entwürfe zu Verträgen, Datenschutz und Konzepten wurden mit Muse Spark 1.3 im Contributor-Modus erstellt (Eingaben können laut Drittberichten zum Training verwendet werden; Bedingungen von Meta nicht abgerufen). Bitte bewerten: Muss das im Verzeichnis der Unterauftragsverarbeiter oder in der Datenschutzerklärung erscheinen? Zulässigkeit und Vertragslage für Claude und Codex bei Verarbeitung von Kundendaten (Art. 28, Art. 44 ff.). Interne Regel: Muse contributor nur ohne Kundendaten und Schlüssel (Plan Abschnitt 7). | Nicks Hinweis 25.11.2026 |
 
 ### Block B — vor dem ersten Newsletter-Versand zusätzlich zwingend
 
@@ -149,7 +150,7 @@ Empfohlene Prüfreihenfolge (jede Stufe baut auf der vorherigen auf):
 3. **Kundendaten je Kunde (vor Go):** Modulschalter (Kontakt, Newsletter, Buchung mit/ohne Kalender-Sync, Bewertungen, Social-Verlinkung vs. Einbettung, Analyse), Absenderdomain mit Verifizierungsstand (SPF/DKIM/DMARC), Einwilligungstext-Version und -Datum, Datenschutzerklärungs-Wortlaut-Version und Freigabedatum, Versandgrenzen, Wiederanlauf-Ziele aus Anlage 1 des Kundenvertrags, Domain-/DNS-Stand (eigene Zone vs. Kundenzone), Preis- und Laufzeitwerte für alle Platzhalter [ANWALT-3].
 4. **Betriebsnachweise:** Protokoll der Wiederanlauf-Probe mit gemessenen Zielzeiten, Sicherungs- und Verfallsnachweis, Schlüssel- und Zugangsverzeichnis (nur IDs und Status, keine Geheimniswerte), Verarbeitungsverzeichnis-Auszüge, Weisungsdokumentation, Export- und Löschprotokolle [ANWALT-4].
 5. **Entscheidungen von Nick:** B2B oder B2C, Preis- und Anpassungsklausel-Werte, Kündigungsfristen, Haftungshöchstgrenze, Geheimhaltungsdauer, Gerichtsstand/Erfüllungsort, Backup-Verfall-Frist, Medienablage (Server vs. EU-Objektspeicher), Hosting-Ort der eigenen Homepage [ANWALT-5].
-6. **Offenlegung der Lücken:** Newsletter-Datenmodell-Datei (docs/NEWSLETTER-SCHEMA.md) fehlt; Anbieter für Sicherungsspeicher, Überwachung und Alarmkanal sind noch zu wählen; konkrete Löschfristen sind Vorschläge; die Resend-Prüfung beruht auf öffentlichen Dokumentationsseiten vom 25.11.2026. Alle Lücken stehen in den Dokumenten; nichts wurde als geprüft ausgegeben, was nicht existiert [ANWALT-6].
+6. **Offenlegung der Lücken:** Hinweis: Das Newsletter-Datenmodell liegt inzwischen in docs/NEWSLETTER-SCHEMA.md vor (Stand des Übergabepakets vor Erstellung); Anbieter für Sicherungsspeicher, Überwachung und Alarmkanal sind noch zu wählen; konkrete Löschfristen sind Vorschläge; die Resend-Prüfung beruht auf öffentlichen Dokumentationsseiten vom 25.11.2026. Alle Lücken stehen in den Dokumenten; nichts wurde als geprüft ausgegeben, was nicht existiert [ANWALT-6].
 
 ## 8. Sammelliste der Anwaltsfragen zu diesem Übergabepaket
 
@@ -163,5 +164,6 @@ Empfohlene Prüfreihenfolge (jede Stufe baut auf der vorherigen auf):
 | ANWALT-6 | Abschnitt 3 (Server-Hoster) | Hoster benennen lassen; Standort, Zugriffe und Garantie einordnen. |
 | ANWALT-7 | Abschnitt 3 (Überwachung/Alarm) | Personenbezug prüfen; ggf. als Unterauftragsverarbeiter aufnehmen oder streichen. |
 | ANWALT-8 | Abschnitt 6 (Muss/Kann) | Go-Live-Sperre bei offenen Muss-Punkten und Stufenfolge bestätigen; B2B/B2C-Weiche, Schuld- und Haftungsfragen im Zusammenhang mit dem Kundenvertrags-Gerüst entscheiden. |
+| ANWALT-9 | Block A, A17 (KI-Werkzeuge) | Muse Spark Contributor (Training mit Eingaben möglich) und Claude/Codex: Offenlegung, Unterauftragsverarbeiter-Status und Drittlandbezug bewerten; interne Nutzungsregel prüfen. |
 
 HPSE_RECHT_UEBERGABE_20261125_FERTIG

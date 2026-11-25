@@ -89,6 +89,7 @@ Regeln gelten nur, wenn sie technisch durchgesetzt werden. Ein Chat-Hinweis sch�
 - Vor jedem KI-Eingriff entsteht ein überprüfbarer Sicherungspunkt. Neue Kunden werden nur aus freigegebenen Paketkennungen angelegt.
 - Betrifft eine Aufgabe den gesperrten Kern, stoppt die KI und schlägt zwei Wege vor: Erweiterungspunkt für den Kunden oder Template-Erweiterung im Haupt-Template. Ob eine Idee in den Kern gehört, entscheidet Nick.
 - Das Löschen von Mediendateien und andere schreibende Operationen sind auf feste Verzeichnisse begrenzt.
+- Modellregel (Nick, 25.11.2026): Muse im Contributor-Modus darf Eingaben zum Training verwenden (Quellen: Drittberichte, Bedingungen von Meta nicht abgerufen). Muse contributor wird deshalb nur für Aufgaben ohne Kundendaten, personenbezogene Daten, Datenbankinhalte, Zugangsdaten, Schlüssel und Serverzugriff eingesetzt (Dokumente, Entwürfe, Prototypen mit Platzhaltern). Alles mit Kundenbezug und jeder Zugriff auf den Homepage-Server läuft nur über Claude oder Codex. Auch deren Datenfluss gehört in die Anwaltsprüfung.
 
 ## 8. Prüfseite, Live-Seite, Freigabe und Rollback (GEÄNDERT)
 
