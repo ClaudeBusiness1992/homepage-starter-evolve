@@ -1,6 +1,6 @@
 # Sicherungsziel – Stand der Entscheidung (25.11.2026)
 
-Status: Vorschlag, noch nicht bestellt. Alle Angaben sind aus Suchergebnissen und Drittquellen, nicht aus der offiziellen Hetzner-Dokumentation belegt (PRÜFEN).
+Status: Vorschlag (BX11 nach Recherche geeignet), noch nicht bestellt. Alle Angaben sind aus Suchergebnissen und Drittquellen, nicht aus der offiziellen Hetzner-Dokumentation belegt (PRÜFEN).
 
 ## Rahmen (Nick)
 - Hauptserver bei netcup (Tarif Lite 1: 2 vCore, 4 GB RAM, 80 GB SSD, 5,86 € im Monat inkl. Steuer, 6 Monate Laufzeit; nano und pico verworfen). Erweiterung bis 4 TB laut Nick, nicht geprüft.
@@ -17,3 +17,11 @@ Status: Vorschlag, noch nicht bestellt. Alle Angaben sind aus Suchergebnissen un
 1. Offizielle Hetzner-Dokumentation: Snapshots vom SSH-Zugang aus nicht löschbar? Erzwungener Befehl im Schlüssel unterstützt?
 2. Größen der Tarife, Standorte (Deutschland/Finnland), Vertrag zur Auftragsverarbeitung.
 3. Wiederanlauf-Probe (docs/RUNBOOK-WIEDERANLAUF.md) mit dieser Kopie durchführen.
+
+## Recherche-Ergebnis BX11 (25.11.2026, Suchauszüge, offizielle Seiten nicht vollständig gelesen)
+- Größe 1 TB laut Nick. Grenzen laut Hetzner-Übersicht: 10 gleichzeitige Verbindungen, bis zu 100 Unterkonten (die Hetzner-API zeigt an einer Stelle 200, vermutlich veraltet). Snapshots: bis zu 10 manuelle und 10 automatische; ist das Limit erreicht, wird der älteste automatisch gelöscht.
+- restic über erzwungenen Befehl im SSH-Schlüssel (rclone serve restic --stdio --append-only) wird in Community-Quellen und einem Hetzner-Community-Tutorial beschrieben. Borg läuft per normalem Schlüssel.
+- Snapshots werden laut Drittquelle nur in Console oder API angelegt und gelöscht, das Snapshot-Verzeichnis ist schreibgeschützt. Ein Zurückspielen setzt die ganze Box zurück, auch alle Unterkonten.
+- Unterkonten können je Verzeichnis nur lesend eingerichtet werden (Hetzner-Übersicht).
+- Folge des Anfüge-Modus: Alte Stände aufräumen (restic forget/prune) geht vom Server aus nicht. Dafür braucht es einen getrennten Wartungszugang (eigener Schlüssel, nicht auf dem Hauptserver).
+- Test vor Verlass: Löschversuch mit dem Server-Schlüssel muss scheitern (Teil der Wiederanlauf-Probe).
