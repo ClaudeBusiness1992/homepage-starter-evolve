@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HPSE – Entscheidungsblätter EU-Auswertung (Entwurf)</title>
+<style>
+:root{--ink:#1c2230;--mut:#5b6475;--bg:#f5f6f9;--card:#fff;--line:#dde1ea;--ok:#1f7a45;--okb:#e3f4ea;--wa:#8a5a00;--wab:#fdf0d5;--ko:#a32a2a;--kob:#fbe4e4;--ac:#2a4fd6}
+*{box-sizing:border-box}body{margin:0;font:16px/1.55 system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+header{background:var(--ink);color:#fff;padding:22px 20px}header h1{margin:0;font-size:22px}header p{margin:6px 0 0;color:#c3cadb;font-size:14px}
+nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);display:flex;gap:4px;padding:8px 12px;flex-wrap:wrap;z-index:5}
+nav button{border:0;background:none;padding:9px 14px;border-radius:8px;font:inherit;cursor:pointer;color:var(--mut)}
+nav button.on{background:var(--ac);color:#fff}
+main{max-width:1060px;margin:0 auto;padding:20px}section{display:none}section.on{display:block}
+h2{margin:6px 0 4px;font-size:21px}h3{margin:22px 0 8px;font-size:17px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+.rec{border-left:5px solid var(--ok)}.warn{border-left:5px solid var(--wa)}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14.5px}
+th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#eef0f6;font-weight:600}
+.tw{overflow-x:auto}.tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.g{background:var(--okb);color:var(--ok)}.y{background:var(--wab);color:var(--wa)}.r{background:var(--kob);color:var(--ko)}
+ul{margin:6px 0;padding-left:20px}small,.mut{color:var(--mut)}
+.note{font-size:13.5px;color:var(--mut);margin-top:8px}
+</style></head><body>
+<header><h1>HPSE – Entscheidungsblätter zur EU-Auswertung</h1>
+<p>Entwurf, Stand 26.11.2026. Grundlage: drei Deep-Research-Berichte, abgeglichen per Stichprobe mit den Originalquellen der Anbieter. Keine Rechtsberatung. Entscheidungen trifft Nick.</p></header>
+<nav id="nav"></nav>
+<main>
+
+<section id="s0"><h2>Gesamtüberblick</h2>
+<div class="card rec"><b>Kurzfassung der Empfehlungen (Entwurf)</b>
+<ul>
+<li><b>Mail:</b> Lettermint (Niederlande) als Versandschicht, Newsletter mit Double-Opt-in über eigene Software (z. B. Listmonk) oder eigenen Handler. Vorher Zustellbarkeitstest bei GMX, WEB.DE und T-Online.</li>
+<li><b>Hosting:</b> Startpfad bleibt der eigene netcup-Server mit Docker (so bereits beschlossen). Nodion ist der aussichtsreichste Cloud-Ersatz für Vercel, aber erst nach Prüfung des Plattform-AVV im Kundenportal und der CDN-Frage entscheidbar.</li>
+<li><b>Anmeldung:</b> Better Auth im eigenen Server, mit Same-Origin-Proxy über Astro, getrennter Datenbank oder getrenntem Schema je Kunde und Update-Prozess. Logto Cloud (EU) ist die Ausweichlösung, wenn die Verantwortung für Sicherheitsupdates ausgelagert werden soll.</li>
+</ul></div>
+<div class="card warn"><b>Qualität der drei Recherchen (nach Stichprobe)</b>
+<ul>
+<li><b>Anmeldung:</b> weitgehend richtig; einzelne Zuordnungsfehler bei Kennungen, Lizenz- und Issue-Angaben.</li>
+<li><b>Mail:</b> Kern zu Lettermint bestätigt; Brevo und Mailgun wurden teils falsch dargestellt (Konten-Regel, Preise).</li>
+<li><b>Hosting:</b> mehrere Preisangaben veraltet (Hetzner), erfundenes SLA bei DanubeData, Quellenliste fehlt.</li>
+<li><b>Wechselkurse:</b> in zwei Berichten nicht als EZB-Referenzkurs belegbar. Verwendet wird hier der EZB-Kurs vom 25.11.2026: 1 EUR = 1,0935 USD.</li>
+</ul></div>
+<div class="card"><b>Was dieses Papier nicht ist</b><br>Es ersetzt keinen Praxistest mit echtem Konto. Alle Eigenschaften sind aus Herstellerangaben belegt, nicht ausprobiert. Die Gewichtungstabellen des Auswertungsrasters sind noch nicht mit Nick durchgegangen; die Ampel unten ist eine begründete Einschätzung.</div>
+<h3>Legende</h3><p><span class="tag g">tragfähig</span> <span class="tag y">mit Auflagen / offen</span> <span class="tag r">ausgeschieden</span></p>
+</section>
+
+<section id="s1"><h2>1 · Mail-Versand (EU)</h2>
+<div class="card rec"><b>Empfehlung: Lettermint</b> (Lettermint B.V., Zwolle, Niederlande) – belegt: eigene EU-Infrastruktur, Subprozessorliste nur mit europäischen Anbietern für Kundendaten, Team-API mit Domain- und DNS-Verwaltung, gehosteter MCP-Server (OAuth), Projekt-Token je Kunde, getrennte IP-Pools für Transaktion und Newsletter, automatische Ein-Klick-Abmeldung (RFC 8058), 24-Stunden-Idempotenz, signierte Webhooks, Listmonk-Anbindung.</div>
+<h3>Kandidaten</h3><div class="tw"><table>
+<tr><th>Anbieter</th><th>Einschätzung</th><th>Begründung (geprüft)</th></tr>
+<tr><td>Lettermint</td><td><span class="tag g">tragfähig</span></td><td>Siehe oben. Keine eigene Kontakt- oder DOI-Verwaltung; nicht auf der CSA-Liste; 0 Tage Aufbewahrung nur mit Genehmigung.</td></tr>
+<tr><td>Mailjet (Sinch)</td><td><span class="tag y">Alternative</span></td><td>Premium: bis 20 Unterkonten, per API anlegbar, CSA-zertifiziert. Dafür Sinch-Konzern und laut Recherche US-Subprozessoren; Webhooks nur mit Basic Auth. Rolle: falls CSA und fertige Newsletter-Funktion Vorrang haben.</td></tr>
+<tr><td>Brevo</td><td><span class="tag y">mit Auflagen</span></td><td>CSA-zertifiziert, nativer DOI-Endpunkt. Aber: ein Konto je Firma bei Free/Starter/Standard; Unterorganisationen nur Enterprise; Webhooks ohne HMAC. Für Agentur mit vielen Kunden ungünstig, außer jeder Kunde bekommt ein eigenes Konto.</td></tr>
+<tr><td>Sweego (FR)</td><td><span class="tag y">Ergänzung</span></td><td>10 € für 20.000 Mails, unbegrenzte Domains (Free: 100 Mails/Tag). Kein operativer MCP, keine CLI; Subprozessoren und Mailserver-Standort nicht belegt.</td></tr>
+<tr><td>MailerSend</td><td><span class="tag r">ausgeschieden</span></td><td>Vertragspartner MailerSend, Inc. (USA). Technisch stark, verfehlt aber die Anforderung EU-Gesellschaft. Webhook v1 endet am 01.12.2026.</td></tr>
+<tr><td>Mailgun EU</td><td><span class="tag r">ausgeschieden</span></td><td>US-Tochter; Konto- und Schlüsseldaten global repliziert; Subaccounts nur Enterprise. Preise der Recherche (14/32 €) falsch: offiziell 15/35 USD.</td></tr>
+<tr><td>Scaleway TEM</td><td><span class="tag r">ausgeschieden</span></td><td>Newsletter ausdrücklich verboten; höchstens als reines Transaktions-Relay denkbar.</td></tr>
+<tr><td>Omnivery (CZ)</td><td><span class="tag y">Spezialfall</span></td><td>CSA-zertifiziert, strenge EU-Architektur, aber manuelle Prüfung jeder Domain und keine öffentlichen Preise.</td></tr>
+<tr><td>Amazon SES</td><td><span class="tag r">Vergleich</span></td><td>US-Konzern (CLOUD Act); nur als Preismaßstab.</td></tr>
+</table></div>
+<h3>Kosten Lettermint (Eurobeträge laut Preisseite)</h3><div class="tw"><table>
+<tr><th>Tarif</th><th>Inhalt</th><th>Preis laut Seite</th><th>falls netto: brutto 19 %</th></tr>
+<tr><td>Free</td><td>300 Mails, 1 Domain</td><td>0 €</td><td>0 €</td></tr>
+<tr><td>Starter</td><td>10.000 Mails, 5 Domains</td><td>10 €</td><td>11,90 €</td></tr>
+<tr><td>Growth</td><td>10.000 Mails, 30 Domains</td><td>13 €</td><td>15,47 €</td></tr>
+<tr><td>Pro</td><td>10.000 Mails, unbegrenzte Domains</td><td>15 €</td><td>17,85 €</td></tr>
+</table></div>
+<p class="note">Die Preisseite weist nicht aus, ob die Beträge netto oder brutto sind. Im Checkout klären. Mehrmengen: Starter 1,50 €, Growth 1,15 €, Pro 1,10 € je 1.000 Mails.</p>
+<h3>Offen vor Entscheidung</h3><ul>
+<li>Zustellbarkeitstest gegen GMX, WEB.DE, T-Online, Gmail, Outlook (Lettermint ist nicht CSA-gelistet).</li>
+<li>Netto-/Brutto-Status der Preise und Dauer der Kontofreigabe.</li>
+<li>Wirkung der teamweiten Hard-Bounce-Sperre bei mehreren Kunden.</li>
+<li>Lettermint-CLI braucht Browser-Anmeldung, auf dem Server also REST-API oder Terraform nutzen.</li>
+</ul></section>
+
+<section id="s2"><h2>2 · Hosting (Vercel-Ersatz, EU)</h2>
+<div class="card rec"><b>Empfehlung (Entwurf):</b> Startpfad eigener netcup-Server mit Docker (bereits beschlossen, Sicherung per Hetzner Storage Box). Nodion als Cloud-Ausweichlösung weiterverfolgen, aber erst nach den zwei offenen Punkten unten.</div>
+<h3>Kandidaten</h3><div class="tw"><table>
+<tr><th>Option</th><th>Einschätzung</th><th>Begründung (geprüft)</th></tr>
+<tr><td>Eigener Server (netcup, Docker)</td><td><span class="tag g">Startpfad</span></td><td>Volle Datenhoheit in Deutschland, vorhandene Docker-Grundgerüste. Selbstbetrieb: Updates, Sicherung, Alarme liegen bei uns.</td></tr>
+<tr><td>Nodion (Stuttgart, RZ Frankfurt)</td><td><span class="tag y">mit Auflagen</span></td><td>Betreiber, Region, Preise, Schlüsselmodell, Preview und Astro-Unterstützung bestätigt. Offen: Plattform-AVV nur im Portal einsehbar; kein Beleg für ein auf die EU beschränktes CDN; Control Plane nur „in Deutschland“ belegt.</td></tr>
+<tr><td>Coolify auf Hetzner Cloud</td><td><span class="tag y">Alternative</span></td><td>Apache-2.0, MCP-Server, Preview und Rollback dokumentiert. Zusätzlicher Betriebsaufwand für den Coolify-Server selbst.</td></tr>
+<tr><td>DanubeData</td><td><span class="tag y">schwach</span></td><td>Günstig, aber kein vertragliches SLA (Behauptung 99,9 % widerlegt); AVV nennt Static Sites nicht ausdrücklich.</td></tr>
+<tr><td>Bunny.net</td><td><span class="tag y">mit Auflagen</span></td><td>Sicherheitsvorfall 17.–24.11.2026 mit Zertifikatsneuausstellung (kein bestätigter Datenabfluss); keine projektbegrenzten Schlüssel belegt.</td></tr>
+<tr><td>Vercel (Referenz)</td><td><span class="tag y">bisheriger Pfad</span></td><td>Pro 20 USD je Nutzer; Passwortschutz für Previews zusätzlich 20 USD je Projekt; Hobby verbietet kommerzielle Nutzung. US-Anbieter.</td></tr>
+</table></div>
+<h3>Kosten (laut Herstellerseiten)</h3><div class="tw"><table>
+<tr><th>Posten</th><th>netto</th><th>brutto 19 %</th><th>Quelle / Stand</th></tr>
+<tr><td>Hetzner Storage Box BX11 (1 TB)</td><td>3,20 €</td><td>3,81 €</td><td>hetzner.com, 26.11.2026</td></tr>
+<tr><td>Hetzner Cloud CX23</td><td>5,49 €</td><td>6,53 €</td><td>Preisliste ab 15.06.2026, zzgl. IPv4</td></tr>
+<tr><td>Hetzner Cloud CX33</td><td>8,49 €</td><td>10,10 €</td><td>Preisliste ab 15.06.2026, zzgl. IPv4</td></tr>
+<tr><td>Nodion Static-App (256 MB)</td><td>ca. 1 €</td><td>je Land/Kontotyp</td><td>nodion.com, Nettolistenpreis</td></tr>
+<tr><td>Nodion Astro-SSR (512 MB)</td><td>ca. 2 €</td><td>je Land/Kontotyp</td><td>nodion.com, Nettolistenpreis</td></tr>
+<tr><td>DanubeData Static Starter / Pro</td><td colspan="2">2,99 € / 9,99 €</td><td>Steuerstatus nicht ausgewiesen</td></tr>
+<tr><td>Vercel Pro</td><td colspan="2">20 USD je Nutzer</td><td>ohne Steuern</td></tr>
+</table></div>
+<h3>Offen vor Entscheidung</h3><ul>
+<li>Nodion: Plattform-AVV im Portal lesen, CDN-Datenort schriftlich erfragen, Funktionstest mit Testkonto.</li>
+<li>Hetzner: Löschschutz für Storage Box offiziell prüfen (aus der Übergabe noch offen).</li>
+<li>Pflicht-Tests für alle Cloud-Kandidaten: Zugriff nur über Tailscale-ähnliche Absicherung der KI-Schlüssel, Rückrollen, Vorschau mit Passwortschutz.</li>
+</ul></section>
+
+<section id="s3"><h2>3 · Anmeldung für Endnutzer (EU-Datenhaltung)</h2>
+<div class="card rec"><b>Empfehlung: Better Auth</b> (MIT) im eigenen Server, mit <b>Same-Origin-Proxy</b> über Astro (Cookies bleiben First-Party, kein Safari-Problem), <b>getrennter Datenbank oder Schema je Kunde</b> und automatischem Update-Prozess. Bestätigt: Plugins für 2FA, Passkeys, Leak-Prüfung, Deutsch, Admin, API-Keys; offizielle Astro-Anbindung.</div>
+<div class="card warn"><b>Pflichten bei Better Auth (selbst zu leisten):</b>
+<ul><li>Konto-Sperre nach Fehlversuchen beim Passwort-Login (nur 2FA hat eine eigene Sperre).</li>
+<li>Rate-Limit in der Datenbank speichern, Proxy-IP absichern.</li>
+<li>DSGVO-Datenexport und saubere Löschung mit Aufbewahrungsfristen.</li>
+<li>Zeitnahe Sicherheitsupdates: 2026 gab es viele Advisories (u. a. Sammelrelease v1.7.16 mit 12 Fixes am 03.11.2026).</li></ul></div>
+<h3>Kandidaten</h3><div class="tw"><table>
+<tr><th>Option</th><th>Einschätzung</th><th>Begründung (geprüft)</th></tr>
+<tr><td>Better Auth (selbst betrieben)</td><td><span class="tag g">tragfähig</span></td><td>Siehe oben. Keine Lizenzkosten, kein zusätzlicher Dienst im RAM, Nutzer liegen neben den Bestelldaten. Vercel hat das Team übernommen („joins Vercel“); Lizenz bleibt MIT.</td></tr>
+<tr><td>Logto Cloud (EU, Niederlande)</td><td><span class="tag g">Ausweichlösung</span></td><td>Remote-MCP-Server, wenige Subprozessoren (Azure, Cloudflare), Leak-Prüfung und Lockout eingebaut. US-Firma (Silverhand Inc.); Token-Abrechnung; kein offizielles Astro-SDK.</td></tr>
+<tr><td>Zitadel Cloud (EU/Schweiz)</td><td><span class="tag y">mit Auflagen</span></td><td>Starke Mandantenstruktur und Terraform. Vertragspartner CAOS AG (Schweiz); keine Leak-Prüfung belegt; Domain-Aufpreis 50 USD je zusätzlicher Domain.</td></tr>
+<tr><td>Hanko Cloud (Kiel, Deutschland)</td><td><span class="tag y">Ergänzung</span></td><td>Daten ausschließlich in Deutschland laut AVV; Pro nur 5 Projekte; kein MCP/Terraform belegt; Leak-Prüfung und Lockout nicht belegt.</td></tr>
+<tr><td>Supabase Auth (GoTrue)</td><td><span class="tag y">schwach</span></td><td>MIT, schlank, aber keine native Mandantentrennung (ein Container je Kunde).</td></tr>
+<tr><td>authentik / Keycloak</td><td><span class="tag r">zu schwer</span></td><td>2 GB bzw. 1,25 GB je Instanz auf dem 4-GB-Server nicht tragbar. authentik-Mehrmandanten-Funktion entfällt im Release 2026.11.</td></tr>
+<tr><td>Ory Kratos (OSS)</td><td><span class="tag r">ungeeignet</span></td><td>Quelle bestätigt: Open Source nur für einen Mandanten.</td></tr>
+<tr><td>SuperTokens</td><td><span class="tag r">teuer</span></td><td>MFA ab 100 USD/Monat auch beim Selbstbetrieb; Mandantenfähigkeit nur auf Anfrage.</td></tr>
+<tr><td>Eigenbau</td><td><span class="tag r">nicht empfohlen</span></td><td>Zu hohes Sicherheitsrisiko bei 2FA, Passkeys und Social Login.</td></tr>
+<tr><td>Clerk, Stytch, WorkOS</td><td><span class="tag r">ausgeschieden</span></td><td>Keine EU-Datenhaltung. Clerk bestätigt es selbst; Stytch-Beleg stammt von 2023 und sollte aktualisiert werden.</td></tr>
+</table></div>
+<h3>Kosten (USD-Preise mit EZB-Kurs 25.11.2026, 1 EUR = 1,0935 USD; Umrechnung eigene Rechnung)</h3><div class="tw"><table>
+<tr><th>Option</th><th>Preis laut Hersteller</th><th>ca. netto in €</th><th>ca. brutto 19 %</th></tr>
+<tr><td>Better Auth (Bibliothek)</td><td>0</td><td>0 €</td><td>0 €</td></tr>
+<tr><td>Logto Pro Basis je Tenant</td><td>24 USD (+ MFA 48, Organizations 48, RBAC 32, Domains 48)</td><td>21,95 € (Basis)</td><td>26,12 €</td></tr>
+<tr><td>Zitadel Pro</td><td>100 USD, 25.000 DAU, erste Domain inkl.</td><td>91,45 €</td><td>108,82 €</td></tr>
+<tr><td>Hanko Pro</td><td>29 USD, 10.000 MAU, 5 Projekte</td><td>26,52 €</td><td>31,56 €</td></tr>
+</table></div>
+<p class="note">Bei Auslandsleistungen gilt im B2B meist das Reverse-Charge-Verfahren; als Regelbesteuerer zählt der Nettobetrag. Preisseiten weisen den Steuerstatus überwiegend nicht aus.</p>
+<h3>Offen vor Entscheidung</h3><ul>
+<li>Prototyp: Safari und iOS, geräteübergreifender Logout, Mandanten mit gleicher E-Mail, Last auf dem 4-GB-Server.</li>
+<li>Wer prüft laufend die Better-Auth-Advisories und spielt Updates ein?</li>
+</ul></section>
+
+<section id="s4"><h2>Offene Punkte und Anwaltsthemen</h2>
+<div class="card"><b>Für Nick (Konto- und Bestellaufgaben, zurückgestellt)</b>
+<ul><li>ntfy-App abonnieren und melden, dann Testmeldung.</li><li>Konten, netcup-Hauptserver und Hetzner Storage Box bestellen (geführte Checkliste auf Wunsch).</li><li>restic-Passwort sicher verwahren; Anwalt einbinden; Namen für HPSE finden (Recherche-Prompt liegt vor).</li></ul></div>
+<div class="card"><b>Themen für den Anwalt (aus den Recherchen)</b>
+<ul>
+<li>Auftragsverarbeiter-Kette der Agentur (Server, Mail, Frontend-Hoster, Anmeldedienst) und Rolle bei Newsletter-Versand für Kunden.</li>
+<li>Frontend bei Vercel: Genügt EU-Region plus AVV/Transfermechanismen der Zusage „EU-Datenhaltung“?</li>
+<li>Kontolöschung gegen Aufbewahrungspflichten; Datenexport (Art. 15/20 DSGVO).</li>
+<li>Tracking in Mails und Cookies (§ 25 TDDDG); Nachweis des Double-Opt-in.</li>
+<li>Abfrage von Passwort-Leaklisten (HaveIBeenPwned) als Datenübermittlung.</li>
+<li>KI-Zugriff über MCP: personenbezogene Daten in KI-Diensten, PII-Filter dauerhaft aktiv?</li>
+<li>Rechtswahl und Haftungsklauseln der Anbieter (NL, FR, CH, USA).</li>
+<li>Lizenzfragen bei AGPL-Software (Zitadel, Hanko).</li>
+</ul></div>
+<div class="card"><b>Nicht verifiziert</b><br>Löschschutz Hetzner Storage Box, Free-Tarife Vercel/Resend, Gewichtungstabellen des Rasters, alle Funktionstests mit echtem Konto.</div>
+</section>
+
+</main>
+<script>
+const names=["Überblick","Mail","Hosting","Anmeldung","Offene Punkte"];
+const nav=document.getElementById('nav');
+names.forEach((n,i)=>{const b=document.createElement('button');b.textContent=n;b.onclick=()=>show(i);nav.appendChild(b)});
+function show(i){document.querySelectorAll('section').forEach((s,j)=>s.classList.toggle('on',i===j));nav.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('on',i===j));scrollTo(0,0);location.hash='s'+i}
+show(parseInt((location.hash||'#s0').slice(2))||0);
+</script></body></html>
